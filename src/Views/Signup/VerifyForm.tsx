@@ -1,7 +1,39 @@
-import { IonButton, IonInput, IonItem, IonList, IonText } from "@ionic/react";
-import { transform } from "ol/proj";
+import {
+  IonButton,
+  IonInput,
+  IonItem,
+  IonList,
+  IonText,
+  IonToast,
+} from "@ionic/react";
+import { useMaskito } from "@maskito/react";
+import { useState } from "react";
+import { verificarCuenta } from "../../App/Auth/Cuenta";
+import { alertCircleOutline } from "ionicons/icons";
 
 export default function VerifyForm(props: any) {
+  const [code, setCode] = useState<string>("");
+  const [openToast, setOpenToast] = useState<boolean>(false);
+  const [ToastMessage, setToastMessage] = useState<string>("");
+
+  const codeMask = useMaskito({
+    options: {
+      mask: [...Array(8).fill(/\d/)],
+    },
+  });
+
+  const handleVerificar = () => {
+    if (code.length != 8) return;
+    verificarCuenta({ id_usuario: props.id, codigo_verificacion: code })
+      .then((response: any) => {
+        window.location.replace("/");
+      })
+      .catch((error: any) => {
+        setToastMessage(error.response.data.message);
+        setOpenToast(true);
+      });
+  };
+
   return (
     <>
       <IonText
@@ -32,19 +64,27 @@ export default function VerifyForm(props: any) {
       >
         <IonItem>
           <IonInput
-            maxlength={6}
-            placeholder="000000"
+            ref={async (cardRef) => {
+              if (cardRef) {
+                const input = await cardRef.getInputElement();
+                codeMask(input);
+              }
+            }}
+            onInput={(e: any) => setCode(e.target.value)}
+            maxlength={8}
+            placeholder="00000000"
             style={{
               letterSpacing: "21pt",
               fontSize: "21pt",
               textAlign: "left",
-              left: "70%",
+              left: "60%",
               transform: "translateX(-50%)",
             }}
           ></IonInput>
         </IonItem>
       </IonList>
       <IonButton
+        disabled={code.length != 8}
         expand="block"
         style={{
           display: "flex",
@@ -55,9 +95,20 @@ export default function VerifyForm(props: any) {
           paddingLeft: "12pt",
           paddingRight: "12pt",
         }}
+        onClick={() => handleVerificar()}
       >
         VALIDAR
       </IonButton>
+      <IonToast
+        isOpen={openToast}
+        message={ToastMessage}
+        duration={5000}
+        icon={alertCircleOutline}
+        onDidDismiss={() => {
+          setOpenToast(false);
+          setToastMessage("");
+        }}
+      ></IonToast>
     </>
   );
 }

@@ -1,16 +1,33 @@
 import { IonButton, IonInput, IonItem, IonList, IonText } from "@ionic/react";
 import { FormProvider, useForm } from "../../hooks/UseForm/FormProvider";
-import { useEffect } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import Field from "../../components/Field/Field";
 import { Validator as v } from "../../hooks/UseForm/Validator/Validator";
+import { registrarCuenta } from "../../App/Auth/Cuenta";
 
-export default function SignupForm(props: any) {
+type TProps = {
+  setIdUsuario: React.Dispatch<React.SetStateAction<string>>;
+};
+export default function SignupForm(props: TProps) {
   const form = useForm();
 
   useEffect(() => {
     if (!form) return;
     console.log("form: ", form);
   }, [form]);
+
+  const handleCrearCuenta = () => {
+    if (!form) return;
+    // [!] Acá se debe llamar a la validación de los campos
+    registrarCuenta({
+      mail: form.schema.email,
+      contraseña: form.schema.password,
+    })
+      .then((response: any) => {
+        props.setIdUsuario(response.id_usuario);
+      })
+      .catch((error) => {});
+  };
 
   return (
     <>
@@ -74,6 +91,7 @@ export default function SignupForm(props: any) {
           paddingLeft: "12pt",
           paddingRight: "12pt",
         }}
+        onClick={() => handleCrearCuenta()}
       >
         CREAR CUENTA
       </IonButton>

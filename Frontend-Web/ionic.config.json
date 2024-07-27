@@ -1,0 +1,7 @@
+{
+  "name": "Frontend-Web",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}

@@ -1,0 +1,31 @@
+ion-grid {
+  width: 100%;
+  flex-grow: 1;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+ion-row {
+  flex-grow: 1;
+  width: 100%;
+  height: 100%;
+}
+ion-col {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  text-align: center;
+}
+.banner {
+  flex-grow: 1;
+  background: rgb(38, 157, 84);
+  background: linear-gradient(
+    90deg,
+    rgba(38, 157, 84, 1) 30%,
+    rgba(40, 200, 90, 1) 100%,
+    rgba(44, 188, 100, 1) 20%
+  );
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}

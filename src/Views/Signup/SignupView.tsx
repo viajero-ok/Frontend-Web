@@ -1,9 +1,23 @@
-import { IonCol, IonGrid, IonImg, IonRow } from "@ionic/react";
+import { IonCol, IonGrid, IonRow } from "@ionic/react";
+import { useState } from "react";
+import MapView from "../../components/MapView/MapView";
+import { FormProvider } from "../../hooks/UseForm/FormProvider";
 import SignupForm from "./SignupForm";
 import VerifyForm from "./VerifyForm";
-import MapView from "../../components/MapView/MapView";
 
+type TSignupView = {
+  params: { [key: string]: string };
+};
 export default function SignupView(props: any) {
+  const { search } = window.location;
+  const id = new URLSearchParams(search).get("id");
+  const [idUsuario, setIdUsuario] = useState<string>(id ?? "");
+  const schema = {
+    email: "",
+    password: "",
+    passwordRepeated: "",
+  };
+
   return (
     <IonGrid fixed>
       <IonRow>
@@ -23,19 +37,6 @@ export default function SignupView(props: any) {
                 "linear-gradient(135deg, rgba(0, 119, 204, 55%) 5%, rgba(31, 160, 255, 20%) 70%, rgba(250, 255, 250, 45%) 100%)",
             }}
           >
-            {/* <h4
-              style={{
-                fontWeight: "bold",
-                color: "white",
-                position: "relative",
-                margin: 0,
-                textAlign: "left",
-                marginLeft: "34pt",
-                marginTop: "21pt",
-              }}
-            >
-              VIAJERO
-            </h4> */}
             <img
               style={{
                 height: "31pt",
@@ -68,8 +69,13 @@ export default function SignupView(props: any) {
           </div>
         </IonCol>
         <IonCol size="4" style={{ alignContent: "center" }}>
-          {true && <SignupForm />}
-          {false && <VerifyForm />}
+          {idUsuario?.length == 0 ? (
+            <FormProvider schema={schema}>
+              <SignupForm setIdUsuario={setIdUsuario} />
+            </FormProvider>
+          ) : (
+            <VerifyForm id={idUsuario} />
+          )}
         </IonCol>
       </IonRow>
     </IonGrid>

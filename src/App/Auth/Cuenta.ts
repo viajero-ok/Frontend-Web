@@ -23,3 +23,11 @@ type TBodyVerificarCuenta = {
 type TVerificarCuenta = (body: TBodyVerificarCuenta) => Promise<any>;
 export const verificarCuenta: any = async (body: TBodyVerificarCuenta) =>
   await API.post(`/auth/verificar/cuenta`, body);
+
+type TBodyIniciarSesion = {
+  mail: string;
+  contraseña: string;
+};
+type TIniciarSesion = (body: TBodyIniciarSesion) => Promise<any>;
+export const iniciarSesion = async (body: TBodyIniciarSesion) =>
+  await API.post(`auth/login`, body);

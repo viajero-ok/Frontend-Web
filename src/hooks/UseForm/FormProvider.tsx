@@ -17,7 +17,6 @@ export const FormProvider: React.FC<{
   schema: ISchema;
 }> = (props: { children: ReactNode; schema: ISchema }) => {
   const context = useProvideForm({ schema: props.schema });
-  console.log("schema form provider: ", props.schema);
 
   return (
     <FormContext.Provider value={context}>

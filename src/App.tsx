@@ -33,8 +33,12 @@ import "@ionic/react/css/palettes/dark.system.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import SignUp from "./pages/SignUp";
 import MapView from "./components/MapView/MapView";
+import SignupComplete from "./pages/SignUp/Complete/SignupComplete";
+import SignUp from "./pages/SignUp/SignUp";
+import SignupPrestador from "./pages/SignUp/Complete/Prestador/SignupPrestador";
+import SignupTurista from "./pages/SignUp/Complete/Turista/SignupTurista";
+import LogIn from "./pages/LogIn/LogIn";
 
 setupIonicReact();
 
@@ -48,7 +52,19 @@ const App: React.FC = () => (
         <Route exact path="/">
           <Redirect to="/home" />
         </Route>
+        <Route exact path="/login" component={LogIn} />
         <Route exact path="/signup" component={SignUp} />
+        <Route exact path="/signup/complete" component={SignupComplete} />
+        <Route
+          exact
+          path="/signup/complete/prestador"
+          component={SignupPrestador}
+        />
+        <Route
+          exact
+          path="/signup/complete/turista"
+          component={SignupTurista}
+        />
         <Route exact path="/map">
           {/* <MapView /> */}
         </Route>

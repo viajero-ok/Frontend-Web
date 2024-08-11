@@ -1,14 +1,14 @@
-import { IonButton, IonInput, IonItem, IonList, IonText } from "@ionic/react";
-import { FormProvider, useForm } from "../../hooks/UseForm/FormProvider";
-import { SetStateAction, useEffect, useState } from "react";
+import { IonButton, IonList, IonText, IonToast } from "@ionic/react";
+import { useEffect, useState } from "react";
 import Field from "../../components/Field/Field";
+import { useForm } from "../../hooks/UseForm/FormProvider";
 import { Validator as v } from "../../hooks/UseForm/Validator/Validator";
-import { registrarCuenta } from "../../App/Auth/Cuenta";
+import { iniciarSesion } from "../../App/Auth/Cuenta";
+import { alertCircleOutline } from "ionicons/icons";
 
-type TProps = {
-  setIdUsuario: React.Dispatch<React.SetStateAction<string>>;
-};
-export default function SignupForm(props: TProps) {
+export default function LoginForm() {
+  const [openToast, setOpenToast] = useState<boolean>(false);
+  const [ToastMessage, setToastMessage] = useState<string>("");
   const form = useForm();
 
   useEffect(() => {
@@ -17,15 +17,18 @@ export default function SignupForm(props: TProps) {
 
   const handleCrearCuenta = () => {
     if (!form) return;
-    // [!] Acá se debe llamar a la validación de los campos
-    registrarCuenta({
+    // Acá se tiene ejecutar la validación del schema
+    iniciarSesion({
       mail: form.schema.email,
       contraseña: form.schema.password,
     })
       .then((response: any) => {
-        props.setIdUsuario(response.data.id_usuario);
+        console.log("response login: ", response.data);
       })
-      .catch((error) => {});
+      .catch((error: any) => {
+        setToastMessage(error.response.data.message);
+        setOpenToast(true);
+      });
   };
 
   return (
@@ -37,7 +40,7 @@ export default function SignupForm(props: TProps) {
           justifyContent: "center",
         }}
       >
-        <h1>Crear Cuenta</h1>
+        <h1>¡Hola, Viajero!</h1>
       </IonText>
       <IonList
         style={{
@@ -49,7 +52,7 @@ export default function SignupForm(props: TProps) {
           marginRight: "34pt",
           paddingRight: "12pt",
         }}
-      > 
+      >
         <Field
           name="email"
           label="Correo Electrónico"
@@ -69,15 +72,6 @@ export default function SignupForm(props: TProps) {
           form={form}
           valid={v().required("El campo es obligatorio")}
         ></Field>
-        <Field
-          password
-          name="passwordRepeated"
-          label="Repetir Contraseña"
-          required
-          value={form?.schema?.passwordRepeated}
-          form={form}
-          valid={v().required("Ingrese una contraseña válida")}
-        ></Field>
       </IonList>
       <IonButton
         expand="block"
@@ -92,7 +86,7 @@ export default function SignupForm(props: TProps) {
         }}
         onClick={() => handleCrearCuenta()}
       >
-        CREAR CUENTA
+        Ingresar
       </IonButton>
       <div
         style={{
@@ -101,10 +95,20 @@ export default function SignupForm(props: TProps) {
           justifyContent: "center",
         }}
       >
-        Ya posee una cuenta?
+        ¿No tenés cuenta?
         <IonButton fill="clear" size="small">
-          Iniciar sesión
+          Registrarse
         </IonButton>
+        <IonToast
+          isOpen={openToast}
+          message={ToastMessage}
+          duration={5000}
+          icon={alertCircleOutline}
+          onDidDismiss={() => {
+            setOpenToast(false);
+            setToastMessage("");
+          }}
+        ></IonToast>
       </div>
     </>
   );

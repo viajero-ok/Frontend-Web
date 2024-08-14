@@ -79,7 +79,7 @@ jobs:
           sshpass -p ${{ secrets.SSH_PASS }} ssh -o StrictHostKeyChecking=no -v ${{ secrets.VPS_USER_Y_HOST }} "
             cd apps/${{ env.RAMA }} &&
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker compose -f frontend.compose.yaml pull &&
+            docker compose --env-file .env.frontend -f frontend.compose.yaml pull &&
             docker compose --env-file .env.frontend -f frontend.compose.yaml up -d
           "
 

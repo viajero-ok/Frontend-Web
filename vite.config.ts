@@ -10,6 +10,9 @@ export default defineConfig({
     react(),
     legacy()
   ],
+  server: {
+    port: parseInt(process.env.VITE_PORT),
+  },
   test: {
     globals: true,
     environment: 'jsdom',

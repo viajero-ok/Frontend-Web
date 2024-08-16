@@ -3,7 +3,7 @@ import { readJWT, storeJWT } from "./Token";
 
 const apiPath = import.meta.env.VITE_API_PATH;
 
-const API = axios.create({
+const AUTH_API = axios.create({
   baseURL: apiPath,
   headers: {
     "Content-Type": "application/json",
@@ -11,7 +11,7 @@ const API = axios.create({
   },
 });
 
-API.interceptors.request.use(
+AUTH_API.interceptors.request.use(
   (config) => {
     const token = readJWT();
     if (!token || !config.headers) return config;
@@ -23,7 +23,7 @@ API.interceptors.request.use(
   }
 );
 
-API.interceptors.response.use(
+AUTH_API.interceptors.response.use(
   (response) => {
     // Respuesta con status == 2xx
     if (response.data.token) storeJWT(response.data.token);
@@ -38,4 +38,4 @@ API.interceptors.response.use(
   }
 );
 
-export default API;
+export default AUTH_API;

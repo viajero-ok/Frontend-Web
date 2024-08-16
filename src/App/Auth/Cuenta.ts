@@ -1,3 +1,4 @@
+import AUTH_API from "../AuthBackendApi";
 import API from "../BackendApi";
 
 type TBodyRegistrarCuenta = {
@@ -23,3 +24,14 @@ type TBodyVerificarCuenta = {
 type TVerificarCuenta = (body: TBodyVerificarCuenta) => Promise<any>;
 export const verificarCuenta: any = async (body: TBodyVerificarCuenta) =>
   await API.post(`/auth/verificar/cuenta`, body);
+
+type TBodyIniciarSesion = {
+  mail: string;
+  contraseña: string;
+};
+type TIniciarSesion = (body: TBodyIniciarSesion) => Promise<any>;
+export const iniciarSesion = async (body: TBodyIniciarSesion) =>
+  await API.post(`auth/login`, body);
+
+export const getDatosUsuario = async () =>
+  await AUTH_API.get(`/auth/datos-usuario`);

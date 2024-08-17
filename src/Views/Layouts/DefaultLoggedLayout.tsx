@@ -1,34 +1,13 @@
 import {
-  IonAvatar,
-  IonButton,
-  IonChip,
   IonContent,
   IonHeader,
-  IonLabel,
   IonPage,
-  IonPopover,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
+import ProfileChip from "../../components/ProfileChip/ProfileChip";
 
-import "./Home.css";
-import { getApi } from "../App/Default/DefaultService";
-import { useAuth } from "../hooks/UseAuth/AuthProvider";
-import { transform } from "ol/proj";
-import ProfileChip from "../components/ProfileChip/ProfileChip";
-
-const Home: React.FC = () => {
-  console.log("HOME");
-  getApi()
-    .then((response) => {
-      console.log("Response: ", response);
-    })
-    .catch((error) => {
-      console.log("Error: ", error);
-    });
-
-  const auth = useAuth();
-
+export default function DefaultLoggedLayout({ children }: any) {
   return (
     <IonPage>
       <IonHeader>
@@ -65,7 +44,7 @@ const Home: React.FC = () => {
               marginRight: "31pt",
             }}
           >
-              <ProfileChip />
+            <ProfileChip />
           </div>
         </IonToolbar>
       </IonHeader>
@@ -75,10 +54,8 @@ const Home: React.FC = () => {
             <IonTitle size="large">Blank</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent></IonContent>
+        <IonContent>{children}</IonContent>
       </IonContent>
     </IonPage>
   );
-};
-
-export default Home;
+}

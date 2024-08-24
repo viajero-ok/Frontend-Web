@@ -1,4 +1,10 @@
-import { IonButton, IonCardSubtitle, IonTitle } from "@ionic/react";
+import {
+  IonButton,
+  IonCardSubtitle,
+  IonContent,
+  IonRow,
+  IonTitle,
+} from "@ionic/react";
 import DefaultLoggedLayout from "../../Layouts/DefaultLoggedLayout";
 import { FormProvider } from "../../../hooks/UseForm/FormProvider";
 import NewPlaceForm from "./NewPlaceForm";
@@ -19,11 +25,9 @@ export default function NewPlaceView() {
   };
   return (
     <DefaultLoggedLayout>
-      <IonTitle>Completá los datos de tu establecimiento</IonTitle>
-      <IonTitle>Datos generales</IonTitle>
-      <FormProvider schema={schema}>
-        <NewPlaceForm />
-      </FormProvider>
+        <FormProvider schema={schema}>
+          <NewPlaceForm />
+        </FormProvider>
     </DefaultLoggedLayout>
   );
 }

@@ -5,6 +5,7 @@ import {
   IonList,
   IonText,
   IonToast,
+  useIonRouter,
 } from "@ionic/react";
 import { useMaskito } from "@maskito/react";
 import { useState } from "react";
@@ -16,6 +17,8 @@ export default function VerifyForm(props: any) {
   const [openToast, setOpenToast] = useState<boolean>(false);
   const [ToastMessage, setToastMessage] = useState<string>("");
 
+  const router = useIonRouter();
+
   const codeMask = useMaskito({
     options: {
       mask: [...Array(8).fill(/\d/)],
@@ -26,7 +29,7 @@ export default function VerifyForm(props: any) {
     if (code.length != 8) return;
     verificarCuenta({ id_usuario: props.id, codigo_verificacion: code })
       .then((response: any) => {
-        window.location.replace("/");
+        router.push("/login")
       })
       .catch((error: any) => {
         setToastMessage(error.response.data.message);
@@ -77,7 +80,7 @@ export default function VerifyForm(props: any) {
               letterSpacing: "21pt",
               fontSize: "21pt",
               textAlign: "left",
-              left: "60%",
+              left: "70%",
               transform: "translateX(-50%)",
             }}
           ></IonInput>

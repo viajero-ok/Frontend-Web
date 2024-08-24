@@ -7,13 +7,25 @@ import {
   IonLabel,
   IonList,
   IonPopover,
+  useIonRouter,
 } from "@ionic/react";
 import { useAuth } from "../../hooks/UseAuth/AuthProvider";
 import { useState } from "react";
+import { clearJWT } from "../../App/Token";
 
 export default function ProfileChip(props: any) {
   const [open, setOpen] = useState<boolean>(false);
   const auth = useAuth();
+  const router = useIonRouter();
+
+  const handleCerrarSesion = () => {
+    {
+      if (!router) return;
+      clearJWT();
+      router.push("/");
+    }
+  };
+
   return (
     <>
       <IonChip id="chip" onClick={() => setOpen(true)}>
@@ -33,9 +45,15 @@ export default function ProfileChip(props: any) {
       >
         <IonContent class="ion-padding">
           <IonList lines="none">
-            <IonItem button>Cambiar perfil</IonItem>
-            <IonItem button>Ajustes de cuenta</IonItem>
-            <IonItem button>Cerrar sesión</IonItem>
+            <IonItem button disabled>
+              Cambiar perfil
+            </IonItem>
+            <IonItem button disabled>
+              Ajustes de cuenta
+            </IonItem>
+            <IonItem button onClick={() => handleCerrarSesion()}>
+              Cerrar sesión
+            </IonItem>
           </IonList>
         </IonContent>
       </IonPopover>

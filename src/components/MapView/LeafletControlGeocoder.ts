@@ -21,7 +21,7 @@ export default function LeafletControlGeocoder(props: TLeafletControlGeocoder) {
     if (!map) return;
 
     const control =
-      props.marker == false
+      props.marker != true
         ? new Geocoder({
             geocoder: new geocoders.Nominatim(),
             position: "topleft",

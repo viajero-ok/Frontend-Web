@@ -5,3 +5,7 @@ export const readJWT = (): string | false =>
 export const storeJWT = (jwt: string) => {
   window.localStorage.setItem(tokenStorageName, jwt);
 };
+
+export const clearJWT = () => {
+  window.localStorage.removeItem(tokenStorageName);
+};

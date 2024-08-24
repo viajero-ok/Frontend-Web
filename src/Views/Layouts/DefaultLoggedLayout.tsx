@@ -4,10 +4,16 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  useIonRouter,
 } from "@ionic/react";
 import ProfileChip from "../../components/ProfileChip/ProfileChip";
+import { useAuth } from "../../hooks/UseAuth/AuthProvider";
+import { useEffect } from "react";
+import LoginNavbar from "../../components/LoginNavbar/LoginNavbar";
 
 export default function DefaultLoggedLayout({ children }: any) {
+  const auth = useAuth();
+
   return (
     <IonPage>
       <IonHeader>
@@ -44,7 +50,8 @@ export default function DefaultLoggedLayout({ children }: any) {
               marginRight: "31pt",
             }}
           >
-            <ProfileChip />
+            {auth && auth.usuario != null && <ProfileChip />}
+            {auth && auth.usuario && <LoginNavbar />}
           </div>
         </IonToolbar>
       </IonHeader>

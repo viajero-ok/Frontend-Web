@@ -15,6 +15,6 @@ export const AuthProvider: React.FC<{
   );
 };
 
-export const useForm = () => {
+export const useAuth = () => {
   return useContext(AuthContext);
 };

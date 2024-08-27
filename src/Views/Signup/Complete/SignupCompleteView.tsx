@@ -7,10 +7,12 @@ import {
   IonList,
   IonRow,
   IonText,
+  useIonRouter,
 } from "@ionic/react";
 import { transform } from "ol/proj";
 
 export default function SignupCompleteView() {
+  const router = useIonRouter();
   return (
     <IonContent>
       <IonGrid
@@ -36,12 +38,26 @@ export default function SignupCompleteView() {
             <h3>Elegí como querés registrarte</h3>
           </IonCol>
         </IonRow>
-        <IonRow style={{ marginTop: "56pt"}}>
+        <IonRow style={{ marginTop: "56pt" }}>
           <IonCol>
-            <IonButton>Soy prestador</IonButton>
+            <IonButton
+              onClick={() => {
+                if (!router) return;
+                router.push("/signup/complete/prestador");
+              }}
+            >
+              Soy prestador
+            </IonButton>
           </IonCol>
           <IonCol>
-            <IonButton>Soy turista</IonButton>
+            <IonButton
+              onClick={() => {
+                if (!router) return;
+                router.push("/signup/complete/turista");
+              }}
+            >
+              Soy turista
+            </IonButton>
           </IonCol>
         </IonRow>
       </IonGrid>

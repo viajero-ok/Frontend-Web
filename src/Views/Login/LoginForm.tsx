@@ -1,4 +1,10 @@
-import { IonButton, IonList, IonText, IonToast } from "@ionic/react";
+import {
+  IonButton,
+  IonList,
+  IonText,
+  IonToast,
+  useIonRouter,
+} from "@ionic/react";
 import { useEffect, useState } from "react";
 import Field from "../../components/Field/Field";
 import { useForm } from "../../hooks/UseForm/FormProvider";
@@ -11,19 +17,22 @@ export default function LoginForm() {
   const [ToastMessage, setToastMessage] = useState<string>("");
   const form = useForm();
 
+  const router = useIonRouter();
+
   useEffect(() => {
     if (!form) return;
   }, [form]);
 
   const handleCrearCuenta = () => {
     if (!form) return;
+    if (!router) return;
     // Acá se tiene ejecutar la validación del schema
     iniciarSesion({
       mail: form.schema.email,
       contraseña: form.schema.password,
     })
       .then((response: any) => {
-        console.log("response login: ", response.data);
+        router.push("/");
       })
       .catch((error: any) => {
         setToastMessage(error.response.data.message);
@@ -96,7 +105,14 @@ export default function LoginForm() {
         }}
       >
         ¿No tenés cuenta?
-        <IonButton fill="clear" size="small">
+        <IonButton
+          fill="clear"
+          size="small"
+          onClick={() => {
+            if (!router) return;
+            router.push("/signup");
+          }}
+        >
           Registrarse
         </IonButton>
         <IonToast

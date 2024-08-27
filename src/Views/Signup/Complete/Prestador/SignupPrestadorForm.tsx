@@ -1,7 +1,4 @@
-import {
-  IonButton,
-  IonList
-} from "@ionic/react";
+import { IonButton, IonList, useIonRouter } from "@ionic/react";
 import { useMaskito } from "@maskito/react";
 import { useEffect, useState } from "react";
 import { registrarPrestador } from "../../../../App/Auth/Prestador";
@@ -21,6 +18,7 @@ export default function SignupPrestadorForm(props: any) {
   const [departamentos, setDepartamentos] = useState<any[]>();
   const [localidades, setLocalidades] = useState<any[]>();
   const form = useForm();
+  const router = useIonRouter();
 
   useEffect(() => {
     getDatosDeRegistro().then((response: any) => {
@@ -74,6 +72,7 @@ export default function SignupPrestadorForm(props: any) {
 
   const handleRegistrarme = () => {
     if (!form) return;
+    if (!router) return;
     registrarPrestador({
       nombre: form.schema.nombre,
       apellido: form.schema.apellido,
@@ -87,6 +86,8 @@ export default function SignupPrestadorForm(props: any) {
       razon_social: form.schema.razonSocial,
       sitio_web: form.schema.sitioWeb,
       fecha_nacimiento: form.schema.fechaDeNacimiento,
+    }).then((response: any) => {
+      router.push("/login");
     });
   };
 

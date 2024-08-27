@@ -38,6 +38,8 @@ import SignupTurista from "./pages/SignUp/Complete/Turista/SignupTurista";
 import SignUp from "./pages/SignUp/SignUp";
 import "./theme/variables.css";
 import { AuthProvider } from "./hooks/UseAuth/AuthProvider";
+import MyPlaces from "./pages/MyPlaces/MyPlaces";
+import NewPlace from "./pages/MyPlaces/NewPlace/NewPlace";
 
 setupIonicReact();
 
@@ -52,6 +54,8 @@ const App: React.FC = () => (
           <Route exact path="/">
             <Redirect to="/home" />
           </Route>
+          <Route exact path="/my-places" component={MyPlaces} />
+          <Route exact path="/my-places/new-place" component={NewPlace} />
           <Route exact path="/login" component={LogIn} />
           <Route exact path="/signup" component={SignUp} />
           <Route exact path="/signup/complete" component={SignupComplete} />

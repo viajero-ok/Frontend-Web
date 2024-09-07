@@ -19,3 +19,6 @@ type TRegistrarEstablecimiento = (body: TBodyRegistrarEstablecimiento) => any;
 export const registrarEstablecimiento: TRegistrarEstablecimiento = async (
   body: TBodyRegistrarEstablecimiento
 ) => await AUTH_API.post(`/establecimientos/registrar-establecimiento`, body);
+
+export const obtenerEstablecimientos = async () =>
+  await AUTH_API.get(`/establecimientos/obtener-establecimientos`);

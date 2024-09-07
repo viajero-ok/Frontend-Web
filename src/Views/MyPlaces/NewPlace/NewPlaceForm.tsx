@@ -8,7 +8,7 @@ import {
   IonTitle,
 } from "@ionic/react";
 import { useEffect, useState } from "react";
-import { registrarEstablecimiento } from "../../../App/Alojamientos/Alojamientos";
+import { registrarEstablecimiento } from "../../../App/Establecimientos/Establecimientos";
 import Field from "../../../components/Field/Field";
 import { useForm } from "../../../hooks/UseForm/FormProvider";
 import NewPlaceMap from "./NewPlaceMap";
@@ -88,7 +88,7 @@ export default function NewPlaceForm() {
       mail: schema.mail,
       calle: schema.calle,
       sin_numero: false,
-      numero: parseInt(schema.numero),
+      numero: schema.numero,
       id_localidad: parseInt(schema.localidad),
       id_departamento: parseInt(schema.departamento),
       id_provincia: 6,

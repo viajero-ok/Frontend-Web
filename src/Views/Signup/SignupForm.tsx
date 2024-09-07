@@ -1,4 +1,12 @@
-import { IonButton, IonInput, IonItem, IonList, IonText } from "@ionic/react";
+import {
+  IonButton,
+  IonImg,
+  IonInput,
+  IonItem,
+  IonList,
+  IonText,
+  IonTitle,
+} from "@ionic/react";
 import { FormProvider, useForm } from "../../hooks/UseForm/FormProvider";
 import { SetStateAction, useEffect, useState } from "react";
 import Field from "../../components/Field/Field";
@@ -29,8 +37,32 @@ export default function SignupForm(props: TProps) {
   };
 
   return (
-    <>
-      <IonText
+    <div style={{ top: "21pt", position: "absolute" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignContent: "center",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+        }}
+      >
+        <IonImg src="icon.png" style={{ width: "100pt" }} />
+        <IonTitle
+          style={{
+            fontSize: "24pt",
+            fontWeight: "bolder",
+            color: "#F08408",
+            marginTop: "13pt",
+            marginBottom: "13pt",
+          }}
+        >
+          ¡Hola, Viajero!
+          <br /> Creá tu cuenta
+        </IonTitle>
+      </div>
+      {/* <IonText
         style={{
           display: "flex",
           flexDirection: "row",
@@ -38,7 +70,7 @@ export default function SignupForm(props: TProps) {
         }}
       >
         <h1>Crear Cuenta</h1>
-      </IonText>
+      </IonText> */}
       <IonList
         style={{
           display: "flex",
@@ -49,7 +81,7 @@ export default function SignupForm(props: TProps) {
           marginRight: "34pt",
           paddingRight: "12pt",
         }}
-      > 
+      >
         <Field
           name="email"
           label="Correo Electrónico"
@@ -106,6 +138,6 @@ export default function SignupForm(props: TProps) {
           Iniciar sesión
         </IonButton>
       </div>
-    </>
+    </div>
   );
 }

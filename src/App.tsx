@@ -69,9 +69,7 @@ const App: React.FC = () => (
             path="/signup/complete/turista"
             component={SignupTurista}
           />
-          <Route exact path="/map">
-            {/* <MapView /> */}
-          </Route>
+          <Route exact path="/map"></Route>
         </IonRouterOutlet>
       </IonReactRouter>
     </AuthProvider>

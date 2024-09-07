@@ -8,11 +8,17 @@ import {
 } from "@ionic/react";
 import ProfileChip from "../../components/ProfileChip/ProfileChip";
 import { useAuth } from "../../hooks/UseAuth/AuthProvider";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import LoginNavbar from "../../components/LoginNavbar/LoginNavbar";
 
 export default function DefaultLoggedLayout({ children }: any) {
+  const [logged, setLogged] = useState<boolean>();
   const auth = useAuth();
+
+  useEffect(() => {
+    console.log("auth:", auth);
+    if (auth) setLogged(auth.isLogged);
+  }, [auth]);
 
   return (
     <IonPage>
@@ -50,8 +56,8 @@ export default function DefaultLoggedLayout({ children }: any) {
               marginRight: "31pt",
             }}
           >
-            {auth && auth.usuario != null && <ProfileChip />}
-            {auth && auth.usuario && <LoginNavbar />}
+            {auth && logged && <ProfileChip />}
+            {auth && logged == false && <LoginNavbar />}
           </div>
         </IonToolbar>
       </IonHeader>

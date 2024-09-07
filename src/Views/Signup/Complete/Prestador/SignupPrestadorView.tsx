@@ -8,9 +8,8 @@ import {
 } from "@ionic/react";
 import { FormProvider, useForm } from "../../../../hooks/UseForm/FormProvider";
 import SignupPrestadorForm from "./SignupPrestadorForm";
-import SignupTuristaForm from "../Turista/SignupTuristaForm";
 
-export default function SignupTuristaView() {
+export default function SignupPrestadorView() {
   const schema = {
     nombre: "",
     apellido: "",
@@ -30,16 +29,14 @@ export default function SignupTuristaView() {
       <IonGrid>
         <IonRow>
           <IonCol>
-            <h1 style={{ fontWeight: "bold" }}>Registrar Turista</h1>
+            <h1 style={{ fontWeight: "bold" }}>Registrar Prestador</h1>
           </IonCol>
         </IonRow>
         <IonRow>
           <IonCol>
-            <IonList>
-              <FormProvider schema={schema}>
-                <SignupTuristaForm />
-              </FormProvider>
-            </IonList>
+            <FormProvider schema={schema}>
+              <SignupPrestadorForm />
+            </FormProvider>
           </IonCol>
         </IonRow>
       </IonGrid>

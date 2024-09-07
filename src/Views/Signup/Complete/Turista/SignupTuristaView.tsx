@@ -1,10 +1,4 @@
-import {
-    IonCol,
-    IonContent,
-    IonGrid,
-    IonList,
-    IonRow
-} from "@ionic/react";
+import { IonCol, IonContent, IonGrid, IonList, IonRow } from "@ionic/react";
 import { FormProvider } from "../../../../hooks/UseForm/FormProvider";
 import SignupTuristaForm from "./SignupTuristaForm";
 
@@ -32,11 +26,9 @@ export default function SignupTuristaView() {
         </IonRow>
         <IonRow>
           <IonCol>
-            <IonList>
-              <FormProvider schema={schema}>
-                <SignupTuristaForm />
-              </FormProvider>
-            </IonList>
+            <FormProvider schema={schema}>
+              <SignupTuristaForm />
+            </FormProvider>
           </IonCol>
         </IonRow>
       </IonGrid>

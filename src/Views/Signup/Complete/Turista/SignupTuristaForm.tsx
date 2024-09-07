@@ -104,7 +104,14 @@ export default function SignupTuristaForm(props: any) {
 
   return (
     form && (
-      <IonList>
+      <IonList
+        style={{
+          width: "50%",
+          marginLeft: "50%",
+          transform: "translateX(-50%)",
+          marginTop: "13pt",
+        }}
+      >
         <Field
           name="nombre"
           label="Nombre"

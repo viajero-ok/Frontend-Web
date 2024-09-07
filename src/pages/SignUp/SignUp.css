@@ -18,13 +18,6 @@ ion-col {
 }
 .banner {
   flex-grow: 1;
-  background: rgb(38, 157, 84);
-  background: linear-gradient(
-    90deg,
-    rgba(38, 157, 84, 1) 30%,
-    rgba(40, 200, 90, 1) 100%,
-    rgba(44, 188, 100, 1) 20%
-  );
   padding: 0;
   display: flex;
   flex-direction: column;

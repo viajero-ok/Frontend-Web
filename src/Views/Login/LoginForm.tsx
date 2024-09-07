@@ -1,37 +1,41 @@
 import {
   IonButton,
   IonList,
-  IonText,
+  IonTitle,
   IonToast,
   useIonRouter,
 } from "@ionic/react";
+import { alertCircleOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
+import { iniciarSesion } from "../../App/Auth/Cuenta";
 import Field from "../../components/Field/Field";
 import { useForm } from "../../hooks/UseForm/FormProvider";
 import { Validator as v } from "../../hooks/UseForm/Validator/Validator";
-import { iniciarSesion } from "../../App/Auth/Cuenta";
-import { alertCircleOutline } from "ionicons/icons";
+import { useAuth } from "../../hooks/UseAuth/AuthProvider";
 
 export default function LoginForm() {
   const [openToast, setOpenToast] = useState<boolean>(false);
   const [ToastMessage, setToastMessage] = useState<string>("");
-  const form = useForm();
 
+  const form = useForm();
   const router = useIonRouter();
+  const auth = useAuth();
 
   useEffect(() => {
     if (!form) return;
   }, [form]);
 
-  const handleCrearCuenta = () => {
+  const handleIniciarSesion = () => {
     if (!form) return;
     if (!router) return;
+    if (!auth) return;
     // Acá se tiene ejecutar la validación del schema
     iniciarSesion({
       mail: form.schema.email,
       contraseña: form.schema.password,
     })
       .then((response: any) => {
+        auth.login();
         router.push("/");
       })
       .catch((error: any) => {
@@ -42,15 +46,15 @@ export default function LoginForm() {
 
   return (
     <>
-      <IonText
+      <IonTitle
         style={{
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
         }}
       >
-        <h1>¡Hola, Viajero!</h1>
-      </IonText>
+        Ingresar
+      </IonTitle>
       <IonList
         style={{
           display: "flex",
@@ -93,7 +97,8 @@ export default function LoginForm() {
           paddingLeft: "12pt",
           paddingRight: "12pt",
         }}
-        onClick={() => handleCrearCuenta()}
+        color="secondary"
+        onClick={() => handleIniciarSesion()}
       >
         Ingresar
       </IonButton>

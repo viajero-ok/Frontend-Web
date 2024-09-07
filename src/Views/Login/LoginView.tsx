@@ -1,4 +1,16 @@
-import { IonCol, IonGrid, IonRow } from "@ionic/react";
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonImg,
+  IonRow,
+  IonTitle,
+} from "@ionic/react";
 import MapView from "../../components/MapView/MapView";
 import { FormProvider } from "../../hooks/UseForm/FormProvider";
 import LoginForm from "./LoginForm";
@@ -10,61 +22,67 @@ export default function LoginView(props: any) {
   };
 
   return (
-    <IonGrid fixed>
-      <IonRow>
-        <IonCol size="8" class="banner">
-          <MapView
-            style={{ height: "100%", width: "100%", position: "absolute" }}
-            initPos={{ lat: -31.44219324616496, lgn: -64.19320461965971 }}
-          />
-          <div
+    <IonContent>
+      <IonImg
+        src="/images/sierras.png"
+        style={{ position: "fixed", width: "100%" }}
+      />
+      <IonCard
+        style={{
+          backgroundColor: "rgba(255, 255, 255, 1)",
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+          transform: "translateX(-50%) translateY(-50%)",
+          padding: "31pt",
+          width: "50%"
+        }}
+      >
+        <IonCardHeader
+          style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <IonImg src="/icon.png" style={{ width: "55pt" }} />
+          <IonTitle
             style={{
-              height: "100%",
-              width: "100%",
-              position: "absolute",
-              zIndex: "999999",
-              // background: "rgba(38, 157, 84, 10%)",
-              background:
-                "linear-gradient(135deg, rgba(0, 119, 204, 55%) 5%, rgba(31, 160, 255, 20%) 70%, rgba(250, 255, 250, 45%) 100%)",
+              color: "#F08408",
+              fontSize: "24pt",
+              fontWeigth: "bold",
+              borderBottom: "2pt solid #F08408",
+              padding: "9pt",
             }}
           >
-            <img
-              style={{
-                height: "31pt",
-                fontWeight: "bold",
-                position: "relative",
-                margin: 0,
-                float: "left",
-                marginLeft: "34pt",
-                marginTop: "21pt",
-              }}
-              src="public\viajero_naranja.png.png"
-            ></img>
-            <br />
-            <br />
-            <h1
-              style={{
-                fontWeight: "bold",
-                color: "white",
-                margin: 0,
-                textAlign: "left",
-                marginLeft: "34pt",
-                marginTop: "34pt",
-                width: "233pt",
-                display: "flex",
-                flexShrink: 1,
-              }}
-            >
-              Organizá tu viaje de principio a fin en una única plataforma.
-            </h1>
-          </div>
-        </IonCol>
-        <IonCol size="4" style={{ alignContent: "center" }}>
+            ¡Hola, viajero!
+          </IonTitle>
+        </IonCardHeader>
+
+        <IonCardContent
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <FormProvider schema={schema}>
             <LoginForm />
           </FormProvider>
-        </IonCol>
-      </IonRow>
-    </IonGrid>
+        </IonCardContent>
+      </IonCard>
+      {/* <IonGrid fixed style={{ backgroundColor: "green" }}>
+        <IonRow>
+          <IonCol size="4" style={{ alignContent: "center" }}>
+            <FormProvider schema={schema}>
+              <LoginForm />
+            </FormProvider>
+          </IonCol>
+        </IonRow>
+      </IonGrid> */}
+    </IonContent>
   );
 }

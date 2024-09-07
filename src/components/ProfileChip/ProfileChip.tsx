@@ -21,9 +21,16 @@ export default function ProfileChip(props: any) {
   const handleCerrarSesion = () => {
     {
       if (!router) return;
+      if (!auth) return;
       clearJWT();
-      router.push("/");
+      auth.logout();
     }
+  };
+
+  const handleCambiarPerfil = () => {
+    if (!router) return;
+    if (!auth) return;
+    auth.cambiarPerfil();
   };
 
   return (
@@ -45,7 +52,7 @@ export default function ProfileChip(props: any) {
       >
         <IonContent class="ion-padding">
           <IonList lines="none">
-            <IonItem button disabled>
+            <IonItem button onClick={() => handleCambiarPerfil()}>
               Cambiar perfil
             </IonItem>
             <IonItem button disabled>

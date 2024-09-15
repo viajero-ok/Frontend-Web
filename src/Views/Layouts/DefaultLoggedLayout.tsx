@@ -1,9 +1,6 @@
 import {
-  IonButton,
-  IonButtons,
   IonContent,
   IonHeader,
-  IonIcon,
   IonItem,
   IonList,
   IonMenu,
@@ -14,11 +11,10 @@ import {
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
-import ProfileChip from "../../components/ProfileChip/ProfileChip";
-import { useAuth } from "../../hooks/UseAuth/AuthProvider";
 import { useEffect, useState } from "react";
 import LoginNavbar from "../../components/LoginNavbar/LoginNavbar";
-import { menu } from "ionicons/icons";
+import ProfileChip from "../../components/ProfileChip/ProfileChip";
+import { useAuth } from "../../hooks/UseAuth/AuthProvider";
 
 export default function DefaultLoggedLayout({ children }: any) {
   const [logged, setLogged] = useState<boolean>();
@@ -68,7 +64,7 @@ export default function DefaultLoggedLayout({ children }: any) {
               </IonItem>
             </IonMenuToggle>
             <IonMenuToggle>
-              <IonItem button disabled>
+              <IonItem button onClick={() => push("/my-offers")}>
                 Mis ofertas turísticas
               </IonItem>
             </IonMenuToggle>
@@ -88,8 +84,11 @@ export default function DefaultLoggedLayout({ children }: any) {
       <IonPage id="burger">
         <IonHeader>
           <IonToolbar>
-            <IonMenuToggle slot="start" style={{ display: "inline-block", marginLeft: "13pt"}}>
-              <IonMenuButton style={{ fontSize: "24pt"}}></IonMenuButton>
+            <IonMenuToggle
+              slot="start"
+              style={{ display: "inline-block", marginLeft: "13pt" }}
+            >
+              <IonMenuButton style={{ fontSize: "24pt" }}></IonMenuButton>
             </IonMenuToggle>
             <IonTitle
               style={{

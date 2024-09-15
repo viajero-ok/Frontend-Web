@@ -8,20 +8,20 @@ import {
   IonTitle,
   useIonRouter,
 } from "@ionic/react";
-import { useEffect, useState } from "react";
-import DefaultLoggedLayout from "../Layouts/DefaultLoggedLayout";
-import { obtenerEstablecimientos } from "../../App/Establecimientos/Establecimientos";
-import EstablecimientoCard from "../../components/EstablecimientoCard/EstablecimientoCard";
 import { addCircle } from "ionicons/icons";
+import { useEffect, useState } from "react";
+import { obtenerOfertasPorPrestador } from "../../App/Ofertas/Ofertas";
+import EstablecimientoCard from "../../components/EstablecimientoCard/EstablecimientoCard";
+import DefaultLoggedLayout from "../Layouts/DefaultLoggedLayout";
 
-export default function MyPlacesView() {
-  const [establecimientos, setEstablecimientos] = useState([]);
+export default function MyOffersView() {
+  const [ofertas, setOfertas] = useState([]);
   const router = useIonRouter();
 
   useEffect(() => {
-    obtenerEstablecimientos()
+    obtenerOfertasPorPrestador()
       .then((response: any) => {
-        setEstablecimientos(response.data.establecimientos);
+        setOfertas(response.data.establecimientos);
       })
       .catch(() => {});
   }, []);
@@ -43,7 +43,7 @@ export default function MyPlacesView() {
             <IonCol>
               <IonRow>
                 <IonTitle style={{ fontSize: "20pt", fontWeight: "bolder" }}>
-                  Mis establecimientos
+                  Mis Ofertas
                 </IonTitle>
               </IonRow>
               <IonRow
@@ -58,11 +58,11 @@ export default function MyPlacesView() {
                   style={{ marginTop: "13pt", "--background": "#F08408" }}
                   onClick={() => {
                     if (!router) return;
-                    router.push("/my-places/new-place");
+                    router.push("/my-offers/new-offer");
                   }}
                 >
                   <IonIcon icon={addCircle} />
-                  &nbsp;NUEVO ESTABLECIMIENTO
+                  &nbsp;NUEVA OFERTA
                 </IonButton>
               </IonRow>
             </IonCol>
@@ -89,11 +89,11 @@ export default function MyPlacesView() {
                 justifyContent: "center",
               }}
             >
-              {establecimientos.map((establecimiento: any) => (
+              {ofertas.map((oferta: any) => (
                 <IonRow style={{ width: "100%" }}>
-                  <EstablecimientoCard
-                    nombre={establecimiento.nombre}
-                    descripcion={establecimiento.descripcion}
+                  <EstablecimientoCard // [!] Cambiar por una OfertaCard
+                    nombre={oferta.nombre}
+                    descripcion={oferta.descripcion}
                   />
                 </IonRow>
               ))}

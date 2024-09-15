@@ -1,8 +1,8 @@
 import { FormProvider } from "../../../hooks/UseForm/FormProvider";
 import DefaultLoggedLayout from "../../Layouts/DefaultLoggedLayout";
-import NewPlaceForm from "./NewPlaceForm";
+import OfferSelection from "./OfferSelection";
 
-export default function NewPlaceView() {
+export default function NewOfferView() {
   const schema = {
     nombreDelEstablecimiento: "",
     numeroDeHabilitacionMunicipal: "",
@@ -17,9 +17,9 @@ export default function NewPlaceView() {
   };
   return (
     <DefaultLoggedLayout>
-        <FormProvider schema={schema}>
-          <NewPlaceForm />
-        </FormProvider>
+      <FormProvider schema={schema}>
+        <OfferSelection />
+      </FormProvider>
     </DefaultLoggedLayout>
   );
 }

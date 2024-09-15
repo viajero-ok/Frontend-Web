@@ -1,15 +1,12 @@
 import {
-  IonContent,
   IonInput,
   IonItem,
-  IonLabel,
-  IonList,
   IonSelect,
   IonSelectOption,
+  IonTextarea
 } from "@ionic/react";
 import { useState } from "react";
 import DateWheel from "../DateWheel/DateWheel";
-import { Maskito } from "@maskito/core";
 
 interface IField {
   value?: string;
@@ -19,11 +16,14 @@ interface IField {
   valid?: any;
   password?: boolean;
   required?: boolean;
+  textarea?: boolean;
   select?: boolean;
   options?: { id: number; text: string }[];
   date?: boolean;
   mask?: any;
   disabled?: boolean;
+  maxLength?: number;
+  rows?: number;
 }
 export default function Field(props: IField) {
   const [error, setError] = useState<string>("");
@@ -39,7 +39,7 @@ export default function Field(props: IField) {
   return (
     <>
       <IonItem lines={error.length > 0 ? "none" : "inset"}>
-        {!props.select && !props.date && (
+        {!props.select && !props.date && !props.textarea && (
           <IonInput
             disabled={props.disabled ?? false}
             type={props.password ? "password" : "text"}
@@ -75,6 +75,7 @@ export default function Field(props: IField) {
             onChange={handleOnChange}
           />
         )}
+        {props.textarea && <IonTextarea maxlength={props.maxLength} rows={props.rows ?? 1} placeholder={props.label} />}
       </IonItem>
       {error.length > 0 && (
         <IonItem

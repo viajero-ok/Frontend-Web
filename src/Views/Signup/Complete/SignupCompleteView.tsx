@@ -20,11 +20,29 @@ export default function SignupCompleteView() {
     <IonContent>
       <IonGrid
         style={{
-          position: "fixed",
+          position: "absolute",
           top: "50%",
-          transform: "translateY(-50%)",
+          left: "25%",
+          transform: "translateY(-50%) transformX(-50%)",
+          border: "1pt solid red"
         }}
       >
+        <IonRow>
+          <IonCol>
+            <h1
+              style={{
+                borderBottom: "1pt solid black",
+                paddingBottom: "13pt",
+                display: "inline-block",
+                fontWeight: "bold",
+              }}
+            >
+              Completá tu registro
+            </h1>
+            <br />
+            <h3>Elegí como querés registrarte</h3>
+          </IonCol>
+        </IonRow>
         <IonRow>
           <IonCol>
             <IonCard
@@ -52,24 +70,10 @@ export default function SignupCompleteView() {
                 Soy Prestador
               </IonTitle>
               <IonImg
-                src="images/registro/hostel.jpg"
+                src="/public/3.3. Registro de usuario/Prestador.png"
                 style={{ width: "250pt" }}
               />
             </IonCard>
-          </IonCol>
-          <IonCol>
-            <h1
-              style={{
-                borderBottom: "1pt solid black",
-                paddingBottom: "13pt",
-                display: "inline-block",
-                fontWeight: "bold",
-              }}
-            >
-              Completá tu registro
-            </h1>
-            <br />
-            <h3>Elegí como querés registrarte</h3>
           </IonCol>
           <IonCol>
             <IonCard
@@ -97,7 +101,7 @@ export default function SignupCompleteView() {
                 Soy Turista
               </IonTitle>
               <IonImg
-                src="images/registro/train.jpg"
+                src="/public/3.3. Registro de usuario/Turista.png"
                 style={{ width: "250pt" }}
               />
             </IonCard>

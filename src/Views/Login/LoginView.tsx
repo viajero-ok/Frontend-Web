@@ -23,9 +23,14 @@ export default function LoginView(props: any) {
 
   return (
     <IonContent>
-      <IonImg
-        src="/images/sierras.png"
-        style={{ position: "fixed", width: "100%" }}
+      <img
+        src="/3.2. Principal/Fondo.jpg"
+        style={{
+          display: "flex",
+          position: "absolute",
+          width: "auto",
+          minHeight: "100%",
+        }}
       />
       <IonCard
         style={{

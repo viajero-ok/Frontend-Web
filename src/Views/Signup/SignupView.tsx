@@ -18,21 +18,14 @@ export default function SignupView(props: any) {
   };
 
   return (
-    <IonCard style={{ margin: "50pt", marginLeft: "100pt", marginRight: "100pt" }}>
-      <IonRow>
-        <IonCol>
-          <IonImg src="/images/mapa.png" style={{ backgroundColor: "white" }} />
-        </IonCol>
-        <IonCol size="4" style={{ alignContent: "center" }}>
-          {idUsuario?.length == 0 ? (
-            <FormProvider schema={schema}>
-              <SignupForm setIdUsuario={setIdUsuario} />
-            </FormProvider>
-          ) : (
-            <VerifyForm id={idUsuario} />
-          )}
-        </IonCol>
-      </IonRow>
-    </IonCard>
+    <>
+      {idUsuario?.length == 0 ? (
+        <FormProvider schema={schema}>
+          <SignupForm setIdUsuario={setIdUsuario} />
+        </FormProvider>
+      ) : (
+        <VerifyForm id={idUsuario} />
+      )}
+    </>
   );
 }

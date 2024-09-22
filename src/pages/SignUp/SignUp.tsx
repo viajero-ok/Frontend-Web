@@ -3,7 +3,15 @@ import SignupView from "../../Views/Signup/SignupView";
 const SignUp: React.FC = () => {
   return (
     <IonPage>
-      <IonImg src="/images/sierras.jpg" style={{ width: "100%", position: "fixed"}} />
+      <img
+        src="/3.2. Principal/Fondo.jpg"
+        style={{
+          display: "flex",
+          position: "absolute",
+          width: "auto",
+          minHeight: "100%",
+        }}
+      />
       <SignupView />
     </IonPage>
   );

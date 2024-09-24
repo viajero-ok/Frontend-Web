@@ -2,7 +2,11 @@ import { IonCheckbox, IonCol, IonRow, IonText } from "@ionic/react";
 import { useForm } from "../../../../../../hooks/UseForm/FormProvider";
 import Field from "../../../../../../components/Field/Field";
 
-export default function Reservas(props: any) {
+type TReservas = {
+  tipoPagoAnticipado: any;
+  metodosDePago: any;
+};
+export default function Reservas(props: TReservas) {
   const form = useForm();
   return (
     <>
@@ -59,7 +63,10 @@ export default function Reservas(props: any) {
               <IonRow>
                 <Field
                   select
-                  options={[]}
+                  options={props.tipoPagoAnticipado.map((tipo: any) => ({
+                    id: tipo.id_tipo_pago_anticipado,
+                    text: tipo.tipo_pago_anticipado,
+                  }))}
                   form={form}
                   name="tipoDePago"
                   label="Tipo de pago"
@@ -153,26 +160,13 @@ export default function Reservas(props: any) {
                     Todos
                   </IonCheckbox>
                 </IonRow>
-                <IonRow>
-                  <IonCheckbox labelPlacement="end" style={{ margin: "3pt" }}>
-                    Transferencia
-                  </IonCheckbox>
-                </IonRow>
-                <IonRow>
-                  <IonCheckbox labelPlacement="end" style={{ margin: "3pt" }}>
-                    Efectivo billete
-                  </IonCheckbox>
-                </IonRow>
-                <IonRow>
-                  <IonCheckbox labelPlacement="end" style={{ margin: "3pt" }}>
-                    Tarjeta de crédito/débito bancarizada
-                  </IonCheckbox>
-                </IonRow>
-                <IonRow>
-                  <IonCheckbox labelPlacement="end" style={{ margin: "3pt" }}>
-                    Billeteras virtuales
-                  </IonCheckbox>
-                </IonRow>
+                {props.metodosDePago?.map((metodo: any) => (
+                  <IonRow style={{ margin: "3pt" }} key={metodo.id_metodo_pago}>
+                    <IonCheckbox labelPlacement="end">
+                      {metodo.metodo_pago}
+                    </IonCheckbox>
+                  </IonRow>
+                ))}
               </div>
             </IonCol>
           </IonRow>

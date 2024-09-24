@@ -1,4 +1,4 @@
-import { IonButton, IonList } from "@ionic/react";
+import { IonButton, IonCol, IonList, IonRow, useIonRouter } from "@ionic/react";
 import Field from "../../../../components/Field/Field";
 import { useForm } from "../../../../hooks/UseForm/FormProvider";
 import { Validator as v } from "../../../../hooks/UseForm/Validator/Validator";
@@ -15,6 +15,7 @@ export default function SignupTuristaForm(props: any) {
   const [paises, setPaises] = useState<any[]>();
 
   const form = useForm();
+  const router = useIonRouter();
 
   useEffect(() => {
     getDatosDeRegistro("turista").then((response: any) => {
@@ -106,9 +107,6 @@ export default function SignupTuristaForm(props: any) {
     form && (
       <IonList
         style={{
-          width: "50%",
-          marginLeft: "50%",
-          transform: "translateX(-50%)",
           marginTop: "13pt",
         }}
       >
@@ -249,12 +247,30 @@ export default function SignupTuristaForm(props: any) {
           value={form?.schema?.fechaDeNacimiento}
           form={form}
         />
-        <IonButton
-          onClick={() => handleRegistrarme()}
-          style={{ marginTop: "13pt" }}
-        >
-          Registrarme
-        </IonButton>
+        <IonRow>
+          <IonCol
+            style={{
+              display: "flex",
+              justifyContent: "left",
+              margin: "13pt",
+            }}
+          >
+            <IonButton color="light" onClick={() => router.goBack()}>
+              Volver
+            </IonButton>
+          </IonCol>
+          <IonCol
+            style={{
+              display: "flex",
+              justifyContent: "right",
+              margin: "13pt",
+            }}
+          >
+            <IonButton onClick={() => handleRegistrarme()} style={{}}>
+              Registrarme
+            </IonButton>
+          </IonCol>
+        </IonRow>
       </IonList>
     )
   );

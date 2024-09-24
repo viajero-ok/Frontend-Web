@@ -21,7 +21,8 @@ export default function MyOffersView() {
   useEffect(() => {
     obtenerOfertasPorPrestador()
       .then((response: any) => {
-        setOfertas(response.data.establecimientos);
+        if (response.data.lenght == 0) return;
+        setOfertas(response.data);
       })
       .catch(() => {});
   }, []);

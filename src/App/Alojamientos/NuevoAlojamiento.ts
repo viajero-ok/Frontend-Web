@@ -6,7 +6,7 @@ type TBodyRegistrarNuevoAlojamiento = {
 };
 export const registrarNuevoAlojamiento = async (
   body: TBodyRegistrarNuevoAlojamiento
-) => await AUTH_API.post(`alojamientos/registrar-alojamiento-vacio`, body);
+) => await AUTH_API.post(`/ofertas-turisticas/registrar-oferta-turistica`, body);
 
 export const getDatosDeRegistroNuevoAlojamiento = async () =>
   await AUTH_API.get(`/alojamientos/datos-registro-alojamiento`);

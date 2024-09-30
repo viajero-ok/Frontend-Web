@@ -15,4 +15,4 @@ type TBodyRegistrarPrestador = {
   fecha_nacimiento: string;
 };
 export const registrarPrestador = async (body: TBodyRegistrarPrestador) =>
-  await AUTH_API.post(`/api/auth/registrar/prestador`, body);
+  await AUTH_API.post(`/auth/registrar/prestador`, body);

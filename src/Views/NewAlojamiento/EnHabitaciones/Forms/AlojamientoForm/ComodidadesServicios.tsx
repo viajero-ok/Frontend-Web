@@ -1,9 +1,12 @@
 import { IonCheckbox, IonCol, IonRow } from "@ionic/react";
-import Field from "../../../../../../components/Field/Field";
-import { useForm } from "../../../../../../hooks/UseForm/FormProvider";
+import Field from "../../../../../components/Field/Field";
+import { useForm } from "../../../../../hooks/UseForm/FormProvider";
+import Check from "../../../../../components/Check/Check";
+import { Dispatch, SetStateAction } from "react";
 
 type TComodidadesServicios = {
   caracteristicas: any;
+  setFormCaracteristicas: Dispatch<SetStateAction<number[]>>;
 };
 export default function ComodidadesServicios(props: TComodidadesServicios) {
   const form = useForm();
@@ -55,9 +58,11 @@ export default function ComodidadesServicios(props: TComodidadesServicios) {
                         style={{ margin: "3pt" }}
                         key={caracteristica.id_caracteristica}
                       >
-                        <IonCheckbox labelPlacement="end">
-                          {caracteristica.caracteristica}
-                        </IonCheckbox>
+                        <Check
+                          id={caracteristica.id_caracteristica}
+                          setList={props.setFormCaracteristicas}
+                          label={caracteristica.caracteristica}
+                        />
                       </IonRow>
                     )
                   )}
@@ -96,9 +101,11 @@ export default function ComodidadesServicios(props: TComodidadesServicios) {
                         style={{ margin: "3pt" }}
                         key={caracteristica.id_caracteristica}
                       >
-                        <IonCheckbox labelPlacement="end">
-                          {caracteristica.caracteristica}
-                        </IonCheckbox>
+                        <Check
+                          id={caracteristica.id_caracteristica}
+                          setList={props.setFormCaracteristicas}
+                          label={caracteristica.caracteristica}
+                        />
                       </IonRow>
                     )
                   )}
@@ -137,9 +144,11 @@ export default function ComodidadesServicios(props: TComodidadesServicios) {
                         style={{ margin: "3pt" }}
                         key={caracteristica.id_caracteristica}
                       >
-                        <IonCheckbox labelPlacement="end">
-                          {caracteristica.caracteristica}
-                        </IonCheckbox>
+                        <Check
+                          id={caracteristica.id_caracteristica}
+                          setList={props.setFormCaracteristicas}
+                          label={caracteristica.caracteristica}
+                        />
                       </IonRow>
                     )
                   )}
@@ -149,7 +158,7 @@ export default function ComodidadesServicios(props: TComodidadesServicios) {
           </IonCol>
         </IonRow>
         <IonRow>
-          <Field form={form} name="observaciones" label="Observaciones" />
+          <Field form={form} name="texto_observacion_comodidades_y_servicios_oferta" label="Observaciones" />
         </IonRow>
       </>
     )

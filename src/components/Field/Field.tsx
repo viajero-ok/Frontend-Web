@@ -3,7 +3,7 @@ import {
   IonItem,
   IonSelect,
   IonSelectOption,
-  IonTextarea
+  IonTextarea,
 } from "@ionic/react";
 import { useState } from "react";
 import DateWheel from "../DateWheel/DateWheel";
@@ -75,7 +75,14 @@ export default function Field(props: IField) {
             onChange={handleOnChange}
           />
         )}
-        {props.textarea && <IonTextarea maxlength={props.maxLength} rows={props.rows ?? 1} placeholder={props.label} />}
+        {props.textarea && (
+          <IonTextarea
+            maxlength={props.maxLength}
+            rows={props.rows ?? 1}
+            placeholder={props.label}
+            onInput={(e: any) => handleOnChange(e.target.value)}
+          />
+        )}
       </IonItem>
       {error.length > 0 && (
         <IonItem

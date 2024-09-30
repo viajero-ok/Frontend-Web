@@ -1,7 +1,6 @@
 import { useState } from "react";
-import Alojaiento from "./NewAlojamiento/Alojamiento";
 import OfferTypeSelection from "./OfferTypeSelection";
-import Alojamiento from "./NewAlojamiento/Alojamiento";
+import Alojamiento from "./NewAlojamiento/NewAlojamiento";
 
 export default function OfferSelection(props: any) {
   const [offerType, setOfferType] = useState<

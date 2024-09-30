@@ -6,16 +6,24 @@ import {
   IonRow,
   IonTitle,
 } from "@ionic/react";
-import Field from "../../../../../../components/Field/Field";
+import Field from "../../../../../components/Field/Field";
 import { add } from "ionicons/icons";
-import { useForm } from "../../../../../../hooks/UseForm/FormProvider";
+import { useForm } from "../../../../../hooks/UseForm/FormProvider";
+import { Dispatch, SetStateAction, useState } from "react";
+import Check from "../../../../../components/Check/Check";
+import CheckInCheckOutRow from "../CheckInCheckOutRow/CheckInCheckOutRow";
+import { THorariosCheckInCheckOut } from "../../../../../App/Alojamientos/NuevoAlojamiento";
 
 type TPoliticasNormas = {
   caracteristicas: any;
+  setFormCaracteristicas: Dispatch<SetStateAction<number[]>>;
   politicasDeCancelacion: any;
+  horarios: THorariosCheckInCheckOut[];
+  setHorarios: Dispatch<SetStateAction<THorariosCheckInCheckOut[]>>;
 };
 export default function PoliticasNormas(props: TPoliticasNormas) {
   const form = useForm();
+
   return (
     props.caracteristicas &&
     props.politicasDeCancelacion && (
@@ -55,103 +63,64 @@ export default function PoliticasNormas(props: TPoliticasNormas) {
         </IonRow>
         <IonRow
           style={{
-            border: "2pt solid #F08408",
-            borderRadius: "8pt",
-            padding: "6pt",
-            marginLeft: "31pt",
-            marginRight: "31pt",
-            marginBottom: "31pt",
+            display: "flex",
+            flexDirection: "column",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: "13pt",
           }}
         >
-          <IonCol
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <IonRow style={{}}>
-              <IonCol>
-                <Field form={form} name="checkin" label="Check-In" />
-              </IonCol>
-              <IonCol>
-                <Field form={form} name="checkout" label="Check-Out" />
-              </IonCol>
-            </IonRow>
-          </IonCol>
-          <IonCol style={{}}>
-            <IonRow
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+          {props.horarios.length > 0 &&
+            props.horarios.map((horario: any, index: number) => (
+              <CheckInCheckOutRow
+                id={index}
+                setRows={props.setHorarios}
+              />
+            ))}
+          {props.horarios.length == 0 && (
+            <IonButton
+              style={{ "--background": "#F08408" }}
+              onClick={() =>
+                props.setHorarios((prev: THorariosCheckInCheckOut[]) => [
+                  ...prev,
+                  {
+                    id_horario: prev.length,
+                    check_in: {
+                      hora_check_in: 10,
+                      minuto_check_in: 30,
+                    },
+                    check_out: {
+                      hora_check_out: 18,
+                      minuto_check_out: 30,
+                    },
+                    aplica_todos_los_dias: false,
+                    dias_semana: {
+                      aplica_lunes: true,
+                      aplica_martes: true,
+                      aplica_miercoles: true,
+                      aplica_jueves: true,
+                      aplica_viernes: true,
+                      aplica_sabado: true,
+                      aplica_domingo: true,
+                    },
+                  },
+                ])
+              }
             >
-              <IonCheckbox>Aplica todo los días</IonCheckbox>
-            </IonRow>
-            <IonRow
-              style={{
-                paddingTop: "13pt",
-                display: "flex",
-                flexDirection: "column",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+              <IonIcon icon={add} />
+              &nbsp;AGREGAR UN HORARIO
+            </IonButton>
+          )}
+          {props.horarios.length > 0 && (
+            <IonButton
+              style={{ "--background": "#F08408" }}
+              onClick={() => props.setHorarios((prev: any[]) => [...prev, {}])}
             >
-              <div>
-                <IonCheckbox labelPlacement="stacked" style={{ margin: "3pt" }}>
-                  L
-                </IonCheckbox>
-                <IonCheckbox labelPlacement="stacked" style={{ margin: "3pt" }}>
-                  M
-                </IonCheckbox>
-                <IonCheckbox labelPlacement="stacked" style={{ margin: "3pt" }}>
-                  M
-                </IonCheckbox>
-                <IonCheckbox labelPlacement="stacked" style={{ margin: "3pt" }}>
-                  J
-                </IonCheckbox>
-                <IonCheckbox labelPlacement="stacked" style={{ margin: "3pt" }}>
-                  V
-                </IonCheckbox>
-                <IonCheckbox labelPlacement="stacked" style={{ margin: "3pt" }}>
-                  S
-                </IonCheckbox>
-                <IonCheckbox labelPlacement="stacked" style={{ margin: "3pt" }}>
-                  D
-                </IonCheckbox>
-              </div>
-            </IonRow>
-          </IonCol>
-          <IonCol
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <IonRow
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <IonButton style={{ "--background": "#F08408" }}>
-                <IonIcon icon={add} />
-                &nbsp;AGREGAR OTRO
-              </IonButton>
-            </IonRow>
-          </IonCol>
+              <IonIcon icon={add} />
+              &nbsp;AGREGAR OTRO
+            </IonButton>
+          )}
         </IonRow>
         <IonRow>
           <IonCol>
@@ -185,14 +154,20 @@ export default function PoliticasNormas(props: TPoliticasNormas) {
                         style={{ margin: "3pt" }}
                         key={caracteristica.id_caracteristica}
                       >
-                        <IonCheckbox labelPlacement="end">
-                          {caracteristica.caracteristica}
-                        </IonCheckbox>
+                        <Check
+                          id={caracteristica.id_caracteristica}
+                          setList={props.setFormCaracteristicas}
+                          label={caracteristica.caracteristica}
+                        />
                       </IonRow>
                     )
                   )}
                 </div>
-                <Field form={form} name="otrasNormas" label="Otras" />
+                <Field
+                  form={form}
+                  name="texto_observacion_normas"
+                  label="Otras"
+                />
               </IonCol>
             </IonRow>
           </IonCol>
@@ -230,14 +205,14 @@ export default function PoliticasNormas(props: TPoliticasNormas) {
                       })
                     )}
                     form={form}
-                    name="tipoDePolitica"
+                    name="id_politica_cancelacion"
                     label="Tipo de política"
                   />
                 </IonRow>
                 <IonRow>
                   <Field
                     form={form}
-                    name="plazoDeCancelacion"
+                    name="plazo_dias_cancelacion"
                     label="Plazo de cancelación (en días)"
                   />
                 </IonRow>
@@ -277,14 +252,14 @@ export default function PoliticasNormas(props: TPoliticasNormas) {
                   <IonRow>
                     <Field
                       form={form}
-                      name="montoDeGarantia"
+                      name="monto_garantia"
                       label="Monto de la garantía"
                     />
                   </IonRow>
                   <IonRow>
                     <Field
                       form={form}
-                      name="observacionesGarantia"
+                      name="texto_observacion_politica_garantia"
                       label="Observaciones"
                     />
                   </IonRow>

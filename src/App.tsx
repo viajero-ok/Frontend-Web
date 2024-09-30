@@ -42,6 +42,7 @@ import MyPlaces from "./pages/MyPlaces/MyPlaces";
 import NewPlace from "./pages/MyPlaces/NewPlace/NewPlace";
 import MyOffers from "./pages/MyOffers/MyOffers";
 import NewOffer from "./pages/MyOffers/NewOffer/NewOffer";
+import NewAlojamientoEnHabitaciones from "./pages/NewAlojamiento/NewAlojamientoEnHabitaciones";
 
 setupIonicReact();
 
@@ -74,6 +75,11 @@ const App: React.FC = () => (
             component={SignupTurista}
           />
           <Route exact path="/map"></Route>
+          <Route
+            exact
+            path="/my-offers/alojamiento/en-habitaciones/edit/:id"
+            component={NewAlojamientoEnHabitaciones}
+          />
         </IonRouterOutlet>
       </IonReactRouter>
     </AuthProvider>

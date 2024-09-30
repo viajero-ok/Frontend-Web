@@ -13,9 +13,10 @@ import { useEffect, useState } from "react";
 import { obtenerOfertasPorPrestador } from "../../App/Ofertas/Ofertas";
 import EstablecimientoCard from "../../components/EstablecimientoCard/EstablecimientoCard";
 import DefaultLoggedLayout from "../Layouts/DefaultLoggedLayout";
+import OfertaCard from "../../components/OfertaCard/OfertaCard";
 
 export default function MyOffersView() {
-  const [ofertas, setOfertas] = useState([]);
+  const [ofertas, setOfertas] = useState<any[]>([]);
   const router = useIonRouter();
 
   useEffect(() => {
@@ -92,9 +93,11 @@ export default function MyOffersView() {
             >
               {ofertas.map((oferta: any) => (
                 <IonRow style={{ width: "100%" }}>
-                  <EstablecimientoCard // [!] Cambiar por una OfertaCard
+                  <OfertaCard // [!] Cambiar por una OfertaCard
                     nombre={oferta.nombre}
                     descripcion={oferta.descripcion}
+                    id={oferta.id_oferta_turistica}
+                    setOfertas={setOfertas}
                   />
                 </IonRow>
               ))}

@@ -1,6 +1,6 @@
 import { IonCol, IonRow } from "@ionic/react";
-import Field from "../../../../../../components/Field/Field";
-import { useForm } from "../../../../../../hooks/UseForm/FormProvider";
+import Field from "../../../../../components/Field/Field";
+import { useForm } from "../../../../../hooks/UseForm/FormProvider";
 
 export default function DatosBasicos(props: any) {
   const form = useForm();
@@ -18,13 +18,13 @@ export default function DatosBasicos(props: any) {
       </IonRow>
       <IonRow>
         <IonCol>
-          <Field form={form} name="nombre" label="Nombre" />
+          <Field form={form} name="nombre_alojamiento" label="Nombre" />
           <Field
             textarea
             rows={4}
             maxLength={200}
             form={form}
-            name="descripcion"
+            name="descripcion_alojamiento"
             label="Descripción"
           />
         </IonCol>

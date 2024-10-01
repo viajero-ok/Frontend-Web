@@ -1,14 +1,15 @@
 import {
-  IonAvatar,
-  IonButton,
-  IonChip,
-  IonContent,
-  IonHeader,
-  IonLabel,
-  IonPage,
-  IonPopover,
-  IonTitle,
-  IonToolbar,
+	IonAvatar,
+	IonButton,
+	IonChip,
+	IonContent,
+	IonHeader,
+	IonImg,
+	IonLabel,
+	IonPage,
+	IonPopover,
+	IonTitle,
+	IonToolbar,
 } from "@ionic/react";
 
 import "./Home.css";
@@ -24,31 +25,36 @@ import HomeTuristaView from "../Views/Home/Turista/HomeTuristaView";
 import HomePrestadorView from "../Views/Home/Prestador/HomePrestadorView";
 
 const Home: React.FC = () => {
-  const [perfil, setPerfil] = useState<number>();
-  const auth = useAuth();
+	const [perfil, setPerfil] = useState<number>();
+	const auth = useAuth();
 
-  useEffect(() => {
-    if (!auth) return;
-    setPerfil(auth.getPerfil());
-  }, [auth]);
+	useEffect(() => {
+		if (!auth) return;
+		setPerfil(auth.getPerfil());
+	}, [auth]);
 
-  return (
-    <DefaultLoggedLayout>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
-          </IonToolbar>
-          <h1>Perfil: {perfil}</h1>
-        </IonHeader>
-        <IonContent>
-          {perfil == PERFILES.INVITADO.id && <HomeVisitanteView />}
-          {perfil == PERFILES.TURISTA.id && <HomeTuristaView />}
-          {perfil == PERFILES.PRESTADOR.id && <HomePrestadorView />}
-        </IonContent>
-      </IonContent>
-    </DefaultLoggedLayout>
-  );
+	return (
+		<DefaultLoggedLayout>
+			<IonContent fullscreen>
+				<IonHeader collapse="condense">
+					<IonToolbar>
+						<IonTitle size="large">Blank</IonTitle>
+					</IonToolbar>
+					<h1>Perfil: {perfil}</h1>
+				</IonHeader>
+				<IonContent>
+				<IonImg
+					src={`../public/3.1. Logos/Logo con nombre.png`}
+					className="logo"
+					/>
+					<p className="logo-title">¿A dónde vamos?</p>
+					{perfil == PERFILES.INVITADO.id && <HomeVisitanteView />}
+					{perfil == PERFILES.TURISTA.id && <HomeTuristaView />}
+					{perfil == PERFILES.PRESTADOR.id && <HomePrestadorView />}
+				</IonContent>
+			</IonContent>
+		</DefaultLoggedLayout>
+	);
 };
 
 export default Home;

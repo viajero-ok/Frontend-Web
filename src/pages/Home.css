@@ -1,0 +1,14 @@
+ion-toolbar {
+	--background: #f0840800 !important;
+}
+.logo {
+	display: block;
+	margin: 20px auto;
+	width: 10%;
+	object-fit: contain;
+}
+.logo-title {
+	font-size: 24px;
+	text-align: center;
+}
+

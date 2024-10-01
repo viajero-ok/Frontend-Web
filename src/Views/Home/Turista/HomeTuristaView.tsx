@@ -1,3 +1,3 @@
 export default function HomeTuristaView(props: any) {
-  return <h1>Hola, Turista</h1>;
+  return <h1> </h1>;
 }

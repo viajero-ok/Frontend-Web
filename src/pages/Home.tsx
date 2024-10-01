@@ -43,11 +43,13 @@ const Home: React.FC = () => {
 					<h1>Perfil: {perfil}</h1>
 				</IonHeader>
 				<IonContent>
-				<IonImg
-					src={`../public/3.1. Logos/Logo con nombre.png`}
-					className="logo"
-					/>
-					<p className="logo-title">¿A dónde vamos?</p>
+					<div className="logo-container">
+						<IonImg
+							src={`../public/3.1. Logos/Logo con nombre.png`}
+							className="logo"
+						/>
+						<p className="logo-title">¿A dónde vamos?</p>
+					</div>
 					{perfil == PERFILES.INVITADO.id && <HomeVisitanteView />}
 					{perfil == PERFILES.TURISTA.id && <HomeTuristaView />}
 					{perfil == PERFILES.PRESTADOR.id && <HomePrestadorView />}

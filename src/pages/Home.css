@@ -3,7 +3,8 @@ ion-toolbar {
 }
 .logo {
 	display: block;
-	margin: 20px auto;
+	padding-top: 20px;
+	margin: auto;
 	width: 10%;
 	object-fit: contain;
 }
@@ -11,4 +12,6 @@ ion-toolbar {
 	font-size: 24px;
 	text-align: center;
 }
-
+.logo-container {
+	padding-bottom: 5px;
+}

@@ -95,7 +95,8 @@ export const useProvideAuth = (props: any) => {
 			isLogged: false,
 			perfilSeleccionado: -1,
 		}));
-		// window.location.reload();
+		//[!] cambiar por router de ionic
+		window.location.reload();
 	};
 
 	const login = () => {

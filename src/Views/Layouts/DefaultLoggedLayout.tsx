@@ -37,55 +37,63 @@ export default function DefaultLoggedLayout({ children }: any) {
 
 	return (
 		<>
-			<IonMenu contentId="burger">
-				<IonHeader>
-					<IonToolbar>
-						<IonTitle
-							style={{
-								display: "flex",
-								position: "absolute",
-								float: "left",
-								top: "50%",
-								transform: "translateY(-50%)",
-								fontWeight: "bolder",
-								fontSize: "21pt",
-								marginLeft: "13pt",
-							}}
-						>
-							viajero
-						</IonTitle>
-					</IonToolbar>
-				</IonHeader>
-				<IonContent>
-					<IonList lines="none" style={{ marginTop: "13pt" }}>
-						<IonMenuToggle>
-							<IonItem button onClick={() => push("/")}>
-								Inicio
-							</IonItem>
-						</IonMenuToggle>
-						<IonMenuToggle>
-							<IonItem button onClick={() => push("/my-places")}>
-								Mis establecimientos
-							</IonItem>
-						</IonMenuToggle>
-						<IonMenuToggle>
-							<IonItem button onClick={() => push("/my-offers")}>
-								Mis ofertas turísticas
-							</IonItem>
-						</IonMenuToggle>
-						<IonMenuToggle>
-							<IonItem button disabled>
-								Mis reservas
-							</IonItem>
-						</IonMenuToggle>
-						<IonMenuToggle>
-							<IonItem button disabled>
-								Informes y estadísticas
-							</IonItem>
-						</IonMenuToggle>
-					</IonList>
-				</IonContent>
-			</IonMenu>
+			{logged && (
+				<IonMenu contentId="burger">
+					<IonHeader>
+						<IonToolbar>
+							<IonTitle
+								style={{
+									display: "flex",
+									position: "absolute",
+									float: "left",
+									top: "50%",
+									transform: "translateY(-50%)",
+									fontWeight: "bolder",
+									fontSize: "21pt",
+									marginLeft: "13pt",
+								}}
+							>
+								viajero
+							</IonTitle>
+						</IonToolbar>
+					</IonHeader>
+					<IonContent>
+						<IonList lines="none" style={{ marginTop: "13pt" }}>
+							<IonMenuToggle>
+								<IonItem button onClick={() => push("/")}>
+									Inicio
+								</IonItem>
+							</IonMenuToggle>
+							<IonMenuToggle>
+								<IonItem
+									button
+									onClick={() => push("/my-places")}
+								>
+									Mis establecimientos
+								</IonItem>
+							</IonMenuToggle>
+							<IonMenuToggle>
+								<IonItem
+									button
+									onClick={() => push("/my-offers")}
+								>
+									Mis ofertas turísticas
+								</IonItem>
+							</IonMenuToggle>
+							<IonMenuToggle>
+								<IonItem button disabled>
+									Mis reservas
+								</IonItem>
+							</IonMenuToggle>
+							<IonMenuToggle>
+								<IonItem button disabled>
+									Informes y estadísticas
+								</IonItem>
+							</IonMenuToggle>
+						</IonList>
+					</IonContent>
+				</IonMenu>
+			)}
 			<IonPage id="burger">
 				<IonHeader>
 					<IonToolbar>
@@ -122,11 +130,13 @@ export default function DefaultLoggedLayout({ children }: any) {
 								transform: "translateX(-50%) translateY(-50%)",
 							}}
 						>
-							¡Hola, {perfilSeleccionado == PERFILES.INVITADO.id
+							¡Hola,{" "}
+							{perfilSeleccionado == -1
 								? "viajero"
 								: perfilSeleccionado == PERFILES.TURISTA.id
 								? "turista"
-								: "prestador"}!
+								: "prestador"}
+							!
 						</IonTitle>
 						<div
 							style={{

@@ -5,7 +5,7 @@ import {
   IonSelectOption,
   IonTextarea,
 } from "@ionic/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DateWheel from "../DateWheel/DateWheel";
 
 interface IField {
@@ -36,11 +36,19 @@ export default function Field(props: IField) {
       setError((prev: string) => props.valid.validate(v).join(", "));
   };
 
+  useEffect(() => {
+    if (!props.form.schema) return;
+    setValue(props.form.schema[props.name]);
+
+    console.log("value: ", props.form.schema[props.name]);
+  }, [props.form]);
+
   return (
     <>
       <IonItem lines={error.length > 0 ? "none" : "inset"}>
         {!props.select && !props.date && !props.textarea && (
           <IonInput
+            value={value}
             disabled={props.disabled ?? false}
             type={props.password ? "password" : "text"}
             placeholder={props.required ? props.label + " (*)" : props.label}
@@ -77,6 +85,7 @@ export default function Field(props: IField) {
         )}
         {props.textarea && (
           <IonTextarea
+            value={value}
             maxlength={props.maxLength}
             rows={props.rows ?? 1}
             placeholder={props.label}

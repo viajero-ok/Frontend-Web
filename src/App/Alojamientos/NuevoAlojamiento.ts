@@ -6,7 +6,7 @@ type TBodyRegistrarNuevoAlojamiento = {
 };
 export const registrarNuevoAlojamiento = async (
   body: TBodyRegistrarNuevoAlojamiento
-) => await AUTH_API.post(`alojamientos/registrar-alojamiento-vacio`, body);
+) => await AUTH_API.post(`ofertas-turisticas/registrar-oferta-turistica`, body);
 
 export const getDatosDeRegistroNuevoAlojamiento = async () =>
   await AUTH_API.get(`/alojamientos/datos-registro-alojamiento`);
@@ -71,19 +71,10 @@ type TBodyGuardarImagenDeAlojamiento = {
   imagen: File;
   id_oferta: string;
 };
-// export const guardarImagenDeAlojamiento = async (
-//   body: TBodyGuardarImagenDeAlojamiento
-// ) => {
-//   console.log("body guardar: ", body.imagen);
-//   return await AUTH_API.post(
-//     `/ofertas-turisticas/registrar-imagen-oferta-turistica`,
-//     body
-//   );
-// };
 export const guardarImagenDeAlojamiento = async (
   body: TBodyGuardarImagenDeAlojamiento
 ) =>
-  AUTH_API.post(
+  await AUTH_API.post(
     `/ofertas-turisticas/registrar-imagen-oferta-turistica`,
     {
       id_oferta: body.id_oferta,
@@ -94,4 +85,22 @@ export const guardarImagenDeAlojamiento = async (
         "Content-Type": "multipart/form-data",
       },
     }
+  );
+
+export const eliminarImagenDeAlojamiento = async (id_imagen: number) =>
+  await AUTH_API.delete(`/ofertas-turisticas/eliminar-imagen-oferta-turistica/${id_imagen}
+`);
+
+type TBodyCrearHorario = {
+  id_oferta: string;
+};
+export const crearHorario = async (body: TBodyCrearHorario) =>
+  await AUTH_API.post(`/alojamientos/registrar-horario`, body);
+
+export const eliminarHorario = async (id_horario: string) =>
+  await AUTH_API.delete(`/api/alojamientos/eliminar-horario/${id_horario}`);
+
+export const obtenerDatosRegistradosAlojamiento = async (id_oferta: string) =>
+  await AUTH_API.get(
+    `/alojamientos/obtener-datos-registrados-alojamiento/${id_oferta}`
   );

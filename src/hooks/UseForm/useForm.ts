@@ -19,7 +19,9 @@ export const useProvideForm = (props: IUseProvideForm) => {
   }, []);
 
   const setValue = (key: string, value: string) => {
+    console.log("llega pero no muestra key")
     if (!schema) return;
+    console.log("key: ", key, value);
     setSchema((prev: any) => {
       const copy = { ...prev };
       copy[key] = value;

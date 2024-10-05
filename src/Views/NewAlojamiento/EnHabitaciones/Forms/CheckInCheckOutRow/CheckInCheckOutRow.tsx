@@ -13,9 +13,10 @@ import { add, trash } from "ionicons/icons";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useMaskito } from "@maskito/react";
 import { maskitoTimeOptionsGenerator } from "@maskito/kit";
+import { eliminarHabitación } from "../../../../../App/Alojamientos/Habitacion";
 
 type TRowData = {
-  id_horario: number;
+  id_horario: string;
   check_in: {
     hora_check_in: string;
     minuto_check_in: string;
@@ -38,7 +39,7 @@ type TRowData = {
 
 type TCheckInCheckOutRow = {
   setRows: Dispatch<SetStateAction<any[]>>;
-  id: number;
+  id: string;
 };
 export default function CheckInCheckOutRow(props: TCheckInCheckOutRow) {
   const [data, setData] = useState<TRowData>({
@@ -64,9 +65,13 @@ export default function CheckInCheckOutRow(props: TCheckInCheckOutRow) {
   });
 
   const handleEliminar = () => {
-    props.setRows((prev: any[]) => [
-      ...prev.filter((row: any, index: number) => index != props.id),
-    ]);
+    eliminarHabitación(props.id)
+      .then((response: any) => {
+        props.setRows((prev: any[]) => [
+          ...prev.filter((row: any) => row.id_horario != props.id),
+        ]);
+      })
+      .catch((_) => {});
   };
 
   const checkInMask = useMaskito({
@@ -202,6 +207,7 @@ export default function CheckInCheckOutRow(props: TCheckInCheckOutRow) {
             <IonIcon icon={trash} />
           </IonButton>
         </IonRow>
+        <h3>id: {props.id}</h3>
       </IonCol>
     </IonRow>
   );

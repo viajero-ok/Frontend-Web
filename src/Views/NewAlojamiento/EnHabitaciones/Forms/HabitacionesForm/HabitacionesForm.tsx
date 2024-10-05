@@ -1,11 +1,21 @@
 import { IonGrid, IonRow } from "@ionic/react";
 import AgregarTipologia from "./AgregarTipologia";
 import Habitacion from "./Habitacion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { obtenerDatosRegistradosHabitacion } from "../../../../../App/Alojamientos/Habitacion";
 
+type THabitacionesForm = {
+  id: string;
+};
 export default function HabitacionesForm(props: any) {
   const [habitacionSelected, setHabitacionSelected] = useState<any>();
   const [habitacionesList, setHabitacionesList] = useState<any[]>([]);
+
+  useEffect(() => {
+    obtenerDatosRegistradosHabitacion(props.id).then((response: any) => {
+      console.log("response: ", response);
+    });
+  }, []);
 
   return (
     <IonGrid style={{}}>
@@ -19,6 +29,7 @@ export default function HabitacionesForm(props: any) {
           habitacionSelected={habitacionSelected}
           setHabitacionSelected={setHabitacionSelected}
           setHabitaciones={setHabitacionesList}
+          id={props.id}
         />
       )}
       {/* <DatosBasicos />

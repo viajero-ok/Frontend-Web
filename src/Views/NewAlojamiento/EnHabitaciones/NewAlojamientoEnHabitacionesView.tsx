@@ -12,6 +12,7 @@ import { FormProvider } from "../../../hooks/UseForm/FormProvider";
 import AlojamientoForm from "./Forms/AlojamientoForm/AlojamientoForm";
 import DefaultLoggedLayout from "../../Layouts/DefaultLoggedLayout";
 import HabitacionesForm from "./Forms/HabitacionesForm/HabitacionesForm";
+import TarifasForm from "./Forms/TarifasForm/TarifasForm";
 
 type TNewAlojamientoEnHabitacionesView = {
   idOferta: string;
@@ -46,6 +47,7 @@ export default function NewAlojamientoEnHabitacionesView(
   };
 
   const schemaHabitacionesForm = {};
+  const schemaTarifasForm = {};
 
   const router = useIonRouter();
 
@@ -99,6 +101,11 @@ export default function NewAlojamientoEnHabitacionesView(
           {segment == "habitaciones-form" && (
             <FormProvider schema={schemaHabitacionesForm}>
               <HabitacionesForm id={props.idOferta} />
+            </FormProvider>
+          )}
+          {segment == "tarifas-form" && (
+            <FormProvider schema={schemaTarifasForm}>
+              <TarifasForm id={props.idOferta} />
             </FormProvider>
           )}
         </IonRow>

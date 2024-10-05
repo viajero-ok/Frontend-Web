@@ -6,6 +6,7 @@ import {
   getDatosDeRegistroNuevoAlojamiento,
   guardarAlojamiento,
   guardarImagenDeAlojamiento,
+  obtenerDatosRegistradosAlojamiento,
   TBodyGuardarAlojamiento,
   THorariosCheckInCheckOut,
 } from "../../../../../App/Alojamientos/NuevoAlojamiento";
@@ -14,7 +15,6 @@ import ComodidadesServicios from "./ComodidadesServicios";
 import DatosBasicos from "./DatosBasicos";
 import PoliticasNormas from "./PoliticasNormas";
 import Reservas from "./Reservas";
-
 
 type TAlojamientoForm = {
   id: string;
@@ -25,9 +25,13 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
   const [tiposPagoAnticipado, setTiposPagoAnticipado] = useState<any>();
   const [metodosDePago, setMetodosDePago] = useState<any>();
 
+  const [datosRegistrados, setDatosRegistrados] = useState<any>();
+
   const [formCaracteristicas, setFormCaracteristicas] = useState<number[]>([]);
   const [formMetodosDePago, setFormMetodosDePago] = useState<number[]>([]);
-  const [formHorarios, setFormHorarios] = useState<THorariosCheckInCheckOut[]>([]);
+  const [formHorarios, setFormHorarios] = useState<THorariosCheckInCheckOut[]>(
+    []
+  );
 
   const form = useForm();
 
@@ -54,8 +58,8 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
           descripcion_alojamiento: s.descripcion_alojamiento,
         },
         politicas_reserva: {
-          id_politica_cancelacion: 0,
-          plazo_dias_cancelacion: 0,
+          id_politica_cancelacion: s.id_politica_cancelacion,
+          plazo_dias_cancelacion: parseInt(s.plazo_dias_cancelacion),
           solicita_garantia: false,
           monto_garantia: 0.0, // float
           id_tipo_pago_anticipado: 0,
@@ -64,7 +68,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
           minimo_dias_estadia: parseInt(s.minimo_dias_estadia),
         },
       },
-      check_in_out: formHorarios
+      check_in_out: formHorarios,
     };
     guardarAlojamiento(body)
       .then((response) => {
@@ -74,11 +78,13 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
   };
 
   const handleImageService = (file: File) => {
-    console.log("file service: ", file)
-    return guardarImagenDeAlojamiento({imagen: file, id_oferta: props.id})
-  }
+    console.log("file service: ", file);
+    return guardarImagenDeAlojamiento({ imagen: file, id_oferta: props.id });
+  };
 
   useEffect(() => {
+    if (!form) return;
+    if (!form.schema) return;
     getDatosDeRegistroNuevoAlojamiento()
       .then((response: any) => {
         setCaracteristicas(response.data.caracteristicas);
@@ -87,12 +93,20 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
         setMetodosDePago(response.data.metodos_pago);
       })
       .catch((error: any) => {});
-  }, []);
 
-  // useEffect(() => {
-  //   if (!form) return;
-  //   console.log("form: ", form);
-  // }, [form]);
+    obtenerDatosRegistradosAlojamiento(props.id).then((response: any) => {
+      setDatosRegistrados(response.data);
+      console.log("setea");
+      form.setValue(
+        "nombre_alojamiento",
+        response.data.datos.datos_basicos.nombre
+      );
+      form.setValue(
+        "descripcion_alojamiento",
+        response.data.datos.datos_basicos.descripcion
+      );
+    });
+  }, [form]);
 
   return (
     <IonGrid style={{}}>
@@ -102,6 +116,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
         setFormCaracteristicas={setFormCaracteristicas}
       />
       <PoliticasNormas
+        idOferta={props.id}
         caracteristicas={caracteristicas}
         setFormCaracteristicas={setFormCaracteristicas}
         politicasDeCancelacion={politicasDeCancelacion}
@@ -115,7 +130,10 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
       />
       <IonRow>
         <IonCol style={{ paddingLeft: "100pt", paddingRight: "100pt" }}>
-          <MultimediaUpload service={handleImageService}/>
+          <MultimediaUpload
+            service={handleImageService}
+            uploaded={datosRegistrados?.imagenes ?? []}
+          />
         </IonCol>
       </IonRow>
       <IonRow>

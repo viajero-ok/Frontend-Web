@@ -15,6 +15,7 @@ import Field from '../../../components/Field/Field';
 import { useForm, FormProvider } from '../../../hooks/UseForm/FormProvider';
 import { Validator as v } from '../../../hooks/UseForm/Validator/Validator';
 import HomeVisitanteForm from './HomeVisitanteForm';
+import ConsultaOfertasCard from '../../../components/ConsultaOfertas/ConsultaOfertasCard';
 
 interface FormSchema {
   destino: string;
@@ -43,7 +44,7 @@ export default function HomeVisitanteView() {
   };
 
   return (
-    <IonContent style={{ overflowY: 'hidden' }}>
+    <IonContent fullscreen style={{ overflowY: 'hidden' }}>
       <IonCard
         style={{
           backgroundColor: "rgba(255, 255, 255, 1)",
@@ -56,6 +57,10 @@ export default function HomeVisitanteView() {
           <HomeVisitanteForm />
         </FormProvider>
       </IonCard>
+      
+
+      <ConsultaOfertasCard />
+      
       <IonToast
         isOpen={openToast}
         message={toastMessage}

@@ -42,7 +42,7 @@ const Home: React.FC = () => {
 					</IonToolbar>
 					<h1>Perfil: {perfil}</h1>
 				</IonHeader>
-				<IonContent>
+				<IonContent style={{ overflowY: 'hidden' }}>
 					<div className="logo-container">
 						<IonImg
 							src={`../public/3.1. Logos/Logo con nombre.png`}

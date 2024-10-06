@@ -35,7 +35,7 @@ const Home: React.FC = () => {
 
 	return (
 		<DefaultLoggedLayout>
-			<IonContent fullscreen>
+			<IonContent style={{ overflowY: 'hidden' }}>
 				<IonHeader collapse="condense">
 					<IonToolbar>
 						<IonTitle size="large">Blank</IonTitle>

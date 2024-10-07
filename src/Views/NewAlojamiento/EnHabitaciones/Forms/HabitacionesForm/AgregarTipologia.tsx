@@ -12,71 +12,21 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { crearHabitacion } from "../../../../../App/Alojamientos/Habitacion";
 
 type TAgregarTipologia = {
+  handleObtenerDatos: () => void;
   setHabitacionSelected: Dispatch<SetStateAction<any>>;
   setHabitaciones: Dispatch<SetStateAction<any>>;
   habitaciones: any[];
+  id: string;
 };
 export default function AgregarTipologia(props: TAgregarTipologia) {
   const handleAgregar = () => {
-    crearHabitacion().then((response: any) =>
-      props.setHabitaciones((prev: any[]) => [
-        ...prev,
-        {
-          id: response.data.id_tipo_detalle,
-        },
-      ])
+    crearHabitacion(props.id).then((response: any) =>
+      props.handleObtenerDatos()
     );
   };
 
   return (
     <>
-      <IonRow
-        style={{
-          display: "flex",
-          alignContent: "center",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <h3 style={{ fontWeight: "bold" }}>Tipologías</h3>
-      </IonRow>
-      <IonRow>
-        <IonCol
-          style={{
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <IonItem>
-            <IonInput placeholder="Nombre de la tipología" />
-          </IonItem>
-        </IonCol>
-        <IonCol
-          style={{
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <IonInput label="Cantidad" type="number" />
-        </IonCol>
-        <IonCol
-          style={{
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <IonButton onClick={() => handleAgregar()}>
-            <IonIcon icon={add} />
-            AGREGAR
-          </IonButton>
-        </IonCol>
-      </IonRow>
       <IonRow>
         <IonGrid
           style={{
@@ -90,6 +40,34 @@ export default function AgregarTipologia(props: TAgregarTipologia) {
             padding: "31pt",
           }}
         >
+          <IonRow
+            style={{
+              display: "flex",
+              alignContent: "center",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <h3 style={{ fontWeight: "bold" }}>Tipologías</h3>
+          </IonRow>
+          <IonRow>
+            <IonCol
+              style={{
+                display: "flex",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <IonButton
+                style={{ "--background": "#F08408" }}
+                onClick={() => handleAgregar()}
+              >
+                <IonIcon icon={add} />
+                &nbsp;AGREGAR NUEVA TIPOLOGÍA
+              </IonButton>
+            </IonCol>
+          </IonRow>
           <IonRow>
             <IonCol
               style={{
@@ -121,7 +99,9 @@ export default function AgregarTipologia(props: TAgregarTipologia) {
                 borderRadius: "8pt",
                 cursor: "pointer",
               }}
-              onClick={() => props.setHabitacionSelected(habitacion.id)}
+              onClick={() =>
+                props.setHabitacionSelected(habitacion.id_tipo_detalle)
+              }
             >
               <IonCol
                 style={{
@@ -131,7 +111,7 @@ export default function AgregarTipologia(props: TAgregarTipologia) {
                   justifyContent: "center",
                 }}
               >
-                Habitación Single
+                {habitacion.tipo_detalle ?? "Sin nombre"}
               </IonCol>
               <IonCol
                 style={{
@@ -141,7 +121,7 @@ export default function AgregarTipologia(props: TAgregarTipologia) {
                   justifyContent: "center",
                 }}
               >
-                8
+                {habitacion.cantidad ?? 0}
               </IonCol>
             </IonRow>
           ))}

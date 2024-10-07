@@ -6,6 +6,7 @@ import { Dispatch, SetStateAction } from "react";
 
 type TComodidadesServicios = {
   caracteristicas: any;
+  formCaracteristicas: number[];
   setFormCaracteristicas: Dispatch<SetStateAction<number[]>>;
 };
 export default function ComodidadesServicios(props: TComodidadesServicios) {
@@ -59,6 +60,7 @@ export default function ComodidadesServicios(props: TComodidadesServicios) {
                         key={caracteristica.id_caracteristica}
                       >
                         <Check
+                          list={props.formCaracteristicas}
                           id={caracteristica.id_caracteristica}
                           setList={props.setFormCaracteristicas}
                           label={caracteristica.caracteristica}
@@ -102,6 +104,7 @@ export default function ComodidadesServicios(props: TComodidadesServicios) {
                         key={caracteristica.id_caracteristica}
                       >
                         <Check
+                          list={props.formCaracteristicas}
                           id={caracteristica.id_caracteristica}
                           setList={props.setFormCaracteristicas}
                           label={caracteristica.caracteristica}
@@ -145,6 +148,7 @@ export default function ComodidadesServicios(props: TComodidadesServicios) {
                         key={caracteristica.id_caracteristica}
                       >
                         <Check
+                          list={props.formCaracteristicas}
                           id={caracteristica.id_caracteristica}
                           setList={props.setFormCaracteristicas}
                           label={caracteristica.caracteristica}
@@ -158,7 +162,11 @@ export default function ComodidadesServicios(props: TComodidadesServicios) {
           </IonCol>
         </IonRow>
         <IonRow>
-          <Field form={form} name="texto_observacion_comodidades_y_servicios_oferta" label="Observaciones" />
+          <Field
+            form={form}
+            name="texto_observacion_comodidades_y_servicios_oferta"
+            label="Observaciones"
+          />
         </IonRow>
       </>
     )

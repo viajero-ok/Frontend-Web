@@ -1,10 +1,13 @@
 import { IonPage } from "@ionic/react";
 import LoginView from "../../Views/Login/LoginView";
+import VisitorLayout from "../../Views/Layouts/VisitorLayout";
 
 const LogIn: React.FC = () => {
   return (
     <IonPage>
-      <LoginView />
+      <VisitorLayout>
+        <LoginView />
+      </VisitorLayout>
     </IonPage>
   );
 };

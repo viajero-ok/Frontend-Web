@@ -12,17 +12,53 @@ import { useForm } from "../../../../../hooks/UseForm/FormProvider";
 import { Dispatch, SetStateAction, useState } from "react";
 import Check from "../../../../../components/Check/Check";
 import CheckInCheckOutRow from "../CheckInCheckOutRow/CheckInCheckOutRow";
-import { THorariosCheckInCheckOut } from "../../../../../App/Alojamientos/NuevoAlojamiento";
+import {
+  crearHorario,
+  THorariosCheckInCheckOut,
+} from "../../../../../App/Alojamientos/NuevoAlojamiento";
 
 type TPoliticasNormas = {
   caracteristicas: any;
+  formCaracteristicas: number[];
   setFormCaracteristicas: Dispatch<SetStateAction<number[]>>;
   politicasDeCancelacion: any;
   horarios: THorariosCheckInCheckOut[];
   setHorarios: Dispatch<SetStateAction<THorariosCheckInCheckOut[]>>;
+  idOferta: string;
 };
 export default function PoliticasNormas(props: TPoliticasNormas) {
   const form = useForm();
+
+  const handleAgregarHorario = () => {
+    console.log("llama");
+    crearHorario({ id_oferta: props.idOferta }).then((response: any) => {
+      console.log("id: ", response.data.id_horario);
+      props.setHorarios((prev: THorariosCheckInCheckOut[]) => [
+        ...prev,
+        {
+          id_horario: response.data.id_horario,
+          check_in: {
+            hora_check_in: 10,
+            minuto_check_in: 30,
+          },
+          check_out: {
+            hora_check_out: 18,
+            minuto_check_out: 30,
+          },
+          aplica_todos_los_dias: false,
+          dias_semana: {
+            aplica_lunes: true,
+            aplica_martes: true,
+            aplica_miercoles: true,
+            aplica_jueves: true,
+            aplica_viernes: true,
+            aplica_sabado: true,
+            aplica_domingo: true,
+          },
+        },
+      ]);
+    });
+  };
 
   return (
     props.caracteristicas &&
@@ -74,39 +110,15 @@ export default function PoliticasNormas(props: TPoliticasNormas) {
           {props.horarios.length > 0 &&
             props.horarios.map((horario: any, index: number) => (
               <CheckInCheckOutRow
-                id={index}
+                key={index}
+                id={horario.id_horario}
                 setRows={props.setHorarios}
               />
             ))}
           {props.horarios.length == 0 && (
             <IonButton
               style={{ "--background": "#F08408" }}
-              onClick={() =>
-                props.setHorarios((prev: THorariosCheckInCheckOut[]) => [
-                  ...prev,
-                  {
-                    id_horario: prev.length,
-                    check_in: {
-                      hora_check_in: 10,
-                      minuto_check_in: 30,
-                    },
-                    check_out: {
-                      hora_check_out: 18,
-                      minuto_check_out: 30,
-                    },
-                    aplica_todos_los_dias: false,
-                    dias_semana: {
-                      aplica_lunes: true,
-                      aplica_martes: true,
-                      aplica_miercoles: true,
-                      aplica_jueves: true,
-                      aplica_viernes: true,
-                      aplica_sabado: true,
-                      aplica_domingo: true,
-                    },
-                  },
-                ])
-              }
+              onClick={() => handleAgregarHorario()}
             >
               <IonIcon icon={add} />
               &nbsp;AGREGAR UN HORARIO
@@ -155,6 +167,7 @@ export default function PoliticasNormas(props: TPoliticasNormas) {
                         key={caracteristica.id_caracteristica}
                       >
                         <Check
+                          list={props.formCaracteristicas}
                           id={caracteristica.id_caracteristica}
                           setList={props.setFormCaracteristicas}
                           label={caracteristica.caracteristica}
@@ -164,6 +177,7 @@ export default function PoliticasNormas(props: TPoliticasNormas) {
                   )}
                 </div>
                 <Field
+                  value={form?.schema.text_observacion_normas}
                   form={form}
                   name="texto_observacion_normas"
                   label="Otras"
@@ -197,6 +211,7 @@ export default function PoliticasNormas(props: TPoliticasNormas) {
               >
                 <IonRow>
                   <Field
+                    value={form?.schema.id_politica_cancelacion}
                     select
                     options={props.politicasDeCancelacion.map(
                       (politica: any) => ({
@@ -211,6 +226,7 @@ export default function PoliticasNormas(props: TPoliticasNormas) {
                 </IonRow>
                 <IonRow>
                   <Field
+                    value={form?.schema.plazo_dias_cancelacion}
                     form={form}
                     name="plazo_dias_cancelacion"
                     label="Plazo de cancelación (en días)"
@@ -251,6 +267,7 @@ export default function PoliticasNormas(props: TPoliticasNormas) {
                   </IonRow>
                   <IonRow>
                     <Field
+                      value={form?.schema.monto_garantia}
                       form={form}
                       name="monto_garantia"
                       label="Monto de la garantía"
@@ -258,6 +275,7 @@ export default function PoliticasNormas(props: TPoliticasNormas) {
                   </IonRow>
                   <IonRow>
                     <Field
+                      value={form?.schema.texto_observacion_politica_garantia}
                       form={form}
                       name="texto_observacion_politica_garantia"
                       label="Observaciones"

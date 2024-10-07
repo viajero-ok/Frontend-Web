@@ -23,15 +23,6 @@ export default function LoginView(props: any) {
 
   return (
     <IonContent>
-      <img
-        src="/3.2. Principal/Fondo.jpg"
-        style={{
-          display: "flex",
-          position: "absolute",
-          width: "auto",
-          minHeight: "100%",
-        }}
-      />
       <IonCard
         style={{
           backgroundColor: "rgba(255, 255, 255, 1)",
@@ -40,7 +31,7 @@ export default function LoginView(props: any) {
           top: "50%",
           transform: "translateX(-50%) translateY(-50%)",
           padding: "31pt",
-          width: "50%"
+          width: "50%",
         }}
       >
         <IonCardHeader

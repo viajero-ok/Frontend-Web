@@ -1,11 +1,36 @@
-import { IonGrid, IonRow } from "@ionic/react";
+import { IonCol, IonGrid, IonRow } from "@ionic/react";
 import AgregarTipologia from "./AgregarTipologia";
 import Habitacion from "./Habitacion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  guardarImagenDeHabitacion,
+  obtenerDatosRegistradosHabitacion,
+  obtenerDatosRegistroHabitacion,
+} from "../../../../../App/Alojamientos/Habitacion";
+import MultimediaUpload from "../../../../../components/MultimediaUpload/MultimediaUpload";
 
+type THabitacionesForm = {
+  id: string;
+};
 export default function HabitacionesForm(props: any) {
   const [habitacionSelected, setHabitacionSelected] = useState<any>();
   const [habitacionesList, setHabitacionesList] = useState<any[]>([]);
+  const [datosRegistro, setDatosRegistro] = useState<any>();
+
+  const handleObtenerDatosRegistrados = () => {
+    obtenerDatosRegistradosHabitacion(props.id).then((response: any) => {
+      setHabitacionesList(response.data.datos);
+    });
+  };
+
+  useEffect(() => {
+    obtenerDatosRegistroHabitacion()
+      .then((response: any) => {
+        setDatosRegistro(response.data);
+      })
+      .catch(() => {});
+    handleObtenerDatosRegistrados();
+  }, []);
 
   return (
     <IonGrid style={{}}>
@@ -13,41 +38,28 @@ export default function HabitacionesForm(props: any) {
         setHabitacionSelected={setHabitacionSelected}
         habitaciones={habitacionesList}
         setHabitaciones={setHabitacionesList}
+        id={props.id}
+        handleObtenerDatos={handleObtenerDatosRegistrados}
       />
-      {habitacionSelected && (
-        <Habitacion
-          habitacionSelected={habitacionSelected}
-          setHabitacionSelected={setHabitacionSelected}
-          setHabitaciones={setHabitacionesList}
-        />
-      )}
-      {/* <DatosBasicos />
-      <ComodidadesServicios
-        caracteristicas={caracteristicas}
-        setFormCaracteristicas={setFormCaracteristicas}
-      />
-      <PoliticasNormas
-        caracteristicas={caracteristicas}
-        setFormCaracteristicas={setFormCaracteristicas}
-        politicasDeCancelacion={politicasDeCancelacion}
-        horarios={formHorarios}
-        setHorarios={setFormHorarios}
-      />
-      <Reservas
-        tipoPagoAnticipado={tiposPagoAnticipado}
-        metodosDePago={metodosDePago}
-        setFormMetodosDePago={setFormMetodosDePago}
-      /> */}
-      <IonRow>
-        {/* <IonCol style={{ paddingLeft: "100pt", paddingRight: "100pt" }}>
-          <MultimediaUpload service={handleImageService} />
-        </IonCol> */}
-      </IonRow>
-      <IonRow>
-        {/* <IonButton color="success" onClick={() => handleGuardar()}>
-          Guardar
-        </IonButton> */}
-      </IonRow>
+      {habitacionSelected &&
+        habitacionesList.filter(
+          (habitacion: any) => habitacion.id_tipo_detalle == habitacionSelected
+        )[0] && (
+          <Habitacion
+            habitacion={
+              habitacionesList.filter(
+                (habitacion: any) =>
+                  habitacion.id_tipo_detalle == habitacionSelected
+              )[0]
+            }
+            habitacionSelected={habitacionSelected}
+            setHabitacionSelected={setHabitacionSelected}
+            setHabitaciones={setHabitacionesList}
+            idOferta={props.id}
+            handleObtenerDatosRegistrados={handleObtenerDatosRegistrados}
+            datosRegistro={datosRegistro}
+          />
+        )}
     </IonGrid>
   );
 }

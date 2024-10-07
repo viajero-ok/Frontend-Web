@@ -44,19 +44,11 @@ export default function HomeVisitanteView() {
   };
 
   return (
-    <IonContent fullscreen style={{ overflowY: 'hidden' }}>
-      <IonCard
-        style={{
-          backgroundColor: "rgba(255, 255, 255, 1)",
-          left: "25%",
-          padding: "20pt",
-          width: "50%"
-        }}
-      >
-        <FormProvider schema={initialSchema}>
+    <>
+    <FormProvider schema={initialSchema}>
           <HomeVisitanteForm />
         </FormProvider>
-      </IonCard>
+      
       
 
       <ConsultaOfertasCard />
@@ -71,6 +63,6 @@ export default function HomeVisitanteView() {
           setToastMessage('');
         }}
       />
-    </IonContent>
+    </>
   );
 }

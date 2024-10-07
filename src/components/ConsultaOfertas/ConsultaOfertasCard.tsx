@@ -22,6 +22,7 @@ interface Oferta {
     precio: number;
     fecha: string;
     tipo: 'alojamiento' | 'actividad' | 'evento';
+    imagen: string;
 }
 
 export default function ConsultaOfertasCard() {
@@ -32,12 +33,12 @@ export default function ConsultaOfertasCard() {
         // Aquí deberías hacer la llamada a tu API para obtener las ofertas
         // Por ahora, usaremos datos de ejemplo
         const ofertasEjemplo: Oferta[] = [
-            { id: 1, titulo: "Hotel Ejemplo", descripcion: "Habitación doble", precio: 100, fecha: "2023-05-01", tipo: 'alojamiento' },
-            { id: 2, titulo: "Tour por la ciudad", descripcion: "Recorrido guiado", precio: 50, fecha: "2023-05-02", tipo: 'actividad' },
-            { id: 3, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'evento' },
-            { id: 4, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'alojamiento' },
+            { id: 1, titulo: "Cabañas de la Colina", descripcion: "Habitación doble", precio: 100, fecha: "2023-05-01", tipo: 'alojamiento', imagen:"public/images/cabaña1.png"},
+            { id: 4, titulo: "Böden Hotel & Spa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'alojamiento', imagen:"public/images/hotel.jpg"},
+            /* { id: 2, titulo: "Reserva Natural Pozo Verde", descripcion: "Recorrido guiado", precio: 50, fecha: "2023-05-02", tipo: 'actividad' },
             { id: 5, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'actividad' },
-            { id: 6, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'evento' },
+            { id: 3, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'evento' },
+            { id: 6, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'evento' }, */
 
         ];
         setOfertas(ofertasEjemplo);
@@ -51,9 +52,9 @@ export default function ConsultaOfertasCard() {
     });
 
     return (
-        <IonCol size="12" sizeMd="10" sizeLg="8" style={{ margin: 'auto',  overflowY: 'hidden' }}>
-            <IonCard style={{ height: '100%', display: 'flex', flexDirection: 'column', margin: '16px' }}>
-                <IonCardHeader style={{overflowY:'hidden'}}>
+        <IonCol size="12" sizeMd="20" sizeLg="8" style={{ margin: 'auto' }}>
+            <>
+                <IonCardHeader>
                     <IonSegment 
                         value={selectedSegment} 
                         onIonChange={e => setSelectedSegment(e.detail.value as any)}
@@ -69,12 +70,12 @@ export default function ConsultaOfertasCard() {
                         </IonSegmentButton>
                     </IonSegment>
                 </IonCardHeader>
-                <IonCardContent style={{ flex: 1, overflowY: 'auto' }}>
+                <IonCardContent style={{ flex: 1, width: '50%', left: '25%' }}>
                     {filteredOfertas.map((oferta) => (
                         <OfertaCard key={oferta.id} oferta={oferta} />
                     ))}
                 </IonCardContent>
-            </IonCard>
+            </>
         </IonCol>
     );
 }
@@ -85,9 +86,9 @@ function OfertaCard({ oferta }: { oferta: Oferta }) {
             <IonRow>
                 <IonCol size="5" style={{ padding: '0' }}>
                     <IonImg 
-                        src="https://ionicframework.com/docs/img/demos/card-media.png" 
-                        alt={oferta.titulo} 
-                        style={{ height: '100%', objectFit: 'cover' }}
+                         src={oferta.imagen} 
+                         alt={oferta.titulo} 
+                         style={{ height: '200px', objectFit: 'cover' }}
                     />
                 </IonCol>
                 <IonCol size="7">

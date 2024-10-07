@@ -12,14 +12,14 @@ export default function HomeVisitanteForm() {
   const form = useForm();
 
   return (
-    <>
+    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
       <IonList style={{
         display: 'flex',
         flexDirection: 'column',
-        margin: '13pt',
-        marginTop: '0',
-        marginLeft: '34pt',
-        marginRight: '34pt',
+        margin: '0pt',
+        marginTop: '0pt',
+        width: '50%',
+        left: '50%',        
         paddingRight: '12pt',
       }}>
         <Field
@@ -54,8 +54,9 @@ export default function HomeVisitanteForm() {
           display: 'flex',
           flexDirection: 'column',
           margin: '13pt',
-          marginLeft: '89pt',
-          marginRight: '89pt',
+          marginTop: '0pt',
+          marginLeft: '95pt',
+          marginRight: '95pt',
           paddingLeft: '12pt',
           paddingRight: '12pt'
         }}
@@ -72,6 +73,6 @@ export default function HomeVisitanteForm() {
           setToastMessage('');
         }}
       />
-    </>
+    </div>
   );
 }

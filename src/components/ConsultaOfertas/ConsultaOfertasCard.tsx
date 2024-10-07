@@ -99,7 +99,7 @@ function OfertaCard({ oferta }: { oferta: Oferta }) {
                     <IonCardContent>
                         <p>{oferta.descripcion}</p>
                         <p>Precio: ${oferta.precio}</p>
-                        <IonButton expand="block" style={{ "--background": "#F08408", "--color": "white" }}>
+                        <IonButton expand="block" style={{ "--background": "white", "--color": "#f08408" }}>
                             Ver detalles
                         </IonButton>
                     </IonCardContent>

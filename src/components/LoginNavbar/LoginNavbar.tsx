@@ -1,4 +1,5 @@
 import { IonButton, useIonRouter } from "@ionic/react";
+import { colorFill } from "ionicons/icons";
 
 export default function LoginNavbar() {
   const router = useIonRouter();
@@ -12,15 +13,19 @@ export default function LoginNavbar() {
   };
   return (
     <>
-      <IonButton color="light" onClick={() => handleRegistrarme()}>
-        Registrarme
-      </IonButton>
       <IonButton
-        style={{ marginLeft: "1rem" }}
+        style={{ marginLeft: "1rem", "--background": "white", "--color": "#F08408", "--border-color": "#F08408", "--border-style": "solid", "--border-width": "1px"}}
         onClick={() => handleIngresar()}
       >
-        Ingresar
+        Ingresá
       </IonButton>
+      <IonButton 
+        style={{ marginLeft: "1rem", "--background": "#F08408"}} 
+        onClick={() => handleRegistrarme()}
+      >
+        Registrate
+      </IonButton>
+      
     </>
   );
 }

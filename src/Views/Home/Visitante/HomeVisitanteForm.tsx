@@ -51,12 +51,6 @@ export default function HomeVisitanteForm() {
       <IonButton 
         expand="block"
         style={{"--background": "#F08408",
-          display: 'flex',
-          flexDirection: 'column',
-          margin: '13pt',
-          marginTop: '0pt',
-          marginLeft: '95pt',
-          marginRight: '95pt',
           paddingLeft: '12pt',
           paddingRight: '12pt'
         }}

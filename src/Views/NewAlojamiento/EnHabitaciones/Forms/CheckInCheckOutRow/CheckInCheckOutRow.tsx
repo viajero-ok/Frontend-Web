@@ -13,7 +13,7 @@ import { add, trash } from "ionicons/icons";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useMaskito } from "@maskito/react";
 import { maskitoTimeOptionsGenerator } from "@maskito/kit";
-import { eliminarHabitación } from "../../../../../App/Alojamientos/Habitacion";
+import { eliminarHabitacion } from "../../../../../App/Alojamientos/Habitacion";
 
 type TRowData = {
   id_horario: string;
@@ -65,7 +65,7 @@ export default function CheckInCheckOutRow(props: TCheckInCheckOutRow) {
   });
 
   const handleEliminar = () => {
-    eliminarHabitación(props.id)
+    eliminarHabitacion(props.id)
       .then((response: any) => {
         props.setRows((prev: any[]) => [
           ...prev.filter((row: any) => row.id_horario != props.id),

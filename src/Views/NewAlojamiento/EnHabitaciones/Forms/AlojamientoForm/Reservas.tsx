@@ -16,6 +16,7 @@ import Check from "../../../../../components/Check/Check";
 type TReservas = {
   tipoPagoAnticipado: any;
   metodosDePago: any;
+  formMetodosDePago: number[];
   setFormMetodosDePago: Dispatch<SetStateAction<number[]>>;
 };
 export default function Reservas(props: TReservas) {
@@ -212,6 +213,7 @@ export default function Reservas(props: TReservas) {
                       key={metodo.id_metodo_pago}
                     >
                       <Check
+                        list={props.formMetodosDePago}
                         forceChecked={todos}
                         id={metodo.id_metodo_pago}
                         setList={props.setFormMetodosDePago}

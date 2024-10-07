@@ -1,7 +1,11 @@
-import { IonCol, IonGrid, IonRow } from "@ionic/react";
+import { IonButton, IonCol, IonGrid, IonIcon, IonRow } from "@ionic/react";
+import { add } from "ionicons/icons";
+import { Dispatch, SetStateAction } from "react";
 
 type TAgregarTarifa = {
   tarifas: any[];
+  handleAgregar: () => void;
+  setSelectedTarifa: Dispatch<SetStateAction<any>>;
 };
 export default function AgregarTarifa(props: TAgregarTarifa) {
   return (
@@ -18,6 +22,32 @@ export default function AgregarTarifa(props: TAgregarTarifa) {
           padding: "31pt",
         }}
       >
+        <IonRow
+          style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <h3 style={{ fontWeight: "bold" }}>Tarifas</h3>
+        </IonRow>
+        <IonRow
+          style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <IonButton
+            style={{ "--background": "#F08408" }}
+            onClick={() => props.handleAgregar()}
+          >
+            <IonIcon icon={add} />
+            &nbsp;AGREGAR NUEVA TARIFA
+          </IonButton>
+        </IonRow>
         <IonRow>
           <IonCol
             style={{
@@ -69,7 +99,7 @@ export default function AgregarTarifa(props: TAgregarTarifa) {
               borderRadius: "8pt",
               cursor: "pointer",
             }}
-            //   onClick={() => props.setHabitacionSelected(habitacion.id)}
+            onClick={() => props.setSelectedTarifa(tarifa)}
           >
             <IonCol
               style={{
@@ -79,7 +109,9 @@ export default function AgregarTarifa(props: TAgregarTarifa) {
                 justifyContent: "center",
               }}
             >
-              01/11/24 al 01/01/25
+              {`${tarifa.fecha_desde.split("T")[0]} a ${
+                tarifa.fecha_hasta.split("T")[0]
+              }`}
             </IonCol>
             <IonCol
               style={{
@@ -89,11 +121,12 @@ export default function AgregarTarifa(props: TAgregarTarifa) {
                 justifyContent: "center",
               }}
             >
-              <ul style={{ listStyleType: "none" }}>
+              {/* <ul style={{ listStyleType: "none" }}>
                 <li>Habitación single</li>
                 <li>Habitación doble</li>
                 <li>Habitación single</li>
-              </ul>
+              </ul> */}
+              {tarifa.nombre_tipo_detalle}
             </IonCol>
             <IonCol
               style={{
@@ -103,11 +136,12 @@ export default function AgregarTarifa(props: TAgregarTarifa) {
                 justifyContent: "center",
               }}
             >
-              <ul style={{ listStyleType: "none" }}>
+              {/* <ul style={{ listStyleType: "none" }}>
                 <li>$1.500.000</li>
                 <li>$1.500.000</li>
                 <li>$1.500.000</li>
-              </ul>
+              </ul> */}
+              {tarifa.tipo_pension}
             </IonCol>
             <IonCol
               style={{
@@ -117,11 +151,12 @@ export default function AgregarTarifa(props: TAgregarTarifa) {
                 justifyContent: "center",
               }}
             >
-              <ul style={{ listStyleType: "none" }}>
+              {/* <ul style={{ listStyleType: "none" }}>
                 <li>Completa</li>
                 <li>Completa</li>
                 <li>Media</li>
-              </ul>
+              </ul> */}
+              ${tarifa.monto_tarifa}
             </IonCol>
           </IonRow>
         ))}

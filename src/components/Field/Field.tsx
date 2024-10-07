@@ -67,6 +67,7 @@ export default function Field(props: IField) {
         )}
         {props.select && props.options && (
           <IonSelect
+            value={value}
             disabled={props.disabled ?? false}
             label={props.required ? props.label + " (*)" : props.label}
             onIonChange={(e: any) => handleOnChange(e.target.value)}

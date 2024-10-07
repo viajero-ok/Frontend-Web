@@ -11,49 +11,42 @@ import { add } from "ionicons/icons";
 export default function TarifasForm(props: any) {
   const [tarifas, setTarifas] = useState<any[]>([]);
   const [tiposPension, setTiposPension] = useState<any[]>([]);
+  const [tipologias, setTipologias] = useState<any[]>([]);
+  const [selectedTarifa, setSelectedTarifa] = useState<any | null>(null);
 
   const handleAgregar = () => {
-    setTarifas((prev: any[]) => [...prev, {}]);
+    // setTarifas((prev: any[]) => [...prev, {}]);
+    setSelectedTarifa(null);
+  };
+
+  const handleObtenerDatos = () => {
+    obtenerDatosRegistradosTarifas(props.id).then((response: any) => {
+      setTarifas(response.data.datos);
+    });
   };
 
   useEffect(() => {
-    obtenerDatosRegistroTarifas().then((response: any) => {
+    obtenerDatosRegistroTarifas(props.id).then((response: any) => {
       setTiposPension(response.data.tipos_pension);
+      setTipologias(response.data.tipos_detalle);
     });
 
-    obtenerDatosRegistradosTarifas(props.id).then((response: any) => {});
+    handleObtenerDatos();
   }, []);
 
   return (
     <IonGrid>
-      <IonRow
-        style={{
-          display: "flex",
-          alignContent: "center",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <h3 style={{ fontWeight: "bold" }}>Tarifas</h3>
-      </IonRow>
-      <IonRow
-        style={{
-          display: "flex",
-          alignContent: "center",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <IonButton
-          style={{ "--background": "#F08408" }}
-          onClick={() => handleAgregar()}
-        >
-          <IonIcon icon={add} />
-          &nbsp;AGREGAR NUEVA TARIFA
-        </IonButton>
-      </IonRow>
-      <AgregarTarifa tarifas={tarifas} />
-      <Tarifa />
+      <AgregarTarifa
+        tarifas={tarifas}
+        handleAgregar={handleAgregar}
+        setSelectedTarifa={setSelectedTarifa}
+      />
+      <Tarifa
+        selectedTarifa={selectedTarifa}
+        tiposPension={tiposPension}
+        tipologias={tipologias}
+        handleObtenerDatos={handleObtenerDatos}
+      />
     </IonGrid>
   );
 }

@@ -12,19 +12,16 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { crearHabitacion } from "../../../../../App/Alojamientos/Habitacion";
 
 type TAgregarTipologia = {
+  handleObtenerDatos: () => void;
   setHabitacionSelected: Dispatch<SetStateAction<any>>;
   setHabitaciones: Dispatch<SetStateAction<any>>;
   habitaciones: any[];
+  id: string;
 };
 export default function AgregarTipologia(props: TAgregarTipologia) {
   const handleAgregar = () => {
-    crearHabitacion().then((response: any) =>
-      props.setHabitaciones((prev: any[]) => [
-        ...prev,
-        {
-          id: response.data.id_tipo_detalle,
-        },
-      ])
+    crearHabitacion(props.id).then((response: any) =>
+      props.handleObtenerDatos()
     );
   };
 
@@ -102,7 +99,9 @@ export default function AgregarTipologia(props: TAgregarTipologia) {
                 borderRadius: "8pt",
                 cursor: "pointer",
               }}
-              onClick={() => props.setHabitacionSelected(habitacion.id)}
+              onClick={() =>
+                props.setHabitacionSelected(habitacion.id_tipo_detalle)
+              }
             >
               <IonCol
                 style={{
@@ -112,7 +111,7 @@ export default function AgregarTipologia(props: TAgregarTipologia) {
                   justifyContent: "center",
                 }}
               >
-                Habitación Single
+                {habitacion.tipo_detalle ?? "Sin nombre"}
               </IonCol>
               <IonCol
                 style={{
@@ -122,7 +121,7 @@ export default function AgregarTipologia(props: TAgregarTipologia) {
                   justifyContent: "center",
                 }}
               >
-                8
+                {habitacion.cantidad ?? 0}
               </IonCol>
             </IonRow>
           ))}

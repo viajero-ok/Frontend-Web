@@ -83,8 +83,6 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
   };
 
   useEffect(() => {
-    if (!form) return;
-    if (!form.schema) return;
     getDatosDeRegistroNuevoAlojamiento()
       .then((response: any) => {
         setCaracteristicas(response.data.caracteristicas);
@@ -93,31 +91,88 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
         setMetodosDePago(response.data.metodos_pago);
       })
       .catch((error: any) => {});
+  }, []);
 
+  useEffect(() => {
     obtenerDatosRegistradosAlojamiento(props.id).then((response: any) => {
-      setDatosRegistrados(response.data);
-      console.log("setea");
-      form.setValue(
-        "nombre_alojamiento",
-        response.data.datos.datos_basicos.nombre
-      );
-      form.setValue(
-        "descripcion_alojamiento",
-        response.data.datos.datos_basicos.descripcion
-      );
+      setDatosRegistrados(response.data.datos);
     });
-  }, [form]);
+  }, []);
+
+  useEffect(() => {
+    if (!datosRegistrados) return;
+    if (!form) return;
+    form.setValue("nombre_alojamiento", datosRegistrados.datos_basicos.nombre);
+    form.setValue(
+      "descripcion_alojamiento",
+      datosRegistrados.datos_basicos.descripcion
+    );
+    /*
+    texto_observacion_comodidades_y_servicios_oferta: "",
+    texto_observacion_canchas_deportes: "",
+    texto_observacion_normas: "",
+    texto_observacion_politica_garantia: "",
+
+    // Datos basicos: {
+    nombre_alojamiento: "",
+    descripcion_alojamiento: "",
+
+    // Politicas de reserva
+    id_politica_cancelacion: "",
+    plazo_dias_cancelacion: "",
+    solicita_garantia: "",
+    monto_garantia: "", // float
+    id_tipo_pago_anticipado: "",
+    porcentaje_pago_anticipado: "", // float
+    monto_pago_anticipado: "", // float
+    minimo_dias_estadia: "",
+*/
+    form.setValue(
+      "texto_observacion_comodidades_y_servicios_oferta",
+      datosRegistrados.datos_basicos.id_politica_cancelacion
+    );
+    form.setValue(
+      "texto_observacion_canchas_deportes",
+      datosRegistrados.datos_basicos.plazo_dias_cancelacion
+    );
+    form.setValue(
+      "texto_observacion_normas",
+      datosRegistrados.datos_basicos.solicita_garantia
+    );
+    form.setValue(
+      "texto_observacion_politica_garantia",
+      datosRegistrados.datos_basicos.monto_garantia
+    );
+    form.setValue(
+      "texto_observacion_politica_garantia",
+      datosRegistrados.datos_basicos.id_tipo_pago_anticipado
+    );
+    form.setValue(
+      "texto_observacion_politica_garantia",
+      datosRegistrados.datos_basicos.porcentaje_pago_anticipado
+    );
+    form.setValue(
+      "texto_observacion_politica_garantia",
+      datosRegistrados.datos_basicos.monto_pago_anticipado
+    );
+    form.setValue(
+      "texto_observacion_politica_garantia",
+      datosRegistrados.datos_basicos.minimo_dias_estadia
+    );
+  }, [datosRegistrados]);
 
   return (
     <IonGrid style={{}}>
       <DatosBasicos />
       <ComodidadesServicios
         caracteristicas={caracteristicas}
+        formCaracteristicas={formCaracteristicas}
         setFormCaracteristicas={setFormCaracteristicas}
       />
       <PoliticasNormas
         idOferta={props.id}
         caracteristicas={caracteristicas}
+        formCaracteristicas={formCaracteristicas}
         setFormCaracteristicas={setFormCaracteristicas}
         politicasDeCancelacion={politicasDeCancelacion}
         horarios={formHorarios}
@@ -125,6 +180,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
       />
       <Reservas
         tipoPagoAnticipado={tiposPagoAnticipado}
+        formMetodosDePago={formMetodosDePago}
         metodosDePago={metodosDePago}
         setFormMetodosDePago={setFormMetodosDePago}
       />

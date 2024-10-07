@@ -19,6 +19,7 @@ import {
 
 type TPoliticasNormas = {
   caracteristicas: any;
+  formCaracteristicas: number[];
   setFormCaracteristicas: Dispatch<SetStateAction<number[]>>;
   politicasDeCancelacion: any;
   horarios: THorariosCheckInCheckOut[];
@@ -166,6 +167,7 @@ export default function PoliticasNormas(props: TPoliticasNormas) {
                         key={caracteristica.id_caracteristica}
                       >
                         <Check
+                          list={props.formCaracteristicas}
                           id={caracteristica.id_caracteristica}
                           setList={props.setFormCaracteristicas}
                           label={caracteristica.caracteristica}
@@ -175,6 +177,7 @@ export default function PoliticasNormas(props: TPoliticasNormas) {
                   )}
                 </div>
                 <Field
+                  value={form?.schema.text_observacion_normas}
                   form={form}
                   name="texto_observacion_normas"
                   label="Otras"
@@ -208,6 +211,7 @@ export default function PoliticasNormas(props: TPoliticasNormas) {
               >
                 <IonRow>
                   <Field
+                    value={form?.schema.id_politica_cancelacion}
                     select
                     options={props.politicasDeCancelacion.map(
                       (politica: any) => ({
@@ -222,6 +226,7 @@ export default function PoliticasNormas(props: TPoliticasNormas) {
                 </IonRow>
                 <IonRow>
                   <Field
+                    value={form?.schema.plazo_dias_cancelacion}
                     form={form}
                     name="plazo_dias_cancelacion"
                     label="Plazo de cancelación (en días)"
@@ -262,6 +267,7 @@ export default function PoliticasNormas(props: TPoliticasNormas) {
                   </IonRow>
                   <IonRow>
                     <Field
+                      value={form?.schema.monto_garantia}
                       form={form}
                       name="monto_garantia"
                       label="Monto de la garantía"
@@ -269,6 +275,7 @@ export default function PoliticasNormas(props: TPoliticasNormas) {
                   </IonRow>
                   <IonRow>
                     <Field
+                      value={form?.schema.texto_observacion_politica_garantia}
                       form={form}
                       name="texto_observacion_politica_garantia"
                       label="Observaciones"

@@ -5,7 +5,6 @@ import {
   IonRow,
   IonSegment,
   IonSegmentButton,
-  useIonRouter,
 } from "@ionic/react";
 import { useState } from "react";
 import { FormProvider } from "../../../hooks/UseForm/FormProvider";
@@ -49,7 +48,7 @@ export default function NewAlojamientoEnHabitacionesView(
   const schemaHabitacionesForm = {};
   const schemaTarifasForm = {};
 
-  const router = useIonRouter();
+ 
 
   return (
     <DefaultLoggedLayout>
@@ -108,15 +107,6 @@ export default function NewAlojamientoEnHabitacionesView(
               <TarifasForm id={props.idOferta} />
             </FormProvider>
           )}
-        </IonRow>
-        <IonRow>
-          <IonButton
-            color="light"
-            onClick={() => router && router.push("/my-offers")}
-            style={{ position: "absolute", float: "left", left: "21pt" }}
-          >
-            Volver
-          </IonButton>
         </IonRow>
       </IonGrid>
     </DefaultLoggedLayout>

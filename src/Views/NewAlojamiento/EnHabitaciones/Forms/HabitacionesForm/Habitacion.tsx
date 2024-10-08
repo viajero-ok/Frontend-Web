@@ -80,7 +80,7 @@ export default function Habitacion(props: THabitacion) {
       .then(() => {
         props.handleObtenerDatosRegistrados();
       })
-      .catch(() => {});
+      .catch(() => { });
   };
 
   const handleImageService = (file: File) => {
@@ -115,7 +115,7 @@ export default function Habitacion(props: THabitacion) {
   return (
     <div
       style={{
-        border: "3pt solid #F08408",
+        border: "1pt solid #F08408",
         borderRadius: "8pt",
         marginLeft: "60pt",
         marginRight: "60pt",
@@ -133,7 +133,7 @@ export default function Habitacion(props: THabitacion) {
       </IonRow>
       <IonRow
         style={{
-          border: "2pt solid #F08408",
+          border: "1pt solid #F08408",
           borderRadius: "8pt",
           width: "50%",
           position: "relative",
@@ -168,6 +168,7 @@ export default function Habitacion(props: THabitacion) {
           }}
         >
           <IonInput
+            style={{ borderBottom: "1pt solid #F08408" }}
             value={cantidad}
             label="Cantidad"
             type="number"
@@ -177,6 +178,7 @@ export default function Habitacion(props: THabitacion) {
       </IonRow>
       <IonRow>
         <IonCol>
+          {/* Sección de Plazas */}
           <IonRow
             style={{
               display: "flex",
@@ -189,11 +191,13 @@ export default function Habitacion(props: THabitacion) {
           </IonRow>
           <IonRow
             style={{
-              border: "2pt solid #F08408",
-              borderRadius: "8pt",
-              margin: "13pt",
-              marginRight: "6.5pt",
+              borderTop: "1pt solid #F08408",
+              width: "50%",
+              position: "relative",
+              left: "50%",
+              transform: "translateX(-50%)",
               padding: "13pt",
+              margin: "8pt",
             }}
           >
             <IonCol>
@@ -208,6 +212,7 @@ export default function Habitacion(props: THabitacion) {
                 <IonCol>Cama doble</IonCol>
                 <IonCol>
                   <IonInput
+                    style={{ borderBottom: "1pt solid #F08408" }}
                     type="number"
                     placeholder="Cantidad"
                     value={plazas[0].cantidad_camas}
@@ -232,6 +237,7 @@ export default function Habitacion(props: THabitacion) {
                 <IonCol>Cama individual</IonCol>
                 <IonCol>
                   <IonInput
+                    style={{ borderBottom: "1pt solid #F08408" }}
                     type="number"
                     placeholder="Cantidad"
                     value={plazas[1].cantidad_camas}
@@ -256,6 +262,7 @@ export default function Habitacion(props: THabitacion) {
                 <IonCol>Sofá-cama</IonCol>
                 <IonCol>
                   <IonInput
+                    style={{ borderBottom: "1pt solid #F08408" }}
                     type="number"
                     placeholder="Cantidad"
                     value={plazas[2].cantidad_camas}
@@ -277,7 +284,7 @@ export default function Habitacion(props: THabitacion) {
                   justifyContent: "center",
                 }}
               >
-                <IonCol>Total de plazas</IonCol>
+                <IonCol style={{ marginTop: "13pt" }}>Total de plazas</IonCol>
                 <IonCol>
                   {plazas.reduce(
                     (partialSum, a) => partialSum + a.cantidad_camas,
@@ -287,25 +294,28 @@ export default function Habitacion(props: THabitacion) {
               </IonRow>
             </IonCol>
           </IonRow>
-        </IonCol>
-        <IonCol>
+
+          {/* Sección de Baños */}
           <IonRow
             style={{
               display: "flex",
               alignContent: "center",
               alignItems: "center",
               justifyContent: "center",
+              marginTop: "20pt",
             }}
           >
             <h3>Baños</h3>
           </IonRow>
           <IonRow
             style={{
-              border: "2pt solid #F08408",
-              borderRadius: "8pt",
-              margin: "13pt",
-              marginLeft: "6.5pt",
+              borderTop: "1pt solid #F08408",
+              width: "50%",
+              position: "relative",
+              left: "50%",
+              transform: "translateX(-50%)",
               padding: "13pt",
+              margin: "8pt",
             }}
           >
             <IonCol>
@@ -319,6 +329,7 @@ export default function Habitacion(props: THabitacion) {
                   }}
                 >
                   <IonInput
+                    style={{ borderBottom: "1pt solid #F08408" }}
                     value={cantidadBaños}
                     type="number"
                     label="Cantidad"
@@ -376,8 +387,7 @@ export default function Habitacion(props: THabitacion) {
       </IonRow>
       <IonRow
         style={{
-          border: "2pt solid #F08408",
-          borderRadius: "8pt",
+          borderTop: "1pt solid #F08408",
           width: "50%",
           position: "relative",
           left: "50%",

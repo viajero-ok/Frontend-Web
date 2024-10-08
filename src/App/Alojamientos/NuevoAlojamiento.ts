@@ -3,7 +3,9 @@ import AUTH_API from "../AuthBackendApi";
 type TBodyRegistrarNuevoAlojamiento = {
   id_tipo_oferta: number;
   id_sub_tipo_oferta: number;
+  id_establecimiento: number;
 };
+
 export const registrarNuevoAlojamiento = async (
   body: TBodyRegistrarNuevoAlojamiento
 ) => await AUTH_API.post(`/ofertas-turisticas/registrar-oferta-turistica`, body);

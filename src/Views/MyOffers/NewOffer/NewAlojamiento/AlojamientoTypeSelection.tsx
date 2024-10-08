@@ -31,8 +31,10 @@ export default function AlojamientoTypeSelection(
     registrarNuevoAlojamiento({
       id_tipo_oferta: 1,
       id_sub_tipo_oferta: idTipoSuboferta,
+      id_establecimiento: 23,
     })
       .then((response: any) => {
+        setOpenConfirm(false);
         router &&
           router.push(
             `/my-offers/alojamiento/en-habitaciones/edit/${response.data.id_oferta}`
@@ -227,8 +229,8 @@ export default function AlojamientoTypeSelection(
                 </IonButton>
               </IonCol>
             </IonRow>
-            <IonRow style={{ justifyContent: "center", padding: "8pt" }}>
-              <h3>Estás por crear un nuevo alojamiento</h3>
+            <IonRow style={{ justifyContent: "center", padding: "8pt"}}>
+              <h3 style={{color: "black", fontSize: "14pt" }}>Estás por crear un nuevo alojamiento</h3>
             </IonRow>
             <IonRow
               style={{
@@ -238,15 +240,14 @@ export default function AlojamientoTypeSelection(
               }}
             >
               <IonButton
-                color="light"
                 onClick={() => setOpenConfirm(false)}
-                style={{ marginRight: "8pt" }}
+                style={{ marginRight: "8pt", "--background": "white", "--color": "#F08408" }}
               >
                 Cancelar
               </IonButton>
               <IonButton
+                style={{ "--background": "#F08408", "--color": "white" }}
                 disabled={selection == null}
-                color="success"
                 onClick={() => selection && handleCrearAlojamiento(selection)}
               >
                 Crear

@@ -27,10 +27,37 @@ export default function AgregarTipologia(props: TAgregarTipologia) {
 
   return (
     <>
+      <IonRow
+        style={{
+          display: "flex",
+          alignContent: "center",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <h3 style={{ fontWeight: "bold" }}>Tipologías</h3>
+      </IonRow>
+      <IonRow >
+        <IonCol
+          style={{
+            display: "flex",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <IonButton
+            style={{ "--background": "#F08408" }}
+            onClick={() => handleAgregar()}
+          >
+            <IonIcon icon={add} />
+            &nbsp;AGREGAR NUEVA TIPOLOGÍA
+          </IonButton>
+        </IonCol>
+      </IonRow>
       <IonRow>
         <IonGrid
           style={{
-            border: "3pt solid #F08408",
             borderRadius: "8pt",
             margin: "31pt",
             marginLeft: "60pt",
@@ -38,18 +65,9 @@ export default function AgregarTipologia(props: TAgregarTipologia) {
             paddingLeft: "31pt",
             paddingRight: "31pt",
             padding: "31pt",
+            border: "1pt solid #F08408",
           }}
         >
-          <IonRow
-            style={{
-              display: "flex",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <h3 style={{ fontWeight: "bold" }}>Tipologías</h3>
-          </IonRow>
           <IonRow>
             <IonCol
               style={{
@@ -59,25 +77,7 @@ export default function AgregarTipologia(props: TAgregarTipologia) {
                 justifyContent: "center",
               }}
             >
-              <IonButton
-                style={{ "--background": "#F08408" }}
-                onClick={() => handleAgregar()}
-              >
-                <IonIcon icon={add} />
-                &nbsp;AGREGAR NUEVA TIPOLOGÍA
-              </IonButton>
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol
-              style={{
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <h4 style={{ fontWeight: "bold" }}>Nombre Habitación</h4>
+              <h4 style={{ fontWeight: "bold" }}>Nombre Tipología</h4>
             </IonCol>
             <IonCol
               style={{

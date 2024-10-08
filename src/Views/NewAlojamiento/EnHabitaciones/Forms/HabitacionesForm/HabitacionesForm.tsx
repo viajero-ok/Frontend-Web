@@ -1,4 +1,4 @@
-import { IonCol, IonGrid, IonRow } from "@ionic/react";
+import { IonButton, IonCol, IonGrid, IonRow, useIonRouter } from "@ionic/react";
 import AgregarTipologia from "./AgregarTipologia";
 import Habitacion from "./Habitacion";
 import { useEffect, useState } from "react";
@@ -16,7 +16,7 @@ export default function HabitacionesForm(props: any) {
   const [habitacionSelected, setHabitacionSelected] = useState<any>();
   const [habitacionesList, setHabitacionesList] = useState<any[]>([]);
   const [datosRegistro, setDatosRegistro] = useState<any>();
-
+  const router = useIonRouter();
   const handleObtenerDatosRegistrados = () => {
     obtenerDatosRegistradosHabitacion(props.id).then((response: any) => {
       setHabitacionesList(response.data.datos);
@@ -60,6 +60,22 @@ export default function HabitacionesForm(props: any) {
             datosRegistro={datosRegistro}
           />
         )}
+        <IonRow style={{ justifyContent: "space-around", marginTop: "10pt", marginBottom: "10pt" }}>
+        <IonButton
+          color="light"
+          onClick={() => router && router.push("/my-offers")}
+        >
+          Volver
+        </IonButton>
+        <IonButton
+          style={{
+            "--background": "#F08408",
+          }}
+        >
+          Guardar
+        </IonButton>
+
+      </IonRow>
     </IonGrid>
   );
 }

@@ -27,7 +27,7 @@ interface FormSchema {
 export default function HomeVisitanteView() {
   const [openToast, setOpenToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>('');
-
+  const [destinoSeleccionado, setDestinoSeleccionado] = useState<string>('');
   const initialSchema: FormSchema = {
     destino: '',
     comienzoViaje: '',
@@ -51,7 +51,7 @@ export default function HomeVisitanteView() {
       
       
 
-      <ConsultaOfertasCard />
+      <ConsultaOfertasCard destino={destinoSeleccionado} />
       
       <IonToast
         isOpen={openToast}

@@ -69,7 +69,7 @@ export default function NewPlaceForm() {
             })
         );
       })
-      .catch((error: any) => {});
+      .catch((error: any) => { });
   }, []);
 
   const handleOnClick = (e: LeafletMouseEvent) => {
@@ -98,25 +98,29 @@ export default function NewPlaceForm() {
       .then((response: any) => {
         console.log(response);
       })
-      .then((error: any) => {});
+      .then((error: any) => { });
   };
 
   return (
     form && (
+      <> 
+      <IonTitle style={{ fontSize: "18pt", fontWeight: "bolder", marginTop: "21pt", marginLeft: "33%"}}>
+      Completá los datos de tu establecimiento
+    </IonTitle>
+      
       <IonGrid>
+        
         <IonRow
           class="ion-justify-content-center"
           style={{ padding: "21pt", paddingBottom: "3pt" }}
         >
           <IonCol>
-            <IonTitle style={{ fontSize: "24pt", fontWeight: "bolder" }}>
-              Completá los datos de tu establecimiento
-            </IonTitle>
+           
           </IonCol>
         </IonRow>
         <IonRow>
           <IonCol style={{ padding: "21pt", paddingRight: "13pt" }}>
-            <IonTitle>Datos generales</IonTitle>
+            <IonTitle style={{borderBottom: "1px solid #F08408"}}>Datos generales</IonTitle>
             <br />
             <IonList>
               <Field
@@ -130,9 +134,9 @@ export default function NewPlaceForm() {
                 form={form}
               />
               <Field name="descripcion" label="Descripción" form={form} />
-              <Field name="telefono" label="telefono" form={form} />
+              <Field name="telefono" label="Teléfono" form={form} />
               <Field name="mail" label="E-mail" form={form} />
-              <Field name="calle" label="calle" form={form} />
+              <Field name="calle" label="Calle" form={form} />
               <Field name="numero" label="Número" form={form} />
               <Field
                 select
@@ -146,16 +150,16 @@ export default function NewPlaceForm() {
                 options={
                   ubicaciones && form.schema.provincia != ""
                     ? ubicaciones
-                        .filter(
-                          (provincia: any) =>
-                            provincia.id == form.schema.provincia
-                        )[0]
-                        .departamentos.map((departamento: any) => {
-                          return {
-                            id: departamento.id,
-                            text: departamento.text,
-                          };
-                        })
+                      .filter(
+                        (provincia: any) =>
+                          provincia.id == form.schema.provincia
+                      )[0]
+                      .departamentos.map((departamento: any) => {
+                        return {
+                          id: departamento.id,
+                          text: departamento.text,
+                        };
+                      })
                     : []
                 }
                 name="departamento"
@@ -166,20 +170,20 @@ export default function NewPlaceForm() {
                 select
                 options={
                   ubicaciones &&
-                  form.schema.departamento &&
-                  form.schema.provincia != ""
+                    form.schema.departamento &&
+                    form.schema.provincia != ""
                     ? ubicaciones
-                        .filter(
-                          (provincia: any) =>
-                            provincia.id == form.schema.provincia
-                        )[0]
-                        .departamentos.filter(
-                          (departamento: any) =>
-                            departamento.id == form.schema.departamento
-                        )[0]
-                        .localidades.map((localidad: any) => {
-                          return { id: localidad.id, text: localidad.text };
-                        })
+                      .filter(
+                        (provincia: any) =>
+                          provincia.id == form.schema.provincia
+                      )[0]
+                      .departamentos.filter(
+                        (departamento: any) =>
+                          departamento.id == form.schema.departamento
+                      )[0]
+                      .localidades.map((localidad: any) => {
+                        return { id: localidad.id, text: localidad.text };
+                      })
                     : []
                 }
                 name="localidad"
@@ -189,7 +193,7 @@ export default function NewPlaceForm() {
             </IonList>
           </IonCol>
           <IonCol style={{ padding: "21pt", paddingLeft: "13pt" }}>
-            <IonTitle>Ubicá en el mapa tu establecimiento turístico</IonTitle>
+            <IonTitle style={{borderBottom: "1px solid #F08408"}}>Ubicá en el mapa tu establecimiento turístico</IonTitle>
             <br />
             <MapView
               search
@@ -202,15 +206,21 @@ export default function NewPlaceForm() {
             />
           </IonCol>
         </IonRow>
-        <IonRow>
-          <IonCol>
-            <IonButton color="medium">Volver</IonButton>
-            <IonButton color="success" onClick={() => handleRegistrar()}>
+        <IonRow style={{justifyContent: "space-between", marginLeft: "21pt", marginRight: "21pt"}}>
+            <IonButton style={{
+              "--background": "white",
+              "--color": "#F08408",
+            }}
+            >Volver</IonButton>
+            <IonButton style={{
+              "--background": "#F08408",
+              "--color": "white",
+            }} onClick={() => handleRegistrar()}>
               Registrar
             </IonButton>
-          </IonCol>
         </IonRow>
       </IonGrid>
+      </>
     )
   );
 }

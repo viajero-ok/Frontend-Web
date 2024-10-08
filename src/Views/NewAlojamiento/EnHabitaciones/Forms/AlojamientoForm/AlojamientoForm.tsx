@@ -1,4 +1,4 @@
-import { IonButton, IonCol, IonGrid, IonRow } from "@ionic/react";
+import { IonButton, IonCol, IonGrid, IonRow, useIonRouter } from "@ionic/react";
 import { useForm } from "../../../../../hooks/UseForm/FormProvider";
 
 import { useEffect, useState } from "react";
@@ -32,7 +32,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
   const [formHorarios, setFormHorarios] = useState<THorariosCheckInCheckOut[]>(
     []
   );
-
+  const router = useIonRouter();
   const form = useForm();
 
   const handleGuardar = () => {
@@ -74,7 +74,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
       .then((response) => {
         console.log("response: ", response);
       })
-      .catch(() => {});
+      .catch(() => { });
   };
 
   const handleImageService = (file: File) => {
@@ -90,7 +90,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
         setTiposPagoAnticipado(response.data.tipos_pago_anticipado);
         setMetodosDePago(response.data.metodos_pago);
       })
-      .catch((error: any) => {});
+      .catch((error: any) => { });
   }, []);
 
   useEffect(() => {
@@ -192,10 +192,22 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
           />
         </IonCol>
       </IonRow>
-      <IonRow>
-        <IonButton color="success" onClick={() => handleGuardar()}>
+      <IonRow style={{ justifyContent: "space-around", marginTop: "10pt", marginBottom: "10pt" }}>
+        <IonButton
+          color="light"
+          onClick={() => router && router.push("/my-offers")}
+        >
+          Volver
+        </IonButton>
+        <IonButton
+          style={{
+            "--background": "#F08408",
+          }}
+          onClick={() => handleGuardar()}
+        >
           Guardar
         </IonButton>
+
       </IonRow>
     </IonGrid>
   );

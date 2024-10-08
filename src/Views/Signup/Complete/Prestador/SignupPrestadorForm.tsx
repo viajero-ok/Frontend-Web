@@ -87,7 +87,7 @@ export default function SignupPrestadorForm(props: any) {
       sitio_web: form.schema.sitioWeb,
       fecha_nacimiento: form.schema.fechaDeNacimiento,
     }).then((response: any) => {
-      router.push("/login");
+      router.push("/home");
     });
   };
 

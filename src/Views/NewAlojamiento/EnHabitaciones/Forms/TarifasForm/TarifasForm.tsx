@@ -58,6 +58,7 @@ export default function TarifasForm(props: any) {
           style={{
             "--background": "#F08408",
           }}
+          onClick={() => router && router.push("/my-offers")}
         >
           Registrar
         </IonButton>

@@ -83,7 +83,7 @@ export default function Habitacion(props: THabitacion) {
 			.then(() => {
 				props.handleObtenerDatosRegistrados();
 			})
-			.catch(() => {});
+			.catch(() => { });
 	};
 
 	const handleImageService = (file: File) => {
@@ -296,15 +296,16 @@ export default function Habitacion(props: THabitacion) {
 									alignContent: "center",
 									alignItems: "center",
 									justifyContent: "center",
+									marginTop: "13pt",
 								}}
 							>
-								<IonCol style={{ marginTop: "13pt" }}>
+								<IonCol style={{ marginTop: "13pt", fontWeight: "bold" }}>
 									Total de plazas
 								</IonCol>
-								<IonCol>
+								<IonCol style={{ borderBottom: "1pt solid #F08408", fontWeight: "bold", marginTop: "13pt" }}>
 									{plazas.reduce(
 										(partialSum, a) =>
-											partialSum + a.cantidad_camas,
+											partialSum + (a.id_tipo_cama === 1 ? a.cantidad_camas * 2 : a.cantidad_camas),
 										0
 									)}
 								</IonCol>

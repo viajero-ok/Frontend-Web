@@ -64,7 +64,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
 					plazo_dias_cancelacion: parseInt(s.plazo_dias_cancelacion),
 					solicita_garantia: false,
 					monto_garantia: 0.0, // float
-					id_tipo_pago_anticipado: 0,
+					id_tipo_pago_anticipado: 1,
 					porcentaje_pago_anticipado: 0.0, // float
 					monto_pago_anticipado: 0.0, // float
 					minimo_dias_estadia: parseInt(s.minimo_dias_estadia),

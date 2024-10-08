@@ -76,7 +76,7 @@ export default function Tarifa(props: any) {
     <IonRow>
       <IonGrid
         style={{
-          border: "3pt solid #F08408",
+          border: "2pt solid #F08408",
           borderRadius: "8pt",
           marginLeft: "60pt",
           marginRight: "60pt",
@@ -93,7 +93,7 @@ export default function Tarifa(props: any) {
             justifyContent: "center",
           }}
         >
-          <h3 style={{ fontWeight: "bold" }}>
+          <h3 style={{ fontWeight: "bold", padding: "10pt" }}>
             {!props.selectedTarifa && "Nueva "}Tarifa
           </h3>
         </IonRow>
@@ -131,7 +131,9 @@ export default function Tarifa(props: any) {
             justifyContent: "center",
           }}
         >
-          <h3 style={{ fontWeight: "bold" }}>Detalles de la tarifa</h3>
+          <h3 style={{ fontWeight: "bold", padding: "10pt" }}>
+            Detalles de la tarifa
+          </h3>
         </IonRow>
         <IonRow>
           <IonCol>
@@ -181,6 +183,7 @@ export default function Tarifa(props: any) {
                   }}
                 >
                   <IonSelect
+                    style={{ borderBottom: "1pt solid #F08408" }}
                     onIonChange={(e: any) =>
                       setDetallesTarifa((prev: any[]) => {
                         const copy = [...prev];
@@ -208,6 +211,7 @@ export default function Tarifa(props: any) {
                   }}
                 >
                   <IonSelect
+                    style={{ borderBottom: "1pt solid #F08408" }}
                     onIonChange={(e: any) =>
                       setDetallesTarifa((prev: any[]) => {
                         const copy = [...prev];
@@ -236,6 +240,7 @@ export default function Tarifa(props: any) {
                   }}
                 >
                   <IonInput
+                  style={{ borderBottom: "1pt solid #F08408" }}
                     label="$"
                     onIonInput={(e: any) =>
                       setDetallesTarifa((prev: any[]) => {
@@ -254,25 +259,33 @@ export default function Tarifa(props: any) {
                 </IonCol>
               </IonRow>
             ))}
-            <IonRow>
-              <IonButton onClick={() => handleAgregarDetalle()}>
+            <IonRow style={{ display: "flex-end", justifyContent: "center", padding: '13pt' }}>
+              <IonButton
+                onClick={() => handleAgregarDetalle()}
+                style={{ "--background": "white", color: "#F08408", border: "1pt solid #F08408" }}
+              >
                 Agregar detalle
               </IonButton>
             </IonRow>
             <IonRow
               style={{
                 display: "flex",
-                alignContent: "right",
-                alignItems: "right",
-                justifyContent: "right",
-                fontWeight: "bold",
-                marginRight: "60pt",
+                alignContent: "space-around",
+                alignItems: "center",
+                justifyContent: "space-around",
+                padding: "13pt",
               }}
             >
-              <IonButton color="danger" onClick={() => handleEliminar()}>
-                Eliminar
+              <IonButton
+                style={{ "--background": "white", color: "#F08408" }}
+                onClick={() => handleEliminar()}
+              >
+                <IonIcon icon={trash} /> Eliminar
               </IonButton>
-              <IonButton color="success" onClick={() => handleGuardar()}>
+              <IonButton
+                style={{ "--background": "#F08408" }}
+                onClick={() => handleGuardar()}
+              >
                 Guardar
               </IonButton>
             </IonRow>

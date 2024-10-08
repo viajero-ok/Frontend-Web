@@ -38,6 +38,7 @@ export default function DateWheel(props: TDateWheel) {
   return (
     <>
       <IonInput
+        style={{ borderBottom: "1pt solid #F08408" }}
         value={value}
         type="text"
         placeholder={props.required ? props.label + " (*)" : props.label}

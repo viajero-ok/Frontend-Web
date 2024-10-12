@@ -43,7 +43,7 @@ import NewPlace from "./pages/MyPlaces/NewPlace/NewPlace";
 import MyOffers from "./pages/MyOffers/MyOffers";
 import NewOffer from "./pages/MyOffers/NewOffer/NewOffer";
 import NewAlojamientoEnHabitaciones from "./pages/NewAlojamiento/NewAlojamientoEnHabitaciones";
-
+import ItineraryView from "./Views/Itinerary/ItineraryView";
 setupIonicReact();
 
 const App: React.FC = () => (
@@ -80,6 +80,7 @@ const App: React.FC = () => (
             path="/my-offers/alojamiento/en-habitaciones/edit/:id"
             component={NewAlojamientoEnHabitaciones}
           />
+          <Route exact path="/itinerary" component={ItineraryView} />
         </IonRouterOutlet>
       </IonReactRouter>
     </AuthProvider>

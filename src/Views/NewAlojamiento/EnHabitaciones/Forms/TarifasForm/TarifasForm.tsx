@@ -1,4 +1,4 @@
-import { IonButton, IonCol, IonGrid, IonIcon, IonRow } from "@ionic/react";
+import { IonButton, IonCol, IonGrid, IonIcon, IonRow, useIonRouter } from "@ionic/react";
 import { useEffect, useState } from "react";
 import AgregarTarifa from "./AgregarTarifa";
 import Tarifa from "./Tarifa";
@@ -13,7 +13,7 @@ export default function TarifasForm(props: any) {
   const [tiposPension, setTiposPension] = useState<any[]>([]);
   const [tipologias, setTipologias] = useState<any[]>([]);
   const [selectedTarifa, setSelectedTarifa] = useState<any | null>(null);
-
+  const router = useIonRouter();
   const handleAgregar = () => {
     // setTarifas((prev: any[]) => [...prev, {}]);
     setSelectedTarifa(null);
@@ -47,6 +47,23 @@ export default function TarifasForm(props: any) {
         tipologias={tipologias}
         handleObtenerDatos={handleObtenerDatos}
       />
+      <IonRow style={{ justifyContent: "space-around", marginTop: "10pt", marginBottom: "10pt" }}>
+        <IonButton
+          color="light"
+          onClick={() => router && router.push("/my-offers")}
+        >
+          Volver
+        </IonButton>
+        <IonButton
+          style={{
+            "--background": "#F08408",
+          }}
+          onClick={() => router && router.push("/my-offers")}
+        >
+          Registrar
+        </IonButton>
+
+      </IonRow>
     </IonGrid>
   );
 }

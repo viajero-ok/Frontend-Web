@@ -23,8 +23,7 @@ export default function EstablecimientoCard(props: TEstablecimientoCard) {
           <IonCol size="auto">
             <IonRow>
               <img
-                alt="Silhouette of mountains"
-                src="https://ionicframework.com/docs/img/demos/card-media.png"
+                src="public\images\hipocampus.jpg"
                 width={"175pt"}
                 height={"150pt"}
                 style={{}}

@@ -87,6 +87,7 @@ export default function SignupTuristaForm(props: any) {
 
   const handleRegistrarme = () => {
     if (!form) return;
+    if (!router) return;
     registrarTurista({
       nombre: form.schema.nombre,
       apellido: form.schema.apellido,
@@ -100,6 +101,8 @@ export default function SignupTuristaForm(props: any) {
       id_idioma: form.schema.idioma,
       id_genero: form.schema.genero,
       fecha_nacimiento: form.schema.fechaDeNacimiento,
+    }).then((response: any) => {
+      router.push("/home");
     });
   };
 
@@ -255,7 +258,9 @@ export default function SignupTuristaForm(props: any) {
               margin: "13pt",
             }}
           >
-            <IonButton color="light" onClick={() => router.goBack()}>
+            <IonButton style={{ 
+              "--background": "white",
+              "--color": "#F08408", }} onClick={() => router.goBack()}>
               Volver
             </IonButton>
           </IonCol>
@@ -266,7 +271,9 @@ export default function SignupTuristaForm(props: any) {
               margin: "13pt",
             }}
           >
-            <IonButton onClick={() => handleRegistrarme()} style={{}}>
+            <IonButton onClick={() => handleRegistrarme()} style={{
+              "--background": "#F08408",
+              "--color": "white",}}>
               Registrarme
             </IonButton>
           </IonCol>

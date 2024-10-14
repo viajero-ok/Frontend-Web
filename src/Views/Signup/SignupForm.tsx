@@ -142,6 +142,8 @@ export default function SignupForm(props: TProps) {
               margin: "13pt",
               marginLeft: "89pt",
               marginRight: "89pt",
+              "--background": "#F08408",
+              "--color": "white",
             }}
             onClick={() => handleCrearCuenta()}
           >
@@ -156,7 +158,7 @@ export default function SignupForm(props: TProps) {
           }}
         >
           Ya posee una cuenta?
-          <IonButton fill="clear" size="small">
+          <IonButton fill="clear" size="small" style={{ "--color": "#F08408" }}>
             Iniciar sesión
           </IonButton>
         </div>

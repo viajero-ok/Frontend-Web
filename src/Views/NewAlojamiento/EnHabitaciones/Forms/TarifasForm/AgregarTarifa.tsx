@@ -12,7 +12,7 @@ export default function AgregarTarifa(props: TAgregarTarifa) {
     <IonRow>
       <IonGrid
         style={{
-          border: "3pt solid #F08408",
+          border: "2pt solid #F08408",
           borderRadius: "8pt",
           margin: "31pt",
           marginLeft: "60pt",

@@ -75,7 +75,7 @@ export default function VerifyForm(props: any) {
           </IonText>
           <div style={{ marginTop: "13pt" }}>
             <IonText color="medium">
-              Enviamos un mail a johndoe@fake.com <br />
+              Enviamos un mail a viajeroapp2024@gmail.com <br />
               con el código de validación
             </IonText>
           </div>
@@ -113,6 +113,8 @@ export default function VerifyForm(props: any) {
             disabled={code.length != 8}
             style={{
               margin: "13pt",
+              "--background": "#F08408",
+              "--color": "white",
             }}
             onClick={() => handleVerificar()}
           >

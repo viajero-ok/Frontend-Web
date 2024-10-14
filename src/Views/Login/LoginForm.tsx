@@ -96,11 +96,12 @@ export default function LoginForm() {
           marginRight: "89pt",
           paddingLeft: "12pt",
           paddingRight: "12pt",
+          "--background": "#F08408",
+          "--color": "white",
         }}
-        color="secondary"
         onClick={() => handleIniciarSesion()}
       >
-        Ingresar
+        Ingresá
       </IonButton>
       <div
         style={{
@@ -111,6 +112,7 @@ export default function LoginForm() {
       >
         ¿No tenés cuenta?
         <IonButton
+          style={{ "--color": "#F08408" }}
           fill="clear"
           size="small"
           onClick={() => {
@@ -118,7 +120,7 @@ export default function LoginForm() {
             router.push("/signup");
           }}
         >
-          Registrarse
+          Registrate
         </IonButton>
         <IonToast
           isOpen={openToast}

@@ -1,45 +1,20 @@
-import React, { useState } from "react";
 import {
   IonButton,
   IonCol,
-  IonContent,
   IonGrid,
   IonIcon,
   IonInput,
-  IonItem,
-  IonList,
-  IonMenu,
-  IonMenuToggle,
-  IonPopover,
   IonRow,
-  IonSelect,
-  IonSelectOption,
-  IonTitle,
-  IonToast,
 } from "@ionic/react";
 import {
-  alertCircleOutline,
-  bed,
-  bedOutline,
   calendarOutline,
-  colorFill,
+  homeOutline,
   navigateOutline,
-  peopleOutline,
   personOutline,
-  pin,
-  pinOutline,
+  pricetagOutline,
 } from "ionicons/icons";
-import Field from "../../../components/Field/Field";
-import { useForm } from "../../../hooks/UseForm/FormProvider";
-import { Validator as v } from "../../../hooks/UseForm/Validator/Validator";
 
-export default function HomeVisitanteForm() {
-  const [openToast, setOpenToast] = useState<boolean>(false);
-  const [toastMessage, setToastMessage] = useState<string>("");
-  const [openPopover, setOpenPopover] = useState<boolean>(false);
-
-  const form = useForm();
-
+export default function FormTarifa(props: any) {
   return (
     <div
       style={{
@@ -49,7 +24,7 @@ export default function HomeVisitanteForm() {
         alignItems: "center",
         justifyContent: "center",
         position: "relative",
-        marginTop: "-28pt",
+        marginTop: "12pt",
       }}
     >
       <div
@@ -73,7 +48,7 @@ export default function HomeVisitanteForm() {
               flexDirection: "row",
               width: "100%",
               backgroundColor: "white",
-              boxShadow: "0px 3px 11px 1px rgba(161,161,161,1)"
+              boxShadow: "0px 3px 11px 1px rgba(161,161,161,1)",
             }}
           >
             <IonCol
@@ -86,11 +61,11 @@ export default function HomeVisitanteForm() {
               }}
             >
               <IonIcon
-                icon={navigateOutline}
+                icon={homeOutline}
                 style={{ fontSize: "24pt", color: "gray" }}
               />
               &nbsp;
-              <IonInput placeholder="A dónde vamos?" />
+              <IonInput placeholder="Tipología" />
             </IonCol>
             <IonCol
               style={{
@@ -107,7 +82,7 @@ export default function HomeVisitanteForm() {
                 style={{ fontSize: "24pt", color: "gray" }}
               />
               &nbsp;
-              <IonInput placeholder="Fecha de llegada - Fecha de salida" />
+              <IonInput placeholder="Vigencia" />
             </IonCol>
             <IonCol
               style={{
@@ -120,67 +95,15 @@ export default function HomeVisitanteForm() {
                 borderRight: 0,
               }}
             >
-              <span
-                id="popover"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "left",
-                  cursor: "pointer",
-                }}
-                onClick={() => setOpenPopover(true)}
-              >
-                <IonIcon
-                  icon={personOutline}
-                  style={{ fontSize: "24pt", color: "gray" }}
-                />
-                &nbsp;2 adultos, 2 niños, 2 habitaciones
-              </span>
-              <IonPopover
-                trigger="popover"
-                isOpen={openPopover}
-                onDidDismiss={() => setOpenPopover(false)}
+              <IonIcon
+                icon={pricetagOutline}
+                style={{ fontSize: "24pt", color: "gray" }}
+              />
+              <IonInput
+                placeholder="AR$&nbsp;100,000"
                 style={{}}
-              >
-                <IonList lines="none" style={{}}>
-                  <IonItem style={{ padding: "2pt" }}>
-                    <IonIcon
-                      icon={personOutline}
-                      style={{ fontSize: "24pt" }}
-                    />
-                    &nbsp;&nbsp;
-                    <IonInput
-                      type="number"
-                      placeholder="Adultos"
-                      style={{ fontSize: "16pt" }}
-                    />
-                  </IonItem>
-                  <IonItem style={{ padding: "2pt" }}>
-                    <IonIcon
-                      icon={peopleOutline}
-                      style={{ fontSize: "24pt" }}
-                    />
-                    &nbsp;&nbsp;
-                    <IonInput
-                      type="number"
-                      placeholder="Niños"
-                      style={{ fontSize: "16pt" }}
-                    />
-                  </IonItem>
-                  <IonItem style={{ padding: "2pt" }}>
-                    <IonIcon icon={bedOutline} style={{ fontSize: "24pt" }} />
-                    &nbsp;&nbsp;
-                    <IonInput
-                      type="number"
-                      placeholder="Habitaciones"
-                      style={{ fontSize: "16pt" }}
-                    />
-                  </IonItem>
-                </IonList>
-              </IonPopover>
+                onClick={() => {}}
+              ></IonInput>
             </IonCol>
             <IonCol
               style={{ border: "3pt solid #F08408", borderLeft: 0, padding: 0 }}
@@ -195,7 +118,7 @@ export default function HomeVisitanteForm() {
                   "--box-shadow": 0,
                 }}
               >
-                Buscar
+                AGREGAR
               </IonButton>
             </IonCol>
           </IonRow>

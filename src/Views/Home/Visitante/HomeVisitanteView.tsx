@@ -1,21 +1,10 @@
-import React, { useState } from 'react';
-import {
-  IonButton,
-  IonList,
-  IonTitle,
-  IonToast,
-  IonContent,
-  IonCard,
-  IonCardHeader,
-  IonCardContent,
-  IonImg,
-} from '@ionic/react';
-import { alertCircleOutline } from 'ionicons/icons';
-import Field from '../../../components/Field/Field';
-import { useForm, FormProvider } from '../../../hooks/UseForm/FormProvider';
-import { Validator as v } from '../../../hooks/UseForm/Validator/Validator';
-import HomeVisitanteForm from './HomeVisitanteForm';
-import ConsultaOfertasCard from '../../../components/ConsultaOfertas/ConsultaOfertasCard';
+import { IonCol, IonGrid, IonRow, IonToast } from "@ionic/react";
+import { alertCircleOutline } from "ionicons/icons";
+import { useState } from "react";
+import ConsultaOfertasCard from "../../../components/ConsultaOfertas/ConsultaOfertasCard";
+import { FormProvider } from "../../../hooks/UseForm/FormProvider";
+import HomeVisitanteForm from "./HomeVisitanteForm";
+import MapView from "../../../components/MapView/MapView";
 
 interface FormSchema {
   destino: string;
@@ -26,33 +15,29 @@ interface FormSchema {
 
 export default function HomeVisitanteView() {
   const [openToast, setOpenToast] = useState<boolean>(false);
-  const [toastMessage, setToastMessage] = useState<string>('');
+  const [toastMessage, setToastMessage] = useState<string>("");
 
   const initialSchema: FormSchema = {
-    destino: '',
-    comienzoViaje: '',
-    finViaje: '',
-    viajeros: '',
+    destino: "",
+    comienzoViaje: "",
+    finViaje: "",
+    viajeros: "",
   };
 
   const handleBuscar = (form: { schema: FormSchema }) => {
     if (!form) return;
     // Aquí iría la lógica para procesar la búsqueda
-    console.log('Formulario enviado:', form.schema);
-    setToastMessage('Búsqueda realizada con éxito');
+    console.log("Formulario enviado:", form.schema);
+    setToastMessage("Búsqueda realizada con éxito");
     setOpenToast(true);
   };
 
   return (
     <>
-    <FormProvider schema={initialSchema}>
-          <HomeVisitanteForm />
-        </FormProvider>
-      
-      
-
+      <FormProvider schema={initialSchema}>
+        <HomeVisitanteForm />
+      </FormProvider>
       <ConsultaOfertasCard />
-      
       <IonToast
         isOpen={openToast}
         message={toastMessage}
@@ -60,7 +45,7 @@ export default function HomeVisitanteView() {
         icon={alertCircleOutline}
         onDidDismiss={() => {
           setOpenToast(false);
-          setToastMessage('');
+          setToastMessage("");
         }}
       />
     </>

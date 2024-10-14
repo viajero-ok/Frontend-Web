@@ -43,8 +43,8 @@ type TMap = {
 const Map = (props: TMap) => {
   // get the location from geolocation
   const [pos, setPos] = useState({
-    lat: (props.initPos && props.initPos.lat) ?? 0.0,
-    lng: (props.initPos && props.initPos.lgn) ?? 0.0,
+    lat: (props.initPos && props.initPos.lat) ?? -31.44158447746307,
+    lng: (props.initPos && props.initPos.lgn) ?? -64.19357580741155,
   });
 
   useEffect(() => {

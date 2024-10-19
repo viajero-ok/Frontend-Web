@@ -1,0 +1,14 @@
+services:
+  reactjs-app:
+    image: ${FRONT_IMAGE}
+    ports:
+      - "${FRONT_PORT}:5173"
+    env_file:
+      - .env.frontend
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    external: true

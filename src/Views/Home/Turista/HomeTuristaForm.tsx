@@ -72,7 +72,7 @@ export default function HomeTuristaForm() {
         Buscar
       </IonButton>
       {busquedaRealizada && <p>Destino seleccionado: {destino}</p>}
-      <ConsultaOfertasCard destino={destino} />
+      <ConsultaOfertasCard /* destino={destino} */ />
       <IonToast
         isOpen={openToast}
         message={toastMessage}

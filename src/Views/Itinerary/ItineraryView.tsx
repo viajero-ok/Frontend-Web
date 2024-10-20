@@ -13,15 +13,35 @@ import {
 import { useState, useEffect } from "react";
 import DefaultLoggedLayout from "../Layouts/DefaultLoggedLayout";
 import OfertaCard from "../../components/OfertaCard/OfertaCard";
+import { obtenerOfertasGuardadas, obtenerOfertasReservadas } from "../../App/Ofertas/Ofertas";
 
 export default function ItineraryView() {
-    const [activeTab, setActiveTab] = useState<'guardados' | 'reservados'>('guardados');
+    const [activeTab, setActiveTab] = useState<'reservados' | 'guardados'>('guardados');
     const [guardados, setGuardados] = useState<any[]>([]);
     const [reservados, setReservados] = useState<any[]>([]);
     const router = useIonRouter();
 
     useEffect(() => {
-        // Aquí irían las llamadas para obtener los datos de guardados y reservados
+        obtenerOfertasGuardadas()
+            .then((response: any) => {
+                if (response.data.ofertas_guardadas.length > 0) {
+                    setGuardados(response.data.ofertas_guardadas);
+                }
+            })
+            .catch((error) => {
+                console.error("Error al obtener ofertas guardadas:", error);
+            });
+
+        obtenerOfertasReservadas()
+            .then((response: any) => {
+                if (response.data.ofertas_reservadas.length > 0) {
+                    setReservados(response.data.ofertas_reservadas);
+                    console.log(response.data.ofertas_reservadas);
+                }
+            })
+            .catch((error) => {
+                console.error("Error al obtener ofertas reservadas:", error);
+            });
     }, []);
 
     return (
@@ -47,7 +67,7 @@ export default function ItineraryView() {
                             <IonRow>
                                 <IonSegment
                                     value={activeTab}
-                                    onIonChange={e => setActiveTab(e.detail.value as 'guardados' | 'reservados')}>
+                                    onIonChange={e => setActiveTab(e.detail.value as 'reservados' | 'guardados')}>
                                     <IonSegmentButton style={{
                                         "--color-checked": "#F08408",
                                         "--border-color-checked": "#F08408",
@@ -90,8 +110,8 @@ export default function ItineraryView() {
                                 guardados.map((oferta: any) => (
                                     <IonRow key={oferta.id} style={{ width: "100%" }}>
                                         <OfertaCard
-                                            nombre={oferta.nombre}
-                                            descripcion={oferta.descripcion}
+                                            nombre={oferta.nombre_oferta}
+                                            descripcion={oferta.descripcion_oferta}
                                             id={oferta.id}
                                             setOfertas={setGuardados}
                                         />
@@ -101,9 +121,9 @@ export default function ItineraryView() {
                                 reservados.map((oferta: any) => (
                                     <IonRow key={oferta.id} style={{ width: "100%" }}>
                                         <OfertaCard
-                                            nombre={oferta.nombre}
-                                            descripcion={oferta.descripcion}
-                                            id={oferta.id}
+                                            nombre={oferta.nombre_oferta}
+                                            descripcion={oferta.descripcion_oferta}
+                                            id={oferta.id_reserva}
                                             setOfertas={setReservados}
                                         />
                                     </IonRow>

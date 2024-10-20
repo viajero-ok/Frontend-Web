@@ -15,23 +15,23 @@ import { close, trash } from "ionicons/icons";
 import { Dispatch, SetStateAction, useState } from "react";
 import { eliminarOferta } from "../../App/Ofertas/Ofertas";
 
-type TOfertaCard = {
+interface OfertaCardProps {
   nombre: string;
   descripcion: string;
   id: number;
-  setOfertas: Dispatch<SetStateAction<any[]>>;
-};
+  setOfertas: React.Dispatch<React.SetStateAction<any[]>>;
+}
 
-export default function OfertaCard(props: TOfertaCard) {
+const OfertaCard: React.FC<OfertaCardProps> = ({ nombre, descripcion, id, setOfertas }) => {
   const [openConfirmDelete, setOpenConfirmDelete] = useState<boolean>(false);
   const handleDelete = () => {
-    if (!props.id) return;
-    eliminarOferta(props.id)
+    if (!id) return;
+    eliminarOferta(id)
       .then(() => {
         setOpenConfirmDelete(false);
-        props.setOfertas((prev: any[]) =>
+        setOfertas((prev: any[]) =>
           [...prev].filter(
-            (oferta: any) => oferta.id_oferta_turistica != props.id
+            (oferta: any) => oferta.id_oferta_turistica != id
           )
         );
       })
@@ -56,8 +56,8 @@ export default function OfertaCard(props: TOfertaCard) {
           <IonCol>
             <IonRow>
               <IonCardHeader style={{}}>
-                <IonCardTitle>{props.nombre}</IonCardTitle>
-                <IonCardSubtitle>{props.descripcion}</IonCardSubtitle>
+                <IonCardTitle>{nombre}</IonCardTitle>
+                <IonCardSubtitle>{descripcion}</IonCardSubtitle>
               </IonCardHeader>
             </IonRow>
             <IonRow>
@@ -134,4 +134,6 @@ export default function OfertaCard(props: TOfertaCard) {
       </IonModal>
     </IonCard>
   );
-}
+};
+
+export default OfertaCard;

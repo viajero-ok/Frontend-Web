@@ -20,6 +20,7 @@
 .env.dev
 .env.prod
 .env.test
+.env
 /.nx
 /.nx/cache
 /.vscode/*

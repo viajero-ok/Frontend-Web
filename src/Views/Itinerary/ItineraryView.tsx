@@ -13,6 +13,7 @@ import {
 import { useState, useEffect } from "react";
 import DefaultLoggedLayout from "../Layouts/DefaultLoggedLayout";
 import OfertaCard from "../../components/OfertaCard/OfertaCard";
+import OfertaReservadaCard from "../../components/OfertaCard/OfertaReservadaCard";
 import { obtenerOfertasGuardadas, obtenerOfertasReservadas } from "../../App/Ofertas/Ofertas";
 
 export default function ItineraryView() {
@@ -120,11 +121,9 @@ export default function ItineraryView() {
                             ) : (
                                 reservados.map((oferta: any) => (
                                     <IonRow key={oferta.id} style={{ width: "100%" }}>
-                                        <OfertaCard
+                                        <OfertaReservadaCard
                                             nombre={oferta.nombre_oferta}
                                             descripcion={oferta.descripcion_oferta}
-                                            id={oferta.id_reserva}
-                                            setOfertas={setReservados}
                                         />
                                     </IonRow>
                                 ))

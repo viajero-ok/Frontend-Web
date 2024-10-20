@@ -1,10 +1,16 @@
 import {
   IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonImg,
   IonInput,
   IonItem,
   IonList,
+  IonRow,
   IonText,
   IonToast,
+  useIonRouter,
 } from "@ionic/react";
 import { useMaskito } from "@maskito/react";
 import { useState } from "react";
@@ -16,6 +22,8 @@ export default function VerifyForm(props: any) {
   const [openToast, setOpenToast] = useState<boolean>(false);
   const [ToastMessage, setToastMessage] = useState<string>("");
 
+  const router = useIonRouter();
+
   const codeMask = useMaskito({
     options: {
       mask: [...Array(8).fill(/\d/)],
@@ -26,7 +34,7 @@ export default function VerifyForm(props: any) {
     if (code.length != 8) return;
     verificarCuenta({ id_usuario: props.id, codigo_verificacion: code })
       .then((response: any) => {
-        window.location.replace("/");
+        router.push("/login");
       })
       .catch((error: any) => {
         setToastMessage(error.response.data.message);
@@ -35,80 +43,95 @@ export default function VerifyForm(props: any) {
   };
 
   return (
-    <>
-      <IonText
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-        }}
-      >
-        <h1>Validar Cuenta</h1>
-      </IonText>
-      <div style={{ marginTop: "13pt" }}>
-        <IonText color="medium">
-          Enviamos un mail a johndoe@fake.com <br />
-          con el código de validación
-        </IonText>
-      </div>
-      <IonList
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          margin: "13pt",
-          marginTop: "13pt",
-          marginLeft: "34pt",
-          marginRight: "34pt",
-          paddingRight: "12pt",
-        }}
-      >
-        <IonItem>
-          <IonInput
-            ref={async (cardRef) => {
-              if (cardRef) {
-                const input = await cardRef.getInputElement();
-                codeMask(input);
-              }
-            }}
-            onInput={(e: any) => setCode(e.target.value)}
-            maxlength={8}
-            placeholder="00000000"
+    <IonCard
+      style={{
+        position: "fixed",
+        width: "50%",
+        left: "50%",
+        top: "50%",
+        transform: "translateX(-50%) translateY(-50%)",
+      }}
+    >
+      <IonCardHeader style={{ padding: "31pt", paddingTop: "40pt" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+          }}
+        >
+          <IonImg src="icon.png" style={{ width: "100pt" }} />
+          <IonText
             style={{
-              letterSpacing: "21pt",
-              fontSize: "21pt",
-              textAlign: "left",
-              left: "60%",
-              transform: "translateX(-50%)",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
             }}
-          ></IonInput>
-        </IonItem>
-      </IonList>
-      <IonButton
-        disabled={code.length != 8}
-        expand="block"
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          margin: "13pt",
-          marginLeft: "89pt",
-          marginRight: "89pt",
-          paddingLeft: "12pt",
-          paddingRight: "12pt",
-        }}
-        onClick={() => handleVerificar()}
-      >
-        VALIDAR
-      </IonButton>
-      <IonToast
-        isOpen={openToast}
-        message={ToastMessage}
-        duration={5000}
-        icon={alertCircleOutline}
-        onDidDismiss={() => {
-          setOpenToast(false);
-          setToastMessage("");
-        }}
-      ></IonToast>
-    </>
+          >
+            <h1>Validar Cuenta</h1>
+          </IonText>
+          <div style={{ marginTop: "13pt" }}>
+            <IonText color="medium">
+              Enviamos un mail a viajeroapp2024@gmail.com <br />
+              con el código de validación
+            </IonText>
+          </div>
+        </div>
+      </IonCardHeader>
+      <IonCardContent>
+        <IonInput
+          ref={async (cardRef) => {
+            if (cardRef) {
+              const input = await cardRef.getInputElement();
+              codeMask(input);
+            }
+          }}
+          onInput={(e: any) => setCode(e.target.value)}
+          maxlength={8}
+          placeholder="00000000"
+          style={{
+            letterSpacing: "21pt",
+            fontSize: "21pt",
+            textAlign: "center",
+            marginLeft: "11pt",
+            width: "auto",
+          }}
+        ></IonInput>
+        <IonRow
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            alignContent: "center",
+            justifyContent: "center",
+          }}
+        >
+          <IonButton
+            disabled={code.length != 8}
+            style={{
+              margin: "13pt",
+              "--background": "#F08408",
+              "--color": "white",
+            }}
+            onClick={() => handleVerificar()}
+          >
+            VALIDAR
+          </IonButton>
+        </IonRow>
+        <IonToast
+          isOpen={openToast}
+          message={ToastMessage}
+          duration={5000}
+          icon={alertCircleOutline}
+          onDidDismiss={() => {
+            setOpenToast(false);
+            setToastMessage("");
+          }}
+        ></IonToast>
+      </IonCardContent>
+    </IonCard>
   );
 }

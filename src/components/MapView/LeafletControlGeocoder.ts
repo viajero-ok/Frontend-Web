@@ -11,41 +11,36 @@ import { Geocoder, geocoders } from "leaflet-control-geocoder";
 //  positionInfos: [{address: "some address"}]
 // }
 
-export default function LeafletControlGeocoder(props: any) {
-  console.log("hello, world");
+type TLeafletControlGeocoder = {
+  marker?: boolean;
+};
+export default function LeafletControlGeocoder(props: TLeafletControlGeocoder) {
   const map = useMap();
-  const { positionInfos } = props;
 
   useEffect(() => {
-    // creaet Geocoder nominatim
-    // new Geocoder({
-    //   geocoder: new geocoders.Nominatim(),
-    //   position: 'topleft',
-    // }).addTo(map);
-    // for every positionInfo
-    // get the geocordinates of the address in the positionInfo
-    // use the latitude and longitude to create a marker
-    // and add it the map
-    // positionInfos.map((positionInfo: any) => {
-    //   const address = positionInfo.address;
-    //   if (address) {
-    //     geocoder.geocode(address, (resultArray: any) => {
-    //       if (resultArray.length > 0) {
-    //         const result = resultArray[0];
-    //         const latlng = result.center;
-    //         L.marker(latlng, { icon }).addTo(map).bindPopup(result.name);
-    //         map.fitBounds(result.bbox);
-    //       }
-    //     });
-    //   }
-    // });
     if (!map) return;
-    map.addControl(
-      new Geocoder({
-        geocoder: new geocoders.Nominatim(),
-        position: "topleft",
-      })
-    );
+
+    const control =
+      props.marker != true
+        ? new Geocoder({
+            geocoder: new geocoders.Nominatim(),
+            position: "topleft",
+            defaultMarkGeocode: false,
+          })
+            .on("markgeocode", function (e) {
+              map.fitBounds(e.geocode.bbox);
+            })
+            .addTo(map)
+        : new Geocoder({
+            geocoder: new geocoders.Nominatim(),
+            position: "topleft",
+          });
+
+    map.addControl(control);
+
+    return () => {
+      map.removeControl(control);
+    };
   }, []);
 
   return null;

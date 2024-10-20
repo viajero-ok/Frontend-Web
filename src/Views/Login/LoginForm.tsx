@@ -1,29 +1,42 @@
-import { IonButton, IonList, IonText, IonToast } from "@ionic/react";
+import {
+  IonButton,
+  IonList,
+  IonTitle,
+  IonToast,
+  useIonRouter,
+} from "@ionic/react";
+import { alertCircleOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
+import { iniciarSesion } from "../../App/Auth/Cuenta";
 import Field from "../../components/Field/Field";
 import { useForm } from "../../hooks/UseForm/FormProvider";
 import { Validator as v } from "../../hooks/UseForm/Validator/Validator";
-import { iniciarSesion } from "../../App/Auth/Cuenta";
-import { alertCircleOutline } from "ionicons/icons";
+import { useAuth } from "../../hooks/UseAuth/AuthProvider";
 
 export default function LoginForm() {
   const [openToast, setOpenToast] = useState<boolean>(false);
   const [ToastMessage, setToastMessage] = useState<string>("");
+
   const form = useForm();
+  const router = useIonRouter();
+  const auth = useAuth();
 
   useEffect(() => {
     if (!form) return;
   }, [form]);
 
-  const handleCrearCuenta = () => {
+  const handleIniciarSesion = () => {
     if (!form) return;
+    if (!router) return;
+    if (!auth) return;
     // Acá se tiene ejecutar la validación del schema
     iniciarSesion({
       mail: form.schema.email,
       contraseña: form.schema.password,
     })
       .then((response: any) => {
-        console.log("response login: ", response.data);
+        auth.login();
+        router.push("/");
       })
       .catch((error: any) => {
         setToastMessage(error.response.data.message);
@@ -33,15 +46,15 @@ export default function LoginForm() {
 
   return (
     <>
-      <IonText
+      <IonTitle
         style={{
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
         }}
       >
-        <h1>¡Hola, Viajero!</h1>
-      </IonText>
+        Ingresar
+      </IonTitle>
       <IonList
         style={{
           display: "flex",
@@ -83,10 +96,12 @@ export default function LoginForm() {
           marginRight: "89pt",
           paddingLeft: "12pt",
           paddingRight: "12pt",
+          "--background": "#F08408",
+          "--color": "white",
         }}
-        onClick={() => handleCrearCuenta()}
+        onClick={() => handleIniciarSesion()}
       >
-        Ingresar
+        Ingresá
       </IonButton>
       <div
         style={{
@@ -96,8 +111,16 @@ export default function LoginForm() {
         }}
       >
         ¿No tenés cuenta?
-        <IonButton fill="clear" size="small">
-          Registrarse
+        <IonButton
+          style={{ "--color": "#F08408" }}
+          fill="clear"
+          size="small"
+          onClick={() => {
+            if (!router) return;
+            router.push("/signup");
+          }}
+        >
+          Registrate
         </IonButton>
         <IonToast
           isOpen={openToast}

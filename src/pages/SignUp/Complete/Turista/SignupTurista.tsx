@@ -1,5 +1,5 @@
 import { IonPage } from "@ionic/react";
-import SignupTuristaView from "../../../../Views/Signup/Complete/Prestador/SignupPrestadorView";
+import SignupTuristaView from "../../../../Views/Signup/Complete/Turista/SignupTuristaView";
 
 const SignupTurista: React.FC = () => {
   return (

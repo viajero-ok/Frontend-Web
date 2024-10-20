@@ -1,16 +1,9 @@
-import {
-  IonCol,
-  IonContent,
-  IonGrid,
-  IonItem,
-  IonList,
-  IonRow,
-} from "@ionic/react";
-import { FormProvider, useForm } from "../../../../hooks/UseForm/FormProvider";
+import { IonCard, IonCol, IonGrid, IonRow } from "@ionic/react";
+import { FormProvider } from "../../../../hooks/UseForm/FormProvider";
 import SignupPrestadorForm from "./SignupPrestadorForm";
-import SignupTuristaForm from "../Turista/SignupTuristaForm";
+import UncompleteLoggedLayout from "../../../Layouts/UncompleteLoggedLayout";
 
-export default function SignupTuristaView() {
+export default function SignupPrestadorView() {
   const schema = {
     nombre: "",
     apellido: "",
@@ -26,23 +19,49 @@ export default function SignupTuristaView() {
     fehcaDeNacimiento: "",
   };
   return (
-    <IonContent>
-      <IonGrid>
-        <IonRow>
-          <IonCol>
-            <h1 style={{ fontWeight: "bold" }}>Registrar Turista</h1>
-          </IonCol>
-        </IonRow>
-        <IonRow>
-          <IonCol>
-            <IonList>
+    <UncompleteLoggedLayout>
+      <img
+        src="/3.2. Principal/Fondo.jpg"
+        style={{
+          display: "flex",
+          position: "absolute",
+          width: "auto",
+          minHeight: "100%",
+        }}
+      />
+      <IonCard
+        style={{
+          position: "relative",
+          width: "50%",
+          left: "50%",
+          marginTop: "13pt",
+          transform: "translateX(-50%)",
+          padding: "31pt",
+          paddingBottom: 0,
+        }}
+      >
+        <IonGrid>
+          <IonRow
+            style={{
+              display: "flex",
+              alignItems: "center",
+              alignContent: "center",
+              justifyContent: "center",
+            }}
+          >
+            <h1 style={{ fontWeight: "bold", color: "#F08408" }}>
+              Registrar Prestador
+            </h1>
+          </IonRow>
+          <IonRow>
+            <IonCol>
               <FormProvider schema={schema}>
-                <SignupTuristaForm />
+                <SignupPrestadorForm />
               </FormProvider>
-            </IonList>
-          </IonCol>
-        </IonRow>
-      </IonGrid>
-    </IonContent>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
+      </IonCard>
+    </UncompleteLoggedLayout>
   );
 }

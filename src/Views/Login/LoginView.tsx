@@ -22,7 +22,7 @@ export default function LoginView(props: any) {
   };
 
   return (
-    <IonContent>
+    <>
       <IonCard
         style={{
           backgroundColor: "rgba(255, 255, 255, 1)",
@@ -79,6 +79,6 @@ export default function LoginView(props: any) {
           </IonCol>
         </IonRow>
       </IonGrid> */}
-    </IonContent>
+    </>
   );
 }

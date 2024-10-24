@@ -79,7 +79,7 @@ export default function MyOffersView() {
               flexGrow: 1,
             }}
           >
-            <IonCol
+            <IonCol 
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -92,8 +92,8 @@ export default function MyOffersView() {
               }}
             >
               {ofertas.map((oferta: any) => (
-                <IonRow style={{ width: "100%" }}>
-                  <OfertaCard // [!] Cambiar por una OfertaCard
+                <IonRow key={oferta.id_oferta_turistica} style={{ width: "100%" }}>
+                  <OfertaCard //
                     nombre={oferta.nombre}
                     descripcion={oferta.descripcion}
                     id={oferta.id_oferta_turistica}

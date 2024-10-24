@@ -5,12 +5,26 @@ import {
   IonGrid,
   IonHeader,
   IonRow,
+  IonButton,
+  IonModal,
 } from "@ionic/react";
+
+import { useState } from "react";
 
 type TOfferTypeSelection = {
   setOfferType: (type: "alojamiento" | "actividad" | "evento") => void;
 };
+
 export default function OfferTypeSelection(props: TOfferTypeSelection) {
+  const [openConfirm, setOpenConfirm] = useState<boolean>(false);
+  
+  const handleSelect = () => {
+    setOpenConfirm(true);
+    /*props.setOfferType("alojamiento");
+    setOpenConfirm(true);
+    console.log("openConfirm", openConfirm);*/
+  };
+
   return (
     <IonGrid
       style={{
@@ -41,7 +55,7 @@ export default function OfferTypeSelection(props: TOfferTypeSelection) {
             paddingTop: "13pt",
           }}
         >
-          <IonCard button onClick={() => props.setOfferType("alojamiento")}>
+          <IonCard button onClick={()=>handleSelect()}>
             <IonHeader
               style={{
                 display: "flex",
@@ -71,9 +85,7 @@ export default function OfferTypeSelection(props: TOfferTypeSelection) {
             </IonHeader>
           </IonCard>
           <IonCard
-            button
-            disabled
-            onClick={() => props.setOfferType("actividad")}
+            button onClick={() => {props.setOfferType("actividad"); } }
           >
             <IonHeader
               style={{
@@ -103,7 +115,7 @@ export default function OfferTypeSelection(props: TOfferTypeSelection) {
               </IonCardTitle>
             </IonHeader>
           </IonCard>
-          <IonCard button disabled onClick={() => props.setOfferType("evento")}>
+          <IonCard button onClick={() => props.setOfferType("evento")}>
             <IonHeader
               style={{
                 display: "flex",
@@ -133,7 +145,55 @@ export default function OfferTypeSelection(props: TOfferTypeSelection) {
             </IonHeader>
           </IonCard>
         </IonRow>
+        <IonModal
+       isOpen={openConfirm}
+      onDidDismiss={() => setOpenConfirm(false)}
+        style={{ "--height": "fit-content" }}
+      >
+        <div className="wrapper">
+          <IonGrid
+            style={{ display: "flex", flexDirection: "column", flexGrow: 0 }}
+          >
+            <IonRow>
+              <IonCol></IonCol>
+              <IonCol>
+                <h4 style={{ fontWeight: "bold" }}>Confirmar creación</h4>
+              </IonCol>
+              <IonCol style={{ display: "flex", justifyContent: "right" }}>
+                <IonButton
+                  size="small"
+                  fill="clear"
+                  onClick={() => setOpenConfirm(false)}
+                >
+                </IonButton>
+              </IonCol>
+            </IonRow>
+            <IonRow style={{ justifyContent: "center", padding: "8pt"}}>
+              <h3 style={{color: "black", fontSize: "14pt" }}>Estás por crear un nuevo alojamiento</h3>
+            </IonRow>
+            <IonRow
+              style={{
+                justifyContent: "right",
+                padding: "8pt",
+                paddingTop: "0",
+              }}
+            >
+              <IonButton
+               onClick={() => setOpenConfirm(false)}
+                style={{ marginRight: "8pt", "--background": "white", "--color": "#F08408" }}
+              >
+                Cancelar
+              </IonButton>
+              <IonButton onClick={() => props.setOfferType("alojamiento")}
+                style={{ "--background": "#F08408", "--color": "white" }}
+              >Aceptar
+              </IonButton>
+            </IonRow>
+          </IonGrid>
+        </div>
+      </IonModal>
       </IonCol>
     </IonGrid>
+    
   );
 }

@@ -7,20 +7,20 @@ import {
   IonRow,
 } from "@ionic/react";
 import { add } from "ionicons/icons";
-import { useState } from "react";
-import DialogTarifa from "./DialogTarifa";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 
-type TTarifas = {};
+type TTarifas = {
+  tarifas: any[];
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  setOpenEditar: Dispatch<SetStateAction<boolean>>;
+  setSelectedTarifa: Dispatch<SetStateAction<any>>;
+};
 export default function Tarifas(props: TTarifas) {
-  const [tarifas, setTarifas] = useState<any[]>([]);
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
-
   return (
     <>
       <IonCard style={{ display: "flex", flexDirection: "row", width: "100%" }}>
         <IonGrid
           style={{
-            margin: "31pt",
             marginLeft: "60pt",
             marginRight: "60pt",
             paddingLeft: "31pt",
@@ -36,7 +36,7 @@ export default function Tarifas(props: TTarifas) {
               justifyContent: "center",
             }}
           >
-            <h3 style={{ fontWeight: "bold" }}>Tarifas</h3>
+            <h2 style={{ fontWeight: "bold" }}>Tarifas</h2>
           </IonRow>
           <IonRow
             style={{
@@ -46,7 +46,10 @@ export default function Tarifas(props: TTarifas) {
               justifyContent: "center",
             }}
           >
-            <IonButton style={{ "--background": "#F08408" }} onClick={() => setOpenDialog(true)}>
+            <IonButton
+              style={{ "--background": "#F08408" }}
+              onClick={() => props.setOpen(true)}
+            >
               <IonIcon icon={add} />
               &nbsp;AGREGAR NUEVA TARIFA
             </IonButton>
@@ -82,18 +85,8 @@ export default function Tarifas(props: TTarifas) {
             >
               <h4 style={{ fontWeight: "bold" }}>Tarifa por noche</h4>
             </IonCol>
-            <IonCol
-              style={{
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <h4 style={{ fontWeight: "bold" }}>Pensión</h4>
-            </IonCol>
           </IonRow>
-          {[].map((tarifa: any, index: any) => (
+          {props.tarifas.map((tarifa: any, index: any) => (
             <IonRow
               key={index}
               style={{
@@ -102,7 +95,10 @@ export default function Tarifas(props: TTarifas) {
                 borderRadius: "8pt",
                 cursor: "pointer",
               }}
-              onClick={() => {}}
+              onClick={() => {
+                props.setSelectedTarifa(tarifa);
+                props.setOpenEditar(true);
+              }}
             >
               <IonCol
                 style={{
@@ -144,28 +140,12 @@ export default function Tarifas(props: TTarifas) {
                 <li>$1.500.000</li>
                 <li>$1.500.000</li>
               </ul> */}
-                {tarifa.tipo_pension}
-              </IonCol>
-              <IonCol
-                style={{
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                {/* <ul style={{ listStyleType: "none" }}>
-                <li>Completa</li>
-                <li>Completa</li>
-                <li>Media</li>
-              </ul> */}
                 ${tarifa.monto_tarifa}
               </IonCol>
             </IonRow>
           ))}
         </IonGrid>
       </IonCard>
-      <DialogTarifa open={openDialog} setOpen={setOpenDialog} />
     </>
   );
 }

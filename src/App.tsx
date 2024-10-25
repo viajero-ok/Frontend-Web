@@ -44,6 +44,7 @@ import MyOffers from "./pages/MyOffers/MyOffers";
 import NewOffer from "./pages/MyOffers/NewOffer/NewOffer";
 import NewAlojamientoEnHabitaciones from "./pages/NewAlojamiento/NewAlojamientoEnHabitaciones";
 import PublicarOfertaPage from "./pages/MyOffers/PublicarOferta/PublicarOfertaPage";
+import PagarTestPage from "./pages/PagarTest/PagarTestPage";
 
 setupIonicReact();
 
@@ -85,6 +86,11 @@ const App: React.FC = () => (
             exact
             path="/my-offers/publicar/:id"
             component={PublicarOfertaPage}
+          />
+          <Route
+            exact
+            path="/pago-test"
+            component={PagarTestPage}
           />
         </IonRouterOutlet>
       </IonReactRouter>

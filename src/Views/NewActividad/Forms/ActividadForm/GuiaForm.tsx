@@ -29,7 +29,15 @@ export default function GuiaForm(props: any) {
     setEsConGuia(e.target.checked);
   };
   return (
-    <IonCard style={{ padding: "6pt" }}>
+    <IonCard style={{
+      padding: "10pt",
+      paddingBottom: "20pt",
+      marginBottom: "30pt",
+      marginLeft: "10%",
+      border: "2px solid #F08408",
+      borderRadius: "10pt",
+      width: "80%",
+  }}>
       <IonGrid>
         <IonRow
           style={{

@@ -7,15 +7,16 @@ import {
 } from "@ionic/react";
 import { useState } from "react";
 import DefaultLoggedLayout from "../Layouts/DefaultLoggedLayout";
-import ActividadForm from "./Forms/ActividadForm";
+import ActividadForm from "./Forms/ActividadForm/ActividadForm";
 import { FormProvider } from "../../hooks/UseForm/FormProvider";
-import UbicacionForm from "./Forms/UbicacionForm";
+import UbicacionForm from "./Forms/UbicacionForm/UbicacionForm";
+import TurnosyEntradasForm from "./Forms/TurnosyEntradasForm/TurnosyEntradasForm";
 
 type TNewActividadView = {
   idOferta: string;
 };
 export default function NewActividadView(props: TNewActividadView) {
-  const [segment, setSegment] = useState<"actividad-form" | "ubicacion-form">(
+  const [segment, setSegment] = useState<"actividad-form" | "ubicacion-form" | "turnosyentradas-form">(
     "actividad-form"
   );
 
@@ -37,6 +38,8 @@ export default function NewActividadView(props: TNewActividadView) {
       id_politica_cancelacion: "", // number
       plazo_dias_cancelacion: "", // number
       porcentaje_pago_anticipado: "", // number
+      id_tipo_pago_anticipado: "", // number
+      metodos_pago: [], // number[]
     },
   };
 
@@ -52,6 +55,43 @@ export default function NewActividadView(props: TNewActividadView) {
     longitud: "",
     observaciones: "",
   };
+
+  const schemaTurnosyEntradasForm = {
+    id_oferta: "",
+    entradas: [
+    /*   {
+        id_entrada:"",
+        nombre: "",
+        descripcion: "",
+      } */
+    ],
+    horarios_turnos: [
+     /*  {
+        id_horario: 1,
+        check_in: {
+          hora_check_in: 14,
+          minuto_check_in: 30,
+        },
+        check_out: {
+          hora_check_out: 11,
+          minuto_check_out: 0,
+        },
+        aplica_todos_los_dias: false,
+        dias_semana: {
+          aplica_lunes: true,
+          aplica_martes: true,
+          aplica_miercoles: true,
+          aplica_jueves: true,
+          aplica_viernes: true,
+          aplica_sabado: false,
+          aplica_domingo: false,
+        },
+        cupo_maximo: 100
+      } */
+    ]
+
+  }
+
 
   return (
     <DefaultLoggedLayout>
@@ -82,17 +122,33 @@ export default function NewActividadView(props: TNewActividadView) {
             >
               <IonLabel>Ubicación</IonLabel>
             </IonSegmentButton>
+            <IonSegmentButton
+              value="turnosyentradas-form"
+              style={{
+                "--indicator-color": "#F08408",
+
+                "--color-hover": "#F08408",
+                "--color-checked": "#F08408",
+              }}
+            >
+              <IonLabel>Turnos y Entradas</IonLabel>
+            </IonSegmentButton>
           </IonSegment>
         </IonRow>
         <IonRow>
           {segment == "actividad-form" && (
             <FormProvider schema={schemaActividadForm}>
-              <ActividadForm idOferta={props.idOferta} />
+              <ActividadForm idOferta={props.idOferta}/>
             </FormProvider>
           )}
           {segment == "ubicacion-form" && (
             <FormProvider schema={schemaUbicacionForm}>
               <UbicacionForm idOferta={props.idOferta} />
+            </FormProvider>
+          )}
+          {segment == "turnosyentradas-form" && (
+            <FormProvider schema={schemaTurnosyEntradasForm}>
+              <TurnosyEntradasForm idOferta={props.idOferta} />
             </FormProvider>
           )}
         </IonRow>

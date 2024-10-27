@@ -1,7 +1,7 @@
 import { IonCheckbox, IonCol, IonGrid, IonRow } from "@ionic/react";
-import MapView from "../../../components/MapView/MapView";
-import Field from "../../../components/Field/Field";
-import { useForm } from "../../../hooks/UseForm/FormProvider";
+import MapView from "../../../../components/MapView/MapView";
+import Field from "../../../../components/Field/Field";
+import { useForm } from "../../../../hooks/UseForm/FormProvider";
 import { useState } from "react";
 import { LatLng, LeafletMouseEvent } from "leaflet";
 

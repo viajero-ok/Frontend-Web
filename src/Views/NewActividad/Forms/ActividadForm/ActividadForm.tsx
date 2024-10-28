@@ -18,6 +18,9 @@ export default function ActividadForm(props: TActividadForm) {
   const [metodosDePago, setMetodosDePago] = useState<any>();
   const [formMetodosDePago, setFormMetodosDePago] = useState<number[]>([]);
   const [datosRegistrados, setDatosRegistrados] = useState<any>();
+  const [categoria, setCategoria] = useState<any>();
+ const [subcategoria, setSubcategoria] = useState<any>();
+  const [dificultad, setDificultad] = useState<number>();
 
   const handleGuardar = () => {
 
@@ -63,9 +66,14 @@ export default function ActividadForm(props: TActividadForm) {
   useEffect(() => {
     getDatosDeRegistroNuevaActividad()
       .then((response: any) => {
+        setCategoria(response.data.tipos_y_subtipos.subtipos);
+        console.log("response: ", response.data.tipos_y_subtipos.subtipos);
+        setSubcategoria(response.data.sub_categorias_actividades);
+        console.log("response: ", response.data.sub_categorias_actividades);
         setTiposPagoAnticipado(response.data.tipos_pago_anticipado);
         setPoliticasDeCancelacion(response.data.politicas_cancelacion);
         setMetodosDePago(response.data.metodos_pago);
+        setDificultad(response.data.dificultad_actividades);
       })
       .catch((error: any) => { });
   }, []);
@@ -78,7 +86,11 @@ export default function ActividadForm(props: TActividadForm) {
 
   return (
     <IonGrid style={{}}>
-      <DatosBasicosActividad />
+      <DatosBasicosActividad
+        categoria={categoria}
+        tipoSubCategoria={subcategoria}
+        dificultad={dificultad}
+      />
       <GuiaForm />
       <PoliticasActividad
         tipoPagoAnticipado={tiposPagoAnticipado}

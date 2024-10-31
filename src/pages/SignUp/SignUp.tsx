@@ -1,6 +1,5 @@
-import { IonImg, IonPage } from "@ionic/react";
-import SignupView from "../../Views/Signup/SignupView";
 import VisitorLayout from "../../Views/Layouts/VisitorLayout";
+import SignupView from "../../Views/Signup/SignupView";
 const SignUp: React.FC = () => {
 	return (
 		<>

@@ -46,6 +46,7 @@ import NewAlojamientoEnHabitaciones from "./pages/NewAlojamiento/NewAlojamientoE
 import PublicarOfertaPage from "./pages/MyOffers/PublicarOferta/PublicarOfertaPage";
 import PagarTestPage from "./pages/PagarTest/PagarTestPage";
 import NewActividad from "./pages/NewActividad/NewActividad";
+import MisReservas from "./pages/MisReservas/MisReservas";
 
 setupIonicReact();
 
@@ -94,6 +95,7 @@ const App: React.FC = () => (
             component={PublicarOfertaPage}
           />
           <Route exact path="/pago-test" component={PagarTestPage} />
+          <Route exact path="/mis-reservas" component={MisReservas} />
         </IonRouterOutlet>
       </IonReactRouter>
     </AuthProvider>

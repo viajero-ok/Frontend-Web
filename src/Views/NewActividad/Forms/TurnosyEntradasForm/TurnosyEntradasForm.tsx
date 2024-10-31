@@ -9,6 +9,8 @@ export default function TurnosyEntradasForm(props: any) {
   const [horarios, setHorarios] = useState<any[]>([]);
   const [entradas, setEntradas] = useState<any[]>([]);
   const router = useIonRouter();
+
+  
   const handleAgregarEntrada = () => {
         setEntradas((prev: any[]) => [...prev, {}]);
   };
@@ -20,14 +22,15 @@ export default function TurnosyEntradasForm(props: any) {
 
   const handleObtenerDatos = () => {
     obtenerDatosRegistradosHorariosyEntradas(props.id).then((response: any) => {
-      setHorarios(response.data.horarios);
+      console.log("llamada");
+      setHorarios(response.data.horarios_turnos);
       setEntradas(response.data.entradas);
     });
   };
 
   useEffect(() => {
     handleObtenerDatos();
-    console.log(props.id);
+    
   }, []);
 
   return (
@@ -58,5 +61,6 @@ export default function TurnosyEntradasForm(props: any) {
 
       </IonRow>
     </IonGrid>
+    
   );
 }

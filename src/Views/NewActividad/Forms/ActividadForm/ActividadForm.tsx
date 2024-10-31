@@ -30,7 +30,6 @@ export default function ActividadForm(props: TActividadForm) {
 
     if (!form) return;
     const s = form.schema;
-
     let body: TBodyGuardarActividad = {
       id_oferta: props.idOferta,
       id_sub_tipo_oferta: 0,

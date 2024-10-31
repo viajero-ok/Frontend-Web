@@ -11,7 +11,6 @@ import ActividadForm from "./Forms/ActividadForm/ActividadForm";
 import { FormProvider } from "../../hooks/UseForm/FormProvider";
 import UbicacionForm from "./Forms/UbicacionForm/UbicacionForm";
 import TurnosyEntradasForm from "./Forms/TurnosyEntradasForm/TurnosyEntradasForm";
-import { THorarios } from "../../App/Actividades/TurnosyHorarios";
 
 
 type TNewActividadView = {
@@ -21,8 +20,6 @@ export default function NewActividadView(props: TNewActividadView) {
   const [segment, setSegment] = useState<"actividad-form" | "ubicacion-form" | "turnosyentradas-form">(
     "actividad-form"
   );
-
-  const [metodosDePago, setMetodosDePago] = useState<number[]>([]);
 
   const schemaActividadForm = {
     //id_oferta: "",
@@ -58,10 +55,10 @@ export default function NewActividadView(props: TNewActividadView) {
     observaciones: "",
   };
 
-  const schemaTurnosyEntradasForm = {/* 
+  const schemaTurnosyEntradasForm = {
     id_oferta: "",
     entradas: [],
-    horarios_turnos: [] */
+    horarios_turnos: []
 
   }
 

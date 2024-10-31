@@ -4,9 +4,8 @@ type TBodyRegistrarHorario = {
 	id_oferta: string;
 };
 
-export const registrarHorario = async (
-	body: TBodyRegistrarHorario
-) => await AUTH_API.post(`/actividades/registrar-horario`, body);
+export const registrarHorario = async (id_oferta: string) => 
+	await AUTH_API.post(`/actividades/registrar-horario`, { id_oferta });
 
 
 type TBodyEliminarHorario = {
@@ -53,8 +52,8 @@ export type TEntrada = {
 
 export const guardarEntrada = async (id_oferta: string) =>
 	await AUTH_API.post(`/actividades/registrar-entrada`, { id_oferta });
-  
-  export const eliminarEntrada = async (id_entrada: number) =>
+
+export const eliminarEntrada = async (id_entrada: number) =>
 	await AUTH_API.delete(`/actividades/eliminar-entrada/${id_entrada}`);
 
 export const obtenerDatosRegistradosHorariosyEntradas = async (id_oferta: string) =>

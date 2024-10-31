@@ -18,20 +18,20 @@ import {
   THorarios,
 } from "../../../../../App/Actividades/TurnosyHorarios";
 
-type TTurnosyEntradas = {
+type TTurnos = {
   idOferta: string;
   handleAgregar: () => void;
 };
-export default function TurnosyEntradasForm(props: TTurnosyEntradas) {
+export default function TurnosForm(props: TTurnos) {
   const form = useForm();
-  const [horarios, setTurnos] = useState<THorarios[]>([]);
+  const [turnos, setTurnos] = useState<THorarios[]>([]);
   const router = useIonRouter();
   
 
   const handleTurno = () => {
     console.log("llama");
     console.log(props.idOferta);
-    registrarHorario({ id_oferta: props.idOferta }).then((response: any) => {
+    registrarHorario(props.idOferta).then((response: any) => {
       console.log("id: ", response.data.id_horario);
       setTurnos((prev: THorarios[]) => [
         ...prev,
@@ -105,15 +105,15 @@ export default function TurnosyEntradasForm(props: TTurnosyEntradas) {
             marginBottom: "13pt",
           }}
         >
-          {horarios.length > 0 &&
-            horarios.map((horario: any, index: number) => (
+          {turnos.length > 0 &&
+            turnos.map((horario: any, index: number) => (
               <TurnosRow
                 key={index}
                 id={horario.id_horario}
                 setRows={setTurnos}
               />
             ))}
-          {horarios.length == 0 && (
+          {turnos.length == 0 && (
             <IonButton
               style={{ "--background": "#F08408" }}
               onClick={() => handleTurno()}
@@ -122,7 +122,7 @@ export default function TurnosyEntradasForm(props: TTurnosyEntradas) {
               &nbsp;AGREGAR UN TURNO
             </IonButton>
           )}
-          {horarios.length > 0 && (
+          {turnos.length > 0 && (
             <IonButton
               style={{ "--background": "#F08408" }}
               onClick={() =>

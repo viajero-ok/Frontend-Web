@@ -81,7 +81,7 @@ export default function DefaultLoggedLayout({ children }: any) {
 								</IonItem>
 							</IonMenuToggle>
 							<IonMenuToggle>
-								<IonItem button disabled>
+								<IonItem button onClick={() => push("/mis-reservas")}>
 									Mis reservas
 								</IonItem>
 							</IonMenuToggle>
@@ -134,8 +134,8 @@ export default function DefaultLoggedLayout({ children }: any) {
 							{perfilSeleccionado == -1
 								? "viajero"
 								: perfilSeleccionado == PERFILES.TURISTA.id
-								? "turista"
-								: "prestador"}
+									? "turista"
+									: "prestador"}
 							!
 						</IonTitle>
 						<div

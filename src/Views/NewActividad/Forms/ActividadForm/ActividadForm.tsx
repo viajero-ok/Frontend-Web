@@ -7,6 +7,7 @@ import { useForm } from "../../../../hooks/UseForm/FormProvider";
 import GuiaForm from "./GuiaForm";
 import DatosBasicosActividad from "./DatosBasicosActividad";
 import PoliticasActividad from "./PoliticasActividad";
+import { THorarios } from "../../../../App/Actividades/TurnosyHorarios";
 
 type TActividadForm = {
   idOferta: string;
@@ -21,6 +22,9 @@ export default function ActividadForm(props: TActividadForm) {
   const [categoria, setCategoria] = useState<any>();
  const [subcategoria, setSubcategoria] = useState<any>();
   const [dificultad, setDificultad] = useState<number>();
+  const [formHorarios, setFormHorarios] = useState<
+		THorarios[]
+	>([]);
 
   const handleGuardar = () => {
 
@@ -64,6 +68,7 @@ export default function ActividadForm(props: TActividadForm) {
   };
 
   useEffect(() => {
+    console.log('idOferta: ', props.idOferta);
     getDatosDeRegistroNuevaActividad()
       .then((response: any) => {
         setCategoria(response.data.tipos_y_subtipos.subtipos);
@@ -74,6 +79,7 @@ export default function ActividadForm(props: TActividadForm) {
         setPoliticasDeCancelacion(response.data.politicas_cancelacion);
         setMetodosDePago(response.data.metodos_pago);
         setDificultad(response.data.dificultad_actividades);
+        setFormHorarios(response.data.horarios);
       })
       .catch((error: any) => { });
   }, []);
@@ -89,7 +95,7 @@ export default function ActividadForm(props: TActividadForm) {
       <DatosBasicosActividad
         categoria={categoria}
         tipoSubCategoria={subcategoria}
-        dificultad={dificultad}
+        dificultad={dificultad}        
       />
       <GuiaForm />
       <PoliticasActividad

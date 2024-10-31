@@ -11,6 +11,8 @@ import ActividadForm from "./Forms/ActividadForm/ActividadForm";
 import { FormProvider } from "../../hooks/UseForm/FormProvider";
 import UbicacionForm from "./Forms/UbicacionForm/UbicacionForm";
 import TurnosyEntradasForm from "./Forms/TurnosyEntradasForm/TurnosyEntradasForm";
+import { THorarios } from "../../App/Actividades/TurnosyHorarios";
+
 
 type TNewActividadView = {
   idOferta: string;
@@ -56,39 +58,10 @@ export default function NewActividadView(props: TNewActividadView) {
     observaciones: "",
   };
 
-  const schemaTurnosyEntradasForm = {
+  const schemaTurnosyEntradasForm = {/* 
     id_oferta: "",
-    entradas: [
-    /*   {
-        id_entrada:"",
-        nombre: "",
-        descripcion: "",
-      } */
-    ],
-    horarios_turnos: [
-     /*  {
-        id_horario: 1,
-        check_in: {
-          hora_check_in: 14,
-          minuto_check_in: 30,
-        },
-        check_out: {
-          hora_check_out: 11,
-          minuto_check_out: 0,
-        },
-        aplica_todos_los_dias: false,
-        dias_semana: {
-          aplica_lunes: true,
-          aplica_martes: true,
-          aplica_miercoles: true,
-          aplica_jueves: true,
-          aplica_viernes: true,
-          aplica_sabado: false,
-          aplica_domingo: false,
-        },
-        cupo_maximo: 100
-      } */
-    ]
+    entradas: [],
+    horarios_turnos: [] */
 
   }
 
@@ -148,7 +121,7 @@ export default function NewActividadView(props: TNewActividadView) {
           )}
           {segment == "turnosyentradas-form" && (
             <FormProvider schema={schemaTurnosyEntradasForm}>
-              <TurnosyEntradasForm idOferta={props.idOferta} />
+              <TurnosyEntradasForm idOferta={props.idOferta}/>
             </FormProvider>
           )}
         </IonRow>

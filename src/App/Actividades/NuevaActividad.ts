@@ -2,7 +2,7 @@ import AUTH_API from "../AuthBackendApi";
 
 type TBodyRegistrarNuevaActividad = {
     id_tipo_oferta: number;
-    id_sub_tipo_oferta: number;
+    id_sub_tipo_oferta?: number;
     id_establecimiento: number;
 };
 

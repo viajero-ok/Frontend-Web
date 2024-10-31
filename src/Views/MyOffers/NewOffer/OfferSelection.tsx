@@ -1,6 +1,5 @@
 import { useState } from "react";
 import OfferTypeSelection from "./OfferTypeSelection";
-import Alojamiento from "./NewAlojamiento/NewAlojamiento";
 import Actividad from "./NewActividad/NewActividad";
 import {
   IonButton,
@@ -12,6 +11,8 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import { close } from "ionicons/icons";
+import { registrarNuevaActividad } from "../../../App/Actividades/NuevaActividad";
+import Alojamiento from "./NewAlojamiento/NewAlojamiento";
 
 export default function OfferSelection(props: any) {
   const [offerType, setOfferType] = useState<
@@ -20,9 +21,13 @@ export default function OfferSelection(props: any) {
   const router = useIonRouter();
 
   const handleCrearActividad = () => {
-    // TODO - llamar post crear actividad
-    // en el then
-    router.push("/my-offers/actividad/edit/1");
+    registrarNuevaActividad({
+      id_tipo_oferta: 2,
+      id_establecimiento: 23,
+    })
+      .then((response: any) => {
+        router.push(`/my-offers/actividad/edit/${response.data.id_oferta}`);
+      });
   };
 
   return (

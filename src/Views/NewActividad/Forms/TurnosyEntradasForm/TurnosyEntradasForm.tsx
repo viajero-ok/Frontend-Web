@@ -5,7 +5,11 @@ import EntradasForm from "./Entradas/EntradasForm";
 import { obtenerDatosRegistradosHorariosyEntradas } from "../../../../App/Actividades/TurnosyHorarios";
 import { add } from "ionicons/icons";
 
-export default function TurnosyEntradasForm(props: any) {
+type TTurnosyEntradasForm = {
+  idOferta: string;
+};
+
+export default function TurnosyEntradasForm(props: TTurnosyEntradasForm) {
   const [horarios, setHorarios] = useState<any[]>([]);
   const [entradas, setEntradas] = useState<any[]>([]);
   const router = useIonRouter();
@@ -21,7 +25,7 @@ export default function TurnosyEntradasForm(props: any) {
 
 
   const handleObtenerDatos = () => {
-    obtenerDatosRegistradosHorariosyEntradas(props.id).then((response: any) => {
+    obtenerDatosRegistradosHorariosyEntradas(props.idOferta).then((response: any) => {
       console.log("llamada");
       setHorarios(response.data.horarios_turnos);
       setEntradas(response.data.entradas);
@@ -29,6 +33,7 @@ export default function TurnosyEntradasForm(props: any) {
   };
 
   useEffect(() => {
+    console.log("turnosID",props.idOferta);
     handleObtenerDatos();
     
   }, []);
@@ -36,11 +41,11 @@ export default function TurnosyEntradasForm(props: any) {
   return (
     <IonGrid>
       <TurnosForm
-        idOferta={props.id}
+        idOferta={props.idOferta}
         handleAgregar={handleAgregarHorario}
       />
       <EntradasForm
-        idOferta={props.id}
+        idOferta={props.idOferta }
         handleAgregar={handleAgregarEntrada}
       />
       <IonRow style={{ justifyContent: "space-around", marginTop: "10pt", marginBottom: "10pt" }}>

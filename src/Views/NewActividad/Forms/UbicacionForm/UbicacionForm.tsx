@@ -2,7 +2,7 @@ import { IonCheckbox, IonCol, IonGrid, IonRow } from "@ionic/react";
 import MapView from "../../../../components/MapView/MapView";
 import Field from "../../../../components/Field/Field";
 import { useForm } from "../../../../hooks/UseForm/FormProvider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LatLng, LeafletMouseEvent } from "leaflet";
 
 type TUbicacionForm = {
@@ -16,6 +16,10 @@ export default function UbicacionForm(props: TUbicacionForm) {
   const handleOnClick = (e: LeafletMouseEvent) => {
     setMarkerPos(e.latlng);
   };
+
+  useEffect(() => {
+    console.log("ubiID",props.idOferta);
+  }, []);
 
   return (
     <IonGrid>

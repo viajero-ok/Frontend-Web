@@ -44,6 +44,9 @@ type TTurnosRow = {
 	id: number;
 };
 export default function TurnosRow(props: TTurnosRow) {
+	const [sinCupo, setSinCupo] = useState<boolean>(false);
+	const [aplicaTodosLosDias, setAplicaTodosLosDias] = useState<boolean>(false);
+
 	const [data, setData] = useState<TRowData>({
 		id_horario: props.id,
 		inicio: {
@@ -115,7 +118,7 @@ export default function TurnosRow(props: TTurnosRow) {
 					<IonCol>
 						<IonItem>
 							<IonInput
-								style={{ textAlign: "center" }}
+								style={{ textAlign: "center", width: "100%" }}
 								placeholder="Hora Inicio"
 								ref={async (cardRef) => {
 									if (cardRef) {
@@ -130,7 +133,7 @@ export default function TurnosRow(props: TTurnosRow) {
 					<IonCol>
 						<IonItem>
 							<IonInput
-								style={{ textAlign: "center" }}
+								style={{ textAlign: "center", width: "100%" }}
 								placeholder="Hora Fin"
 								ref={async (cardRef) => {
 									if (cardRef) {
@@ -154,7 +157,11 @@ export default function TurnosRow(props: TTurnosRow) {
 						justifyContent: "center",
 					}}
 				>
-					<IonCheckbox>Aplica todo los días</IonCheckbox>
+					<IonCheckbox
+						onIonChange={(e: any) =>
+							setAplicaTodosLosDias(e.detail.checked)
+						}
+					>Aplica todos los días</IonCheckbox>
 				</IonRow>
 				<IonRow
 					style={{
@@ -170,42 +177,49 @@ export default function TurnosRow(props: TTurnosRow) {
 						<IonCheckbox
 							labelPlacement="stacked"
 							style={{ margin: "3pt" }}
+							disabled={aplicaTodosLosDias}
 						>
 							L
 						</IonCheckbox>
 						<IonCheckbox
 							labelPlacement="stacked"
 							style={{ margin: "3pt" }}
+							disabled={aplicaTodosLosDias}
 						>
 							M
 						</IonCheckbox>
 						<IonCheckbox
 							labelPlacement="stacked"
 							style={{ margin: "3pt" }}
+							disabled={aplicaTodosLosDias}
 						>
 							M
 						</IonCheckbox>
 						<IonCheckbox
 							labelPlacement="stacked"
 							style={{ margin: "3pt" }}
+							disabled={aplicaTodosLosDias}
 						>
 							J
 						</IonCheckbox>
 						<IonCheckbox
 							labelPlacement="stacked"
 							style={{ margin: "3pt" }}
+							disabled={aplicaTodosLosDias}
 						>
 							V
 						</IonCheckbox>
 						<IonCheckbox
 							labelPlacement="stacked"
 							style={{ margin: "3pt" }}
+							disabled={aplicaTodosLosDias}
 						>
 							S
 						</IonCheckbox>
 						<IonCheckbox
 							labelPlacement="stacked"
 							style={{ margin: "3pt" }}
+							disabled={aplicaTodosLosDias}
 						>
 							D
 						</IonCheckbox>
@@ -213,13 +227,25 @@ export default function TurnosRow(props: TTurnosRow) {
 				</IonRow>
 			</IonCol>
 			<IonCol>
+				<IonCheckbox
+					style={{ margin: "3pt" }}
+					onIonChange={(e: any) =>
+						setSinCupo(e.detail.checked)
+					}
+				>Sin Cupo</IonCheckbox>
 				<IonItem>
-					{/* <Field
-						value={data.sin_cupo}
-						form={form}
-						name="sin_cupo"
-						label="Sin Cupo"
-					/> */}
+					<IonInput
+						type="number"
+						style={{ textAlign: "center", width: "100%"}}
+						disabled={sinCupo}
+						placeholder="Cupo Máximo"
+						onIonInput={(e: any) =>
+							setData((prev: any) => {
+								prev.cupo_maximo = parseInt(e.target.value);
+								return prev;
+							})
+						}
+					/>
 				</IonItem>
 			</IonCol>
 			<IonCol
@@ -244,7 +270,6 @@ export default function TurnosRow(props: TTurnosRow) {
 						<IonIcon icon={trash} />
 					</IonButton>
 				</IonRow>
-				{/* <h3>id: {props.id}</h3> */}
 			</IonCol>
 		</IonRow>
 	);

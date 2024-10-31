@@ -76,7 +76,7 @@ export default function EntradasForm(props: TEntradas) {
                         padding: "2pt",
                     }}
                 >
-                    Horarios de ingreso y egreso
+                    Entradas
                 </IonTitle>
             </IonRow>
             <IonRow
@@ -103,7 +103,7 @@ export default function EntradasForm(props: TEntradas) {
                         onClick={() => handleAgregarEntrada()}
                     >
                         <IonIcon icon={add} />
-                        &nbsp;AGREGAR UN HORARIO
+                        &nbsp;AGREGAR UNA ENTRADA
                     </IonButton>
                 )}
                 {entradas.length > 0 && (
@@ -117,7 +117,7 @@ export default function EntradasForm(props: TEntradas) {
                         }
                     >
                         <IonIcon icon={add} />
-                        &nbsp;AGREGAR OTRO
+                        &nbsp;AGREGAR OTRA
                     </IonButton>
                 )}
             </IonRow>

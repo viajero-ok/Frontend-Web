@@ -5,11 +5,13 @@ import {
 	IonIcon,
 	IonInput,
 	IonItem,
+	IonLabel,
 	IonRow,
+	IonPopover,
 } from "@ionic/react";
 import Field from "../../../../../components/Field/Field";
 import { useForm } from "../../../../../hooks/UseForm/FormProvider";
-import { add, trash } from "ionicons/icons";
+import { add, trash, helpCircle } from "ionicons/icons";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useMaskito } from "@maskito/react";
 import { maskitoTimeOptionsGenerator } from "@maskito/kit";
@@ -30,6 +32,7 @@ type TEntradasRow = {
 	id: number;
 };
 export default function EntradasRow(props: TEntradasRow) {
+	const [showTooltip, setShowTooltip] = useState<boolean>(false);
 	const [data, setData] = useState<TRowData>({
 		entradas: [
 			{
@@ -50,7 +53,7 @@ export default function EntradasRow(props: TEntradasRow) {
 			.catch((_) => { });
 	};
 
-		return (
+	return (
 		<IonRow
 			style={{
 				border: "2pt solid #F08408",
@@ -72,16 +75,35 @@ export default function EntradasRow(props: TEntradasRow) {
 			>
 				<IonRow style={{}}>
 					<IonCol>
-						<IonItem>
+						<IonItem>{/* 
+							<IonLabel>Nombre de Entrada</IonLabel> */}
 							<IonInput
+								label="Nombre de Entrada"
 								style={{ textAlign: "center" }}
-								placeholder="Nombre de Entrada"
 							/>
+							{/* <IonIcon icon={helpCircle} slot="end"
+								onMouseEnter={() => {
+									setShowTooltip(true);
+								}}
+								onMouseLeave={() => {
+									setShowTooltip(false);
+								}}
+								style={{ cursor: "pointer" }}
+							/>
+							<IonPopover
+								isOpen={showTooltip}
+								side="top"
+								onDidDismiss={() => setShowTooltip(false)}
+							>
+								Ingresá el nombre de la entrada, por ejemplo: "Entrada General"
+
+							</IonPopover> */}
 						</IonItem>
 					</IonCol>
 					<IonCol>
 						<IonItem>
 							<IonInput
+								label="¿Qué incluye?"
 								style={{ textAlign: "center" }}
 								placeholder="¿Qué incluye?"
 							/>

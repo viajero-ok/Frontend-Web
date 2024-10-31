@@ -29,7 +29,6 @@ export default function TurnosForm(props: TTurnos) {
   
 
   const handleTurno = () => {
-    console.log("llama");
     console.log(props.idOferta);
     registrarHorario(props.idOferta).then((response: any) => {
       console.log("id: ", response.data.id_horario);

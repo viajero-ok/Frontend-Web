@@ -14,7 +14,7 @@ export default function FormTarifa(props: any) {
   return (
     <IonGrid style={{ padding: "12pt" }}>
       <IonRow>
-        <CalendarPicker />
+        {/* <CalendarPicker /> */}
       </IonRow>
       <IonRow>
         <IonSelect label="Tipología"></IonSelect>

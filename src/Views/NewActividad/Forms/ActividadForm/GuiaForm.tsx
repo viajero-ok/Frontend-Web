@@ -9,18 +9,25 @@ import {
   IonRow,
   IonToast,
   IonToggle,
+  IonSelect,
 } from "@ionic/react";
 import { add, alertCircleOutline, close, trash } from "ionicons/icons";
 import { useState } from "react";
+import { guardarGuia } from "../../../../App/Actividades/NuevaActividad";
+import { eliminarGuia } from "../../../../App/Actividades/NuevaActividad";
 
-export default function GuiaForm(props: any) {
+type TGuiaForm = {
+  idOferta: string;
+}
+
+export default function GuiaForm(props: TGuiaForm) {
   const [esConGuia, setEsConGuia] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [guias, setGuias] = useState<any[]>([]);
   const [openToast, setOpenToast] = useState<boolean>(false);
-  const handleAgregar = () => {
-    setOpen(false);
-  };
+  const [numeroResolucion, setNumeroResolucion] = useState<string>("");
+  const [nombreCompleto, setNombreCompleto] = useState<string>("");
+
   const handleChangeEsConGuia = (e: any) => {
     if (guias.length > 0) {
       setOpenToast(true);
@@ -28,6 +35,54 @@ export default function GuiaForm(props: any) {
     }
     setEsConGuia(e.target.checked);
   };
+
+  const handleAgregarDetalle = () => {
+    setGuias((prev: any[]) => [
+      ...prev,
+      { id_oferta: props.idOferta, id_guia: null, nombre_y_apellido: null },
+    ]);
+  };
+  const handleEliminarDetalle = (id: number) => {
+    setGuias((prev: any[]) => [
+      ...prev.filter((_, index: number) => index != id),
+    ]);
+  };
+
+  const doGuardar = () => {
+    if (!numeroResolucion || !nombreCompleto) return;
+    guardarGuia({
+      id_oferta: props.idOferta,
+      nro_resolucion: numeroResolucion,
+      nombre_y_apellido: nombreCompleto,
+    }).then(() => {/* 
+      props.handleObtenerDatos();
+      setOpen(false); */
+    });
+  };
+  const doActualizar = () => {
+    if (!numeroResolucion || !nombreCompleto) return;
+    guardarGuia({
+      id_oferta: props.idOferta,
+      nro_resolucion: numeroResolucion,
+      nombre_y_apellido: nombreCompleto,
+    }).then((_) => {/* 
+      props.handleObtenerDatos();
+      setOpen(false); */
+    });
+  };
+
+  const handleGuardar = () => {
+    if (!esConGuia) doGuardar();
+    else doActualizar();
+    setOpen(false);
+  };
+
+  const handleEliminar = () => {
+    if (!esConGuia) return;
+    eliminarGuia(props.idOferta).then((_) => {
+    });
+  };
+
   return (
     <IonCard style={{
       padding: "10pt",
@@ -37,7 +92,7 @@ export default function GuiaForm(props: any) {
       border: "2px solid #F08408",
       borderRadius: "10pt",
       width: "80%",
-  }}>
+    }}>
       <IonGrid>
         <IonRow
           style={{
@@ -72,27 +127,33 @@ export default function GuiaForm(props: any) {
             Agregar guía
           </IonButton>
         </IonRow>
-        <IonRow
-          style={{
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: "6pt",
-            width: "400pt",
-          }}
-        >
+        <IonRow>
           <IonCol>
             <IonRow>
-              <IonCol style={{ fontWeight: "bold", textAlign: "center" }}>
+            <IonCol
+                style={{
+                  display: "flex",
+                  alignContent: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: "bold",
+                }}
+              >
                 Número de resolución
               </IonCol>
-              <IonCol style={{ fontWeight: "bold", textAlign: "center" }}>
+              <IonCol
+                style={{
+                  display: "flex",
+                  alignContent: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: "bold",
+                }}
+              >
                 Nombre y apellido
               </IonCol>
-              <IonCol size="small"></IonCol>
-            </IonRow>
-            <IonRow
+            </IonRow>                
+                <IonRow
               style={{
                 backgroundColor: "#F084084D",
                 margin: "6pt",
@@ -165,13 +226,16 @@ export default function GuiaForm(props: any) {
               </IonRow>
               <IonRow>
                 <IonCol>
-                  <IonInput label="Número de resolución" />
+                  <IonInput
+                    label="Número de resolución"
+                    value={numeroResolucion}
+                    onIonChange={(e) => setNumeroResolucion(e.detail.value!)} />
                 </IonCol>
                 <IonCol>
-                  <IonInput label="Nombre" />
-                </IonCol>
-                <IonCol>
-                  <IonInput label="Apellido" />
+                  <IonInput
+                    label="Nombre y apellido"
+                    value={nombreCompleto}
+                    onIonChange={(e) => setNombreCompleto(e.detail.value!)} />
                 </IonCol>
               </IonRow>
               <IonRow
@@ -193,7 +257,7 @@ export default function GuiaForm(props: any) {
                 </IonButton>
                 <IonButton
                   style={{ "--background": "#F08408", "--color": "white" }}
-                  onClick={() => handleAgregar()}
+                  onClick={() => handleGuardar()}
                 >
                   Agregar
                 </IonButton>

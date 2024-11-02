@@ -38,15 +38,18 @@ export default function DatosBasicosActividad(props: TDatosBasicosActividad) {
                 >
                     <h3 style={{ fontWeight: "bold" }}>Datos básicos</h3>
                 </IonRow>
-                <IonRow>
+                <IonRow
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        alignContent: "center",
+                        margin: "1pt",
+                    }}>
                     <IonCol
                         style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            alignContent: "center",
-                        }}
-                    >
+                            margin: "10pt",
+                        }}>
                         <Field
                             form={form}
                             name="nombre_actividad"
@@ -55,10 +58,7 @@ export default function DatosBasicosActividad(props: TDatosBasicosActividad) {
                     </IonCol>
                     <IonCol
                         style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            alignContent: "center",
+                            margin: "10pt",
                         }}
                     >
                         <IonSelect
@@ -87,68 +87,68 @@ export default function DatosBasicosActividad(props: TDatosBasicosActividad) {
                     </IonCol>
                     <IonCol
                         style={{
+                            margin: "10pt",
+                        }}>
+                        <IonRow style={{
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
                             alignContent: "center",
-                        }}
-                    >
+                            margin: "1pt",
+                        }}>
 
-                        <div>
-                            <IonRow>
-                                <IonItem>
-                                    <IonSelect
-                                        label="Sub Categoría"
-                                        onIonChange={(e) =>
-                                            setTipoSubCategoria(
-                                                e.target.value
-                                            )
-                                        }
-                                    >
-                                        {props.tipoSubCategoria.filter((subTipo: any) => subTipo.id_sub_tipo_oferta === categoria).map(
-                                            (tipo: any) => (
-                                                <IonSelectOption
-                                                    key={tipo.id_sub_categoria}
-                                                    value={
-                                                        tipo.id_sub_categoria
-                                                    }
-                                                >
-                                                    {
-                                                        tipo.nombre_sub_categoria
-                                                    }
-                                                </IonSelectOption>
-                                            )
-                                        )}
-                                    </IonSelect>
-                                </IonItem>
-                            </IonRow>
-                        </div>
+                            <IonSelect
+                                label="Sub Categoría"
+                                onIonChange={(e) =>
+                                    setTipoSubCategoria(
+                                        e.target.value
+                                    )
+                                }
+                            >
+                                {props.tipoSubCategoria.filter((subTipo: any) => subTipo.id_sub_tipo_oferta === categoria).map(
+                                    (tipo: any) => (
+                                        <IonSelectOption
+                                            key={tipo.id_sub_categoria}
+                                            value={
+                                                tipo.id_sub_categoria
+                                            }
+                                        >
+                                            {
+                                                tipo.nombre_sub_categoria
+                                            }
+                                        </IonSelectOption>
+                                    )
+                                )}
+                            </IonSelect>
+                        </IonRow>
                     </IonCol>
-                </IonRow>
-                <IonRow
-                    style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        alignContent: "center",
-                    }}
-                >
-                    <Field
-                        textarea
-                        form={form}
-                        name="descripcion_actiidad"
-                        label="Descripción de la actividad"
-                    />
                 </IonRow>
                 <IonRow>
                     <IonCol
                         style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            alignContent: "center",
-                        }}
-                    >
+                            margin: "10pt",
+                        }}>
+                        <Field
+                            textarea
+                            rows={4}
+                            maxLength={200}
+                            form={form}
+                            name="descripcion_actiidad"
+                            label="Descripción de la actividad"
+                        />
+                    </IonCol>
+                </IonRow>
+                <IonRow style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    alignContent: "center",
+                    margin: "1pt",
+                }}>
+                    <IonCol
+                        style={{
+                            margin: "10pt",
+                        }}>
                         <Field
                             form={form}
                             name="duracion_actividad"
@@ -157,12 +157,8 @@ export default function DatosBasicosActividad(props: TDatosBasicosActividad) {
                     </IonCol>
                     <IonCol
                         style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            alignContent: "center",
-                        }}
-                    >
+                            margin: "10pt",
+                        }}>
                         <Field
                             form={form}
                             name="distancia_actividad"
@@ -171,12 +167,8 @@ export default function DatosBasicosActividad(props: TDatosBasicosActividad) {
                     </IonCol>
                     <IonCol
                         style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            alignContent: "center",
-                        }}
-                    >
+                            margin: "10pt",
+                        }}>
                         <IonSelect
                             label="Dificultad"
                             onIonChange={(e) =>
@@ -208,14 +200,22 @@ export default function DatosBasicosActividad(props: TDatosBasicosActividad) {
                         justifyContent: "center",
                         alignItems: "center",
                         alignContent: "center",
-                    }}
-                >
-                    <Field
-                        textarea
-                        form={form}
-                        name="requisitos_actividad"
-                        label="Requisitos y/o recomendaciones"
-                    />
+                        margin: "1pt",
+                    }}>
+                    <IonCol
+                        style={{
+                            margin: "10pt",
+                        }}
+                    >
+                        <Field
+                            textarea
+                            rows={4}
+                            maxLength={200}
+                            form={form}
+                            name="requisitos_actividad"
+                            label="Requisitos y/o recomendaciones"
+                        />
+                    </IonCol>
                 </IonRow>
             </div>
         )

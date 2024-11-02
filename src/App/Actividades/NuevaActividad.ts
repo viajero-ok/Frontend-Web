@@ -1,7 +1,23 @@
 import AUTH_API from "../AuthBackendApi";
+type TGuia = {
+  id_oferta: string;
+  nro_resolucion: string;
+  nombre_y_apellido: string;
+};
+
+export const guardarGuia = async (guia: TGuia) => {
+  console.log(guia);
+  await AUTH_API.post(`/actividades/registrar-guia`, guia);
+};
+
+export const eliminarGuia = async (id_oferta: string) =>
+  await AUTH_API.get(`/actividades/eliminar-guia/${id_oferta}`);
+
+export const obtenerGuias = async () =>
+  await AUTH_API.get(`/actividades/obtener-guias`);
 
 type TBodyRegistrarNuevaActividad = {
-    id_tipo_oferta: number;
+  id_tipo_oferta: number;
     id_sub_tipo_oferta?: number;
     id_establecimiento: number;
 };
@@ -35,8 +51,8 @@ export type TBodyGuardarActividad = {
   export const guardarActividad = async (body: TBodyGuardarActividad) =>
     await AUTH_API.patch(`/actividades/actualizar-actividad`, body);
 
- /*  export const obtenerDatosRegistradosActividad = async (id_oferta: string) =>
+  export const obtenerDatosRegistradosActividad = async (id_oferta: string) =>
     await AUTH_API.get(
       `/actividades/obtener-datos-registrados-actividad/${id_oferta}`
-    ); */
+    );
   

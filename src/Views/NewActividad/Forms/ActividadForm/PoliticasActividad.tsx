@@ -56,210 +56,201 @@ export default function PoliticasActividad(props: TPoliticasActividad) {
                         Políticas de reserva
                     </h3>
                 </IonRow>
-                <IonCol>
-					<IonCol>
-						<IonRow
-							style={{
-								display: "flex",
-								flexDirection: "column",
-								alignContent: "center",
-								alignItems: "center",
-								justifyContent: "center",
-							}}
-						>
-							<h4
-								style={{
-									borderBottom: "2pt solid #F08408",
-									padding: "2pt",
-									marginBottom: "31pt",
-								}}
-							>
-								Pago anticipado
-							</h4>
-						</IonRow>
-						<IonRow
-							style={{
-								display: "flex",
-								flexDirection: "column",
-								alignContent: "center",
-								alignItems: "center",
-								justifyContent: "center",
-							}}
-						>
-							<div>
-								<IonRow>
-									<IonItem>
-										<IonSelect
-											label="Tipo de pago"
-											onIonChange={(e) =>
-												setTipoPagoAnticipado(
-													e.target.value
-												)
-											}
-										>
-											{props.tipoPagoAnticipado.map(
-												(tipo: any) => (
-													<IonSelectOption
-                                                        key={tipo.id_tipo_pago_anticipado}
-														value={
-															tipo.id_tipo_pago_anticipado
-														}
-													>
-														{
-															tipo.tipo_pago_anticipado
-														}
-													</IonSelectOption>
-												)
-											)}
-										</IonSelect>
-									</IonItem>
-								</IonRow>
-								<IonRow>
-									{tipoPagoAnticipado == 1 && (
-										<Field
-											form={form}
-											name="porcentaje_pago_anticipado"
-											label="Porcentaje"
-										/>
-									)}
-									{tipoPagoAnticipado == 2 && (
-										<Field
-											form={form}
-											name="monto_pago_anticipado"
-											label="Monto"
-										/>
-									)}
-								</IonRow>
-							</div>
-						</IonRow>
-					</IonCol>
-                    <IonRow
-                        style={{
-                            display: "flex",
-                            alignContent: "center",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            marginBottom: "13pt",
-                        }}
-                    >
+                <IonRow>
+                    <IonCol>
                         <h4
                             style={{
                                 borderBottom: "2pt solid #F08408",
                                 padding: "2pt",
+                                margin: "15pt"
+                            }}
+                        >
+                            Pago anticipado
+                        </h4>
+                    </IonCol>
+                    <IonCol>
+                        <h4
+                            style={{
+                                borderBottom: "2pt solid #F08408",
+                                padding: "2pt",
+                                margin: "15pt"
                             }}
                         >
                             Política de cancelación
                         </h4>
-                    </IonRow>
-                    <IonRow>
-                        <IonCol
+                    </IonCol>
+                    <IonCol>
+                        <h4
                             style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignContent: "center",
-                                alignItems: "center",
-                                justifyContent: "center",
+                                borderBottom: "2pt solid #F08408",
+                                padding: "2pt",
+                                margin: "15pt"
                             }}
                         >
-                            <IonRow>
-                                <Field
-                                    value={
-                                        form?.schema.id_politica_cancelacion
+                            Métodos de pago
+                        </h4>
+                    </IonCol>
+                </IonRow>
+                <IonRow>
+                    <IonCol>
+                        <div
+                         style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignContent: "center",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}>
+                            <IonItem>
+                                <IonSelect
+                                    label="Tipo de pago"
+                                    onIonChange={(e) =>
+                                        setTipoPagoAnticipado(
+                                            e.target.value
+                                        )
                                     }
-                                    select
-                                    options={props.politicasDeCancelacion.map(
-                                        (politica: any) => ({
-                                            id: politica.id_politica_cancelacion,
-                                            text: politica.politica_cancelacion,
-                                        })
+                                >
+                                    {props.tipoPagoAnticipado.map(
+                                        (tipo: any) => (
+                                            <IonSelectOption
+                                                key={tipo.id_tipo_pago_anticipado}
+                                                value={
+                                                    tipo.id_tipo_pago_anticipado
+                                                }
+                                            >
+                                                {
+                                                    tipo.tipo_pago_anticipado
+                                                }
+                                            </IonSelectOption>
+                                        )
                                     )}
-                                    form={form}
-                                    name="id_politica_cancelacion"
-                                    label="Tipo de política"
-                                />
-                            </IonRow>
+                                </IonSelect>
+                            </IonItem>
                             <IonRow>
-                                <Field
-                                    value={
-                                        form?.schema.plazo_dias_cancelacion
-                                    }
-                                    form={form}
-                                    name="plazo_dias_cancelacion"
-                                    label="Plazo de cancelación (días)"
-                                />
+                                {tipoPagoAnticipado == 1 && (
+                                    <Field
+                                        form={form}
+                                        name="porcentaje_pago_anticipado"
+                                        label="Porcentaje"
+                                    />
+                                )}
+                                {tipoPagoAnticipado == 2 && (
+                                    <Field
+                                        form={form}
+                                        name="monto_pago_anticipado"
+                                        label="Monto"
+                                    />
+                                )}
                             </IonRow>
-                        </IonCol>
-                    </IonRow>
-                </IonCol>
-                <IonCol>
-                    <IonRow
+                        </div>
+                    </IonCol>
+
+
+                    <IonCol>
+
+                        <IonRow
+                         style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignContent: "center",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}>
+                            <Field
+                                value={
+                                    form?.schema.id_politica_cancelacion
+                                }
+                                select
+                                options={props.politicasDeCancelacion.map(
+                                    (politica: any) => ({
+                                        id: politica.id_politica_cancelacion,
+                                        text: politica.politica_cancelacion,
+                                    })
+                                )}
+                                form={form}
+                                name="id_politica_cancelacion"
+                                label="Tipo de política"
+                            />
+                        </IonRow>
+                        <IonRow
+                         style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignContent: "center",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}>
+                            <Field
+                                value={
+                                    form?.schema.plazo_dias_cancelacion
+                                }
+                                form={form}
+                                name="plazo_dias_cancelacion"
+                                label="Plazo de cancelación (días)"
+                            />
+                        </IonRow>
+                    </IonCol>
+                    <IonCol
                         style={{
                             display: "flex",
                             flexDirection: "column",
                             alignContent: "center",
                             alignItems: "center",
                             justifyContent: "center",
-                        }}
-                    >
-                        <h4
-                            style={{
-                                borderBottom: "2pt solid #F08408",
-                                padding: "2pt",
-                                marginBottom: "31pt",
-                            }}
-                        >
-                            Métodos de pago
-                        </h4>
-                    </IonRow>
-                    <IonRow>
-                        <IonCol
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignContent: "center",
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                        >
-                            <IonRow style={{ marginBottom: "13pt" }}>
-                                <IonText>
-                                    Seleccioná los métodos de pago aceptados
-                                    en el alojamiento
-                                </IonText>
-                            </IonRow>
-                            <div>
-                                <IonRow>
-                                    <IonCheckbox
-                                        labelPlacement="end"
-                                        style={{ margin: "3pt" }}
-                                        onIonChange={(e) =>
-                                            setTodos(e.target.checked)
-                                        }
-                                    >
-                                        Todos
-                                    </IonCheckbox>
+                        }}>
+
+
+
+                        <IonRow>
+                            <IonCol
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignContent: "center",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                }}
+                            >
+                                <IonRow style={{ marginBottom: "13pt" }}>
+                                    <IonText>
+                                        Seleccioná los métodos de pago aceptados
+                                        en el alojamiento
+                                    </IonText>
                                 </IonRow>
-                                {props.metodosDePago?.map((metodo: any) => (
-                                    <IonRow
-                                        style={{ margin: "3pt" }}
-                                        key={metodo.id_metodo_pago}
-                                    >
-                                        <Check
-                                            list={props.formMetodosDePago}
-                                            forceChecked={todos}
-                                            id={metodo.id_metodo_pago}
-                                            setList={
-                                                props.setFormMetodosDePago
+                                <div>
+                                    <IonRow>
+                                        <IonCheckbox
+                                            labelPlacement="end"
+                                            style={{ margin: "3pt" }}
+                                            onIonChange={(e) =>
+                                                setTodos(e.target.checked)
                                             }
-                                            label={metodo.metodo_pago}
-                                        />
+                                        >
+                                            Todos
+                                        </IonCheckbox>
                                     </IonRow>
-                                ))}
-                            </div>
-                        </IonCol>
-                    </IonRow>
-                </IonCol>
-            </div>
+                                    {props.metodosDePago?.map((metodo: any) => (
+                                        <IonRow
+                                            style={{ margin: "3pt" }}
+                                            key={metodo.id_metodo_pago}
+                                        >
+                                            <Check
+                                                list={props.formMetodosDePago}
+                                                forceChecked={todos}
+                                                id={metodo.id_metodo_pago}
+                                                setList={
+                                                    props.setFormMetodosDePago
+                                                }
+                                                label={metodo.metodo_pago}
+                                            />
+                                        </IonRow>
+                                    ))}
+                                </div>
+                            </IonCol>
+                        </IonRow>
+                    </IonCol>
+                </IonRow>
+            </div >
         )
     );
 }

@@ -96,7 +96,9 @@ export default function ActividadForm(props: TActividadForm) {
         tipoSubCategoria={subcategoria}
         dificultad={dificultad}        
       />
-      <GuiaForm />
+      <GuiaForm
+        idOferta={props.idOferta}
+       />
       <PoliticasActividad
         tipoPagoAnticipado={tiposPagoAnticipado}
         politicasDeCancelacion={politicasDeCancelacion}

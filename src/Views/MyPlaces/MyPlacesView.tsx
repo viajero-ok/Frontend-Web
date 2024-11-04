@@ -21,7 +21,7 @@ export default function MyPlacesView() {
   useEffect(() => {
     obtenerEstablecimientos()
       .then((response: any) => {
-        setEstablecimientos(response.data.establecimientos);
+        setEstablecimientos(response.establecimientos);
       })
       .catch(() => {});
   }, []);

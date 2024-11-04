@@ -4,16 +4,7 @@ import OfferSelection from "./OfferSelection";
 
 export default function NewOfferView() {
   const schema = {
-    nombreDelEstablecimiento: "",
-    numeroDeHabilitacionMunicipal: "",
-    descripcion: "",
-    telefono: "",
-    mail: "",
-    calle: "",
-    numero: "",
-    provincia: "", // fijada como siempre cordoba?
-    localidad: "",
-    departamento: "",
+    id_establecimiento: 1,
   };
   return (
     <DefaultLoggedLayout>

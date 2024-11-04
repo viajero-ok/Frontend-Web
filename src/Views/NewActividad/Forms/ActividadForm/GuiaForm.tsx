@@ -12,12 +12,18 @@ import {
   IonSelect,
 } from "@ionic/react";
 import { add, alertCircleOutline, close, trash } from "ionicons/icons";
-import { useState } from "react";
-import { guardarGuia } from "../../../../App/Actividades/NuevaActividad";
-import { eliminarGuia } from "../../../../App/Actividades/NuevaActividad";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { guardarGuia, eliminarGuia, modificarGuia } from "../../../../App/Actividades/Actividad";
 
+type TGuia = {
+  id_guia: number;
+  numero_resolucion: string;
+  nombre_apellido_guia: string;
+}
 type TGuiaForm = {
   idOferta: string;
+  guias: TGuia[];
+  setEsConGuia: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function GuiaForm(props: TGuiaForm) {
@@ -27,6 +33,12 @@ export default function GuiaForm(props: TGuiaForm) {
   const [openToast, setOpenToast] = useState<boolean>(false);
   const [numeroResolucion, setNumeroResolucion] = useState<string>("");
   const [nombreCompleto, setNombreCompleto] = useState<string>("");
+  const [idGuiaEditar, setIdGuiaEditar] = useState<number>(0);
+
+  useEffect(() => {
+    console.log(props.guias);
+    setGuias(props.guias);
+  }, []);
 
   const handleChangeEsConGuia = (e: any) => {
     if (guias.length > 0) {
@@ -34,54 +46,75 @@ export default function GuiaForm(props: TGuiaForm) {
       return;
     }
     setEsConGuia(e.target.checked);
+    props.setEsConGuia(e.target.checked);
   };
 
-  const handleAgregarDetalle = () => {
-    setGuias((prev: any[]) => [
-      ...prev,
-      { id_oferta: props.idOferta, id_guia: null, nombre_y_apellido: null },
-    ]);
-  };
-  const handleEliminarDetalle = (id: number) => {
-    setGuias((prev: any[]) => [
-      ...prev.filter((_, index: number) => index != id),
-    ]);
-  };
-
-  const doGuardar = () => {
+  const handleGuardarGuia = () => {
     if (!numeroResolucion || !nombreCompleto) return;
-    guardarGuia({
-      id_oferta: props.idOferta,
-      nro_resolucion: numeroResolucion,
-      nombre_y_apellido: nombreCompleto,
-    }).then(() => {/* 
-      props.handleObtenerDatos();
-      setOpen(false); */
-    });
-  };
-  const doActualizar = () => {
-    if (!numeroResolucion || !nombreCompleto) return;
-    guardarGuia({
-      id_oferta: props.idOferta,
-      nro_resolucion: numeroResolucion,
-      nombre_y_apellido: nombreCompleto,
-    }).then((_) => {/* 
-      props.handleObtenerDatos();
-      setOpen(false); */
-    });
-  };
-
-  const handleGuardar = () => {
-    if (!esConGuia) doGuardar();
-    else doActualizar();
+    if (idGuiaEditar) {
+      doModificarGuia(idGuiaEditar);
+    }
+    else {
+      doGuardarGuia();
+    }
     setOpen(false);
-  };
+    setNumeroResolucion("");
+    setNombreCompleto("");
+  }
 
-  const handleEliminar = () => {
-    if (!esConGuia) return;
-    eliminarGuia(props.idOferta).then((_) => {
+  const handleEliminarGuia = (id: number) => {
+    eliminarGuia({
+      id_guia: id,
+      id_oferta: props.idOferta,
+    }).then(() => {
+      setGuias(guias.filter((guia: TGuia) => guia.id_guia != id));
     });
-  };
+  }
+
+  const EditarRegistro = (guia: TGuia) => {
+    setNumeroResolucion(guia.numero_resolucion);
+    setNombreCompleto(guia.nombre_apellido_guia);
+    setIdGuiaEditar(guia.id_guia);
+    setOpen(true);
+  }
+
+  const doGuardarGuia = () => {
+    guardarGuia({
+      id_oferta: props.idOferta,
+      nro_resolucion: numeroResolucion,
+      nombre_y_apellido: nombreCompleto,
+    }).then((data: any) => {
+      console.log(data.data);
+      setGuias([...guias, {
+        id_guia: data.data.id_guia,
+        nro_resolucion: numeroResolucion,
+        nombre_y_apellido: nombreCompleto,
+      }]);
+    });
+  }
+
+  const doModificarGuia = (idGuia: number) => {
+    if (!numeroResolucion || !nombreCompleto) return;
+    modificarGuia({
+      id_guia: idGuia,
+      id_oferta: props.idOferta,
+      nro_resolucion: numeroResolucion,
+      nombre_y_apellido: nombreCompleto,
+    }).then((data: any) => {
+      console.log(data.data);
+      setGuias(guias.map((guia: TGuia) => {
+        if (guia.id_guia == idGuia) {
+          return {
+            id_guia: data.data.id_guia,
+            nro_resolucion: numeroResolucion,
+            nombre_apellido_guia: nombreCompleto,
+          }
+        }
+        return guia;
+      }));
+      setIdGuiaEditar(0);
+    });
+  }
 
   return (
     <IonCard style={{
@@ -130,7 +163,7 @@ export default function GuiaForm(props: TGuiaForm) {
         <IonRow>
           <IonCol>
             <IonRow>
-            <IonCol
+              <IonCol
                 style={{
                   display: "flex",
                   alignContent: "center",
@@ -152,47 +185,54 @@ export default function GuiaForm(props: TGuiaForm) {
               >
                 Nombre y apellido
               </IonCol>
-            </IonRow>                
-                <IonRow
-              style={{
-                backgroundColor: "#F084084D",
-                margin: "6pt",
-                borderRadius: "8pt",
-              }}
-            >
-              <IonCol
-                style={{
-                  textAlign: "center",
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                asdasdas12312425
-              </IonCol>
-              <IonCol
-                style={{
-                  textAlign: "center",
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                José María Perez Rordriguez
-              </IonCol>
-              <IonCol
-                size="small"
-                style={{ textAlign: "center", paddingRight: "12pt" }}
-              >
-                <IonIcon
-                  icon={trash}
-                  color="danger"
-                  style={{ cursor: "pointer", fontSize: "14pt" }}
-                />
-              </IonCol>
             </IonRow>
+            {guias.map((guia: TGuia) => (
+              <IonRow
+                key={guia.id_guia}
+                onClick={() => EditarRegistro(guia)}
+                style={{
+                  backgroundColor: "#F084084D",
+                  margin: "6pt",
+                  borderRadius: "8pt",
+                }}
+              >
+                <IonCol
+                  style={{
+                    textAlign: "center",
+                    display: "flex",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {guia.numero_resolucion}
+                </IonCol>
+                <IonCol
+                  style={{
+                    textAlign: "center",
+                    display: "flex",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {guia.nombre_apellido_guia}
+                </IonCol>
+
+                <IonCol
+                  size="small"
+                  style={{ textAlign: "center", paddingRight: "12pt" }}
+                >
+                  <IonButton onClick={() => handleEliminarGuia(guia.id_guia)}>
+                    <IonIcon
+                      icon={trash}
+                      color="danger"
+                      style={{ cursor: "pointer", fontSize: "14pt" }}
+                    />
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+            ))}
           </IonCol>
         </IonRow>
         <IonModal
@@ -257,7 +297,7 @@ export default function GuiaForm(props: TGuiaForm) {
                 </IonButton>
                 <IonButton
                   style={{ "--background": "#F08408", "--color": "white" }}
-                  onClick={() => handleGuardar()}
+                  onClick={() => handleGuardarGuia()}
                 >
                   Agregar
                 </IonButton>

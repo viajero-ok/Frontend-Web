@@ -9,12 +9,17 @@ import {
   IonIcon,
   IonModal,
   IonRow,
+  IonSelect,
+  IonSelectOption,
   IonTitle,
   useIonRouter,
 } from "@ionic/react";
 import { registrarNuevoAlojamiento } from "../../../../App/Alojamientos/NuevoAlojamiento";
 import { close } from "ionicons/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Field from "../../../../components/Field/Field";
+import { useForm } from "../../../../hooks/UseForm/FormProvider";
+import { obtenerEstablecimientos } from "../../../../App/Establecimientos/Establecimientos";
 
 type TAlojamientoTypeSelection = {
   setOfferType: any;
@@ -24,14 +29,15 @@ export default function AlojamientoTypeSelection(
 ) {
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [selection, setSelection] = useState<number | null>(null);
-
+  const [establecimientos, setEstablecimientos] = useState<any[]>([]);
+  const form = useForm();
   const router = useIonRouter();
 
   const handleCrearAlojamiento = (idTipoSuboferta: number) => {
     registrarNuevoAlojamiento({
       id_tipo_oferta: 1,
       id_sub_tipo_oferta: idTipoSuboferta,
-      id_establecimiento: 23,
+      id_establecimiento: form?.schema.id_establecimiento,
     })
       .then((response: any) => {
         setOpenConfirm(false);
@@ -47,6 +53,12 @@ export default function AlojamientoTypeSelection(
     setSelection(idType);
     setOpenConfirm(true);
   };
+  
+  useEffect(() => {
+    obtenerEstablecimientos().then((response: any) => {
+      setEstablecimientos(response.establecimientos);
+    });
+  }, []);
 
   return (
     <>
@@ -229,8 +241,27 @@ export default function AlojamientoTypeSelection(
                 </IonButton>
               </IonCol>
             </IonRow>
-            <IonRow style={{ justifyContent: "center", padding: "8pt"}}>
-              <h3 style={{color: "black", fontSize: "14pt" }}>Estás por crear un nuevo alojamiento</h3>
+            <IonRow style={{ justifyContent: "center", padding: "8pt" }}>
+              <h3 style={{ color: "black", fontSize: "14pt" }}>
+                Seleccioná el establecimiento al que pertenece la actividad
+              </h3>
+            </IonRow>
+            <IonRow>
+              <IonCol>
+              <IonSelect
+                  placeholder="Seleccioná el establecimiento"
+                  value={form?.schema.id_establecimiento}
+                  onIonChange={(e: any) => {
+                    form?.setValue("id_establecimiento", e.target.value);
+                  }}
+                >
+                  {establecimientos.map((establecimiento: any) => (
+                    <IonSelectOption key={establecimiento.id_establecimiento} value={establecimiento.id_establecimiento}>
+                      {establecimiento.nombre}
+                    </IonSelectOption>
+                  ))}
+                </IonSelect>
+              </IonCol>
             </IonRow>
             <IonRow
               style={{
@@ -241,13 +272,16 @@ export default function AlojamientoTypeSelection(
             >
               <IonButton
                 onClick={() => setOpenConfirm(false)}
-                style={{ marginRight: "8pt", "--background": "white", "--color": "#F08408" }}
+                style={{
+                  marginRight: "8pt",
+                  "--background": "white",
+                  "--color": "#F08408",
+                }}
               >
                 Cancelar
               </IonButton>
               <IonButton
                 style={{ "--background": "#F08408", "--color": "white" }}
-                disabled={selection == null}
                 onClick={() => selection && handleCrearAlojamiento(selection)}
               >
                 Crear

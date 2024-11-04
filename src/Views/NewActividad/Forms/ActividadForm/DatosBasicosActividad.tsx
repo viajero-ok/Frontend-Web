@@ -1,22 +1,23 @@
 import { IonCol, IonItem, IonRow, IonSelect, IonSelectOption } from "@ionic/react";
 import Field from "../../../../components/Field/Field";
 import { useForm } from "../../../../hooks/UseForm/FormProvider";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { TBodyGuardarActividad } from "../../../../App/Actividades/Actividad";
 
 type TDatosBasicosActividad = {
     categoria: any;
-    tipoSubCategoria: any;
+    subCategorias: any;
     dificultad: any;
+    formDatosBasicos: TBodyGuardarActividad[];
+    setFormDatosBasicos: Dispatch<SetStateAction<TBodyGuardarActividad[]>>;
 };
 
 export default function DatosBasicosActividad(props: TDatosBasicosActividad) {
     const form = useForm();
-    const [tipoSubCategoria, setTipoSubCategoria] = useState<number>();
-    const [categoria, setCategoria] = useState<number>();
-    const [dificultad, setDificultad] = useState<number>();
-
     return (
-        props.categoria && (
+        props.categoria &&
+        props.subCategorias &&
+        props.dificultad && (
             <div
                 style={{
                     padding: "10pt",
@@ -61,29 +62,21 @@ export default function DatosBasicosActividad(props: TDatosBasicosActividad) {
                             margin: "10pt",
                         }}
                     >
-                        <IonSelect
-                            label="Categoría"
-                            onIonChange={(e) =>
-                                setCategoria(
-                                    e.target.value
-                                )
+                        <Field
+                            value={
+                                form?.schema.id_sub_tipo_oferta
                             }
-                        >
-                            {props.categoria.map(
-                                (tipo: any) => (
-                                    <IonSelectOption
-                                        key={tipo.id_sub_tipo_oferta}
-                                        value={
-                                            tipo.id_sub_tipo_oferta
-                                        }
-                                    >
-                                        {
-                                            tipo.nombre_sub_tipo_oferta
-                                        }
-                                    </IonSelectOption>
-                                )
+                            select
+                            options={props.categoria.map(
+                                (categorias: any) => ({
+                                    id: categorias.id_sub_tipo_oferta,
+                                    text: categorias.nombre_sub_tipo_oferta,
+                                })
                             )}
-                        </IonSelect>
+                            form={form}
+                            name="id_sub_tipo_oferta"
+                            label="Categoría"
+                        />
                     </IonCol>
                     <IonCol
                         style={{
@@ -96,30 +89,38 @@ export default function DatosBasicosActividad(props: TDatosBasicosActividad) {
                             alignContent: "center",
                             margin: "1pt",
                         }}>
-
-                            <IonSelect
-                                label="Sub Categoría"
-                                onIonChange={(e) =>
-                                    setTipoSubCategoria(
-                                        e.target.value
-                                    )
+                            <Field
+                                value={
+                                    form?.schema.id_sub_categoria
                                 }
-                            >
-                                {props.tipoSubCategoria.filter((subTipo: any) => subTipo.id_sub_tipo_oferta === categoria).map(
+                                select
+                                options={props.subCategorias.filter((subTipo: any) =>
+                                    form?.schema.id_sub_tipo_oferta === subTipo.id_sub_tipo_oferta
+                                ).map(
+                                    (tipo: any) => ({
+                                        id: tipo.id_sub_categoria,
+                                        text: tipo.nombre_sub_categoria,
+                                    })
+                                )}
+                                form={form}
+                                name="id_sub_categoria"
+                                label="Sub Categoría"
+                            />
+
+                            {/*     {props.tipoSubCategoria.filter((subTipo: any) => 
+                                    props.formDatosBasicos.some((dato) => 
+                                        dato.id_sub_tipo_oferta === subTipo.id_sub_tipo_oferta
+                                    )
+                                ).map(
                                     (tipo: any) => (
                                         <IonSelectOption
                                             key={tipo.id_sub_categoria}
-                                            value={
-                                                tipo.id_sub_categoria
-                                            }
+                                            value={tipo.id_sub_categoria}
                                         >
-                                            {
-                                                tipo.nombre_sub_categoria
-                                            }
+                                            {tipo.nombre_sub_categoria}
                                         </IonSelectOption>
                                     )
-                                )}
-                            </IonSelect>
+                                )} */}
                         </IonRow>
                     </IonCol>
                 </IonRow>
@@ -133,7 +134,7 @@ export default function DatosBasicosActividad(props: TDatosBasicosActividad) {
                             rows={4}
                             maxLength={200}
                             form={form}
-                            name="descripcion_actiidad"
+                            name="descripcion_actividad"
                             label="Descripción de la actividad"
                         />
                     </IonCol>
@@ -169,29 +170,21 @@ export default function DatosBasicosActividad(props: TDatosBasicosActividad) {
                         style={{
                             margin: "10pt",
                         }}>
-                        <IonSelect
-                            label="Dificultad"
-                            onIonChange={(e) =>
-                                setDificultad(
-                                    e.target.value
-                                )
+                        <Field
+                            value={
+                                form?.schema.id_dificultad
                             }
-                        >
-                            {props.dificultad.map(
-                                (tipo: any) => (
-                                    <IonSelectOption
-                                        key={tipo.id_dificultad}
-                                        value={
-                                            tipo.id_dificultad
-                                        }
-                                    >
-                                        {
-                                            tipo.dificultad
-                                        }
-                                    </IonSelectOption>
-                                )
+                            select
+                            options={props.dificultad.map(
+                                (dificultad: any) => ({
+                                    id: dificultad.id_dificultad,
+                                    text: dificultad.dificultad,
+                                })
                             )}
-                        </IonSelect>
+                            form={form}
+                            name="id_dificultad"
+                            label="Dificultad"
+                        />
                     </IonCol>
                 </IonRow>
                 <IonRow

@@ -1,20 +1,30 @@
 import AUTH_API from "../AuthBackendApi";
+
 type TGuia = {
   id_oferta: string;
   nro_resolucion: string;
   nombre_y_apellido: string;
+  id_guia?: number;
 };
 
 export const guardarGuia = async (guia: TGuia) => {
   console.log(guia);
-  await AUTH_API.post(`/actividades/registrar-guia`, guia);
+  return await AUTH_API.post(`/actividades/registrar-guia`, guia);
 };
 
-export const eliminarGuia = async (id_oferta: string) =>
-  await AUTH_API.get(`/actividades/eliminar-guia/${id_oferta}`);
+type TEliminarGuia = {
+  id_guia: number;
+  id_oferta: string;
+}
 
-export const obtenerGuias = async () =>
-  await AUTH_API.get(`/actividades/obtener-guias`);
+export const eliminarGuia = async (guia: TEliminarGuia) =>
+  await AUTH_API.delete(`/actividades/eliminar-guia`, { data: guia });
+
+
+export const modificarGuia = async (guia: TGuia) => {
+  console.log(guia);
+  return await AUTH_API.patch(`/actividades/modificar-guia`, guia);
+};
 
 type TBodyRegistrarNuevaActividad = {
   id_tipo_oferta: number;
@@ -51,8 +61,8 @@ export type TBodyGuardarActividad = {
   export const guardarActividad = async (body: TBodyGuardarActividad) =>
     await AUTH_API.patch(`/actividades/actualizar-actividad`, body);
 
-  export const obtenerDatosRegistradosActividad = async (id_oferta: string) =>
-    await AUTH_API.get(
+  export const obtenerDatosRegistradosActividad = async (id_oferta: string) => {
+    return await AUTH_API.get(
       `/actividades/obtener-datos-registrados-actividad/${id_oferta}`
     );
-  
+  }

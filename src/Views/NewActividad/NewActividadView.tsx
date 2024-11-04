@@ -45,11 +45,11 @@ export default function NewActividadView(props: TNewActividadView) {
   const schemaUbicacionForm = {
     id_oferta: "",
     calle: "",
-    sin_numero: "", // boolean
+    sin_numero: false, // boolean
     numero: "",
-    id_localidad: "", // number
-    id_departamento: "", // number
-    id_provincia: 3, // number
+    localidad: "", // number
+    departamento: "", // number
+    provincia:"", // number
     latitud: "",
     longitud: "",
     observaciones: "",

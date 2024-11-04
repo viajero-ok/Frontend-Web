@@ -39,8 +39,6 @@ export default function Field(props: IField) {
 	useEffect(() => {
 		if (!props.form.schema) return;
 		setValue(props.form.schema[props.name]);
-
-		console.log("value: ", props.form.schema[props.name]);
 	}, [props.form]);
 
 	return (
@@ -78,7 +76,7 @@ export default function Field(props: IField) {
 						onIonChange={(e: any) => handleOnChange(e.target.value)}
 					>
 						{props.options.map((value: any) => (
-							<IonSelectOption value={value.id}>
+							<IonSelectOption key={value.id} value={value.id}>
 								{value.text}
 							</IonSelectOption>
 						))}

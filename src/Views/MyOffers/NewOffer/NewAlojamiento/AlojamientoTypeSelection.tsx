@@ -246,9 +246,10 @@ export default function AlojamientoTypeSelection(
                 Seleccioná el establecimiento al que pertenece la actividad
               </h3>
             </IonRow>
-            <IonRow>
-              <IonCol>
+            <IonRow style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingLeft: "10%", paddingRight: "10%" }}>
+              
               <IonSelect
+                label="Establecimiento"
                   placeholder="Seleccioná el establecimiento"
                   value={form?.schema.id_establecimiento}
                   onIonChange={(e: any) => {
@@ -261,7 +262,6 @@ export default function AlojamientoTypeSelection(
                     </IonSelectOption>
                   ))}
                 </IonSelect>
-              </IonCol>
             </IonRow>
             <IonRow
               style={{

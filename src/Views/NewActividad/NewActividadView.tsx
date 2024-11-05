@@ -17,6 +17,7 @@ type TNewActividadView = {
   idOferta: string;
 };
 export default function NewActividadView(props: TNewActividadView) {
+  
   const [segment, setSegment] = useState<"actividad-form" | "ubicacion-form" | "turnosyentradas-form">(
     "actividad-form"
   );
@@ -113,7 +114,9 @@ export default function NewActividadView(props: TNewActividadView) {
           )}
           {segment == "ubicacion-form" && (
             <FormProvider schema={schemaUbicacionForm}>
-              <UbicacionForm idOferta={props.idOferta} />
+              <UbicacionForm 
+              idOferta={props.idOferta} 
+              id_establecimiento={props.id_establecimiento} />
             </FormProvider>
           )}
           {segment == "turnosyentradas-form" && (

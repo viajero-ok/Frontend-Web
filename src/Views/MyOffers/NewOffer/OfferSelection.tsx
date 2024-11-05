@@ -37,8 +37,9 @@ export default function OfferSelection(props: any) {
       id_tipo_oferta: 2,
       id_establecimiento: id_establecimiento,
     })
-    .then((response: any) => {
-        router.push(`/my-offers/actividad/edit/${response.data.id_oferta}`);
+      .then((response: any) => {
+        router.push(`/my-offers/actividad/edit/${response.data.id_oferta}?id_establecimiento=${id_establecimiento}`);
+        setOfferType(null);
       });
   };
 
@@ -98,22 +99,22 @@ export default function OfferSelection(props: any) {
                 Seleccioná el establecimiento al que pertenece la actividad
               </h3>
             </IonRow>
-            <IonRow>
-              <IonCol>
-                <IonSelect
-                  placeholder="Seleccioná el establecimiento"
-                  value={form?.schema?.id_establecimiento}
-                  onIonChange={(e: any) => {
-                    form?.setValue("id_establecimiento", e.target.value);
-                  }}
-                >
-                  {establecimientos.map((establecimiento: any) => (
-                    <IonSelectOption key={establecimiento.id_establecimiento} value={establecimiento.id_establecimiento}>
-                      {establecimiento.nombre}
-                    </IonSelectOption>
-                  ))}
-                </IonSelect>
-                {/* <Field
+            <IonRow style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingLeft: "10%", paddingRight: "10%" }}>
+              <IonSelect
+                label="Establecimiento"
+                placeholder="Seleccioná el establecimiento"
+                value={form?.schema?.id_establecimiento}
+                onIonChange={(e: any) => {
+                  form?.setValue("id_establecimiento", e.target.value);
+                }}
+              >
+                {establecimientos.map((establecimiento: any) => (
+                  <IonSelectOption key={establecimiento.id_establecimiento} value={establecimiento.id_establecimiento}>
+                    {establecimiento.nombre}
+                  </IonSelectOption>
+                ))}
+              </IonSelect>
+              {/* <Field
                   select
                   name="establecimiento"
                   label="Establecimientos"
@@ -123,7 +124,6 @@ export default function OfferSelection(props: any) {
                   }))}
                   form={form}
                 /> */}
-              </IonCol>
             </IonRow>
             <IonRow
               style={{

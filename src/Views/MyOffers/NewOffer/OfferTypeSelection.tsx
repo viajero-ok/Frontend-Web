@@ -87,7 +87,6 @@ export default function OfferTypeSelection(props: TOfferTypeSelection) {
           <IonCard
             button onClick={() => {props.setOfferType("actividad"); } }
           >
-            
             <IonHeader
               style={{
                 display: "flex",

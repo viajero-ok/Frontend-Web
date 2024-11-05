@@ -36,17 +36,25 @@ export default function GuiaForm(props: TGuiaForm) {
   const [idGuiaEditar, setIdGuiaEditar] = useState<number>(0);
 
   useEffect(() => {
-    console.log(props.guias);
     setGuias(props.guias);
-  }, []);
+    if (props.guias.length > 0) {
+      console.log(guias);
+    } 
+  }, [props.guias]);
 
   const handleChangeEsConGuia = (e: any) => {
     if (guias.length > 0) {
-      setOpenToast(true);
+      setEsConGuia(true);
       return;
     }
     setEsConGuia(e.target.checked);
     props.setEsConGuia(e.target.checked);
+
+    if (e.target.checked) {
+      setGuias(guias);
+    } else {
+      setGuias([]);
+    }
   };
 
   const handleGuardarGuia = () => {
@@ -71,12 +79,12 @@ export default function GuiaForm(props: TGuiaForm) {
     });
   }
 
-  const EditarRegistro = (guia: TGuia) => {
+  /* const EditarRegistro = (guia: TGuia) => {
     setNumeroResolucion(guia.numero_resolucion);
     setNombreCompleto(guia.nombre_apellido_guia);
     setIdGuiaEditar(guia.id_guia);
     setOpen(true);
-  }
+  } */
 
   const doGuardarGuia = () => {
     guardarGuia({
@@ -84,7 +92,6 @@ export default function GuiaForm(props: TGuiaForm) {
       nro_resolucion: numeroResolucion,
       nombre_y_apellido: nombreCompleto,
     }).then((data: any) => {
-      console.log(data.data);
       setGuias([...guias, {
         id_guia: data.data.id_guia,
         nro_resolucion: numeroResolucion,
@@ -101,7 +108,6 @@ export default function GuiaForm(props: TGuiaForm) {
       nro_resolucion: numeroResolucion,
       nombre_y_apellido: nombreCompleto,
     }).then((data: any) => {
-      console.log(data.data);
       setGuias(guias.map((guia: TGuia) => {
         if (guia.id_guia == idGuia) {
           return {
@@ -138,6 +144,7 @@ export default function GuiaForm(props: TGuiaForm) {
           <IonToggle
             checked={esConGuia}
             onIonChange={(e) => handleChangeEsConGuia(e)}
+            color="primary"
           >
             Con guía
           </IonToggle>
@@ -181,6 +188,7 @@ export default function GuiaForm(props: TGuiaForm) {
                   alignItems: "center",
                   justifyContent: "center",
                   fontWeight: "bold",
+                  fontColor: "black",
                 }}
               >
                 Nombre y apellido
@@ -189,7 +197,7 @@ export default function GuiaForm(props: TGuiaForm) {
             {guias.map((guia: TGuia) => (
               <IonRow
                 key={guia.id_guia}
-                onClick={() => EditarRegistro(guia)}
+                /* onClick={() => EditarRegistro(guia)} */
                 style={{
                   backgroundColor: "#F084084D",
                   margin: "6pt",
@@ -223,7 +231,7 @@ export default function GuiaForm(props: TGuiaForm) {
                   size="small"
                   style={{ textAlign: "center", paddingRight: "12pt" }}
                 >
-                  <IonButton onClick={() => handleEliminarGuia(guia.id_guia)}>
+                  <IonButton onClick={() => handleEliminarGuia(guia.id_guia)} fill="clear">
                     <IonIcon
                       icon={trash}
                       color="danger"
@@ -306,7 +314,7 @@ export default function GuiaForm(props: TGuiaForm) {
           </div>
         </IonModal>
       </IonGrid>
-      <IonToast
+      {/* <IonToast
         isOpen={openToast}
         message={"Primero elimine los guías creados"}
         duration={5000}
@@ -314,7 +322,7 @@ export default function GuiaForm(props: TGuiaForm) {
         onDidDismiss={() => {
           setOpenToast(false);
         }}
-      />
+      /> */}
     </IonCard>
   );
 }

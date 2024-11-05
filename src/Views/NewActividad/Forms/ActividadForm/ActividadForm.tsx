@@ -32,6 +32,7 @@ export default function ActividadForm(props: TActividadForm) {
   const [formDatosBasicos, setFormDatosBasicos] = useState<TBodyGuardarActividad[]>([]);
   const [guias, setGuias] = useState<any[]>([]);
   const [esConGuia, setEsConGuia] = useState<boolean>(false);
+  
   const handleGuardar = () => {
 
     if (!form) return;
@@ -84,8 +85,11 @@ export default function ActividadForm(props: TActividadForm) {
     obtenerDatosRegistradosActividad(props.idOferta)
       .then((response: any) => {
         setGuias(response.data.datos_actividad.guias);
+       /*  console.log("guias: ", response.data.datos_actividad.guias); */
       })
-      .catch((error: any) => { });
+      .catch((error: any) => { 
+        console.log("error: ", error);  
+      });
   }, []);
 
 

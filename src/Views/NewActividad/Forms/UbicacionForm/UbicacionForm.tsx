@@ -113,142 +113,149 @@ export default function UbicacionForm(props: TUbicacionForm) {
   return (
     <IonGrid>
       <IonRow>
+        <IonToggle
+          name="ubiEstablecimiento"
+          checked={ubiEstablecimiento}
+          onIonChange={(e) => setUbiEstablecimiento(e.target.checked)}
+          style={{ margin: "10pt", paddingLeft: "40%"}}
+        >
+          Usar ubicación del establecimiento
+        </IonToggle>
+      </IonRow>
+      <IonRow>
         <IonCol
           size="medium"
-          style={{ paddingLeft: "24pt", paddingRight: "24pt" }}
-        >
-          <IonToggle
-            name="ubiEstablecimiento"
-            checked={ubiEstablecimiento}
-            onIonChange={(e) => setUbiEstablecimiento(e.target.checked)}
+            style={{ paddingLeft: "20pt", paddingRight: "24pt" }}
           >
-            Usar ubicación del establecimiento
-          </IonToggle>
-          <Field
-            name="numero"
-            label="Número"
-            form={form}
-            disabled={ubiEstablecimiento} />
-          <IonCheckbox
-            name="sin_numero"
-            labelPlacement="end"
-            onIonChange={handleCheckboxChange}
-            disabled={ubiEstablecimiento}
-          >Sin número</IonCheckbox>
-          <Field
-            select
-            options={provincias ?? []}
-            name="provincia"
-            label="Provincia"
-            form={form}
-            disabled={ubiEstablecimiento}
-          />
-          <Field
-            select
-            options={
-              ubicaciones && form?.schema.provincia != ""
-                ? ubicaciones
-                  .filter(
-                    (provincia: any) =>
-                      provincia.id == form?.schema.provincia
-                  )[0]
-                  .departamentos.map((departamento: any) => {
-                    return {
-                      id: departamento.id,
-                      text: departamento.text,
-                    };
-                  })
-                : []
-            }
-            name="departamento"
-            label="Departamento"
-            form={form}
-            disabled={ubiEstablecimiento}
-          />
-          <Field
-            select
-            options={
-              ubicaciones &&
-                form?.schema.departamento &&
-                form?.schema.provincia != ""
-                ? ubicaciones
-                  .filter(
-                    (provincia: any) =>
-                      provincia.id == form?.schema.provincia
-                  )[0]
-                  .departamentos.filter(
-                    (departamento: any) =>
-                      departamento.id == form?.schema.departamento
-                  )[0]
-                  .localidades.map((localidad: any) => {
-                    return { id: localidad.id, text: localidad.text };
-                  })
-                : []
-            }
-            name="localidad"
-            label="Localidad"
-            form={form}
-            disabled={ubiEstablecimiento}
-          />
-          <IonRow
+            <Field
+              name="numero"
+              label="Número"
+              form={form}
+              disabled={ubiEstablecimiento}
+              
+            />
+            <IonCheckbox
+              name="sin_numero"
+              labelPlacement="end"
+              onIonChange={handleCheckboxChange}
+              disabled={ubiEstablecimiento}
+            >Sin número</IonCheckbox>
+            <Field
+              select
+              options={provincias ?? []}
+              name="provincia"
+              label="Provincia"
+              form={form}
+              disabled={ubiEstablecimiento}
+            />
+            <Field
+              select
+              options={
+                ubicaciones && form?.schema.provincia != ""
+                  ? ubicaciones
+                    .filter(
+                      (provincia: any) =>
+                        provincia.id == form?.schema.provincia
+                    )[0]
+                    .departamentos.map((departamento: any) => {
+                      return {
+                        id: departamento.id,
+                        text: departamento.text,
+                      };
+                    })
+                  : []
+              }
+              name="departamento"
+              label="Departamento"
+              form={form}
+              disabled={ubiEstablecimiento}
+            />
+            <Field
+              select
+              options={
+                ubicaciones &&
+                  form?.schema.departamento &&
+                  form?.schema.provincia != ""
+                  ? ubicaciones
+                    .filter(
+                      (provincia: any) =>
+                        provincia.id == form?.schema.provincia
+                    )[0]
+                    .departamentos.filter(
+                      (departamento: any) =>
+                        departamento.id == form?.schema.departamento
+                    )[0]
+                    .localidades.map((localidad: any) => {
+                      return { id: localidad.id, text: localidad.text };
+                    })
+                  : []
+              }
+              name="localidad"
+              label="Localidad"
+              form={form}
+              disabled={ubiEstablecimiento}
+            />
+            <IonRow
+              style={{
+                display: "flex",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "left",
+              }}
+            >
+              <Field
+                textarea
+                form={form}
+                name="observaciones"
+                label="Observaciones"
+              />
+            </IonRow>
+          </IonCol>
+          <IonCol
             style={{
               display: "flex",
               alignContent: "center",
               alignItems: "center",
-              justifyContent: "left",
+              justifyContent: "center",
             }}
           >
-            <Field
-              textarea
-              form={form}
-              name="observaciones"
-              label="Observaciones"
+            <MapView
+              search
+              markerOnClick
+              onClick={handleOnClick}
+              style={{
+                display: "flex",
+                width: "80%",
+                aspectRatio: "2/1",
+                marginLeft: "24pt",
+                marginRight: "24pt",
+              }}
             />
-          </IonRow>
-        </IonCol>
-        <IonCol
-          style={{
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <MapView
-            search
-            markerOnClick
-            onClick={handleOnClick}
-            style={{
-              display: "flex",
-              width: "80%",
-              aspectRatio: "2/1",
-              marginLeft: "24pt",
-              marginRight: "24pt",
-            }}
-          />
-        </IonCol>
+          </IonCol>
       </IonRow>
-      <IonRow
-        style={{
-          justifyContent: "space-around",
-          marginTop: "10pt",
-          marginBottom: "10pt",
-        }}
-      >
-        <IonButton
-          color="light"
-          onClick={() => router && router.push("/my-offers")}
-        >
-          Volver
-        </IonButton>
-        <IonButton
+      <IonRow>
+        <IonRow
           style={{
-            "--background": "#F08408",
+            justifyContent: "space-around",
+            marginTop: "10pt",
+            marginBottom: "10pt",
           }}
-          onClick={() => handleRegistrarUbicacion()}
         >
-          Guardar
-        </IonButton>
+          <IonButton
+            color="light"
+            onClick={() => router && router.push("/my-offers")}
+          >
+            Volver
+          </IonButton>
+          <IonButton
+            style={{
+              "--background": "#F08408",
+            }}
+            onClick={() => handleRegistrarUbicacion()}
+          >
+            Guardar
+          </IonButton>
+        </IonRow>
       </IonRow>
     </IonGrid>
   );

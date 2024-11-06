@@ -1,110 +1,258 @@
-import React, { useState, useEffect } from 'react';
 import {
-    IonButton,
-    IonCard,
-    IonCardContent,
-    IonCardHeader,
-    IonCardSubtitle,
-    IonCardTitle,
-    IonCol,
-    IonGrid,
-    IonRow,
-    IonSegment,
-    IonSegmentButton,
-    IonLabel,
-    IonImg,
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonCol,
+  IonGrid,
+  IonIcon,
+  IonImg,
+  IonLabel,
+  IonRow,
+  IonSegment,
+  IonSegmentButton,
 } from "@ionic/react";
+import { useEffect, useState } from "react";
+import MapView from "../MapView/MapView";
+import FiltrosConsultaOfertas from "./FiltrosConsultaOfertas";
+import { chevronForward, bookmark } from "ionicons/icons";
+import { eliminarOfertaGuardada } from "../../App/Ofertas/Ofertas";
 
 interface Oferta {
-    id: number;
-    titulo: string;
-    ubicacion: string;
-    descripcion: string;
-    precio: number;
-    fecha: string;
-    tipo: 'alojamiento' | 'actividad' | 'evento';
-    imagen: string;
+  id: number;
+  titulo: string;
+  descripcion: string;
+  precio: number;
+  fecha: string;
+  tipo: "alojamiento" | "actividad" | "evento";
+  imagen: string;
+  setOfertasGuardadas?: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
-interface ConsultaOfertasCardProps {
-    destino: string;
-  }
+export default function ConsultaOfertasCard() {
+  const [ofertas, setOfertas] = useState<Oferta[]>([]);
+  const [selectedSegment, setSelectedSegment] = useState<
+    "alojamientos" | "actividades" | "eventos"
+  >("alojamientos");
 
-export default function ConsultaOfertasCard({ destino }: ConsultaOfertasCardProps) {
-    const [ofertas, setOfertas] = useState<Oferta[]>([]);
-    const [selectedSegment, setSelectedSegment] = useState<'alojamientos' | 'actividades' | 'eventos'>('alojamientos');
+  useEffect(() => {
+    // Aquí deberías hacer la llamada a tu API para obtener las ofertas
+    // Por ahora, usaremos datos de ejemplo
+    const ofertasEjemplo: Oferta[] = [
+      {
+        id: 1,
+        titulo: "Cabañas de la Colina",
+        descripcion: "Habitación doble",
+        precio: 100,
+        fecha: "2023-05-01",
+        tipo: "alojamiento",
+        imagen: "public/images/cabaña1.png",
+      },
+      {
+        id: 4,
+        titulo: "Böden Hotel & Spa",
+        descripcion: "Música en vivo",
+        precio: 30,
+        fecha: "2023-05-03",
+        tipo: "alojamiento",
+        imagen: "public/images/hotel.jpg",
+      },
+      /* { id: 2, titulo: "Reserva Natural Pozo Verde", descripcion: "Recorrido guiado", precio: 50, fecha: "2023-05-02", tipo: 'actividad' },
+            { id: 5, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'actividad' },
+            { id: 3, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'evento' },
+            { id: 6, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'evento' }, */
+    ];
+    setOfertas(ofertasEjemplo);
+  }, []);
 
-    useEffect(() => {
-        const ofertasEjemplo: Oferta[] = [
-            { id: 1, titulo: "Cabañas de la Colina", ubicacion: "Córdoba", descripcion: "La colina ofrece un máximo contacto con la naturaleza, ubicado al pie de las Sierras, sobre la Ruta frente camino de acceso principal a la Villa. Ubicado a 10 cuadras de la plaza principal.", precio: 50000, fecha: "2023-05-01", tipo: 'alojamiento', imagen: "public/images/cabaña.jpg" },
-            { id: 2, titulo: "Böden Hotel & Spa", ubicacion: "Villa General Belgrano", descripcion: "Böden Hotel & Spa by AKEN Soul nos brinda una experiencia que nos conecta con un sereno", precio: 80000, fecha: "2023-05-03", tipo: 'alojamiento', imagen: "public/images/hotel.jpg" },
-            { id: 3, titulo: "Reserva Natural Pozo Verde", ubicacion: "Jesus Maria", descripcion: "Recorrido guiado por la Reserva Natural Pozo Verde, conociendo la flora y fauna de la zona.", precio: 5000, fecha: "2023-05-02", tipo: 'actividad', imagen: "public/images/pozoverde.jpg" },
-            { id: 4, titulo: "Trekking Cerro de la Virgen", ubicacion: "Villa General Belgrano", descripcion: "Trekking de dificultad baja por el cerro de la virgen, conociendo paisajes únicos.", precio: 3000, fecha: "2023-05-03", tipo: 'actividad', imagen: "public/images/trekking.jpg" },
-        ];
-        setOfertas(ofertasEjemplo);
-    }, []);
+  const filteredOfertas = ofertas.filter((oferta) => {
+    if (selectedSegment === "alojamientos")
+      return oferta.tipo === "alojamiento";
+    if (selectedSegment === "actividades") return oferta.tipo === "actividad";
+    if (selectedSegment === "eventos") return oferta.tipo === "evento";
+    return false;
+  });
 
-    const ofertasFiltradas = ofertas.filter(oferta => {
-        const ubicacionCoincide = oferta.ubicacion.toLowerCase().includes(destino.toLowerCase());
-        if (selectedSegment === 'alojamientos') return oferta.tipo === 'alojamiento' && ubicacionCoincide;
-        if (selectedSegment === 'actividades') return oferta.tipo === 'actividad' && ubicacionCoincide;
-        if (selectedSegment === 'eventos') return oferta.tipo === 'evento' && ubicacionCoincide;
-        return ubicacionCoincide;
-    });
-    return (
-        <IonCol size="12" sizeMd="20" sizeLg="15">
-            <>
-                <IonCardHeader>
-                    <IonSegment
-                        value={selectedSegment}
-                        onIonChange={e => setSelectedSegment(e.detail.value as any)}
-                    >
-                        <IonSegmentButton value="alojamientos" style={{ "--color-checked": "#F08408" }}>
-                            <IonLabel>Alojamientos</IonLabel>
-                        </IonSegmentButton>
-                        <IonSegmentButton value="actividades" style={{ "--color-checked": "#F08408" }}>
-                            <IonLabel>Actividades</IonLabel>
-                        </IonSegmentButton>
-                        <IonSegmentButton value="eventos" style={{ "--color-checked": "#F08408" }}>
-                            <IonLabel>Eventos</IonLabel>
-                        </IonSegmentButton>
-                    </IonSegment>
-                </IonCardHeader>
-                <IonCardContent style={{ flex: 1, width: '50%', left: '25%' }}>
-                    {ofertasFiltradas.map((oferta) => (
-                        <OfertaCard key={oferta.id} oferta={oferta} />
-                    ))}
-                </IonCardContent>
-            </>
+  return (
+    <div style={{ marginTop: "12pt" }}>
+      <div>
+        <IonSegment
+          value={selectedSegment}
+          onIonChange={(e) => setSelectedSegment(e.detail.value as any)}
+        >
+          <IonSegmentButton
+            value="alojamientos"
+            style={{ "--color-checked": "#F08408" }}
+          >
+            <IonLabel>Alojamientos</IonLabel>
+          </IonSegmentButton>
+          <IonSegmentButton
+            value="actividades"
+            style={{ "--color-checked": "#F08408" }}
+          >
+            <IonLabel>Actividades</IonLabel>
+          </IonSegmentButton>
+          <IonSegmentButton
+            value="eventos"
+            style={{ "--color-checked": "#F08408" }}
+          >
+            <IonLabel>Eventos</IonLabel>
+          </IonSegmentButton>
+        </IonSegment>
+      </div>
+      <IonGrid style={{}}>
+        <IonRow style={{ paddingTop: "12pt" }}>
+          <IonCol size="auto" style={{}}>
+            <MapView
+              style={{
+                height: "200pt",
+                width: "300pt",
+                borderRadius: "16pt",
+              }}
+            />
+            <FiltrosConsultaOfertas />
+          </IonCol>
+          <IonCol
+            style={{
+              paddingLeft: "12pt",
+            }}
+          >
+            {filteredOfertas.map((oferta) => (
+              <OfertaCard key={oferta.id} oferta={oferta} />
+            ))}
+          </IonCol>
+        </IonRow>
+      </IonGrid>
+    </div>
+  );
+}
+
+export function OfertaCard({ oferta }: { oferta: Oferta }) {
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const handleGuardarOferta = () => {
+    // Aquí puedes agregar la lógica para guardar la oferta
+    console.log('Guardando oferta:', oferta.id);
+  };
+
+  const handleEliminarGuardado = () => {
+    if (!oferta.id) return;
+    eliminarOfertaGuardada(oferta.id)
+      .then(() => {
+        setIsFavorite(false);
+        if (oferta.setOfertasGuardadas) {
+          oferta.setOfertasGuardadas((prev: any[]) =>
+            prev.filter((item: any) => item.id_oferta !== oferta.id)
+          );
+        }
+      })
+      .catch(() => {});
+    console.log('Eliminando oferta guardada:', oferta.id);
+  };
+
+  return (
+    <IonCard
+      style={{ borderRadius: "16pt", marginBottom: "24pt", marginTop: 0 }}
+    >
+      <IonRow>
+        <IonCol size="auto" style={{ padding: "20pt", paddingRight: 0 }}>
+          <img
+            src={oferta.imagen}
+            alt={oferta.titulo}
+            style={{
+              width: "250pt",
+              objectFit: "cover",
+              aspectRatio: "1/1",
+              objectPosition: "center center",
+              borderRadius: "8pt",
+              cursor: "pointer"
+            }}
+          />
         </IonCol>
-    );
-}
-
-function OfertaCard({ oferta }: { oferta: Oferta }) {
-    return (
-        <IonCard style={{ margin: '0 0 16px 0' }}>
-            <IonRow>
-                <IonCol size="5" style={{ padding: '0' }}>
-                    <IonImg
-                        src={oferta.imagen}
-                        alt={oferta.titulo}
-                        style={{ height: '200px', objectFit: 'cover', margin: '10px' }}
-                    />
-                </IonCol>
-                <IonCol size="7">
-                    <IonCardHeader>
-                        <IonCardTitle style={{ color: 'black', fontWeight: 'bold' }}>{oferta.titulo}</IonCardTitle>
-                        <IonCardSubtitle style={{ fontSize: '18px', color: 'black' }}>{oferta.ubicacion}</IonCardSubtitle>
-                    </IonCardHeader>
-                    <IonCardContent>
-                        <p style={{ marginBottom: '10px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{oferta.descripcion}</p>
-                        <p style={{ fontWeight: 'bold', fontSize: '18px', color: '#F08408' }}>desde: ${oferta.precio}/noche</p>
-                        <IonButton expand="full" style={{ "--background": "white", "--color": "#f08408"}}>
-                            Ver
-                        </IonButton>
-                    </IonCardContent>
-                </IonCol>
-            </IonRow>
-        </IonCard>
-    );
+        <IonCol style={{ paddingTop: "12pt" }}>
+          <IonCardHeader>
+            <IonCardTitle
+              style={{
+                fontSize: "24pt",
+                fontWeight: "bold",
+                color: "#F08408",
+                cursor: "pointer",
+              }}
+            >
+              {oferta.titulo}
+            </IonCardTitle>
+            <IonCardSubtitle>
+              <IonButton fill="clear">Villa Carlos Paz</IonButton>&nbsp;
+              <IonButton fill="clear">Mostrar en el mapa</IonButton>
+            </IonCardSubtitle>
+          </IonCardHeader>
+          <IonCardContent>
+            <div style={{}}>
+              <IonGrid style={{ borderLeft: "3pt solid lightgray" }}>
+                <IonRow>
+                  <IonCol>
+                    <IonRow>Cabaña</IonRow>
+                    <IonRow>1 habitación &bull; 1 living &bull; 1 baño</IonRow>
+                    <IonRow>3 camas (1 doble, 1 single, 1 sofá)</IonRow>
+                  </IonCol>
+                  <IonCol
+                    style={{
+                      display: "flex",
+                      alignContent: "center",
+                      alignItems: "center",
+                      justifyContent: "right",
+                    }}
+                  >
+                    <div>
+                      <IonRow>3 noches, 2 personas</IonRow>
+                      <IonRow style={{ fontSize: "16pt", fontWeight: "bold" }}>
+                        AR$ 300,500
+                      </IonRow>
+                      <IonRow>+ impuestos y tazas</IonRow>
+                    </div>
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
+            </div>
+          </IonCardContent>
+        </IonCol>
+      </IonRow>
+      <IonButton
+        style={{
+          "--background": "#F08408",
+          "--color": "white",
+          position: "absolute",
+          float: "right",
+          right: "150pt",
+          bottom: "20pt",
+        }}
+      >
+        Ver disponibilidad&nbsp;
+        <IonIcon icon={chevronForward} />
+      </IonButton>
+      <IonIcon
+        icon={bookmark}
+        style={{
+          position: 'absolute',
+          right: '20pt',
+          top: '20pt',
+          fontSize: '24px',
+          cursor: 'pointer',
+          color: isFavorite ? '#53992B' : '#999',
+        }}
+        onClick={() => {
+          const nuevoEstado = !isFavorite;
+          setIsFavorite(nuevoEstado);
+          
+          if (nuevoEstado) {
+            handleGuardarOferta();
+          } else {
+            handleEliminarGuardado();
+          }
+        }}
+      />
+    </IonCard>
+  );
 }

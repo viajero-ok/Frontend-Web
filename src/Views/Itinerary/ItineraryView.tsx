@@ -12,7 +12,7 @@ import {
 } from "@ionic/react";
 import { useState, useEffect } from "react";
 import DefaultLoggedLayout from "../Layouts/DefaultLoggedLayout";
-import OfertaCard from "../../components/OfertaCard/OfertaCard";
+import OfertaGuardadaCard from "../../components/OfertaCard/OfertaGuardadaCard";
 import OfertaReservadaCard from "../../components/OfertaCard/OfertaReservadaCard";
 import { obtenerOfertasGuardadas, obtenerOfertasReservadas } from "../../App/Ofertas/Ofertas";
 
@@ -27,6 +27,8 @@ export default function ItineraryView() {
             .then((response: any) => {
                 if (response.data.ofertas_guardadas.length > 0) {
                     setGuardados(response.data.ofertas_guardadas);
+                    console.log(response.data.ofertas_guardadas);
+
                 }
             })
             .catch((error) => {
@@ -110,10 +112,10 @@ export default function ItineraryView() {
                             {activeTab === 'guardados' ? (
                                 guardados.map((oferta: any) => (
                                     <IonRow key={oferta.id} style={{ width: "100%" }}>
-                                        <OfertaCard
+                                        <OfertaGuardadaCard
                                             nombre={oferta.nombre_oferta}
                                             descripcion={oferta.descripcion_oferta}
-                                            id={oferta.id}
+                                            id={oferta.id_oferta_guardada}
                                             setOfertas={setGuardados}
                                         />
                                     </IonRow>

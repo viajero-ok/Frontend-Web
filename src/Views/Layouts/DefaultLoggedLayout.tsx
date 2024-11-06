@@ -59,32 +59,43 @@ export default function DefaultLoggedLayout({ children }: any) {
 					</IonHeader>
 					<IonContent>
 						<IonList lines="none" style={{ marginTop: "13pt" }}>
-							<IonMenuToggle>
-								<IonItem button onClick={() => push("/")}>
-									Inicio
-								</IonItem>
-							</IonMenuToggle>
-							<IonMenuToggle>
-								<IonItem
-									button
-									onClick={() => push("/my-places")}
-								>
-									Mis establecimientos
-								</IonItem>
-							</IonMenuToggle>
-							<IonMenuToggle>
-								<IonItem
-									button
-									onClick={() => push("/my-offers")}
-								>
-									Mis ofertas turísticas
-								</IonItem>
-							</IonMenuToggle>
-							<IonMenuToggle>
-								<IonItem button disabled>
-									Mis reservas
-								</IonItem>
-							</IonMenuToggle>
+							{perfilSeleccionado === PERFILES.TURISTA.id ? (
+								<>
+									<IonMenuToggle>
+										<IonItem button onClick={() => push("/")}>
+											Inicio
+										</IonItem>
+									</IonMenuToggle>
+									<IonMenuToggle>
+										<IonItem button onClick={() => push("/itinerary")}>
+											Mi Itinerario
+										</IonItem>
+									</IonMenuToggle>
+									<IonMenuToggle>
+										<IonItem button disabled>
+											Mis reservas
+										</IonItem>
+									</IonMenuToggle>
+								</>
+							) : (
+								<>
+									<IonMenuToggle>
+										<IonItem button onClick={() => push("/")}>
+											Inicio
+										</IonItem>
+									</IonMenuToggle>
+									<IonMenuToggle>
+										<IonItem button onClick={() => push("/my-places")}>
+											Mis establecimientos
+										</IonItem>
+									</IonMenuToggle>
+									<IonMenuToggle>
+										<IonItem button onClick={() => push("/my-offers")}>
+											Mis ofertas turísticas
+										</IonItem>
+									</IonMenuToggle>
+								</>
+							)}
 							<IonMenuToggle>
 								<IonItem button disabled>
 									Informes y estadísticas

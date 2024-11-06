@@ -44,6 +44,11 @@ import MyOffers from "./pages/MyOffers/MyOffers";
 import NewOffer from "./pages/MyOffers/NewOffer/NewOffer";
 import NewAlojamientoEnHabitaciones from "./pages/NewAlojamiento/NewAlojamientoEnHabitaciones";
 import ItineraryView from "./Views/Itinerary/ItineraryView";
+import PublicarOfertaPage from "./pages/MyOffers/PublicarOferta/PublicarOfertaPage";
+import PagarTestPage from "./pages/PagarTest/PagarTestPage";
+import NewActividad from "./pages/NewActividad/NewActividad";
+import MisReservas from "./pages/MisReservas/MisReservas";
+
 setupIonicReact();
 
 const App: React.FC = () => (
@@ -81,6 +86,18 @@ const App: React.FC = () => (
             component={NewAlojamientoEnHabitaciones}
           />
           <Route exact path="/itinerary" component={ItineraryView} />
+          <Route
+            exact
+            path="/my-offers/actividad/edit/:id"
+            component={NewActividad}
+          />
+          <Route
+            exact
+            path="/my-offers/publicar/:id"
+            component={PublicarOfertaPage}
+          />
+          <Route exact path="/pago-test" component={PagarTestPage} />
+          <Route exact path="/mis-reservas" component={MisReservas} />
         </IonRouterOutlet>
       </IonReactRouter>
     </AuthProvider>

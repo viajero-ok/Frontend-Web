@@ -1,0 +1,22 @@
+# Stage 1: Instalación de dependencias y compilación
+FROM node:20-alpine as deps
+
+WORKDIR /app
+COPY package.json package-lock.json tsconfig.json tsconfig.node.json ./
+RUN npm ci
+
+COPY src/ ./src
+COPY public/ ./public
+COPY tsconfig.json .
+COPY vite.config.ts .
+COPY index.html .
+RUN npm run build
+
+# Stage 2: Imagen final
+FROM node:20-alpine AS final
+WORKDIR /app
+COPY --from=deps /app/dist ./dist
+RUN npm i -g serve
+EXPOSE 5173
+
+CMD ["serve", "-s", "dist", "-l", "5173"]

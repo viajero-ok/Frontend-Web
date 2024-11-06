@@ -4,11 +4,9 @@ import VisitorLayout from "../../Views/Layouts/VisitorLayout";
 
 const LogIn: React.FC = () => {
   return (
-    <IonPage>
       <VisitorLayout>
         <LoginView />
       </VisitorLayout>
-    </IonPage>
   );
 };
 

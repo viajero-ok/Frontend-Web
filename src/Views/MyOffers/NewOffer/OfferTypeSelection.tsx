@@ -55,7 +55,7 @@ export default function OfferTypeSelection(props: TOfferTypeSelection) {
             paddingTop: "13pt",
           }}
         >
-          <IonCard button onClick={()=>handleSelect()}>
+          <IonCard button onClick={() => props.setOfferType("alojamiento")} /* onClick={()=>handleSelect()} */>
             <IonHeader
               style={{
                 display: "flex",
@@ -111,7 +111,7 @@ export default function OfferTypeSelection(props: TOfferTypeSelection) {
                   paddingTop: "13pt",
                 }}
               >
-                Actividades
+                Actividad
               </IonCardTitle>
             </IonHeader>
           </IonCard>
@@ -145,7 +145,7 @@ export default function OfferTypeSelection(props: TOfferTypeSelection) {
             </IonHeader>
           </IonCard>
         </IonRow>
-        <IonModal
+{/*         <IonModal
        isOpen={openConfirm}
       onDidDismiss={() => setOpenConfirm(false)}
         style={{ "--height": "fit-content" }}
@@ -191,7 +191,7 @@ export default function OfferTypeSelection(props: TOfferTypeSelection) {
             </IonRow>
           </IonGrid>
         </div>
-      </IonModal>
+      </IonModal> */}
       </IonCol>
     </IonGrid>
     

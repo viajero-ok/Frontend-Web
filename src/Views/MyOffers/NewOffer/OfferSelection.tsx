@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OfferTypeSelection from "./OfferTypeSelection";
-import Alojamiento from "./NewAlojamiento/NewAlojamiento";
 import Actividad from "./NewActividad/NewActividad";
 import {
   IonButton,
@@ -9,21 +8,51 @@ import {
   IonIcon,
   IonModal,
   IonRow,
+  IonSelect,
+  IonSelectOption,
   useIonRouter,
 } from "@ionic/react";
 import { close } from "ionicons/icons";
+import { registrarNuevaActividad } from "../../../App/Actividades/Actividad";
+import Alojamiento from "./NewAlojamiento/NewAlojamiento";
+import { obtenerEstablecimientos } from "../../../App/Establecimientos/Establecimientos";
+import Field from "../../../components/Field/Field";
+import { useForm } from "../../../hooks/UseForm/FormProvider";
 
 export default function OfferSelection(props: any) {
   const [offerType, setOfferType] = useState<
     null | "alojamiento" | "actividad" | "evento"
   >(null);
   const router = useIonRouter();
+  const [establecimientos, setEstablecimientos] = useState<any[]>([]);
+  const form = useForm();
 
   const handleCrearActividad = () => {
-    // TODO - llamar post crear actividad
-    // en el then
-    router.push("/my-offers/actividad/edit/1");
+    console.log("id_establecimiento", form?.schema?.id_establecimiento);
+    const id_establecimiento = form?.schema?.id_establecimiento;
+    if (id_establecimiento == null) {
+      return;
+    }
+    registrarNuevaActividad({
+      id_tipo_oferta: 2,
+      id_establecimiento: id_establecimiento,
+    })
+      .then((response: any) => {
+        router.push(`/my-offers/actividad/edit/${response.data.id_oferta}?id_establecimiento=${id_establecimiento}`);
+        setOfferType(null);
+      });
   };
+
+  useEffect(() => {
+    obtenerEstablecimientos().then((response: any) => {
+      const establecimientos = response.establecimientos;
+      establecimientos.unshift({
+        id_establecimiento: null,
+        nombre: "Sin establecimiento",
+      });
+      setEstablecimientos(establecimientos);
+    });
+  }, []);
 
   return (
     <>
@@ -67,8 +96,34 @@ export default function OfferSelection(props: any) {
             </IonRow>
             <IonRow style={{ justifyContent: "center", padding: "8pt" }}>
               <h3 style={{ color: "black", fontSize: "14pt" }}>
-                Estás por crear una nueva actividad
+                Seleccioná el establecimiento al que pertenece la actividad
               </h3>
+            </IonRow>
+            <IonRow style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingLeft: "10%", paddingRight: "10%" }}>
+              <IonSelect
+                label="Establecimiento"
+                placeholder="Seleccioná el establecimiento"
+                value={form?.schema?.id_establecimiento}
+                onIonChange={(e: any) => {
+                  form?.setValue("id_establecimiento", e.target.value);
+                }}
+              >
+                {establecimientos.map((establecimiento: any) => (
+                  <IonSelectOption key={establecimiento.id_establecimiento} value={establecimiento.id_establecimiento}>
+                    {establecimiento.nombre}
+                  </IonSelectOption>
+                ))}
+              </IonSelect>
+              {/* <Field
+                  select
+                  name="establecimiento"
+                  label="Establecimientos"
+                  options={establecimientos.map((establecimiento: any) => ({
+                    id: establecimiento.id_establecimiento,
+                    text: establecimiento.nombre,
+                  }))}
+                  form={form}
+                /> */}
             </IonRow>
             <IonRow
               style={{

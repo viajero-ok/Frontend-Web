@@ -20,5 +20,7 @@ export const registrarEstablecimiento: TRegistrarEstablecimiento = async (
   body: TBodyRegistrarEstablecimiento
 ) => await AUTH_API.post(`/establecimientos/registrar-establecimiento`, body);
 
-export const obtenerEstablecimientos = async () =>
-  await AUTH_API.get(`/establecimientos/obtener-establecimientos`);
+export const obtenerEstablecimientos = async () => {
+  const response = await AUTH_API.get(`/establecimientos/obtener-establecimientos`);
+  return response.data;
+};

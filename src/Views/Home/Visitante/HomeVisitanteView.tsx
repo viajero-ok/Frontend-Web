@@ -1,10 +1,10 @@
-import { IonCol, IonGrid, IonRow, IonToast } from "@ionic/react";
+import { IonToast } from "@ionic/react";
 import { alertCircleOutline } from "ionicons/icons";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ConsultaOfertasCard from "../../../components/ConsultaOfertas/ConsultaOfertasCard";
 import { FormProvider } from "../../../hooks/UseForm/FormProvider";
 import HomeVisitanteForm from "./HomeVisitanteForm";
-import MapView from "../../../components/MapView/MapView";
+import { consultarOfertasTurista } from "../../../App/Ofertas/Ofertas";
 
 interface FormSchema {
   destino: string;
@@ -14,6 +14,7 @@ interface FormSchema {
 }
 
 export default function HomeVisitanteView() {
+  const [ofertas, setOfertas] = useState<any[]>([]);
   const [openToast, setOpenToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
 
@@ -31,6 +32,13 @@ export default function HomeVisitanteView() {
     setToastMessage("Búsqueda realizada con éxito");
     setOpenToast(true);
   };
+
+  useMemo(() => {
+    consultarOfertasTurista().then((response: any) => {
+      console.log("ofertas: ", response);
+      setOfertas(response.data);
+    });
+  }, []);
 
   return (
     <>

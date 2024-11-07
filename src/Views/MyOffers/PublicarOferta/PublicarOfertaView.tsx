@@ -9,17 +9,21 @@ import {
   IonGrid,
   IonRow,
 } from "@ionic/react";
-import CalendarPicker from "./CalendarPicker";
-import Tarifas from "./Tarifas/Tarifas";
 import { useEffect, useRef, useState } from "react";
-import DialogTarifaNueva from "./Tarifas/DialogTarifaNueva";
-import { obtenerTarifas } from "../../../App/Publicaciones/PublicacionesAlojamientos";
+import {
+  obtenerDatosRegistradosPublicacion,
+  obtenerTarifas,
+  publicarAlojamiento,
+} from "../../../App/Publicaciones/PublicacionesAlojamientos";
 import DialogTarifa from "./Tarifas/DialogTarifa";
+import DialogTarifaNueva from "./Tarifas/DialogTarifaNueva";
+import Tarifas from "./Tarifas/Tarifas";
 
 type TPublicarOfertaView = {
   idOferta: string;
 };
 export default function PublicarOfertaView(props: TPublicarOfertaView) {
+  const [datosRegistrados, setDatosRegistrados] = useState<any | null>(null);
   const [tarifas, setTarifas] = useState<any[]>([]);
   const [openDialogTarifa, setOpenDialogTarifa] = useState<boolean>(false);
   const [openDialogEditar, setOpenDialogEditar] = useState<boolean>(false);
@@ -30,11 +34,17 @@ export default function PublicarOfertaView(props: TPublicarOfertaView) {
     obtenerTarifas(props.idOferta)
       .then((response: any) => {
         console.log("tarifas: ", response);
-        setTarifas(response.data.datos);
+        setTarifas(response.data.datos_tarifas);
       })
       .catch((error) => {
         console.log("error: ", error);
       });
+    obtenerDatosRegistradosPublicacion(props.idOferta)
+      .then((response: any) => {
+        console.log("datos registrados: ", response.data);
+        setDatosRegistrados(response.data);
+      })
+      .catch((error) => {});
   }, []);
 
   const handleReload = () => {
@@ -45,6 +55,16 @@ export default function PublicarOfertaView(props: TPublicarOfertaView) {
       })
       .catch((error) => {
         console.log("error: ", error);
+      });
+  };
+
+  const handlePublicar = () => {
+    publicarAlojamiento(props.idOferta)
+      .then(() => {
+        console.log("publicada");
+      })
+      .catch((error) => {
+        console.log("error pub oferta: ", error);
       });
   };
 
@@ -101,14 +121,21 @@ export default function PublicarOfertaView(props: TPublicarOfertaView) {
               />
               <IonCardHeader style={{ marginTop: "20pt" }}>
                 <IonCardTitle style={{ fontSize: "24pt", fontWeight: "bold" }}>
-                  La posada del emi
+                  {datosRegistrados &&
+                    datosRegistrados.datos_oferta.datos_oferta.nombre}
                 </IonCardTitle>
                 <IonCardSubtitle style={{ fontSize: "14pt" }}>
-                  Descripción: Lorem Ipsum is simply dummy text of the printing
-                  and typesetting industry. Lorem Ips
+                  {datosRegistrados &&
+                    datosRegistrados.datos_oferta.datos_oferta.descripcion}
                 </IonCardSubtitle>
               </IonCardHeader>
-              <IonButton color="success" style={{ position: "absolute", bottom: "12pt", right: "12pt" }}>PUBLICAR</IonButton>
+              <IonButton
+                color="success"
+                style={{ position: "absolute", bottom: "12pt", right: "12pt" }}
+                onClick={() => handlePublicar()}
+              >
+                PUBLICAR
+              </IonButton>
             </IonCard>
           </IonCol>
           <Tarifas

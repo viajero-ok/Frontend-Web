@@ -86,7 +86,7 @@ export default function Tarifas(props: TTarifas) {
               <h4 style={{ fontWeight: "bold" }}>Tarifa por noche</h4>
             </IonCol>
           </IonRow>
-          {props.tarifas.map((tarifa: any, index: any) => (
+          {props.tarifas && props.tarifas.map((tarifa: any, index: any) => (
             <IonRow
               key={index}
               style={{

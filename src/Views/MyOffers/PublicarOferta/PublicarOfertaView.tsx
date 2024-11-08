@@ -51,7 +51,7 @@ export default function PublicarOfertaView(props: TPublicarOfertaView) {
     obtenerTarifas(props.idOferta)
       .then((response: any) => {
         console.log("tarifas: ", response);
-        setTarifas(response.data.datos);
+        setTarifas(response.data.datos_tarifas);
       })
       .catch((error) => {
         console.log("error: ", error);

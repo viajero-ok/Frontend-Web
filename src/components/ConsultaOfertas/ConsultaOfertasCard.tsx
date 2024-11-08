@@ -14,10 +14,11 @@ import {
   IonSegment,
   IonSegmentButton,
 } from "@ionic/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import MapView from "../MapView/MapView";
 import FiltrosConsultaOfertas from "./FiltrosConsultaOfertas";
 import { chevronForward } from "ionicons/icons";
+import { consultarOfertasTurista } from "../../App/Ofertas/Ofertas";
 
 interface Oferta {
   id: number;
@@ -35,34 +36,41 @@ export default function ConsultaOfertasCard() {
     "alojamientos" | "actividades" | "eventos"
   >("alojamientos");
 
-  useEffect(() => {
-    // Aquí deberías hacer la llamada a tu API para obtener las ofertas
-    // Por ahora, usaremos datos de ejemplo
-    const ofertasEjemplo: Oferta[] = [
-      {
-        id: 1,
-        titulo: "Cabañas de la Colina",
-        descripcion: "Habitación doble",
-        precio: 100,
-        fecha: "2023-05-01",
-        tipo: "alojamiento",
-        imagen: "public/images/cabaña1.png",
-      },
-      {
-        id: 4,
-        titulo: "Böden Hotel & Spa",
-        descripcion: "Música en vivo",
-        precio: 30,
-        fecha: "2023-05-03",
-        tipo: "alojamiento",
-        imagen: "public/images/hotel.jpg",
-      },
-      /* { id: 2, titulo: "Reserva Natural Pozo Verde", descripcion: "Recorrido guiado", precio: 50, fecha: "2023-05-02", tipo: 'actividad' },
-            { id: 5, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'actividad' },
-            { id: 3, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'evento' },
-            { id: 6, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'evento' }, */
-    ];
-    setOfertas(ofertasEjemplo);
+  // useEffect(() => {
+  //   // Aquí deberías hacer la llamada a tu API para obtener las ofertas
+  //   // Por ahora, usaremos datos de ejemplo
+  //   const ofertasEjemplo: Oferta[] = [
+  //     {
+  //       id: 1,
+  //       titulo: "Cabañas de la Colina",
+  //       descripcion: "Habitación doble",
+  //       precio: 100,
+  //       fecha: "2023-05-01",
+  //       tipo: "alojamiento",
+  //       imagen: "public/images/cabaña1.png",
+  //     },
+  //     {
+  //       id: 4,
+  //       titulo: "Böden Hotel & Spa",
+  //       descripcion: "Música en vivo",
+  //       precio: 30,
+  //       fecha: "2023-05-03",
+  //       tipo: "alojamiento",
+  //       imagen: "public/images/hotel.jpg",
+  //     },
+  //     /* { id: 2, titulo: "Reserva Natural Pozo Verde", descripcion: "Recorrido guiado", precio: 50, fecha: "2023-05-02", tipo: 'actividad' },
+  //           { id: 5, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'actividad' },
+  //           { id: 3, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'evento' },
+  //           { id: 6, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'evento' }, */
+  //   ];
+  //   setOfertas(ofertasEjemplo);
+  // }, []);
+
+  useMemo(() => {
+    consultarOfertasTurista().then((response: any) => {
+      console.log("ofertas: ", response);
+      setOfertas(response.data);
+    });
   }, []);
 
   const filteredOfertas = ofertas.filter((oferta) => {
@@ -117,7 +125,7 @@ export default function ConsultaOfertasCard() {
               paddingLeft: "12pt",
             }}
           >
-            {filteredOfertas.map((oferta) => (
+            {ofertas.map((oferta) => (
               <OfertaCard key={oferta.id} oferta={oferta} />
             ))}
           </IonCol>
@@ -127,23 +135,23 @@ export default function ConsultaOfertasCard() {
   );
 }
 
-function OfertaCard({ oferta }: { oferta: Oferta }) {
+function OfertaCard({ oferta }: { oferta: any }) {
   return (
     <IonCard
-      style={{ borderRadius: "16pt", marginBottom: "24pt", marginTop: 0 }}
+      style={{ borderRadius: "16pt", marginBottom: "24pt", marginTop: 0, paddingBottom: "48pt" }}
     >
       <IonRow>
         <IonCol size="auto" style={{ padding: "20pt", paddingRight: 0 }}>
           <img
             src={oferta.imagen}
-            alt={oferta.titulo}
+            alt={oferta.nombre_oferta}
             style={{
               width: "250pt",
               objectFit: "cover",
               aspectRatio: "1/1",
               objectPosition: "center center",
               borderRadius: "8pt",
-              cursor: "pointer"
+              cursor: "pointer",
             }}
           />
         </IonCol>
@@ -151,18 +159,19 @@ function OfertaCard({ oferta }: { oferta: Oferta }) {
           <IonCardHeader>
             <IonCardTitle
               style={{
-                fontSize: "24pt",
+                fontSize: "18pt",
                 fontWeight: "bold",
                 color: "#F08408",
                 cursor: "pointer",
               }}
             >
-              {oferta.titulo}
+              {oferta.nombre_oferta}
             </IonCardTitle>
             <IonCardSubtitle>
               <IonButton fill="clear">Villa Carlos Paz</IonButton>&nbsp;
               <IonButton fill="clear">Mostrar en el mapa</IonButton>
             </IonCardSubtitle>
+            <IonCardSubtitle>{oferta.descripcion_alojamiento}</IonCardSubtitle>
           </IonCardHeader>
           <IonCardContent>
             <div style={{}}>

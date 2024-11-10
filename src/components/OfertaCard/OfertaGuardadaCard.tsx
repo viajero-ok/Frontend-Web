@@ -15,13 +15,13 @@ import { close, chevronForward, bookmark } from "ionicons/icons";
 import { Dispatch, SetStateAction, useState } from "react";
 import { eliminarOferta } from "../../App/Ofertas/Ofertas";
 import { eliminarOfertaGuardada } from "../../App/Ofertas/Ofertas";
+import { useIonRouter } from "@ionic/react";
 
 interface OfertaCardProps {
   nombre: string;
   descripcion: string;
   id: number;
-  setOfertas: React.Dispatch<React.SetStateAction<any[]>>;
-  setOfertasGuardadas?: React.Dispatch<React.SetStateAction<any[]>>;
+  setOfertasGuardadas: React.Dispatch<React.SetStateAction<any[]>>;
   isGuardada?: boolean;
 }
 
@@ -29,12 +29,12 @@ const OfertaGuardadaCard: React.FC<OfertaCardProps> = ({
   nombre,
   descripcion,
   id,
-  setOfertas,
   setOfertasGuardadas,
-  isGuardada = true
+  isGuardada = true,
 }) => {
   const [isFavorite, setIsFavorite] = useState(isGuardada);
   const [openConfirmDelete, setOpenConfirmDelete] = useState<boolean>(false);
+  const ionRoute = useIonRouter();
 
   const handleGuardarOferta = () => {
     console.log("Guardando oferta:", id);
@@ -42,19 +42,23 @@ const OfertaGuardadaCard: React.FC<OfertaCardProps> = ({
   };
 
   const handleEliminarGuardado = () => {
+    setOpenConfirmDelete(true);
+  };
+
+  const confirmarEliminacion = () => {
     if (!id) return;
     console.log("Eliminando oferta guardada:", id);
     eliminarOfertaGuardada(id)
       .then(() => {
         setIsFavorite(false);
-        if (setOfertasGuardadas) {
-          setOfertasGuardadas((prev: any[]) => {
-            console.log('Ofertas antes de filtrar:', prev);
-            const nuevasOfertas = prev.filter((item: any) => item.id !== id);
-            console.log('Ofertas después de filtrar:', nuevasOfertas);
-            return nuevasOfertas;
-          });
-        }
+        setOfertasGuardadas((prev: any[]) => {
+          console.log("Ofertas antes de filtrar:", prev);
+          const nuevasOfertas = prev.filter(
+            (item: any) => item.id_oferta_guardada !== id
+          );
+          console.log("Ofertas después de filtrar:", nuevasOfertas);
+          return [...nuevasOfertas];
+        });
       })
       .catch((error) => {
         console.error("Error al eliminar oferta:", error);
@@ -103,7 +107,7 @@ const OfertaGuardadaCard: React.FC<OfertaCardProps> = ({
                     cursor: "pointer",
                     color: isFavorite ? "#53992B" : "#999",
                     marginLeft: "10px",
-                    verticalAlign: "middle"
+                    verticalAlign: "middle",
                   }}
                   onClick={() => {
                     const nuevoEstado = !isFavorite;
@@ -140,34 +144,45 @@ const OfertaGuardadaCard: React.FC<OfertaCardProps> = ({
                 <IonButton
                   size="small"
                   fill="clear"
-                  onClick={() => setOpenConfirmDelete(false)}
+                  onClick={() => {
+                    setOpenConfirmDelete(false);
+                  setIsFavorite(true); }}
                 >
-                  <IonIcon icon={close} />
+                  <IonIcon icon={close}
+                  />
                 </IonButton>
               </IonCol>
             </IonRow>
             <IonRow style={{ justifyContent: "center", padding: "8pt" }}>
-              <h3>Esta acción no se puede deshacer</h3>
+              <h3>¿Seguro que desea eliminar?</h3>
             </IonRow>
             <IonRow
               style={{
-                justifyContent: "right",
+                justifyContent: "space-between",
                 padding: "8pt",
                 paddingTop: "0",
               }}
             >
+              
+              <IonButton onClick={() => {
+                setOpenConfirmDelete(false);
+                setIsFavorite(true);
+              }}
+              color="danger">
+                Cancelar
+              </IonButton>
+
               <IonButton
+                onClick={() => {
+                  confirmarEliminacion();
+                  setOpenConfirmDelete(false);
+                }}
                 style={{
                   "--background": "#F08408",
                   "--color": "white",
-                  position: "absolute",
-                  float: "right",
-                  right: "150pt",
-                  bottom: "20pt",
                 }}
               >
-                Ver disponibilidad&nbsp;
-                <IonIcon icon={chevronForward} />
+                Confirmar
               </IonButton>
             </IonRow>
           </IonGrid>

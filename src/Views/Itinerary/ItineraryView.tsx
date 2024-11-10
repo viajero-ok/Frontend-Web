@@ -116,7 +116,7 @@ export default function ItineraryView() {
                                             nombre={oferta.nombre_oferta}
                                             descripcion={oferta.descripcion_oferta}
                                             id={oferta.id_oferta_guardada}
-                                            setOfertas={setGuardados}
+                                            setOfertasGuardadas={setGuardados}
                                         />
                                     </IonRow>
                                 ))

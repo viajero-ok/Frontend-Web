@@ -19,7 +19,7 @@ export default function TipologiaList() {
   };
 
   return (
-    <IonCard style={{ width: "200pt" }}>
+    <IonCard style={{ width: "300pt" }}>
       <IonCardHeader>
         <IonCardTitle style={{ fontWeight: "bold" }}>Tipologías</IonCardTitle>
       </IonCardHeader>

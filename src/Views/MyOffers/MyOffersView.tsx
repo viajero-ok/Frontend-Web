@@ -98,7 +98,6 @@ export default function MyOffersView() {
                     descripcion={oferta.descripcion}
                     id={oferta.id_oferta_turistica}
                     setOfertas={setOfertas}
-                    tipoOferta={oferta.id_tipo_oferta}
                   />
                 </IonRow>
               ))}

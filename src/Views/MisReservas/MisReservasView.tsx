@@ -2,7 +2,6 @@ import { IonCol, IonGrid, IonRow } from "@ionic/react";
 import Calendar from "../../components/Calendar/Calendar";
 import FilterList from "./FilterList";
 import TipologiaList from "./TipologiaList";
-import { getMargin } from "ol/extent";
 
 export default function MisReservasView(props: any) {
   return (
@@ -12,7 +11,6 @@ export default function MisReservasView(props: any) {
         alignItems: "center",
         alignContent: "center",
         justifyContent: "center",
-        
       }}
     >
       <IonGrid style={{ display: "inline-block" }}>
@@ -21,8 +19,7 @@ export default function MisReservasView(props: any) {
             display: "flex",
             alignContent: "center",
             alignItems: "center",
-            justifyContent: "center"
-            
+            justifyContent: "center",
           }}
         >
           <h1>Mis reservas</h1>
@@ -42,6 +39,7 @@ export default function MisReservasView(props: any) {
           <IonCol
             size="auto"
             style={{
+              paddingLeft: 0,
               display: "flex",
               flexDirection: "row",
             }}

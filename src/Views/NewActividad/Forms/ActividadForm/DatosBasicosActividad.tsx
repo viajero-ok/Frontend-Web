@@ -24,7 +24,6 @@ export default function DatosBasicosActividad(props: TDatosBasicosActividad) {
                     paddingBottom: "20pt",
                     marginBottom: "30pt",
                     marginLeft: "10%",
-                    marginTop: "20pt",
                     border: "2px solid #F08408",
                     borderRadius: "10pt",
                     width: "80%",

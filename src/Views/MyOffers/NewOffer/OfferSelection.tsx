@@ -30,10 +30,12 @@ export default function OfferSelection(props: any) {
   const handleCrearActividad = () => {
     console.log("id_establecimiento", form?.schema?.id_establecimiento);
     const id_establecimiento = form?.schema?.id_establecimiento;
-
+    if (id_establecimiento == null) {
+      return;
+    }
     registrarNuevaActividad({
       id_tipo_oferta: 2,
-      id_establecimiento: id_establecimiento !== null ? id_establecimiento : undefined,
+      id_establecimiento: id_establecimiento,
     })
       .then((response: any) => {
         router.push(`/my-offers/actividad/edit/${response.data.id_oferta}?id_establecimiento=${id_establecimiento}`);

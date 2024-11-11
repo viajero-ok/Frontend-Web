@@ -26,7 +26,7 @@ export default function TurnosForm(props: TTurnos) {
   const form = useForm();
   const [turnos, setTurnos] = useState<THorarios[]>([]);
   const router = useIonRouter();
-
+  
 
   const handleTurno = () => {
     console.log(props.idOferta);
@@ -61,73 +61,82 @@ export default function TurnosForm(props: TTurnos) {
     });
   };
 
-
+  
 
   return (
-    <div
-      style={{
-        padding: "10pt",
-        paddingBottom: "20pt",
-        marginBottom: "30pt",
-        width: "80%",
-        marginLeft: "10%",
-        border: "2px solid #F08408",
-        borderRadius: "10pt",
-      }}
-    >
-      <IonRow
+   <div
         style={{
-          display: "flex",
-          alignContent: "center",
-          alignItems: "center",
-          justifyContent: "center",
+          padding: "10pt",
+          paddingBottom: "20pt",
+          marginBottom: "30pt",
+          width: "80%",
+          marginLeft: "10%",
+          border: "2px solid #F08408",
+          borderRadius: "10pt",
         }}
       >
-        <h3 style={{ fontWeight: "bold" }}>Datos básicos</h3>
-      </IonRow>
-      <IonRow
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignContent: "center",
-          alignItems: "center",
-          justifyContent: "center",
-          marginBottom: "13pt",
-        }}
-      >
-        {turnos.length > 0 &&
-          turnos.map((horario: any, index: number) => (
-            <TurnosRow
-              key={index}
-              id={horario.id_horario}
-              setRows={setTurnos}
-            />
-          ))}
-        {turnos.length == 0 && (
-          <IonButton
-            style={{ "--background": "#F08408" }}
-            onClick={() => handleTurno()}
+        <IonRow
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <IonTitle
+            style={{
+              borderBottom: "2pt solid #F08408",
+              marginBottom: "31pt",
+              padding: "2pt",
+            }}
           >
-            <IonIcon icon={add} />
-            &nbsp;AGREGAR UN TURNO
-          </IonButton>
-        )}
-        {turnos.length > 0 && (
-          <IonButton
-            style={{ "--background": "#F08408" }}
-            onClick={() =>
-              setTurnos((prev: any[]) => [
-                ...prev,
-                {},
-              ])
-            }
-          >
-            <IonIcon icon={add} />
-            &nbsp;AGREGAR OTRO
-          </IonButton>
-        )}
-      </IonRow>
-    </div>
+            Turnos y Horarios
+          </IonTitle>
+        </IonRow>
+        <IonRow
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: "13pt",
+          }}
+        >
+          {turnos.length > 0 &&
+            turnos.map((horario: any, index: number) => (
+              <TurnosRow
+                key={index}
+                id={horario.id_horario}
+                setRows={setTurnos}
+              />
+            ))}
+          {turnos.length == 0 && (
+            <IonButton
+              style={{ "--background": "#F08408" }}
+              onClick={() => handleTurno()}
+            >
+              <IonIcon icon={add} />
+              &nbsp;AGREGAR UN TURNO
+            </IonButton>
+          )}
+          {turnos.length > 0 && (
+            <IonButton
+              style={{ "--background": "#F08408" }}
+              onClick={() =>
+                setTurnos((prev: any[]) => [
+                  ...prev,
+                  {},
+                ])
+              }
+            >
+              <IonIcon icon={add} />
+              &nbsp;AGREGAR OTRO
+            </IonButton>
+          )}
+        </IonRow>
+      </div>
   );
 }
 

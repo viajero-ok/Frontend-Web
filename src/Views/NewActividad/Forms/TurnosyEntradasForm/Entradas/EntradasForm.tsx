@@ -35,15 +35,14 @@ export default function EntradasForm(props: TEntradas) {
             setEntradas((prev: TEntrada[]) => [
                 ...prev,
                 {
-                    entradas: {
+                    entradas:
+                    {
                         id_entrada: response.data.id_entrada,
                         nombre: "",
                         descripcion: "",
                     },
                 },
             ]);
-        }).catch(error => {
-            console.error("Error al guardar la entrada:", error);
         });
     };
 
@@ -64,12 +63,21 @@ export default function EntradasForm(props: TEntradas) {
             <IonRow
                 style={{
                     display: "flex",
+                    flexDirection: "column",
                     alignContent: "center",
                     alignItems: "center",
                     justifyContent: "center",
                 }}
             >
-                <h3 style={{ fontWeight: "bold" }}>Entradas</h3>
+                <IonTitle
+                    style={{
+                        borderBottom: "2pt solid #F08408",
+                        marginBottom: "31pt",
+                        padding: "2pt",
+                    }}
+                >
+                    Entradas
+                </IonTitle>
             </IonRow>
             <IonRow
                 style={{

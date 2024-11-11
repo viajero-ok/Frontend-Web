@@ -46,14 +46,14 @@ export default function AlojamientoTypeSelection(
             `/my-offers/alojamiento/en-habitaciones/edit/${response.data.id_oferta}`
           );
       })
-      .catch((error: any) => { });
+      .catch((error: any) => {});
   };
 
   const handleSelect = (idType: number) => {
     setSelection(idType);
     setOpenConfirm(true);
   };
-
+  
   useEffect(() => {
     obtenerEstablecimientos().then((response: any) => {
       setEstablecimientos(response.establecimientos);
@@ -80,7 +80,13 @@ export default function AlojamientoTypeSelection(
               paddingTop: "13pt",
             }}
           >
-
+            <IonButton
+              color="light"
+              onClick={() => props.setOfferType(null)}
+              style={{ position: "absolute", float: "left", left: "21pt" }}
+            >
+              Volver
+            </IonButton>
             <h1>Elegí el tipo de alojamiento que querés registrar</h1>
           </IonRow>
           <IonRow
@@ -209,16 +215,6 @@ export default function AlojamientoTypeSelection(
               </IonHeader>
             </IonCard>
           </IonRow>
-          <IonRow
-          style={{justifyContent: "center", padding: "20px"}}>
-            <IonButton
-              color="light"
-              onClick={() => props.setOfferType(null)}
-              style={{ position: "absolute", float: "left", left: "21pt", margin: "0 auto" }}
-            >
-              Volver
-            </IonButton>
-          </IonRow>
         </IonCol>
       </IonGrid>
       <IonModal
@@ -251,21 +247,21 @@ export default function AlojamientoTypeSelection(
               </h3>
             </IonRow>
             <IonRow style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingLeft: "10%", paddingRight: "10%" }}>
-
+              
               <IonSelect
                 label="Establecimiento"
-                placeholder="Seleccioná el establecimiento"
-                value={form?.schema.id_establecimiento}
-                onIonChange={(e: any) => {
-                  form?.setValue("id_establecimiento", e.target.value);
-                }}
-              >
-                {establecimientos.map((establecimiento: any) => (
-                  <IonSelectOption key={establecimiento.id_establecimiento} value={establecimiento.id_establecimiento}>
-                    {establecimiento.nombre}
-                  </IonSelectOption>
-                ))}
-              </IonSelect>
+                  placeholder="Seleccioná el establecimiento"
+                  value={form?.schema.id_establecimiento}
+                  onIonChange={(e: any) => {
+                    form?.setValue("id_establecimiento", e.target.value);
+                  }}
+                >
+                  {establecimientos.map((establecimiento: any) => (
+                    <IonSelectOption key={establecimiento.id_establecimiento} value={establecimiento.id_establecimiento}>
+                      {establecimiento.nombre}
+                    </IonSelectOption>
+                  ))}
+                </IonSelect>
             </IonRow>
             <IonRow
               style={{

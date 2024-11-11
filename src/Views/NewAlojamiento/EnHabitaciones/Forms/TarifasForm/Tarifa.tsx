@@ -1,4 +1,4 @@
-/* import {
+import {
   IonButton,
   IonCol,
   IonGrid,
@@ -295,4 +295,3 @@ export default function Tarifa(props: any) {
     </IonRow>
   );
 }
- */

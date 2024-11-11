@@ -20,7 +20,7 @@ export default function FilterList() {
   const [selectedStates, setSelectedStates] = useState<number[]>([]);
 
   return (
-    <IonCard style={{ width: "200pt" }}>
+    <IonCard style={{ width: "300pt" }}>
       <IonCardHeader>
         <IonCardTitle style={{ fontWeight: "bold" }}>Filtros</IonCardTitle>
       </IonCardHeader>

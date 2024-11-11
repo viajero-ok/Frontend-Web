@@ -98,7 +98,7 @@ export default function DefaultLoggedLayout({ children }: any) {
 							)}
 							<IonMenuToggle>
 								<IonItem button disabled>
-									Reportes
+									Informes y estadísticas
 								</IonItem>
 							</IonMenuToggle>
 						</IonList>

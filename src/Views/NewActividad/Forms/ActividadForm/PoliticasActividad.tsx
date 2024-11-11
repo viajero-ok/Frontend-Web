@@ -57,10 +57,16 @@ export default function PoliticasActividad(props: TPoliticasActividad) {
                     </h3>
                 </IonRow>
                 <IonRow>
-                    <IonCol>
+                    <IonCol
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            textAlign: "center"
+                        }}
+                    >
                         <h4
                             style={{
-                                borderBottom: "2pt solid #F08408",
+                                borderBottom: "1pt solid #F08408",
                                 padding: "2pt",
                                 margin: "15pt"
                             }}
@@ -68,10 +74,16 @@ export default function PoliticasActividad(props: TPoliticasActividad) {
                             Pago anticipado
                         </h4>
                     </IonCol>
-                    <IonCol>
+                    <IonCol
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            textAlign: "center"
+                        }}
+                    >
                         <h4
                             style={{
-                                borderBottom: "2pt solid #F08408",
+                                borderBottom: "1pt solid #F08408",
                                 padding: "2pt",
                                 margin: "15pt"
                             }}
@@ -79,10 +91,15 @@ export default function PoliticasActividad(props: TPoliticasActividad) {
                             Política de cancelación
                         </h4>
                     </IonCol>
-                    <IonCol>
+                    <IonCol
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            textAlign: "center"
+                        }}>
                         <h4
                             style={{
-                                borderBottom: "2pt solid #F08408",
+                                borderBottom: "1pt solid #F08408",
                                 padding: "2pt",
                                 margin: "15pt"
                             }}
@@ -94,13 +111,13 @@ export default function PoliticasActividad(props: TPoliticasActividad) {
                 <IonRow>
                     <IonCol>
                         <div
-                         style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignContent: "center",
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}>
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignContent: "center",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}>
                             <IonItem>
                                 <IonSelect
                                     label="Tipo de pago"
@@ -149,13 +166,13 @@ export default function PoliticasActividad(props: TPoliticasActividad) {
                     <IonCol>
 
                         <IonRow
-                         style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignContent: "center",
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}>
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignContent: "center",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}>
                             <Field
                                 value={
                                     form?.schema.id_politica_cancelacion
@@ -173,13 +190,13 @@ export default function PoliticasActividad(props: TPoliticasActividad) {
                             />
                         </IonRow>
                         <IonRow
-                         style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignContent: "center",
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}>
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignContent: "center",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}>
                             <Field
                                 value={
                                     form?.schema.plazo_dias_cancelacion

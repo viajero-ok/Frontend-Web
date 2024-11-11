@@ -15,7 +15,7 @@ export type TUbicacion = {
 
 export type TUbicacionEstablecimiento = {
     id_oferta: string;
-    id_establecimiento: string;
+    id_establecimiento: number;
     misma_ubicacion_establecimiento: boolean;
 }
 

@@ -150,7 +150,7 @@ export default function CheckInCheckOutRow(props: TCheckInCheckOutRow) {
 						justifyContent: "center",
 					}}
 				>
-					<IonCheckbox>Aplica todo los días</IonCheckbox>
+					<IonCheckbox>Aplica todos los días</IonCheckbox>
 				</IonRow>
 				<IonRow
 					style={{

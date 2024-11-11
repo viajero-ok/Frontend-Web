@@ -11,7 +11,6 @@ import { FormProvider } from "../../../hooks/UseForm/FormProvider";
 import AlojamientoForm from "./Forms/AlojamientoForm/AlojamientoForm";
 import DefaultLoggedLayout from "../../Layouts/DefaultLoggedLayout";
 import HabitacionesForm from "./Forms/HabitacionesForm/HabitacionesForm";
-import TarifasForm from "./Forms/TarifasForm/TarifasForm";
 
 type TNewAlojamientoEnHabitacionesView = {
   idOferta: string;
@@ -43,6 +42,8 @@ export default function NewAlojamientoEnHabitacionesView(
     porcentaje_pago_anticipado: "", // float
     monto_pago_anticipado: "", // float
     minimo_dias_estadia: "",
+
+    // Metodos de pago
   };
 
   const schemaHabitacionesForm = {};
@@ -79,7 +80,7 @@ export default function NewAlojamientoEnHabitacionesView(
             >
               <IonLabel>Habitaciones</IonLabel>
             </IonSegmentButton>
-            <IonSegmentButton
+           {/*  <IonSegmentButton
               value="tarifas-form"
               style={{
                 "--indicator-color": "#F08408",
@@ -88,7 +89,7 @@ export default function NewAlojamientoEnHabitacionesView(
               }}
             >
               <IonLabel>Tarifas</IonLabel>
-            </IonSegmentButton>
+            </IonSegmentButton> */}
           </IonSegment>
         </IonRow>
         <IonRow>
@@ -102,11 +103,11 @@ export default function NewAlojamientoEnHabitacionesView(
               <HabitacionesForm id={props.idOferta} />
             </FormProvider>
           )}
-          {segment == "tarifas-form" && (
+         {/*  {segment == "tarifas-form" && (
             <FormProvider schema={schemaTarifasForm}>
               <TarifasForm id={props.idOferta} />
             </FormProvider>
-          )}
+          )} */}
         </IonRow>
       </IonGrid>
     </DefaultLoggedLayout>

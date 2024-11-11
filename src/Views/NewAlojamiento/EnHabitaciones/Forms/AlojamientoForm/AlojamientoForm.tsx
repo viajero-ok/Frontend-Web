@@ -107,66 +107,28 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
 	useEffect(() => {
 		if (!datosRegistrados) return;
 		if (!form) return;
-		form.setValue(
-			"nombre_alojamiento",
-			datosRegistrados.datos_basicos.nombre
-		);
-		form.setValue(
-			"descripcion_alojamiento",
-			datosRegistrados.datos_basicos.descripcion
-		);
-		/*
-    texto_observacion_comodidades_y_servicios_oferta: "",
-    texto_observacion_canchas_deportes: "",
-    texto_observacion_normas: "",
-    texto_observacion_politica_garantia: "",
 
-    // Datos basicos: {
-    nombre_alojamiento: "",
-    descripcion_alojamiento: "",
-
-    // Politicas de reserva
-    id_politica_cancelacion: "",
-    plazo_dias_cancelacion: "",
-    solicita_garantia: "",
-    monto_garantia: "", // float
-    id_tipo_pago_anticipado: "",
-    porcentaje_pago_anticipado: "", // float
-    monto_pago_anticipado: "", // float
-    minimo_dias_estadia: "",
-*/
-		form.setValue(
-			"texto_observacion_comodidades_y_servicios_oferta",
-			datosRegistrados.datos_basicos.id_politica_cancelacion
-		);
-		form.setValue(
-			"texto_observacion_canchas_deportes",
-			datosRegistrados.datos_basicos.plazo_dias_cancelacion
-		);
-		form.setValue(
-			"texto_observacion_normas",
-			datosRegistrados.datos_basicos.solicita_garantia
-		);
-		form.setValue(
-			"texto_observacion_politica_garantia",
-			datosRegistrados.datos_basicos.monto_garantia
-		);
-		form.setValue(
-			"texto_observacion_politica_garantia",
-			datosRegistrados.datos_basicos.id_tipo_pago_anticipado
-		);
-		form.setValue(
-			"texto_observacion_politica_garantia",
-			datosRegistrados.datos_basicos.porcentaje_pago_anticipado
-		);
-		form.setValue(
-			"texto_observacion_politica_garantia",
-			datosRegistrados.datos_basicos.monto_pago_anticipado
-		);
-		form.setValue(
-			"texto_observacion_politica_garantia",
-			datosRegistrados.datos_basicos.minimo_dias_estadia
-		);
+		// Establecer los valores del formulario con los datos registrados
+		form.setValue("nombre_alojamiento", datosRegistrados.datos_basicos.nombre);
+		form.setValue("descripcion_alojamiento", datosRegistrados.datos_basicos.descripcion);
+		
+		// Establecer observaciones
+		form.setValue("texto_observacion_comodidades_y_servicios_oferta", datosRegistrados.observaciones?.texto_observacion_comodidades_y_servicios_oferta || "");
+		form.setValue("texto_observacion_canchas_deportes", datosRegistrados.observaciones?.texto_observacion_canchas_deportes || "");
+		form.setValue("texto_observacion_normas", datosRegistrados.observaciones?.texto_observacion_normas || "");
+		form.setValue("texto_observacion_politica_garantia", datosRegistrados.observaciones?.texto_observacion_politica_garantia || "");
+		
+		// Verificar si politicas_reserva está definido antes de acceder a sus propiedades
+		if (datosRegistrados.politicas_reserva) {
+			form.setValue("id_politica_cancelacion", datosRegistrados.politicas_reserva.id_politica_cancelacion);
+			form.setValue("plazo_dias_cancelacion", datosRegistrados.politicas_reserva.plazo_dias_cancelacion);
+			form.setValue("solicita_garantia", datosRegistrados.politicas_reserva.solicita_garantia);
+			form.setValue("monto_garantia", datosRegistrados.politicas_reserva.monto_garantia);
+			form.setValue("id_tipo_pago_anticipado", datosRegistrados.politicas_reserva.id_tipo_pago_anticipado);
+			form.setValue("porcentaje_pago_anticipado", datosRegistrados.politicas_reserva.porcentaje_pago_anticipado);
+			form.setValue("monto_pago_anticipado", datosRegistrados.politicas_reserva.monto_pago_anticipado);
+			form.setValue("minimo_dias_estadia", datosRegistrados.politicas_reserva.minimo_dias_estadia);
+		}
 	}, [datosRegistrados]);
 
 	return (

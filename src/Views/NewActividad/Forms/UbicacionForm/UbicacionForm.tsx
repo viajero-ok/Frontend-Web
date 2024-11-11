@@ -9,7 +9,7 @@ import { getUbicaciones } from "../../../../App/Ubicaciones/Ubicaciones";
 
 type TUbicacionForm = {
   idOferta: string;
-  id_establecimiento: string;
+  id_establecimiento: number;
 };
 export default function UbicacionForm(props: TUbicacionForm) {
   const [markerPos, setMarkerPos] = useState<LatLng>();
@@ -117,7 +117,7 @@ export default function UbicacionForm(props: TUbicacionForm) {
           name="ubiEstablecimiento"
           checked={ubiEstablecimiento}
           onIonChange={(e) => setUbiEstablecimiento(e.target.checked)}
-          style={{ margin: "10pt", paddingLeft: "40%"}}
+          style={{ margin: "10pt", paddingLeft: "40%" }}
         >
           Usar ubicación del establecimiento
         </IonToggle>
@@ -125,21 +125,38 @@ export default function UbicacionForm(props: TUbicacionForm) {
       <IonRow>
         <IonCol
           size="medium"
-            style={{ paddingLeft: "20pt", paddingRight: "24pt" }}
-          >
+          style={{ paddingLeft: "20pt", paddingRight: "24pt" }}
+        >
+          <IonRow
+            style={{ marginBottom: "10pt", marginTop: "10pt" }}>
             <Field
-              name="numero"
-              label="Número"
+              name="calle"
+              label="Calle"
               form={form}
-              disabled={ubiEstablecimiento}
-              
             />
-            <IonCheckbox
-              name="sin_numero"
-              labelPlacement="end"
-              onIonChange={handleCheckboxChange}
-              disabled={ubiEstablecimiento}
-            >Sin número</IonCheckbox>
+          </IonRow>
+          <IonRow style={{ alignItems: "center" }}>
+            <IonCol size="auto">
+              <Field
+                name="numero"
+                label="Número"
+                form={form}
+                disabled={ubiEstablecimiento}
+              />
+            </IonCol>
+            <IonCol size="auto" style={{ paddingLeft: "10pt" }}>
+              <IonCheckbox
+                name="sin_numero"
+                labelPlacement="end"
+                onIonChange={handleCheckboxChange}
+                disabled={ubiEstablecimiento}
+              >
+                Sin número
+              </IonCheckbox>
+            </IonCol>
+          </IonRow>
+          <IonRow
+            style={{ marginBottom: "10pt", marginTop: "10pt" }}>
             <Field
               select
               options={provincias ?? []}
@@ -148,6 +165,9 @@ export default function UbicacionForm(props: TUbicacionForm) {
               form={form}
               disabled={ubiEstablecimiento}
             />
+          </IonRow>
+          <IonRow
+            style={{ marginBottom: "10pt", marginTop: "10pt" }}>
             <Field
               select
               options={
@@ -170,6 +190,9 @@ export default function UbicacionForm(props: TUbicacionForm) {
               form={form}
               disabled={ubiEstablecimiento}
             />
+          </IonRow>
+          <IonRow
+            style={{ marginBottom: "10pt", marginTop: "10pt" }}>
             <Field
               select
               options={
@@ -195,67 +218,68 @@ export default function UbicacionForm(props: TUbicacionForm) {
               form={form}
               disabled={ubiEstablecimiento}
             />
-            <IonRow
-              style={{
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "left",
-              }}
-            >
-              <Field
-                textarea
-                form={form}
-                name="observaciones"
-                label="Observaciones"
-              />
-            </IonRow>
-          </IonCol>
-          <IonCol
+          </IonRow>
+          <IonRow
             style={{
               display: "flex",
               alignContent: "center",
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "left",
+              marginBottom: "10pt", marginTop: "10pt"
             }}
           >
-            <MapView
-              search
-              markerOnClick
-              onClick={handleOnClick}
-              style={{
-                display: "flex",
-                width: "80%",
-                aspectRatio: "2/1",
-                marginLeft: "24pt",
-                marginRight: "24pt",
-              }}
+            <Field
+              textarea
+              form={form}
+              name="observaciones"
+              label="Observaciones"
             />
-          </IonCol>
-      </IonRow>
-      <IonRow>
-        <IonRow
+          </IonRow>
+        </IonCol>
+        <IonCol
           style={{
-            justifyContent: "space-around",
-            marginTop: "10pt",
-            marginBottom: "10pt",
+            display: "flex",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <IonButton
-            color="light"
-            onClick={() => router && router.push("/my-offers")}
-          >
-            Volver
-          </IonButton>
-          <IonButton
+          <MapView
+            search
+            markerOnClick
+            onClick={handleOnClick}
             style={{
-              "--background": "#F08408",
+              display: "flex",
+              width: "80%",
+              aspectRatio: "2/1",
+              marginLeft: "24pt",
+              marginRight: "24pt",
             }}
-            onClick={() => handleRegistrarUbicacion()}
-          >
-            Guardar
-          </IonButton>
-        </IonRow>
+          />
+        </IonCol>
+      </IonRow>
+      <IonRow
+        style={{
+          justifyContent: "space-around",
+          marginTop: "10pt",
+          marginBottom: "10pt",
+        }}
+      >
+        <IonButton
+          color="light"
+          onClick={() => router && router.push("/my-offers")}
+        >
+          Volver
+        </IonButton>
+        <IonButton
+          style={{
+            "--background": "#F08408",
+          }}
+          onClick={() => handleRegistrarUbicacion()}
+        >
+          Guardar
+        </IonButton>
+
       </IonRow>
     </IonGrid>
   );

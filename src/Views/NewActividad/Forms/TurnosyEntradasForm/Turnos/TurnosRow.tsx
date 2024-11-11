@@ -97,12 +97,11 @@ export default function TurnosRow(props: TTurnosRow) {
 	return (
 		<IonRow
 			style={{
-				border: "2pt solid #F08408",
-				borderRadius: "8pt",
 				padding: "6pt",
-				marginLeft: "31pt",
-				marginRight: "31pt",
+				marginLeft: "0",
+				marginRight: "0",
 				marginBottom: "31pt",
+				width: "100%",
 			}}
 		>
 			<IonCol

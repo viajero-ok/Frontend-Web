@@ -1,4 +1,4 @@
-import { IonButton, IonCol, IonGrid, IonIcon, IonRow } from "@ionic/react";
+/* import { IonButton, IonCol, IonGrid, IonIcon, IonRow } from "@ionic/react";
 import { add } from "ionicons/icons";
 import { Dispatch, SetStateAction } from "react";
 
@@ -121,11 +121,11 @@ export default function AgregarTarifa(props: TAgregarTarifa) {
                 justifyContent: "center",
               }}
             >
-              {/* <ul style={{ listStyleType: "none" }}>
+              <ul style={{ listStyleType: "none" }}>
                 <li>Habitación single</li>
                 <li>Habitación doble</li>
                 <li>Habitación single</li>
-              </ul> */}
+              </ul>
               {tarifa.nombre_tipo_detalle}
             </IonCol>
             <IonCol
@@ -136,11 +136,11 @@ export default function AgregarTarifa(props: TAgregarTarifa) {
                 justifyContent: "center",
               }}
             >
-              {/* <ul style={{ listStyleType: "none" }}>
+              <ul style={{ listStyleType: "none" }}>
                 <li>$1.500.000</li>
                 <li>$1.500.000</li>
                 <li>$1.500.000</li>
-              </ul> */}
+              </ul>
               {tarifa.tipo_pension}
             </IonCol>
             <IonCol
@@ -151,11 +151,11 @@ export default function AgregarTarifa(props: TAgregarTarifa) {
                 justifyContent: "center",
               }}
             >
-              {/* <ul style={{ listStyleType: "none" }}>
+              <ul style={{ listStyleType: "none" }}>
                 <li>Completa</li>
                 <li>Completa</li>
                 <li>Media</li>
-              </ul> */}
+              </ul>
               ${tarifa.monto_tarifa}
             </IonCol>
           </IonRow>
@@ -164,3 +164,4 @@ export default function AgregarTarifa(props: TAgregarTarifa) {
     </IonRow>
   );
 }
+ */

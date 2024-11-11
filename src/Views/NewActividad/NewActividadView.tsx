@@ -15,6 +15,7 @@ import TurnosyEntradasForm from "./Forms/TurnosyEntradasForm/TurnosyEntradasForm
 
 type TNewActividadView = {
   idOferta: string;
+  id_establecimiento?: number;
 };
 export default function NewActividadView(props: TNewActividadView) {
   
@@ -69,7 +70,7 @@ export default function NewActividadView(props: TNewActividadView) {
       <IonGrid>
         <IonRow style={{ marginTop: "31pt" }}>
           <IonSegment
-            value="default"
+            value={segment}
             onIonChange={(e: any) => setSegment(e.target.value)}
           >
             <IonSegmentButton
@@ -115,8 +116,8 @@ export default function NewActividadView(props: TNewActividadView) {
           {segment == "ubicacion-form" && (
             <FormProvider schema={schemaUbicacionForm}>
               <UbicacionForm 
-              idOferta={props.idOferta} 
-              id_establecimiento={props.id_establecimiento} />
+              idOferta={props.idOferta ?? 0} 
+              id_establecimiento={props.id_establecimiento ?? 0} />
             </FormProvider>
           )}
           {segment == "turnosyentradas-form" && (

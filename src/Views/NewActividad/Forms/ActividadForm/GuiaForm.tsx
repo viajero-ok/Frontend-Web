@@ -10,6 +10,7 @@ import {
   IonToast,
   IonToggle,
   IonSelect,
+  IonTitle,
 } from "@ionic/react";
 import { add, alertCircleOutline, close, trash } from "ionicons/icons";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -37,9 +38,7 @@ export default function GuiaForm(props: TGuiaForm) {
 
   useEffect(() => {
     setGuias(props.guias);
-    if (props.guias.length > 0) {
-      console.log(guias);
-    } 
+    setEsConGuia(props.guias.length > 0);
   }, [props.guias]);
 
   const handleChangeEsConGuia = (e: any) => {
@@ -61,8 +60,7 @@ export default function GuiaForm(props: TGuiaForm) {
     if (!numeroResolucion || !nombreCompleto) return;
     if (idGuiaEditar) {
       doModificarGuia(idGuiaEditar);
-    }
-    else {
+    } else {
       doGuardarGuia();
     }
     setOpen(false);
@@ -92,11 +90,21 @@ export default function GuiaForm(props: TGuiaForm) {
       nro_resolucion: numeroResolucion,
       nombre_y_apellido: nombreCompleto,
     }).then((data: any) => {
-      setGuias([...guias, {
+      const nuevaGuia = {
         id_guia: data.data.id_guia,
-        nro_resolucion: numeroResolucion,
-        nombre_y_apellido: nombreCompleto,
-      }]);
+        numero_resolucion: numeroResolucion,
+        nombre_apellido_guia: nombreCompleto,
+      };
+      setGuias((prevGuias) => [
+        ...prevGuias,
+        nuevaGuia,
+      ]);
+      setEsConGuia(true);
+      setOpen(false);
+      setNumeroResolucion("");
+      setNombreCompleto("");
+    }).catch((error) => {
+      console.error("Error al guardar la guía:", error);
     });
   }
 
@@ -123,7 +131,7 @@ export default function GuiaForm(props: TGuiaForm) {
   }
 
   return (
-    <IonCard style={{
+    <div style={{
       padding: "10pt",
       paddingBottom: "20pt",
       marginBottom: "30pt",
@@ -132,6 +140,9 @@ export default function GuiaForm(props: TGuiaForm) {
       borderRadius: "10pt",
       width: "80%",
     }}>
+      <h3 style={{ textAlign: "center", fontWeight: "bold" }}>
+        Guías
+      </h3>
       <IonGrid>
         <IonRow
           style={{
@@ -142,6 +153,10 @@ export default function GuiaForm(props: TGuiaForm) {
           }}
         >
           <IonToggle
+            style={{
+              marginBottom: "10pt",
+              marginTop: "10pt",
+            }}
             checked={esConGuia}
             onIonChange={(e) => handleChangeEsConGuia(e)}
             color="primary"
@@ -161,7 +176,10 @@ export default function GuiaForm(props: TGuiaForm) {
           <IonButton
             disabled={!esConGuia}
             onClick={() => setOpen(true)}
-            style={{ "--background": "#F08408", "--color": "white" }}
+            style={{
+              "--background": "#F08408",
+              "--color": "white"
+            }}
           >
             <IonIcon icon={add} />
             Agregar guía
@@ -246,38 +264,57 @@ export default function GuiaForm(props: TGuiaForm) {
         <IonModal
           isOpen={open}
           onDidDismiss={() => setOpen(false)}
-          style={{ "--height": "fit-content" }}
+          style={{
+            "--height": "fit-content",
+            "--width": "50%",
+          }}
         >
           <div className="wrapper">
             <IonGrid
-              style={{ display: "flex", flexDirection: "column", flexGrow: 0 }}
+              style={{ display: "flex", flexDirection: "column", flexGrow: 0, margin: "15pt" }}
             >
-              <IonRow>
-                <IonCol></IonCol>
-                <IonCol>
-                  <h4 style={{ fontWeight: "bold" }}>Agregar guía</h4>
+              <IonRow
+                style={{
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: "100%",
+                  borderBottom: "1px solid #F08408",
+                  paddingLeft: "10pt",
+                  paddingRight: "10pt",
+                  marginBottom: "10pt"
+                }}>
+                <IonCol
+                  size="auto"
+                  style={{
+                    textAlign: "center",
+                    marginLeft: "40%",
+                  }}>
+                  <IonTitle
+                    style={{
+                      fontWeight: "bold",
+                      marginBottom: "10pt",
+                    }}>
+                    Agregar guía
+                  </IonTitle>
                 </IonCol>
-                <IonCol style={{ display: "flex", justifyContent: "right" }}>
+                <IonCol style={{ display: "flex", justifyContent: "flex-end" }}>
                   <IonButton
                     size="small"
                     fill="clear"
                     onClick={() => setOpen(false)}
                   >
-                    <IonIcon icon={close} />
+                    <IonIcon icon={close} style={{ color: "#F08408" }} />
                   </IonButton>
                 </IonCol>
               </IonRow>
-              <IonRow style={{ justifyContent: "center", padding: "8pt" }}>
-                <h3 style={{ color: "black", fontSize: "14pt" }}>
-                  Estás por agregar un nuevo guía
-                </h3>
-              </IonRow>
+
               <IonRow>
                 <IonCol>
                   <IonInput
                     label="Número de resolución"
                     value={numeroResolucion}
-                    onIonChange={(e) => setNumeroResolucion(e.detail.value!)} />
+                    onIonChange={(e) => setNumeroResolucion(e.detail.value!)}
+                  />
                 </IonCol>
                 <IonCol>
                   <IonInput
@@ -286,6 +323,7 @@ export default function GuiaForm(props: TGuiaForm) {
                     onIonChange={(e) => setNombreCompleto(e.detail.value!)} />
                 </IonCol>
               </IonRow>
+
               <IonRow
                 style={{
                   justifyContent: "right",
@@ -323,6 +361,6 @@ export default function GuiaForm(props: TGuiaForm) {
           setOpenToast(false);
         }}
       /> */}
-    </IonCard>
+    </div>
   );
 }

@@ -76,7 +76,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
 			.then((response) => {
 				console.log("response: ", response);
 			})
-			.catch(() => {});
+			.catch(() => { });
 	};
 
 	const handleImageService = (file: File) => {
@@ -95,41 +95,84 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
 				setTiposPagoAnticipado(response.data.tipos_pago_anticipado);
 				setMetodosDePago(response.data.metodos_pago);
 			})
-			.catch((error: any) => {});
+			.catch((error: any) => { });
 	}, []);
 
 	useEffect(() => {
-		obtenerDatosRegistradosAlojamiento(props.id).then((response: any) => {
-			setDatosRegistrados(response.data.datos);
-		});
+		obtenerDatosRegistradosAlojamiento(props.id)
+			.then((response: any) => {
+				setDatosRegistrados(response.data.datos);
+			});
+
 	}, []);
 
 	useEffect(() => {
 		if (!datosRegistrados) return;
+		console.log("datos registrados: ", datosRegistrados);
 		if (!form) return;
-
-		// Establecer los valores del formulario con los datos registrados
-		form.setValue("nombre_alojamiento", datosRegistrados.datos_basicos.nombre);
-		form.setValue("descripcion_alojamiento", datosRegistrados.datos_basicos.descripcion);
-		
-		// Establecer observaciones
-		form.setValue("texto_observacion_comodidades_y_servicios_oferta", datosRegistrados.observaciones?.texto_observacion_comodidades_y_servicios_oferta || "");
-		form.setValue("texto_observacion_canchas_deportes", datosRegistrados.observaciones?.texto_observacion_canchas_deportes || "");
-		form.setValue("texto_observacion_normas", datosRegistrados.observaciones?.texto_observacion_normas || "");
-		form.setValue("texto_observacion_politica_garantia", datosRegistrados.observaciones?.texto_observacion_politica_garantia || "");
-		
 		// Verificar si politicas_reserva está definido antes de acceder a sus propiedades
-		if (datosRegistrados.politicas_reserva) {
-			form.setValue("id_politica_cancelacion", datosRegistrados.politicas_reserva.id_politica_cancelacion);
-			form.setValue("plazo_dias_cancelacion", datosRegistrados.politicas_reserva.plazo_dias_cancelacion);
-			form.setValue("solicita_garantia", datosRegistrados.politicas_reserva.solicita_garantia);
-			form.setValue("monto_garantia", datosRegistrados.politicas_reserva.monto_garantia);
-			form.setValue("id_tipo_pago_anticipado", datosRegistrados.politicas_reserva.id_tipo_pago_anticipado);
-			form.setValue("porcentaje_pago_anticipado", datosRegistrados.politicas_reserva.porcentaje_pago_anticipado);
-			form.setValue("monto_pago_anticipado", datosRegistrados.politicas_reserva.monto_pago_anticipado);
-			form.setValue("minimo_dias_estadia", datosRegistrados.politicas_reserva.minimo_dias_estadia);
+		if (datosRegistrados.datos_basicos) {
+			form.setValue("nombre_alojamiento", datosRegistrados.datos_basicos.nombre);
+			form.setValue("descripcion_alojamiento", datosRegistrados.datos_basicos.descripcion);
+			form.setValue("id_politica_cancelacion", datosRegistrados.datos_basicos.id_politica_cancelacion);
+			form.setValue("plazo_dias_cancelacion", datosRegistrados.datos_basicos.plazo_dias_cancelacion);
+			form.setValue("solicita_garantia", datosRegistrados.datos_basicos.bl_solicita_garantia);
+			form.setValue("monto_garantia", datosRegistrados.datos_basicos.monto_garantia);
+			form.setValue("id_tipo_pago_anticipado", datosRegistrados.datos_basicos.id_tipo_pago_anticipado);
+			form.setValue("porcentaje_pago_anticipado", datosRegistrados.datos_basicos.porcentaje_pago_anticipado);
+			form.setValue("minimo_dias_estadia", datosRegistrados.datos_basicos.min_dias_estadia);
+			/* form.setValue("monto_pago_anticipado", datosRegistrados.politicas_reserva.monto_pago_anticipado); */
+
 		}
+		if (datosRegistrados.horarios_checkin_checkout) {
+			setFormHorarios(datosRegistrados.horarios_checkin_checkout.map((horario: any) => ({
+				id_horario: horario.id_horario,
+				check_in: {
+					hora_check_in: horario.check_in_hora,
+					minuto_check_in: horario.check_in_minuto,
+				},
+				check_out: {
+					hora_check_out: horario.check_out_hora,
+					minuto_check_out: horario.check_out_minuto,
+				},
+				/* aplica_todos_los_dias: horario.aplica_todos_los_dias, */
+				dias_semana: {
+					aplica_lunes: horario.aplica_lunes,
+					aplica_martes: horario.aplica_martes,
+					aplica_miercoles: horario.aplica_miercoles,
+					aplica_jueves: horario.aplica_jueves,
+					aplica_viernes: horario.aplica_viernes,
+					aplica_sabado: horario.aplica_sabado,
+					aplica_domingo: horario.aplica_domingo,
+				},
+			})));
+		}
+		if (datosRegistrados.caracteristicas) {
+			setFormCaracteristicas(datosRegistrados.caracteristicas.map((caracteristica: any) => caracteristica.id_caracteristica));
+		}
+		if (datosRegistrados.metodos_pago) {
+			setFormMetodosDePago(datosRegistrados.metodos_pago.map((metodo: any) => metodo.id_metodo_pago));
+		}
+		if (datosRegistrados.observaciones) {
+			for (const observacion of datosRegistrados.observaciones) {
+				if (observacion.id_tipo_observacion == 1) {
+					form.setValue("texto_observacion_comodidades_y_servicios_oferta", observacion?.observacion || "");
+				}
+				if (observacion.id_tipo_observacion == 2) {
+					form.setValue("texto_observacion_canchas_deportes", observacion?.observacion || "");
+				}
+				if (observacion.id_tipo_observacion == 3) {
+					form.setValue("texto_observacion_politica_garantia", observacion?.observacion || "");
+				}
+				if (observacion.id_tipo_observacion == 6) {
+					form.setValue("texto_observacion_normas", observacion?.observacion || "");
+				}
+				
+			}
+		}
+
 	}, [datosRegistrados]);
+
 
 	return (
 		<IonGrid style={{}}>

@@ -42,6 +42,8 @@ export default function NewAlojamientoEnHabitacionesView(
     porcentaje_pago_anticipado: "", // float
     monto_pago_anticipado: "", // float
     minimo_dias_estadia: "",
+
+    // Metodos de pago
   };
 
   const schemaHabitacionesForm = {};

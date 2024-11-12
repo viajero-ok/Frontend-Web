@@ -123,17 +123,17 @@ export default function VerOfertaView() {
                 </IonCardSubtitle>
                 <IonGrid>
                   <IonRow>
-                    <IonChip style={{ paddingRight: "16pt" }}>
+                    {/* <IonChip style={{ paddingRight: "16pt" }}>
                       <IonIcon icon={flash} />
                       &nbsp;Turismo alernativo
                     </IonChip>
                     <IonChip style={{ paddingRight: "16pt" }}>
                       <IonIcon icon={walk} />
                       &nbsp;Caminata
-                    </IonChip>
+                    </IonChip> */}
                   </IonRow>
                   <IonRow>
-                    <IonCol
+                  {/*   <IonCol
                       style={{
                         display: "flex",
                         flexDirection: "column",
@@ -147,8 +147,8 @@ export default function VerOfertaView() {
                     >
                       <IonIcon style={{ fontSize: "16pt" }} icon={logoUsd} />
                       Gratis
-                    </IonCol>
-                    <IonCol
+                    </IonCol> */}
+                    {/* <IonCol
                       style={{
                         display: "flex",
                         flexDirection: "column",
@@ -165,7 +165,7 @@ export default function VerOfertaView() {
                         icon={radioButtonOff}
                       />
                       Dificultad baja
-                    </IonCol>
+                    </IonCol> */}
                     <IonCol
                       style={{
                         display: "flex",
@@ -181,7 +181,7 @@ export default function VerOfertaView() {
                       <IonIcon style={{ fontSize: "16pt" }} icon={star} />
                       4.8
                     </IonCol>
-                    <IonCol
+                    {/* <IonCol
                       style={{
                         display: "flex",
                         flexDirection: "column",
@@ -195,7 +195,7 @@ export default function VerOfertaView() {
                     >
                       <IonIcon style={{ fontSize: "16pt" }} icon={compass} />
                       Con guía
-                    </IonCol>
+                    </IonCol> */}
                     <IonCol
                       style={{
                         display: "flex",
@@ -361,10 +361,12 @@ export default function VerOfertaView() {
             alignContent: "center",
             alignItems: "center",
             justifyContent: "center",
+            backgroundColor: "#F084084D",
+            marginBottom: "12pt"
           }}
         >
           <h3>
-            <q style={{ fontWeight: "bold", fontSize: "24pt" }}>
+            <q style={{ fontWeight: "normal", fontSize: "14pt", color: "black" }}>
               {datos && datos.datos_basicos.descripcion}
             </q>
           </h3>
@@ -386,17 +388,17 @@ export default function VerOfertaView() {
           <IonCol>
             <IonCard style={{ padding: "20pt" }}>
               <IonCardHeader>
-                <IonTitle>Información</IonTitle>
+                <IonTitle style={{ textAlign: "center", fontWeight: "bold", fontSize: "18pt", color: "#f08408" }}>Información</IonTitle>
               </IonCardHeader>
               <IonCardContent>
-                <IonCardTitle>Métodos de pago</IonCardTitle>
+                <IonCardTitle style={{ fontWeight: "bold", fontSize: "12pt", color: "black" }}>Métodos de pago</IonCardTitle>
                 <div style={{ marginTop: "6pt" }} />
                 {datos &&
                   datos.metodos_pago.map((metodo: any) => (
                     <IonChip>{metodo.metodo_pago}</IonChip>
                   ))}
                 <div style={{ marginTop: "12pt" }} />
-                <IonCardTitle>Horarios de check-in y check-out</IonCardTitle>
+                <IonCardTitle style={{ fontWeight: "bold", fontSize: "12pt", color: "black" }}>Horarios de check-in y check-out</IonCardTitle>
                 <div style={{ marginTop: "6pt" }} />
                 <IonGrid>
                   <IonRow style={{ fontWeight: "bold" }}>Check-in</IonRow>
@@ -581,7 +583,7 @@ export default function VerOfertaView() {
                   </IonRow>
                 </IonGrid>
                 <div style={{ marginTop: "12pt" }} />
-                <IonCardTitle>Observaciones</IonCardTitle>
+                <IonCardTitle style={{ fontWeight: "bold", fontSize: "12pt", color: "black" }}>Observaciones</IonCardTitle>
                 <div style={{ marginTop: "6pt" }} />
                 <ul>
                   {datos &&
@@ -595,7 +597,7 @@ export default function VerOfertaView() {
           <IonCol>
             <IonCard style={{ padding: "12pt" }}>
               <IonCardHeader style={{ paddingBottom: "12pt" }}>
-                <IonTitle>Reservá</IonTitle>
+                <IonTitle style={{ textAlign: "center", fontWeight: "bold", fontSize: "18pt", color: "#f08408" }}>Reservá</IonTitle>
               </IonCardHeader>
               <IonGrid
                 title="ver disponibilidad"

@@ -8,6 +8,7 @@ import {
 	obtenerDatosRegistroHabitacion,
 } from "../../../../../App/Alojamientos/Habitacion";
 import MultimediaUpload from "../../../../../components/MultimediaUpload/MultimediaUpload";
+import { finalizarRegistroAlojamiento } from "../../../../../App/Alojamientos/NuevoAlojamiento";
 
 type THabitacionesForm = {
 	id: string;
@@ -18,6 +19,12 @@ export default function HabitacionesForm(props: any) {
 	const [datosRegistro, setDatosRegistro] = useState<any>();
 	const [openConfirm, setOpenConfirm] = useState<boolean>(false);
 	const router = useIonRouter();
+	
+	const handleRegistrarAlojamiento = () => {
+		finalizarRegistroAlojamiento(props.id).then((response: any) => {
+			console.log(response);
+		});
+	};
 
 
 	const handleObtenerDatosRegistrados = () => {
@@ -84,7 +91,10 @@ export default function HabitacionesForm(props: any) {
 					style={{
 						"--background": "#F08408",
 					}}
-					onClick={() => setOpenConfirm(true)}
+					onClick={() => {
+						setOpenConfirm(true);
+						handleRegistrarAlojamiento();
+					}}
 				>
 					Registrar
 				</IonButton>

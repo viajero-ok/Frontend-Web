@@ -1,4 +1,4 @@
-import { IonContent, IonGrid, IonImg, IonRow } from "@ionic/react";
+import { IonContent, IonGrid, IonImg, IonRow, IonTitle } from "@ionic/react";
 import Checkout from "../../pages/PagarTest/Checkout";
 import { useParams } from "react-router";
 import { useMemo, useState } from "react";
@@ -24,7 +24,18 @@ export default function PagoView() {
 
   return (
     <IonContent>
-      <IonGrid>
+
+      <IonTitle style={{ marginTop: "10%", textAlign: "center", fontSize: "20pt", fontWeight: "bolder" }}>
+        <IonImg
+          src="icon.png"
+          style={{ width: "50pt", aspectRatio: "1/1", margin: "auto" }}
+        />
+        <h1 style={{ fontWeight: "bold", fontSize: "18pt", color: "#f08408" }}>viajero</h1>
+        Pagá tu reserva
+        <h2 style={{ fontWeight: "normal", fontSize: "16pt", color: "#f08408" }}>¡Ya casi comienza tu aventura!</h2>
+      </IonTitle>
+      <IonGrid style={{ margin: "20pt", border: "2px solid #F08408" }}>
+
         <IonRow
           style={{
             display: "flex",
@@ -34,11 +45,9 @@ export default function PagoView() {
             justifyContent: "center",
           }}
         >
-          <IonImg
-            src="icon.png"
-            style={{ width: "250pt", aspectRatio: "1/1" }}
-          />
-          <h1>viajero</h1>
+
+          <h1 style={{ fontWeight: "normal", fontSize: "12pt", color: "black" }}>Serás redirigido a la página de Mercado Pago para realizar el pago.</h1>
+
         </IonRow>
         <IonRow
           style={{

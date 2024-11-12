@@ -298,7 +298,7 @@ export function OfertaCard({
           </IonCardContent>
         </IonCol>
       </IonRow>
-      {/* <IonButton
+       <IonButton
         style={{
           "--background": "#F08408",
           "--color": "white",

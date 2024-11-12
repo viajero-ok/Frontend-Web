@@ -94,6 +94,7 @@ export default function MyPlacesView() {
                   <EstablecimientoCard
                     nombre={establecimiento.nombre}
                     descripcion={establecimiento.descripcion}
+                    id={establecimiento.id_establecimiento}
                   />
                 </IonRow>
               ))}

@@ -65,6 +65,7 @@ const App: React.FC = () => (
           </Route>
           <Route exact path="/my-places" component={MyPlaces} />
           <Route exact path="/my-places/new-place" component={NewPlace} />
+          <Route exact path="/my-places/edit/:id" component={NewPlace} />
           <Route exact path="/my-offers" component={MyOffers} />
           <Route exact path="/my-offers/new-offer" component={NewOffer} />
           <Route exact path="/login" component={LogIn} />

@@ -1,10 +1,13 @@
 import { IonPage } from "@ionic/react";
 import NewPlaceView from "../../../Views/MyPlaces/NewPlace/NewPlaceView";
+import { useParams } from "react-router";
 
 const NewPlace: React.FC = () => {
+  const params: any = useParams();
+
   return (
     <IonPage>
-      <NewPlaceView />
+      {params && <NewPlaceView idEstablecimiento={params.id} />}
     </IonPage>
   );
 };

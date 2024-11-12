@@ -24,3 +24,14 @@ export const obtenerEstablecimientos = async () => {
   const response = await AUTH_API.get(`/establecimientos/obtener-establecimientos`);
   return response.data;
 };
+
+export const eliminarEstablecimiento = async (idEstablecimiento: number) => {
+  const response = await AUTH_API.delete(`/establecimientos/eliminar-establecimiento/${idEstablecimiento}`);
+  return response.data;
+};
+
+export const obtenerDatosRegistradosEstablecimiento = async (idEstablecimiento: number) => {
+  const response = await AUTH_API.get(`/establecimientos/obtener-datos-registrados-establecimiento/${idEstablecimiento}`);
+  return response.data;
+};
+

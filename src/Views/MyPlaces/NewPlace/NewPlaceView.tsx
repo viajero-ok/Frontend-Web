@@ -2,7 +2,10 @@ import { FormProvider } from "../../../hooks/UseForm/FormProvider";
 import DefaultLoggedLayout from "../../Layouts/DefaultLoggedLayout";
 import NewPlaceForm from "./NewPlaceForm";
 
-export default function NewPlaceView() {
+type TNewPlaceView = {
+  idEstablecimiento: number;
+};
+export default function NewPlaceView(props: TNewPlaceView) {
   const schema = {
     nombreDelEstablecimiento: "",
     numeroDeHabilitacionMunicipal: "",
@@ -18,7 +21,7 @@ export default function NewPlaceView() {
   return (
     <DefaultLoggedLayout>
         <FormProvider schema={schema}>
-          <NewPlaceForm />
+          <NewPlaceForm idEstablecimiento={props.idEstablecimiento} />
         </FormProvider>
     </DefaultLoggedLayout>
   );

@@ -115,12 +115,12 @@ export default function TurnosForm(props: TTurnos) {
         {turnos.length > 0 && (
           <IonButton
             style={{ "--background": "#F08408" }}
-            onClick={() =>
+            onClick={() => {
               setTurnos((prev: any[]) => [
                 ...prev,
                 {},
               ])
-            }
+            }}
           >
             <IonIcon icon={add} />
             &nbsp;AGREGAR OTRO

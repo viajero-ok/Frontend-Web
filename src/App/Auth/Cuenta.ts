@@ -15,7 +15,7 @@ type TRegistrarCuenta = (
 ) => Promise<TResponseRegistrarCuenta>;
 export const registrarCuenta: TRegistrarCuenta = async (
   body: TBodyRegistrarCuenta
-) => await API.post(`/api/auth/registrar/cuenta`, body);
+) => await API.post(`/auth/registrar/cuenta`, body);
 
 type TBodyVerificarCuenta = {
   id_usuario: "string";
@@ -23,7 +23,7 @@ type TBodyVerificarCuenta = {
 };
 type TVerificarCuenta = (body: TBodyVerificarCuenta) => Promise<any>;
 export const verificarCuenta: any = async (body: TBodyVerificarCuenta) =>
-  await API.post(`/api/auth/verificar/cuenta`, body);
+  await API.post(`/auth/verificar/cuenta`, body);
 
 type TBodyIniciarSesion = {
   mail: string;
@@ -31,7 +31,7 @@ type TBodyIniciarSesion = {
 };
 type TIniciarSesion = (body: TBodyIniciarSesion) => Promise<any>;
 export const iniciarSesion = async (body: TBodyIniciarSesion) =>
-  await API.post(`/api/auth/login`, body);
+  await API.post(`/auth/login`, body);
 
 export const getDatosUsuario = async () =>
-  await AUTH_API.get(`/api/auth/datos-usuario`);
+  await AUTH_API.get(`/auth/datos-usuario`);

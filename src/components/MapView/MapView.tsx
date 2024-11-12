@@ -7,11 +7,12 @@ import {
   useMap,
 } from "react-leaflet";
 
-import { CSSProperties, useEffect, useState } from "react";
+import { CSSProperties, useEffect, useMemo, useState } from "react";
 import LeafletControlGeocoder from "./LeafletControlGeocoder";
 import { CSSOptions } from "vite";
 import MarkerOnClick from "./MarkerOnClick";
 import { LeafletMouseEvent } from "leaflet";
+import MarkerPin from "./MarkerPin";
 
 const ComponentResize = () => {
   const map = useMap();
@@ -39,6 +40,8 @@ type TMap = {
   search?: boolean;
   markerOnClick?: boolean;
   onClick?: (e: LeafletMouseEvent) => any;
+  pos?: { lat: number; lgn: number } | null;
+  setMarker?: { lat: number; lgn: number } | null;
 };
 const Map = (props: TMap) => {
   // get the location from geolocation
@@ -58,6 +61,22 @@ const Map = (props: TMap) => {
       });
     }
   }, []);
+
+  useMemo(() => {
+    if (!props.pos) return;
+    setPos({
+      lat: props.pos.lat,
+      lng: props.pos.lgn,
+    });
+  }, [props.pos]);
+
+  useMemo(() => {
+    if (!props.setMarker) return;
+    setPos({
+      lat: props.setMarker.lat,
+      lng: props.setMarker.lgn,
+    });
+  }, [props.setMarker]);
 
   return (
     <>
@@ -79,6 +98,7 @@ const Map = (props: TMap) => {
         {props.markerOnClick && (
           <MarkerOnClick onClick={props.onClick ?? undefined} />
         )}
+        {props.setMarker != null && <MarkerPin pos={props.setMarker} />}
       </MapContainer>
     </>
   );
@@ -92,6 +112,8 @@ interface IMapView {
   initPos?: { lat: number; lgn: number };
   markerOnClick?: boolean;
   onClick?: (e: LeafletMouseEvent) => any;
+  pos?: { lat: number; lgn: number } | null;
+  setMarker?: { lat: number; lgn: number } | null;
 }
 export default function MapView(props: IMapView) {
   return <Map {...props} />;

@@ -8,13 +8,15 @@ import {
   IonCol,
   IonGrid,
   IonIcon,
-  IonImg,
   IonLabel,
   IonRow,
   IonSegment,
   IonSegmentButton,
+  useIonRouter,
 } from "@ionic/react";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
+import styled from "styled-components";
+import { consultarOfertasTurista } from "../../App/Ofertas/Ofertas";
 import MapView from "../MapView/MapView";
 import FiltrosConsultaOfertas from "./FiltrosConsultaOfertas";
 import { chevronForward, bookmark } from "ionicons/icons";
@@ -31,49 +33,28 @@ interface Oferta {
   setOfertasGuardadas?: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
-export default function ConsultaOfertasCard() {
-  const [ofertas, setOfertas] = useState<Oferta[]>([]);
+type TConsultaOfertasCard = {
+  fechas: { fecha_desde: string | null; fecha_hasta: string | null };
+  personas: number | null;
+  ofertas: any[];
+};
+export default function ConsultaOfertasCard(props: TConsultaOfertasCard) {
   const [selectedSegment, setSelectedSegment] = useState<
     "alojamientos" | "actividades" | "eventos"
   >("alojamientos");
+  const [pos, setPos] = useState<{ lat: number; lgn: number } | null>(null);
 
-  useEffect(() => {
-    // Aquí deberías hacer la llamada a tu API para obtener las ofertas
-    // Por ahora, usaremos datos de ejemplo
-    const ofertasEjemplo: Oferta[] = [
-      {
-        id: 1,
-        titulo: "Cabañas de la Colina",
-        descripcion: "Habitación doble",
-        precio: 100,
-        fecha: "2023-05-01",
-        tipo: "alojamiento",
-        imagen: "public/images/cabaña1.png",
-      },
-      {
-        id: 4,
-        titulo: "Böden Hotel & Spa",
-        descripcion: "Música en vivo",
-        precio: 30,
-        fecha: "2023-05-03",
-        tipo: "alojamiento",
-        imagen: "public/images/hotel.jpg",
-      },
-      /* { id: 2, titulo: "Reserva Natural Pozo Verde", descripcion: "Recorrido guiado", precio: 50, fecha: "2023-05-02", tipo: 'actividad' },
-            { id: 5, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'actividad' },
-            { id: 3, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'evento' },
-            { id: 6, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'evento' }, */
-    ];
-    setOfertas(ofertasEjemplo);
-  }, []);
+  // const filteredOfertas = ofertas.filter((oferta) => {
+  //   if (selectedSegment === "alojamientos")
+  //     return oferta.tipo === "alojamiento";
+  //   if (selectedSegment === "actividades") return oferta.tipo === "actividad";
+  //   if (selectedSegment === "eventos") return oferta.tipo === "evento";
+  //   return false;
+  // });
 
-  const filteredOfertas = ofertas.filter((oferta) => {
-    if (selectedSegment === "alojamientos")
-      return oferta.tipo === "alojamiento";
-    if (selectedSegment === "actividades") return oferta.tipo === "actividad";
-    if (selectedSegment === "eventos") return oferta.tipo === "evento";
-    return false;
-  });
+  const posicionar = (latitud: number, longitud: number) => {
+    setPos((_) => ({ lat: latitud, lgn: longitud }));
+  };
 
   return (
     <div style={{ marginTop: "12pt" }}>
@@ -106,6 +87,7 @@ export default function ConsultaOfertasCard() {
         <IonRow style={{ paddingTop: "12pt" }}>
           <IonCol size="auto" style={{}}>
             <MapView
+              setMarker={pos}
               style={{
                 height: "200pt",
                 width: "300pt",
@@ -119,8 +101,14 @@ export default function ConsultaOfertasCard() {
               paddingLeft: "12pt",
             }}
           >
-            {filteredOfertas.map((oferta) => (
-              <OfertaCard key={oferta.id} oferta={oferta} />
+            {props.ofertas.map((oferta) => (
+              <OfertaCard
+                key={oferta.id}
+                oferta={oferta}
+                posicionar={posicionar}
+                fecha_desde={props.fechas.fecha_desde ?? ""}
+                fecha_hasta={props.fechas.fecha_hasta ?? ""}
+              />
             ))}
           </IonCol>
         </IonRow>
@@ -129,12 +117,34 @@ export default function ConsultaOfertasCard() {
   );
 }
 
-export function OfertaCard({ oferta }: { oferta: Oferta }) {
+const StyledDiv = styled.div`
+  border-left: 3pt solid lightgray;
+  transition-duration: 0.25s;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 2pt 2pt 3pt lightgray;
+  }
+`;
+
+export function OfertaCard({
+  oferta,
+  fecha_desde,
+  fecha_hasta,
+  posicionar,
+}: {
+  oferta: any;
+  fecha_desde: string;
+  fecha_hasta: string;
+  posicionar: (latitud: number, longitud: number) => void;
+}) {
+  const router = useIonRouter();
+
   const [isFavorite, setIsFavorite] = useState(false);
 
   const handleGuardarOferta = () => {
     // Aquí puedes agregar la lógica para guardar la oferta
-    console.log('Guardando oferta:', oferta.id);
+    console.log("Guardando oferta:", oferta.id);
   };
 
   const handleEliminarGuardado = () => {
@@ -149,25 +159,28 @@ export function OfertaCard({ oferta }: { oferta: Oferta }) {
         }
       })
       .catch(() => {});
-    console.log('Eliminando oferta guardada:', oferta.id);
+    console.log("Eliminando oferta guardada:", oferta.id);
   };
 
   return (
     <IonCard
-      style={{ borderRadius: "16pt", marginBottom: "24pt", marginTop: 0 }}
+      style={{
+        borderRadius: "16pt",
+        marginBottom: "24pt",
+        marginTop: 0,
+      }}
     >
       <IonRow>
         <IonCol size="auto" style={{ padding: "20pt", paddingRight: 0 }}>
           <img
-            src={oferta.imagen}
-            alt={oferta.titulo}
+            src={`data:image/png;base64, ${oferta.ruta_imagen}`}
+            alt={oferta.nombre_oferta}
             style={{
-              width: "250pt",
+              width: "225pt",
+              aspectRatio: "4/3",
               objectFit: "cover",
-              aspectRatio: "1/1",
               objectPosition: "center center",
-              borderRadius: "8pt",
-              cursor: "pointer"
+              cursor: "pointer",
             }}
           />
         </IonCol>
@@ -175,51 +188,118 @@ export function OfertaCard({ oferta }: { oferta: Oferta }) {
           <IonCardHeader>
             <IonCardTitle
               style={{
-                fontSize: "24pt",
+                fontSize: "18pt",
                 fontWeight: "bold",
                 color: "#F08408",
                 cursor: "pointer",
               }}
             >
-              {oferta.titulo}
+              {oferta.nombre_oferta}
             </IonCardTitle>
             <IonCardSubtitle>
-              <IonButton fill="clear">Villa Carlos Paz</IonButton>&nbsp;
-              <IonButton fill="clear">Mostrar en el mapa</IonButton>
+              <IonButton
+                fill="clear"
+                onClick={() =>
+                  posicionar(
+                    oferta.latitud as number,
+                    oferta.longitud as number
+                  )
+                }
+              >
+                {oferta.localidad}
+              </IonButton>
+              &nbsp;
+              <IonButton
+                fill="clear"
+                onClick={() =>
+                  posicionar(
+                    oferta.latitud as number,
+                    oferta.longitud as number
+                  )
+                }
+              >
+                Mostrar en el mapa
+              </IonButton>
             </IonCardSubtitle>
+            <IonCardSubtitle>{oferta.descripcion}</IonCardSubtitle>
           </IonCardHeader>
           <IonCardContent>
             <div style={{}}>
-              <IonGrid style={{ borderLeft: "3pt solid lightgray" }}>
-                <IonRow>
-                  <IonCol>
-                    <IonRow>Cabaña</IonRow>
-                    <IonRow>1 habitación &bull; 1 living &bull; 1 baño</IonRow>
-                    <IonRow>3 camas (1 doble, 1 single, 1 sofá)</IonRow>
-                  </IonCol>
-                  <IonCol
-                    style={{
-                      display: "flex",
-                      alignContent: "center",
-                      alignItems: "center",
-                      justifyContent: "right",
-                    }}
-                  >
-                    <div>
-                      <IonRow>3 noches, 2 personas</IonRow>
-                      <IonRow style={{ fontSize: "16pt", fontWeight: "bold" }}>
-                        AR$ 300,500
+              <IonGrid title="ver disponibilidad" style={{}}>
+                <StyledDiv
+                  onClick={() =>
+                    router.push(
+                      `/ver-oferta/${oferta.id_oferta}/${fecha_desde}/${fecha_hasta}/${oferta.cantidad_personas}`
+                    )
+                  }
+                >
+                  <IonRow>
+                    <IonCol>
+                      <IonRow>{oferta.subtipo_oferta}</IonRow>
+                      <IonRow>
+                        {oferta.cantidad_baños} <span>&nbsp;baño</span>
+                        {oferta.cantidad_baños > 1 && <span>s</span>}
+                        {oferta.bl_baño_compartido ? (
+                          <span>&nbsp;&bull;baño compartido</span>
+                        ) : null}
+                        {oferta.bl_baño_adaptado ? (
+                          <span>&nbsp;&bull; baño adaptado</span>
+                        ) : null}
                       </IonRow>
-                      <IonRow>+ impuestos y tazas</IonRow>
-                    </div>
-                  </IonCol>
-                </IonRow>
+                      <IonRow>
+                        {oferta.camas_cantidad.reduce(
+                          (acumulador: number, valorActual: any) =>
+                            acumulador + valorActual.cantidad,
+                          0
+                        )}
+                        &nbsp; cama
+                        {oferta.camas_cantidad.reduce(
+                          (acumulador: number, valorActual: any) =>
+                            acumulador + valorActual.cantidad,
+                          0
+                        ) > 1 && "s"}
+                        &nbsp; (
+                        {oferta.camas_cantidad.map(
+                          (cama: any, index: number) =>
+                            `${index != 0 ? ", " : ""}` +
+                            cama.cantidad +
+                            " " +
+                            cama.nombre_cama
+                        )}
+                        )
+                      </IonRow>
+                    </IonCol>
+                    <IonCol
+                      style={{
+                        display: "flex",
+                        alignContent: "center",
+                        alignItems: "center",
+                        justifyContent: "right",
+                      }}
+                    >
+                      <div>
+                        <IonRow>
+                          {oferta.noches_estadia} noche
+                          {oferta.noches_estadia > 1 ? "s" : ""},
+                          {oferta.cantidad_personas} persona
+                          {oferta.cantidad_personas > 1 ? "s" : ""}
+                        </IonRow>
+                        <IonRow
+                          style={{ fontSize: "16pt", fontWeight: "bold" }}
+                        >
+                          AR$ {oferta.precios_desde.replace(".", ",")}
+                        </IonRow>
+                        <IonRow>+ impuestos y tazas</IonRow>
+                      </div>
+                    </IonCol>
+                  </IonRow>
+                </StyledDiv>
               </IonGrid>
             </div>
           </IonCardContent>
         </IonCol>
       </IonRow>
-      <IonButton
+       <IonButton
         style={{
           "--background": "#F08408",
           "--color": "white",
@@ -235,17 +315,17 @@ export function OfertaCard({ oferta }: { oferta: Oferta }) {
       <IonIcon
         icon={bookmark}
         style={{
-          position: 'absolute',
-          right: '20pt',
-          top: '20pt',
-          fontSize: '24px',
-          cursor: 'pointer',
-          color: isFavorite ? '#53992B' : '#999',
+          position: "absolute",
+          right: "20pt",
+          top: "20pt",
+          fontSize: "24px",
+          cursor: "pointer",
+          color: isFavorite ? "#53992B" : "#999",
         }}
         onClick={() => {
           const nuevoEstado = !isFavorite;
           setIsFavorite(nuevoEstado);
-          
+
           if (nuevoEstado) {
             handleGuardarOferta();
           } else {

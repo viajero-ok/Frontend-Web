@@ -48,63 +48,77 @@ import PublicarOfertaPage from "./pages/MyOffers/PublicarOferta/PublicarOfertaPa
 import PagarTestPage from "./pages/PagarTest/PagarTestPage";
 import NewActividad from "./pages/NewActividad/NewActividad";
 import MisReservas from "./pages/MisReservas/MisReservas";
+import VerOfertaPage from "./pages/VerOferta/VerOfertaPage";
+import ReservarOfertaPage from "./pages/ReservarOferta/ReservarOfertaPage";
 import ResultadoReservaView from "./Views/ResultadosReserva/ResultadoReservaView";
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <AuthProvider>
-      <IonReactRouter>
-        <IonRouterOutlet>
-          <Route exact path="/home">
-            <Home />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/home" />
-          </Route>
-          <Route exact path="/my-places" component={MyPlaces} />
-          <Route exact path="/my-places/new-place" component={NewPlace} />
-          <Route exact path="/my-places/edit/:id" component={NewPlace} />
+const App: React.FC = () => {
+  return (
+    <IonApp>
+      <AuthProvider>
+        <IonReactRouter>
+          <IonRouterOutlet>
+            <Route exact path="/home">
+              <Home />
+            </Route>
+            <Route exact path="/">
+              <Redirect to="/home" />
+            </Route>
+            <Route exact path="/my-places" component={MyPlaces} />
+            <Route exact path="/my-places/new-place" component={NewPlace} />
+            <Route exact path="/my-places/edit/:id" component={NewPlace} />
           <Route exact path="/my-offers" component={MyOffers} />
-          <Route exact path="/my-offers/new-offer" component={NewOffer} />
-          <Route exact path="/login" component={LogIn} />
-          <Route exact path="/signup" component={SignUp} />
-          <Route exact path="/signup/complete" component={SignupComplete} />
-          <Route
-            exact
-            path="/signup/complete/prestador"
-            component={SignupPrestador}
-          />
-          <Route
-            exact
-            path="/signup/complete/turista"
-            component={SignupTurista}
-          />
-          <Route exact path="/map"></Route>
-          <Route
-            exact
-            path="/my-offers/alojamiento/en-habitaciones/edit/:id"
-            component={NewAlojamientoEnHabitaciones}
-          />
-          <Route exact path="/itinerary" component={ItineraryView} />
-          <Route
-            exact
-            path="/my-offers/actividad/edit/:id"
-            component={NewActividad}
-          />
-          <Route
-            exact
-            path="/my-offers/publicar/:id"
-            component={PublicarOfertaPage}
-          />
-          <Route exact path="/pago-test" component={PagarTestPage} />
-          <Route exact path="/mis-reservas" component={MisReservas} />
-          <Route exact path="/resultado-reserva" component={ResultadoReservaView} />
+            <Route exact path="/my-offers/new-offer" component={NewOffer} />
+            <Route exact path="/login" component={LogIn} />
+            <Route exact path="/signup" component={SignUp} />
+            <Route exact path="/signup/complete" component={SignupComplete} />
+            <Route
+              exact
+              path="/signup/complete/prestador"
+              component={SignupPrestador}
+            />
+            <Route
+              exact
+              path="/signup/complete/turista"
+              component={SignupTurista}
+            />
+            <Route exact path="/map"></Route>
+            <Route
+              exact
+              path="/my-offers/alojamiento/en-habitaciones/edit/:id"
+              component={NewAlojamientoEnHabitaciones}
+            />
+            <Route
+              exact
+              path="/my-offers/actividad/edit/:id"
+              component={NewActividad}
+            />
+            <Route
+              exact
+              path="/my-offers/publicar/:id"
+              component={PublicarOfertaPage}
+            />
+            <Route exact path="/pago/:id" component={PagarTestPage} />
+            <Route exact path="/mis-reservas" component={MisReservas} />
+            <Route
+              exact
+              path="/ver-oferta/:id/:fecha_desde/:fecha_hasta/:cantidad_personas"
+              component={VerOfertaPage}
+            />
+            <Route
+              exact
+              path="/oferta/reservar/:id/:id_detalle/:fecha_desde/:fecha_hasta/:cantidad_personas"
+              component={ReservarOfertaPage}
+            />
+            <Route exact path="/resultado-reserva" component={ResultadoReservaView} />
+            <Route exact path="/itinerario" component={ItineraryView} />
         </IonRouterOutlet>
-      </IonReactRouter>
-    </AuthProvider>
-  </IonApp>
-);
+        </IonReactRouter>
+      </AuthProvider>
+    </IonApp>
+  );
+};
 
 export default App;

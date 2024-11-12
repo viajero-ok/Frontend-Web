@@ -37,3 +37,12 @@ export const eliminarTarifa = async (idTarifa: number) =>
   await AUTH_API.delete(
     `/publicaciones/alojamientos/eliminar-tarifa/${idTarifa}`
   );
+
+export const publicarAlojamiento = async (idOferta: string) =>
+  await AUTH_API.post(`/publicaciones/alojamientos/publicar-alojamiento/${idOferta}
+`);
+
+export const obtenerDatosRegistradosPublicacion = async (idOferta: string) =>
+  await AUTH_API.get(
+    `/publicaciones/alojamientos/obtener-datos-registrados-tarifa/${idOferta}`
+  );

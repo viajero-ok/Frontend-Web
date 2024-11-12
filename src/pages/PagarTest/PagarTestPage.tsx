@@ -1,6 +1,6 @@
 import { IonContent, IonPage } from "@ionic/react";
 import { useParams } from "react-router";
-import Checkout from "./Checkout";
+import PagoView from "../../Views/PagoView/PagoView";
 
 const PagarTestPage: React.FC = () => {
   const params: any = useParams();
@@ -8,8 +8,7 @@ const PagarTestPage: React.FC = () => {
   return (
     <IonPage>
       <IonContent>
-        <h1>Hello, World!</h1>
-        <Checkout />
+        <PagoView />
       </IonContent>
     </IonPage>
   );

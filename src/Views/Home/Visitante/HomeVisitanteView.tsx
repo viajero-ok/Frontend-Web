@@ -12,10 +12,26 @@ interface FormSchema {
   viajeros: string;
 }
 
+interface Oferta {
+  id: number;
+  titulo: string;
+  descripcion: string;
+  precio: number;
+  fecha: string;
+  tipo: "alojamiento" | "actividad" | "evento";
+  imagen: string;
+}
+
+
 export default function HomeVisitanteView() {
-  const [ofertas, setOfertas] = useState<any[]>([]);
   const [openToast, setOpenToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
+  const [fechas, setFechas] = useState<{
+    fecha_desde: string | null;
+    fecha_hasta: string | null;
+  }>({ fecha_desde: null, fecha_hasta: null });
+  const [personas, setPersonas] = useState<number | null>(null);
+  const [ofertas, setOfertas] = useState<Oferta[]>([]);
 
   const initialSchema: FormSchema = {
     destino: "",
@@ -35,9 +51,9 @@ export default function HomeVisitanteView() {
   return (
     <>
       <FormProvider schema={initialSchema}>
-        <HomeVisitanteForm />
+        <HomeVisitanteForm setFechas={setFechas} setPersonas={setPersonas} setOfertas={setOfertas} />
       </FormProvider>
-      <ConsultaOfertasCard />
+      <ConsultaOfertasCard fechas={fechas} personas={personas} ofertas={ofertas} />
       <IonToast
         isOpen={openToast}
         message={toastMessage}

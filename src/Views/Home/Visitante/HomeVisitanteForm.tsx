@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   IonButton,
   IonCol,
@@ -8,37 +7,80 @@ import {
   IonInput,
   IonItem,
   IonList,
-  IonMenu,
-  IonMenuToggle,
   IonPopover,
   IonRow,
-  IonSelect,
-  IonSelectOption,
-  IonTitle,
-  IonToast,
 } from "@ionic/react";
 import {
-  alertCircleOutline,
-  bed,
-  bedOutline,
   calendarOutline,
-  colorFill,
   navigateOutline,
-  peopleOutline,
   personOutline,
-  pin,
-  pinOutline,
 } from "ionicons/icons";
-import Field from "../../../components/Field/Field";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "../../../hooks/UseForm/FormProvider";
-import { Validator as v } from "../../../hooks/UseForm/Validator/Validator";
+import CalendarPicker from "../../MyOffers/PublicarOferta/CalendarPicker";
+import { consultarOfertasTurista } from "../../../App/Ofertas/Ofertas";
 
-export default function HomeVisitanteForm() {
+type THomeVisitanteForm = {
+  setFechas: Dispatch<
+    SetStateAction<{ fecha_desde: string | null; fecha_hasta: string | null }>
+  >;
+  setPersonas: Dispatch<SetStateAction<number | null>>;
+  setOfertas: Dispatch<SetStateAction<any[]>>;
+};
+export default function HomeVisitanteForm(props: THomeVisitanteForm) {
   const [openToast, setOpenToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
   const [openPopover, setOpenPopover] = useState<boolean>(false);
+  const [fechas, setFechas] = useState<{
+    fecha_desde: string | null;
+    fecha_hasta: string | null;
+  }>({ fecha_desde: null, fecha_hasta: null });
+  const [personas, setPersonas] = useState<number | null>(1);
 
   const form = useForm();
+
+  useEffect(() => {
+    if (!fechas) return;
+    props.setFechas(fechas);
+  }, [fechas]);
+
+  useEffect(() => {
+    if (!personas) return;
+    props.setPersonas(personas);
+  }, [personas]);
+
+  // pagina: number;
+  // limite: number;
+  // id_tipo_oferta: number;
+  // id_sub_tipo_oferta?: number;
+  // id_localidad?: number;
+  // min_monto?: number;
+  // max_monto?: number;
+  // latitud?: string;
+  // longitud?: string;
+  // radio?: number;
+  // fecha_desde: Date;
+  // fecha_hasta: Date;
+  // cantidad_personas: number;
+  const handleBuscar = () => {
+    if (
+      fechas.fecha_desde == null ||
+      fechas.fecha_hasta == null ||
+      personas == null
+    )
+      return;
+    consultarOfertasTurista({
+      pagina: 1,
+      limite: 10,
+      id_tipo_oferta: 1,
+      fecha_desde: fechas.fecha_desde,
+      fecha_hasta: fechas.fecha_hasta,
+      cantidad_personas: personas,
+    }).then((response: any) => {
+      console.log("ofertas: ", response);
+      props.setOfertas(response.data);
+    });
+  };
 
   return (
     <div
@@ -73,7 +115,7 @@ export default function HomeVisitanteForm() {
               flexDirection: "row",
               width: "100%",
               backgroundColor: "white",
-              boxShadow: "0px 3px 11px 1px rgba(161,161,161,1)"
+              boxShadow: "0px 3px 11px 1px rgba(161,161,161,1)",
             }}
           >
             <IonCol
@@ -107,7 +149,36 @@ export default function HomeVisitanteForm() {
                 style={{ fontSize: "24pt", color: "gray" }}
               />
               &nbsp;
-              <IonInput placeholder="Fecha de llegada - Fecha de salida" />
+              <IonInput
+                id="click-trigger"
+                placeholder="Fecha de llegada - Fecha de salida"
+                value={
+                  fechas.fecha_desde != null && fechas.fecha_hasta != null
+                    ? `Del ${fechas.fecha_desde.split("T")[0]} al ${
+                        fechas.fecha_hasta.split("T")[0]
+                      }`
+                    : ""
+                }
+              />
+              <IonPopover
+                trigger="click-trigger"
+                triggerAction="click"
+                style={{
+                  "--min-width": "fit-content",
+                }}
+              >
+                <IonContent
+                  style={{
+                    paddingTop: "12pt",
+                    display: "flex",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <CalendarPicker setFechas={setFechas} />
+                </IonContent>
+              </IonPopover>
             </IonCol>
             <IonCol
               style={{
@@ -137,7 +208,10 @@ export default function HomeVisitanteForm() {
                   icon={personOutline}
                   style={{ fontSize: "24pt", color: "gray" }}
                 />
-                &nbsp;2 adultos, 2 niños, 2 habitaciones
+                &nbsp;
+                {personas != null
+                  ? personas + ` persona${personas > 1 ? "s" : ""}`
+                  : "1 persona"}
               </span>
               <IonPopover
                 trigger="popover"
@@ -154,29 +228,11 @@ export default function HomeVisitanteForm() {
                     &nbsp;&nbsp;
                     <IonInput
                       type="number"
-                      placeholder="Adultos"
+                      value={personas}
+                      min={1}
+                      placeholder="Personas"
                       style={{ fontSize: "16pt" }}
-                    />
-                  </IonItem>
-                  <IonItem style={{ padding: "2pt" }}>
-                    <IonIcon
-                      icon={peopleOutline}
-                      style={{ fontSize: "24pt" }}
-                    />
-                    &nbsp;&nbsp;
-                    <IonInput
-                      type="number"
-                      placeholder="Niños"
-                      style={{ fontSize: "16pt" }}
-                    />
-                  </IonItem>
-                  <IonItem style={{ padding: "2pt" }}>
-                    <IonIcon icon={bedOutline} style={{ fontSize: "24pt" }} />
-                    &nbsp;&nbsp;
-                    <IonInput
-                      type="number"
-                      placeholder="Habitaciones"
-                      style={{ fontSize: "16pt" }}
+                      onIonChange={(e) => setPersonas(e.target.value as number)}
                     />
                   </IonItem>
                 </IonList>
@@ -194,75 +250,13 @@ export default function HomeVisitanteForm() {
                   height: "100%",
                   "--box-shadow": 0,
                 }}
+                onClick={() => handleBuscar()}
               >
                 Buscar
               </IonButton>
             </IonCol>
           </IonRow>
         </IonGrid>
-        {/* <IonList
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          margin: "0pt",
-          marginTop: "0pt",
-          width: "50%",
-          left: "50%",
-          paddingRight: "12pt",
-        }}
-      >
-        <Field
-          name="destino"
-          label="Destino"
-          value={form?.schema?.destino}
-          form={form}
-          valid={v().required("El destino es obligatorio")}
-        />
-        <Field
-          name="comienzoViaje"
-          label="Comienzo del viaje"
-          value={form?.schema?.comienzoViaje}
-          form={form}
-        />
-        <Field
-          name="finViaje"
-          label="Fin del viaje"
-          value={form?.schema?.finViaje}
-          form={form}
-        />
-        <Field
-          name="viajeros"
-          label="Viajeros"
-          value={form?.schema?.viajeros}
-          form={form}
-        />
-      </IonList>
-      <IonButton
-        expand="block"
-        style={{
-          "--background": "#F08408",
-          display: "flex",
-          flexDirection: "column",
-          margin: "13pt",
-          marginTop: "0pt",
-          marginLeft: "95pt",
-          marginRight: "95pt",
-          paddingLeft: "12pt",
-          paddingRight: "12pt",
-        }}
-      >
-        Buscar
-      </IonButton>
-      <IonToast
-        isOpen={openToast}
-        message={toastMessage}
-        duration={5000}
-        icon={alertCircleOutline}
-        onDidDismiss={() => {
-          setOpenToast(false);
-          setToastMessage("");
-        }}
-      /> */}
       </div>
     </div>
   );

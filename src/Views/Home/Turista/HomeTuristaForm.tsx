@@ -73,7 +73,7 @@ export default function HomeVisitanteForm() {
               flexDirection: "row",
               width: "100%",
               backgroundColor: "white",
-              boxShadow: "0px 3px 11px 1px rgba(161,161,161,1)"
+              boxShadow: "0px 3px 11px 1px rgba(161,161,161,1)",
             }}
           >
             <IonCol
@@ -107,7 +107,10 @@ export default function HomeVisitanteForm() {
                 style={{ fontSize: "24pt", color: "gray" }}
               />
               &nbsp;
-              <IonInput placeholder="Fecha de llegada - Fecha de salida" />
+              <IonInput id="click-trigger" placeholder="Fecha de llegada - Fecha de salida" />
+              <IonPopover trigger="click-trigger" triggerAction="click">
+                <IonContent class="ion-padding">Hello World!</IonContent>
+              </IonPopover>
             </IonCol>
             <IonCol
               style={{

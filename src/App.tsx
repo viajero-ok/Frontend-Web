@@ -48,6 +48,7 @@ import PagarTestPage from "./pages/PagarTest/PagarTestPage";
 import NewActividad from "./pages/NewActividad/NewActividad";
 import MisReservas from "./pages/MisReservas/MisReservas";
 import VerOfertaPage from "./pages/VerOferta/VerOfertaPage";
+import ReservarOfertaPage from "./pages/ReservarOferta/ReservarOfertaPage";
 
 setupIonicReact();
 
@@ -96,9 +97,18 @@ const App: React.FC = () => {
               path="/my-offers/publicar/:id"
               component={PublicarOfertaPage}
             />
-            <Route exact path="/pago-test" component={PagarTestPage} />
+            <Route exact path="/pago/:id" component={PagarTestPage} />
             <Route exact path="/mis-reservas" component={MisReservas} />
-            <Route exact path="/ver-oferta/:id" component={VerOfertaPage} />
+            <Route
+              exact
+              path="/ver-oferta/:id/:fecha_desde/:fecha_hasta/:cantidad_personas"
+              component={VerOfertaPage}
+            />
+            <Route
+              exact
+              path="/oferta/reservar/:id/:id_detalle/:fecha_desde/:fecha_hasta/:cantidad_personas"
+              component={ReservarOfertaPage}
+            />
           </IonRouterOutlet>
         </IonReactRouter>
       </AuthProvider>

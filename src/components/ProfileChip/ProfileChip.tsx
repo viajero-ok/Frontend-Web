@@ -28,8 +28,8 @@ export default function ProfileChip(props: any) {
   };
 
   const handleCambiarPerfil = () => {
-    if (!router) return;
     if (!auth) return;
+    console.log("llego")
     auth.cambiarPerfil();
   };
 

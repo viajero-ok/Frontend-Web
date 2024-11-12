@@ -4,20 +4,33 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCheckbox,
-  IonHeader,
-  IonInput,
   IonItem,
   IonList,
-  IonListHeader,
   IonSelect,
   IonSelectOption,
   IonTitle,
 } from "@ionic/react";
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
+import Check from "../../components/Check/Check";
 
-export default function FilterList() {
-  const [states, setStates] = useState<any[]>([{}, {}]);
-  const [selectedStates, setSelectedStates] = useState<number[]>([]);
+type TFilterListProps = {
+  estados: any[];
+  clientes: any[];
+  setSelectedEstados: Dispatch<SetStateAction<string[]>>;
+};
+export default function FilterList(props: TFilterListProps) {
+  const handleEstadoChange = (k: string, v: boolean) => {
+    if (!v) {
+      props.setSelectedEstados((prev: string[]) => [
+        ...prev.filter((estado: string) => estado != k),
+      ]);
+      return;
+    }
+    props.setSelectedEstados((prev: string[]) => {
+      if (prev.includes(k)) return [...prev];
+      return [...prev, k];
+    });
+  };
 
   return (
     <IonCard style={{ width: "200pt" }}>
@@ -28,19 +41,31 @@ export default function FilterList() {
         <IonList>
           <IonTitle>Estados</IonTitle>
 
-          {states.map((tipologia: any, index: number) => (
-            <IonItem key={index}>
-              <IonCheckbox labelPlacement="start">Estado {index}</IonCheckbox>
+          {props.estados.map((estado: any, index: number) => (
+            <IonItem key={estado.id_estado}>
+              <IonCheckbox
+                labelPlacement="start"
+                onIonChange={(e) =>
+                  handleEstadoChange(estado.nombre_estado, e.target.checked)
+                }
+              >
+                {estado.nombre_estado}
+              </IonCheckbox>
             </IonItem>
           ))}
         </IonList>
         <IonList>
           <IonTitle>Cliente</IonTitle>
           <IonItem>
-            <IonSelect>
-              <IonSelectOption>Romero Carranza Emiliano</IonSelectOption>
-              <IonSelectOption>Federico Cañete</IonSelectOption>
-              <IonSelectOption>Valentina Cudos Nóbile</IonSelectOption>
+            <IonSelect disabled>
+              {props.clientes.map((cliente: any) => (
+                <IonSelectOption
+                  key={cliente.id_turista}
+                  value={cliente.id_turista}
+                >
+                  {cliente.nombre_turista + " " + cliente.apellido_turista}
+                </IonSelectOption>
+              ))}
             </IonSelect>
           </IonItem>
         </IonList>

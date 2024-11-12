@@ -6,16 +6,20 @@ import {
   IonItem,
   IonList,
 } from "@ionic/react";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
-export default function TipologiaList() {
-  const [tipologias, setTipologias] = useState<any[]>([{}, {}]);
+type TTipologiaListProps = {
+  detalles: any[];
+  setSelected: Dispatch<SetStateAction<string | null>>;
+};
+export default function TipologiaList(props: TTipologiaListProps) {
   const [selectedTipologia, setSelectedTipologia] = useState<number | null>(
     null
   );
 
-  const handleSelect = (id: number) => {
-    setSelectedTipologia(id);
+  const handleSelect = (id: string) => {
+    console.log("id: ", id);
+    props.setSelected(id);
   };
 
   return (
@@ -25,7 +29,7 @@ export default function TipologiaList() {
       </IonCardHeader>
       <IonCardContent>
         <IonList>
-          {tipologias.map((tipologia: any, index: number) => (
+          {props.detalles.map((detalle: any, index: number) => (
             <IonItem
               key={index}
               button
@@ -33,9 +37,9 @@ export default function TipologiaList() {
                 fontWeight: index == selectedTipologia ? "bold" : "normal",
                 color: index == selectedTipologia ? "#F08408" : "black",
               }}
-              onClick={() => handleSelect(index)}
+              onClick={() => handleSelect(detalle.id_tipo_detalle)}
             >
-              Cama doble premium {index}
+              {detalle.nombre_tipo_detalle}
             </IonItem>
           ))}
         </IonList>

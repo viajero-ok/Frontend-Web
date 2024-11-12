@@ -13,3 +13,6 @@ type TBodyReservarOferta = {
 };
 export const reservarOferta = async (body: TBodyReservarOferta) =>
   await AUTH_API.post(`/reservas/reservar-alojamiento`, body);
+
+export const obtenerReservasPorPrestador = async () =>
+  await AUTH_API.get(`/reservas/obtener-reservas-por-prestador`);

@@ -299,19 +299,6 @@ export function OfertaCard({
           </IonCardContent>
         </IonCol>
       </IonRow>
-       <IonButton
-        style={{
-          "--background": "#F08408",
-          "--color": "white",
-          position: "absolute",
-          float: "right",
-          right: "150pt",
-          bottom: "20pt",
-        }}
-      >
-        Ver disponibilidad&nbsp;
-        <IonIcon icon={chevronForward} />
-      </IonButton>
       <IonIcon
         icon={bookmark}
         style={{

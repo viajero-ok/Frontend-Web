@@ -29,7 +29,7 @@ import {
 } from "date-fns";
 import { es } from "date-fns/locale";
 import { chevronBack, chevronForward } from "ionicons/icons";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Reservas from "../../Views/NewAlojamiento/EnHabitaciones/Forms/AlojamientoForm/Reservas";
 import { HookOverlayOptions } from "@ionic/react/dist/types/hooks/HookOverlayOptions";
 
@@ -71,14 +71,14 @@ const StartLane = (
     options?: Omit<PopoverOptions, "component" | "componentProps"> &
       HookOverlayOptions
   ) => void,
-  state: "ACTIVA" | "RESERVADA"
+  state: "Pendiente de pago" | "Reservada"
 ) => (
   <div
     style={{
       height: "12pt",
       width: "82%",
       borderRadius: "8pt 0 0 8pt",
-      backgroundColor: state == "ACTIVA" ? "#38C606" : "#F08408",
+      backgroundColor: state == "Reservada" ? "#38C606" : "#F08408",
       position: "absolute",
       right: "-2pt",
       top: 20 + (lane % 2) * 24 + "pt",
@@ -100,13 +100,13 @@ const CenterLane = (
     options?: Omit<PopoverOptions, "component" | "componentProps"> &
       HookOverlayOptions
   ) => void,
-  state: "ACTIVA" | "RESERVADA"
+  state: "Pendiente de pago" | "Reservada"
 ) => (
   <div
     style={{
       height: "12pt",
       width: "104%",
-      backgroundColor: state == "ACTIVA" ? "#38C606" : "#F08408",
+      backgroundColor: state == "Reservada" ? "#38C606" : "#F08408",
       position: "absolute",
       left: "-2pt",
       top: 20 + (lane % 2) * 24 + "pt",
@@ -129,14 +129,14 @@ const EndLane = (
     options?: Omit<PopoverOptions, "component" | "componentProps"> &
       HookOverlayOptions
   ) => void,
-  state: "ACTIVA" | "RESERVADA"
+  state: "Pendiente de pago" | "Reservada"
 ) => (
   <div
     style={{
       height: "12pt",
       width: "80%",
       borderRadius: "0 8pt 8pt 0",
-      backgroundColor: state == "ACTIVA" ? "#38C606" : "#F08408",
+      backgroundColor: state == "Reservada" ? "#38C606" : "#F08408",
       position: "absolute",
       left: 0,
       top: 20 + (lane % 2) * 24 + "pt",
@@ -156,7 +156,7 @@ const drawLane = (
   reserva: {
     fecha_desde: Date;
     fecha_hasta: Date;
-    state: "ACTIVA" | "RESERVADA";
+    state: "Pendiente de pago" | "Reservada";
   },
   day: Date,
   lane: number,
@@ -177,7 +177,7 @@ const drawLanes = (
   reservations: {
     fecha_desde: Date;
     fecha_hasta: Date;
-    state: "ACTIVA" | "RESERVADA";
+    state: "Pendiente de pago" | "Reservada";
   }[],
   present: (
     options?: Omit<PopoverOptions, "component" | "componentProps"> &
@@ -197,10 +197,10 @@ const Popover = () => (
   <IonContent className="ion-padding">Hello World!</IonContent>
 );
 
-// type TCalendar = {
-//   events: TEvent[];
-// };
-export default function Calendar() {
+type TCalendarProps = {
+  reservas: any[];
+};
+export default function Calendar(props: TCalendarProps) {
   const [present, dismiss] = useIonPopover(Popover, {
     onDismiss: (data: any, role: string) => dismiss(data, role),
   });
@@ -238,6 +238,7 @@ export default function Calendar() {
 
   const lunes = days.filter((day: Date) => day.getDay() == 1);
   const martes = days.filter((day: Date) => day.getDay() == 2);
+
   const miercoles = days.filter((day: Date) => day.getDay() == 3);
   const jueves = days.filter((day: Date) => day.getDay() == 4);
   const viernes = days.filter((day: Date) => day.getDay() == 5);
@@ -268,6 +269,10 @@ export default function Calendar() {
         : addMonths(prevDate, -1);
     }
   };
+
+  useEffect(() => {
+    console.log("reservas filtradas: ", props.reservas);
+  }, [props.reservas]);
 
   return (
     <IonCard style={{ display: "inline-block" }}>
@@ -329,7 +334,14 @@ export default function Calendar() {
                 </IonButton>
               </IonCol>
               <IonCol>
-                <IonRow style={{ display: "flex", alignContent: "center", alignItems: "center", justifyContent: "right" }}>
+                <IonRow
+                  style={{
+                    display: "flex",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "right",
+                  }}
+                >
                   <div
                     style={{
                       width: "25pt",
@@ -338,9 +350,16 @@ export default function Calendar() {
                       backgroundColor: "#38C606",
                     }}
                   ></div>
-                  &nbsp;<span style={{ fontSize: "9pt" }}>ACTIVA</span>
+                  &nbsp;<span style={{ fontSize: "9pt" }}>Reservada</span>
                 </IonRow>
-                <IonRow style={{ display: "flex", alignContent: "center", alignItems: "center", justifyContent: "right" }}>
+                <IonRow
+                  style={{
+                    display: "flex",
+                    alignContent: "center",
+                    alignItems: "center",
+                    justifyContent: "right",
+                  }}
+                >
                   <div
                     style={{
                       width: "25pt",
@@ -349,7 +368,8 @@ export default function Calendar() {
                       backgroundColor: "#F08408",
                     }}
                   ></div>
-                  &nbsp;<span style={{ fontSize: "9pt" }}>RESERVADA</span>
+                  &nbsp;
+                  <span style={{ fontSize: "9pt" }}>Pendiente de pago</span>
                 </IonRow>
               </IonCol>
             </IonRow>
@@ -405,9 +425,13 @@ export default function Calendar() {
                     </div>
                     {drawLanes(
                       day,
-                      MOCK_RESERVAS.map((reserva: any) => ({
-                        fecha_desde: new Date(reserva.fecha_desde),
-                        fecha_hasta: new Date(reserva.fecha_hasta),
+                      props.reservas.map((reserva: any) => ({
+                        fecha_desde: new Date(
+                          reserva.fecha_desde + "T00:00:00"
+                        ),
+                        fecha_hasta: new Date(
+                          reserva.fecha_hasta + "T00:00:00"
+                        ),
                         state: reserva.state,
                       })),
                       present
@@ -445,9 +469,13 @@ export default function Calendar() {
                     </div>
                     {drawLanes(
                       day,
-                      MOCK_RESERVAS.map((reserva: any) => ({
-                        fecha_desde: new Date(reserva.fecha_desde),
-                        fecha_hasta: new Date(reserva.fecha_hasta),
+                      props.reservas.map((reserva: any) => ({
+                        fecha_desde: new Date(
+                          reserva.fecha_desde + "T00:00:00"
+                        ),
+                        fecha_hasta: new Date(
+                          reserva.fecha_hasta + "T00:00:00"
+                        ),
                         state: reserva.state,
                       })),
                       present
@@ -485,9 +513,13 @@ export default function Calendar() {
                     </div>
                     {drawLanes(
                       day,
-                      MOCK_RESERVAS.map((reserva: any) => ({
-                        fecha_desde: new Date(reserva.fecha_desde),
-                        fecha_hasta: new Date(reserva.fecha_hasta),
+                      props.reservas.map((reserva: any) => ({
+                        fecha_desde: new Date(
+                          reserva.fecha_desde + "T00:00:00"
+                        ),
+                        fecha_hasta: new Date(
+                          reserva.fecha_hasta + "T00:00:00"
+                        ),
                         state: reserva.state,
                       })),
                       present
@@ -525,9 +557,13 @@ export default function Calendar() {
                     </div>
                     {drawLanes(
                       day,
-                      MOCK_RESERVAS.map((reserva: any) => ({
-                        fecha_desde: new Date(reserva.fecha_desde),
-                        fecha_hasta: new Date(reserva.fecha_hasta),
+                      props.reservas.map((reserva: any) => ({
+                        fecha_desde: new Date(
+                          reserva.fecha_desde + "T00:00:00"
+                        ),
+                        fecha_hasta: new Date(
+                          reserva.fecha_hasta + "T00:00:00"
+                        ),
                         state: reserva.state,
                       })),
                       present
@@ -565,9 +601,13 @@ export default function Calendar() {
                     </div>
                     {drawLanes(
                       day,
-                      MOCK_RESERVAS.map((reserva: any) => ({
-                        fecha_desde: new Date(reserva.fecha_desde),
-                        fecha_hasta: new Date(reserva.fecha_hasta),
+                      props.reservas.map((reserva: any) => ({
+                        fecha_desde: new Date(
+                          reserva.fecha_desde + "T00:00:00"
+                        ),
+                        fecha_hasta: new Date(
+                          reserva.fecha_hasta + "T00:00:00"
+                        ),
                         state: reserva.state,
                       })),
                       present
@@ -605,9 +645,13 @@ export default function Calendar() {
                     </div>
                     {drawLanes(
                       day,
-                      MOCK_RESERVAS.map((reserva: any) => ({
-                        fecha_desde: new Date(reserva.fecha_desde),
-                        fecha_hasta: new Date(reserva.fecha_hasta),
+                      props.reservas.map((reserva: any) => ({
+                        fecha_desde: new Date(
+                          reserva.fecha_desde + "T00:00:00"
+                        ),
+                        fecha_hasta: new Date(
+                          reserva.fecha_hasta + "T00:00:00"
+                        ),
                         state: reserva.state,
                       })),
                       present
@@ -645,9 +689,13 @@ export default function Calendar() {
                     </div>
                     {drawLanes(
                       day,
-                      MOCK_RESERVAS.map((reserva: any) => ({
-                        fecha_desde: new Date(reserva.fecha_desde),
-                        fecha_hasta: new Date(reserva.fecha_hasta),
+                      props.reservas.map((reserva: any) => ({
+                        fecha_desde: new Date(
+                          reserva.fecha_desde + "T00:00:00"
+                        ),
+                        fecha_hasta: new Date(
+                          reserva.fecha_hasta + "T00:00:00"
+                        ),
                         state: reserva.state,
                       })),
                       present

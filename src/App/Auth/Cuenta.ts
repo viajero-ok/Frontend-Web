@@ -31,7 +31,7 @@ type TBodyIniciarSesion = {
 };
 type TIniciarSesion = (body: TBodyIniciarSesion) => Promise<any>;
 export const iniciarSesion = async (body: TBodyIniciarSesion) =>
-  await API.post(`/auth/login`, body);
+  await API.post(`/api/auth/login`, body);
 
 export const getDatosUsuario = async () =>
-  await AUTH_API.get(`/auth/datos-usuario`);
+  await AUTH_API.get(`/api/auth/datos-usuario`);

@@ -27,7 +27,6 @@ API.interceptors.response.use(
 	(response) => {
 		// Respuesta con status == 2xx
 		if (response.data.token) storeJWT(response.data.token);
-		console.log(response.data);
 		return response;
 	},
 	(error) => {

@@ -49,7 +49,7 @@ export default function DialogTarifa(props: TDialogTarifa) {
     setDisable(true);
     obtenerDatosRegistroPublicacion(props.idOferta)
       .then((response: any) => {
-        setTipologias(response.data.tipos_detalle);
+        setTipologias(response.data.tipos_detalles);
         setDisable(false);
       })
       .catch(() => {

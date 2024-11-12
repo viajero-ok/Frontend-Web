@@ -1,7 +1,7 @@
 import axios from "axios";
 import { readJWT, storeJWT } from "./Token";
 
-const apiPath = import.meta.env.VITE_API_PATH;
+const apiPath = 'https://dev.viajeroturismo.com.ar/api';
 
 const API = axios.create({
 	baseURL: apiPath,

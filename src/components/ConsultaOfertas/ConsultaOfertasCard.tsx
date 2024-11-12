@@ -8,6 +8,7 @@ import {
   IonCol,
   IonGrid,
   IonIcon,
+  IonIcon,
   IonLabel,
   IonRow,
   IonSegment,

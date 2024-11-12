@@ -10,6 +10,7 @@ import {
   IonIcon,
   IonRow,
   IonTitle,
+  IonToast,
 } from "@ionic/react";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -32,6 +33,8 @@ export default function PublicarOfertaView(props: TPublicarOfertaView) {
   const [openDialogEditar, setOpenDialogEditar] = useState<boolean>(false);
   const [selectedTarifa, setSelectedTarifa] = useState<any>(null);
   const modal = useRef<HTMLIonModalElement>(null);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [showToast, setShowToast] = useState<boolean>(false);
 
   useEffect(() => {
     obtenerTarifas(props.idOferta)
@@ -67,6 +70,8 @@ export default function PublicarOfertaView(props: TPublicarOfertaView) {
         console.log("publicada");
       })
       .catch((error) => {
+        setErrorMessage(error.response.data.message);
+        setShowToast(true);
         console.log("error pub oferta: ", error);
       });
   };
@@ -166,6 +171,16 @@ export default function PublicarOfertaView(props: TPublicarOfertaView) {
             idOferta={props.idOferta}
           />
         </IonRow>
+        <IonToast
+        isOpen={showToast}
+        onDidDismiss={() => setShowToast(false)}
+        message={errorMessage}
+        duration={5000}
+        color="danger"
+        style={{
+          fontSize: "12pt"
+        }}
+      />
       </IonGrid>
     </IonContent>
   );

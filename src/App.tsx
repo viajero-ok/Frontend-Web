@@ -113,7 +113,7 @@ const App: React.FC = () => {
               component={ReservarOfertaPage}
             />
             <Route exact path="/resultado-reserva" component={ResultadoReservaView} />
-            <Route exact path="/itinerario" component={ItineraryView} />
+            <Route exact path="/itinerary" component={ItineraryView} />
         </IonRouterOutlet>
         </IonReactRouter>
       </AuthProvider>

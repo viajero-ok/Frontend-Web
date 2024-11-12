@@ -52,7 +52,7 @@ export default function NumberField(props: TNumericField) {
         .replaceAll(".", "");
       const reversed = parsedValue.split("").reverse().join("");
       const wholeChunks = reversed.substring(2).match(/.{1,3}/g) ?? [];
-      const result = wholeChunks.map((chunk) => chunk.length).reverse();
+      const result = wholeChunks.map((chunk) => chunk.length);
 
       const resultArrayWithCommas: any = [];
       result.forEach((digits: number, index: number) => {
@@ -117,6 +117,7 @@ export default function NumberField(props: TNumericField) {
             flexDirection: "row",
             textAlign: "center",
             width: "100pt",
+            borderBottom: "1pt solid #F08408",
           }}
           ref={maskedInputRef}
           onIonInput={(e: any) => handleChange(e)}

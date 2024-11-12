@@ -23,6 +23,7 @@ interface OfertaCardProps {
   setOfertas: React.Dispatch<React.SetStateAction<any[]>>;
   setOfertasGuardadas?: React.Dispatch<React.SetStateAction<any[]>>;
   isGuardada?: boolean;
+  savedOfferId?: number;
 }
 
 const OfertaGuardadaCard: React.FC<OfertaCardProps> = ({
@@ -31,14 +32,18 @@ const OfertaGuardadaCard: React.FC<OfertaCardProps> = ({
   id,
   setOfertas,
   setOfertasGuardadas,
-  isGuardada = true
+  isGuardada = true,
 }) => {
   const [isFavorite, setIsFavorite] = useState(isGuardada);
   const [openConfirmDelete, setOpenConfirmDelete] = useState<boolean>(false);
 
   const handleGuardarOferta = () => {
-    console.log("Guardando oferta:", id);
-    // Implementa la lógica para guardar la oferta aquí
+    if (id) {
+      console.log("Guardando oferta:", id);
+      // Implementa la lógica para guardar la oferta aquí
+    } else {
+      console.error("ID de oferta no definido");
+    }
   };
 
   const handleEliminarGuardado = () => {

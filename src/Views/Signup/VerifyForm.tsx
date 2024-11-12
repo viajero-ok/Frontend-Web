@@ -6,9 +6,11 @@ import {
   IonImg,
   IonInput,
   IonItem,
+  IonLabel,
   IonList,
   IonRow,
   IonText,
+  IonTitle,
   IonToast,
   useIonRouter,
 } from "@ionic/react";
@@ -64,7 +66,22 @@ export default function VerifyForm(props: any) {
           }}
         >
           <IonImg src="icon.png" style={{ width: "100pt" }} />
-          <IonText
+          <IonTitle
+            style={{
+              fontSize: "16pt",
+              fontWeight: "bolder",
+              color: "#F08408",
+              marginTop: "13pt",
+              marginBottom: "13pt",
+              textAlign: "center",
+            }}
+          >
+            Verificá tu cuenta
+            <IonLabel style={{ fontSize: "12pt", fontWeight: "normal", textAlign: "center", color: "gray" }}>
+              <br /> Enviamos un mail al correo ingresado para que puedas validar tu cuenta
+            </IonLabel>
+          </IonTitle>
+          {/* <IonText
             style={{
               display: "flex",
               flexDirection: "row",
@@ -78,7 +95,7 @@ export default function VerifyForm(props: any) {
               Enviamos un mail a viajeroapp2024@gmail.com <br />
               con el código de validación
             </IonText>
-          </div>
+          </div> */}
         </div>
       </IonCardHeader>
       <IonCardContent>

@@ -65,7 +65,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
 					solicita_garantia: false,
 					monto_garantia: 0.0, // float
 					id_tipo_pago_anticipado: 1,
-					porcentaje_pago_anticipado: 0.0, // float
+					porcentaje_pago_anticipado: parseFloat(s.porcentaje_pago_anticipado), // float
 					monto_pago_anticipado: 0.0, // float
 					minimo_dias_estadia: parseInt(s.minimo_dias_estadia),
 				},

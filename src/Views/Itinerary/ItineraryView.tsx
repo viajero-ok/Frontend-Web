@@ -17,7 +17,7 @@ import OfertaReservadaCard from "../../components/OfertaCard/OfertaReservadaCard
 import { obtenerOfertasGuardadas, obtenerOfertasReservadas } from "../../App/Ofertas/Ofertas";
 
 export default function ItineraryView() {
-    const [activeTab, setActiveTab] = useState<'reservados' | 'guardados'>('guardados');
+    const [activeTab, setActiveTab] = useState<'reservados' | 'guardados'>('reservados');
     const [guardados, setGuardados] = useState<any[]>([]);
     const [reservados, setReservados] = useState<any[]>([]);
     const router = useIonRouter();

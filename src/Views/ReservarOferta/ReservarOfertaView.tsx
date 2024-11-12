@@ -11,6 +11,7 @@ import {
   IonIcon,
   IonInput,
   IonRow,
+  useIonRouter
 } from "@ionic/react";
 import { calendar, location, person } from "ionicons/icons";
 import { useMemo, useState } from "react";
@@ -21,6 +22,7 @@ import { reservarOferta } from "../../App/Reservas/Reservas";
 export default function ReservarOfertaView() {
   const [oferta, setOferta] = useState<any | null>(null);
   const params: any = useParams();
+  const router = useIonRouter();
 
   useMemo(() => {
     if (!params.id) return;
@@ -38,7 +40,7 @@ export default function ReservarOfertaView() {
       .then((response: any) => {
         setOferta(response.data);
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   const handleReservar = () => {
@@ -55,8 +57,10 @@ export default function ReservarOfertaView() {
         },
       ],
     })
-      .then((response: any) => {})
-      .catch(() => {});
+      .then((response: any) => { 
+        router.push(`/pago/${response.data.id_reserva}`) 
+      })
+      .catch(() => { });
   };
 
   return (
@@ -79,7 +83,7 @@ export default function ReservarOfertaView() {
           <IonCol>
             <IonCard style={{ padding: "12pt" }}>
               <IonCardHeader>
-                <IonCardTitle>Datos de quien reserva</IonCardTitle>
+                <IonCardTitle style={{ textAlign: "center", fontWeight: "bold", fontSize: "18pt", color: "#f08408" }}>Datos de quien reserva</IonCardTitle>
               </IonCardHeader>
               <IonCardContent>
                 <IonGrid>
@@ -115,7 +119,7 @@ export default function ReservarOfertaView() {
                       "--background": "#F08408",
                       "--color": "white",
                     }}
-                    onClick={() => handleReservar()}
+                    onClick={() => { handleReservar(); }}
                   >
                     Confirmar y pagar
                   </IonButton>
@@ -126,14 +130,14 @@ export default function ReservarOfertaView() {
           <IonCol>
             <IonCard style={{ padding: "12pt" }}>
               <IonCardHeader>
-                <IonCardTitle>Datos de la reserva</IonCardTitle>
+                <IonCardTitle style={{ textAlign: "center", fontWeight: "bold", fontSize: "18pt", color: "#f08408" }}>Datos de la reserva</IonCardTitle>
               </IonCardHeader>
               <IonCardContent>
                 <IonGrid>
                   <IonRow>
                     <IonCol>
                       <IonCardTitle
-                        style={{ fontWeight: "bold", fontSize: "20pt" }}
+                        style={{ fontWeight: "bold", fontSize: "16pt" }}
                       >
                         {oferta && oferta.datos_basicos_oferta.nombre}
                       </IonCardTitle>
@@ -160,7 +164,7 @@ export default function ReservarOfertaView() {
                   <IonRow style={{ marginTop: "12pt" }}>
                     <IonCol>
                       <IonCardTitle
-                        style={{ fontWeight: "bold", fontSize: "20pt" }}
+                        style={{ fontWeight: "bold", fontSize: "16pt" }}
                       >
                         {oferta && oferta.datos_basicos_detalle.tipo_detalle}
                       </IonCardTitle>
@@ -169,111 +173,113 @@ export default function ReservarOfertaView() {
                         printing and typesetting industry. Lorem Ips
                       </IonCardSubtitle>
                     </IonCol>
+
                   </IonRow>
-                  <IonRow
-                    style={{
-                      marginTop: "12pt",
-                      display: "flex",
-                      alignContent: "center",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <IonCardTitle>Detalles</IonCardTitle>
-                  </IonRow>
-                  <IonRow
-                    style={{
-                      display: "flex",
-                      alignContent: "center",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "12pt",
-                      marginTop: "3pt",
-                    }}
-                  >
-                    <IonIcon icon={calendar} />
-                    &nbsp; Del {params.fecha_desde.split("T")[0]} al{" "}
-                    {params.fecha_hasta.split("T")[0]}
-                  </IonRow>
-                  <IonRow
-                    style={{
-                      display: "flex",
-                      alignContent: "center",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "12pt",
-                    }}
-                  >
-                    <IonIcon icon={person} />
-                    &nbsp; {params.cantidad_personas} persona
-                    {params.cantidad_personas > 1 ? "s" : ""}
-                  </IonRow>
-                  <IonRow>
-                    <IonCol
+                  <IonCol>
+                    <IonRow
                       style={{
+                        marginTop: "12pt",
                         display: "flex",
-                        flexDirection: "column",
                         alignContent: "center",
                         alignItems: "center",
                         justifyContent: "center",
                       }}
                     >
-                      <div
+                      <IonCardTitle style={{ textAlign: "center", fontWeight: "bold", fontSize: "18pt", color: "#f08408" }}>Detalles</IonCardTitle>
+                    </IonRow>
+                    <IonRow
+                      style={{
+                        display: "flex",
+                        alignContent: "center",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "12pt",
+                        marginTop: "3pt",
+                      }}
+                    >
+                      <IonIcon icon={calendar} />
+                      &nbsp; Del {params.fecha_desde.split("T")[0]} al{" "}
+                      {params.fecha_hasta.split("T")[0]}
+                    </IonRow>
+                    <IonRow
+                      style={{
+                        display: "flex",
+                        alignContent: "center",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "12pt",
+                      }}
+                    >
+                      <IonIcon icon={person} />
+                      &nbsp; {params.cantidad_personas} persona
+                      {params.cantidad_personas > 1 ? "s" : ""}
+                    </IonRow>
+                    <IonRow>
+                      <IonCol
                         style={{
                           display: "flex",
                           flexDirection: "column",
-                          alignItems: "end",
-                          fontSize: "12pt",
+                          alignContent: "center",
+                          alignItems: "center",
+                          justifyContent: "center",
                         }}
                       >
-                        <IonRow>
-                          Precio por noche: $
-                          {oferta &&
-                            `${oferta.tarifas[0].monto_tarifa}`.replace(
-                              ".",
-                              ","
-                            )}
-                        </IonRow>
-                        <IonRow>
-                          Precio total: $
-                          {oferta &&
-                            `${oferta.resumen_pago.precio_total}`.replace(
-                              ".",
-                              ","
-                            )}
-                        </IonRow>
-                        <IonRow>
-                          Pago anticipado: $
-                          {oferta &&
-                            `${oferta.resumen_pago.pago_anticipado}`.replace(
-                              ".",
-                              ","
-                            )}
-                        </IonRow>
-                        <IonRow>
-                          Saldo restante: $
-                          {oferta &&
-                            `${
-                              oferta.resumen_pago.precio_total -
-                              oferta.resumen_pago.pago_anticipado
-                            }`.replace(".", ",")}
-                        </IonRow>
-                        <IonRow
+                        <div
                           style={{
-                            borderTop: "2pt solid #F08408",
-                            marginTop: "3pt",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "end",
+                            fontSize: "12pt",
                           }}
                         >
-                          A pagar: $
-                          {oferta &&
-                            `${oferta.resumen_pago.pago_anticipado}`.replace(
-                              ".",
-                              ","
-                            )}
-                        </IonRow>
-                      </div>
+                          <IonRow>
+                            Precio por noche: $
+                            {oferta &&
+                              `${oferta.tarifas[0].monto_tarifa}`.replace(
+                                ".",
+                                ","
+                              )}
+                          </IonRow>
+                          <IonRow>
+                            Precio total: $
+                            {oferta &&
+                              `${oferta.resumen_pago.precio_total}`.replace(
+                                ".",
+                                ","
+                              )}
+                          </IonRow>
+                          <IonRow>
+                            Pago anticipado: $
+                            {oferta &&
+                              `${oferta.resumen_pago.pago_anticipado}`.replace(
+                                ".",
+                                ","
+                              )}
+                          </IonRow>
+                          <IonRow>
+                            Saldo restante: $
+                            {oferta &&
+                              `${oferta.resumen_pago.precio_total -
+                                oferta.resumen_pago.pago_anticipado
+                                }`.replace(".", ",")}
+                          </IonRow>
+                          <IonRow
+                            style={{
+                              borderTop: "2pt solid #F08408",
+                              marginTop: "3pt",
+                            }}
+                          >
+                            A pagar: $
+                            {oferta &&
+                              `${oferta.resumen_pago.pago_anticipado}`.replace(
+                                ".",
+                                ","
+                              )}
+                          </IonRow>
+                        </div>
+                      </IonCol>
+                    </IonRow>
                     </IonCol>
-                  </IonRow>
                 </IonGrid>
               </IonCardContent>
             </IonCard>

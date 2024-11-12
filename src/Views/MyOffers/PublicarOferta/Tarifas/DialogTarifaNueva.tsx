@@ -74,7 +74,7 @@ export default function DialogTarifa(props: TDialogTarifa) {
         props.handleReload();
         props.setOpen(false);
       })
-      .catch(() => {});
+      .catch(() => { });
   };
 
   return (
@@ -96,29 +96,13 @@ export default function DialogTarifa(props: TDialogTarifa) {
               justifyContent: "center",
               width: "100%",
               position: "relative",
+              borderBottom: "1pt solid #F08408",
             }}
           >
-            <h2>
+            <h2 style={{ fontSize: "18pt", fontWeight: "bold" }}>
               {props.isEdit ? "Editar tarifa" : "Agregar una nueva tarifa"}
             </h2>
-            <div
-              style={{ position: "absolute", float: "right", right: "12pt" }}
-            >
-              <IonButton
-                fill="clear"
-                style={{ marginRight: "12pt" }}
-                onClick={() => props.setOpen(false)}
-              >
-                CANCELAR
-              </IonButton>
-              <IonButton
-                color="success"
-                style={{}}
-                onClick={() => handlePublicar()}
-              >
-                {props.isEdit ? "GUARDAR" : "AGREGAR"}
-              </IonButton>
-            </div>
+
           </IonRow>
           <IonRow style={{ marginTop: "20pt" }}>
             <IonCol>
@@ -137,10 +121,11 @@ export default function DialogTarifa(props: TDialogTarifa) {
               </IonRow>
             </IonCol>
             <IonCol>
-              <IonRow>
+              <IonRow style={{ margin: "20pt" }}>
                 <IonSelect
                   label="Tipología"
                   onIonChange={(e) => setSelectedTipologia(e.target.value)}
+                  style={{borderBottom: "1pt solid #F08408" }}
                 >
                   {tipologias.map((tipologia: any) => (
                     <IonSelectOption
@@ -152,7 +137,7 @@ export default function DialogTarifa(props: TDialogTarifa) {
                   ))}
                 </IonSelect>
               </IonRow>
-              <IonRow>
+              <IonRow style={{ margin: "20pt" }}>
                 <NumberField
                   setValue={setTarifa}
                   money
@@ -161,7 +146,35 @@ export default function DialogTarifa(props: TDialogTarifa) {
                 />
               </IonRow>
             </IonCol>
+
           </IonRow>
+          <div
+            style={{ position: "absolute", float: "right", right: "12pt" }}
+          >
+            <IonButton
+              fill="outline"
+              style={{
+                "--border": "1pt solid #F08408",
+                "--border-color": "#F08408",
+                "--background": "transparent",
+                "--color": "#F08408",
+                marginRight: "12pt",
+              }}
+              onClick={() => props.setOpen(false)}
+            >
+              CANCELAR
+            </IonButton>
+            <IonButton
+              fill="solid"
+              style={{
+                "--background": "#F08408",
+                "--color": "#FFFFFF",
+              }}
+              onClick={() => handlePublicar()}
+            >
+              {props.isEdit ? "GUARDAR" : "AGREGAR"}
+            </IonButton>
+          </div>
         </IonGrid>
       </IonContent>
     </IonModal>

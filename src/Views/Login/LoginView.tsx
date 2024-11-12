@@ -10,6 +10,7 @@ import {
   IonImg,
   IonRow,
   IonTitle,
+  IonLabel,
 } from "@ionic/react";
 import MapView from "../../components/MapView/MapView";
 import { FormProvider } from "../../hooks/UseForm/FormProvider";
@@ -45,25 +46,29 @@ export default function LoginView(props: any) {
           <IonImg src="/icon.png" style={{ width: "55pt" }} />
           <IonTitle
             style={{
-              color: "#F08408",
               fontSize: "24pt",
-              fontWeigth: "bold",
-              borderBottom: "2pt solid #F08408",
-              padding: "9pt",
+              fontWeight: "bolder",
+              color: "#F08408",
+              marginTop: "13pt",
+              marginBottom: "13pt",
+              textAlign: "center",
             }}
           >
             ¡Hola, viajero!
+            <IonLabel style={{ fontSize: "16pt", fontWeight: "bold", textAlign: "center" }}>
+              <br /> Ingresá
+            </IonLabel>
           </IonTitle>
         </IonCardHeader>
 
         <IonCardContent
-          style={{
+          /* style={{
             display: "flex",
             flexDirection: "column",
             alignContent: "center",
             alignItems: "center",
             justifyContent: "center",
-          }}
+          }} */
         >
           <FormProvider schema={schema}>
             <LoginForm />

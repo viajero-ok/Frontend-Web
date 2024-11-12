@@ -21,13 +21,17 @@ interface OfertaCardProps {
   descripcion: string;
   id: number;
   setOfertas: React.Dispatch<React.SetStateAction<any[]>>;
-  tipoOferta?: number;
+  tipoOferta: number;
 }
 
 const OfertaCard: React.FC<OfertaCardProps> = ({ nombre, descripcion, id, setOfertas, tipoOferta }) => {
   const [openConfirmDelete, setOpenConfirmDelete] = useState<boolean>(false);
   const router = useIonRouter();
 
+  const handlePublicar = () => {
+    if (!id) return;
+    router.push(`/my-offers/publicar/${id}`);
+  }
   const handleEditar = () => {
     if (!id) return;
     if (tipoOferta === 1) {
@@ -38,7 +42,7 @@ const OfertaCard: React.FC<OfertaCardProps> = ({ nombre, descripcion, id, setOfe
   };
   const handleDelete = () => {
     if (!id) return;
-    eliminarOferta(id)
+    eliminarOferta({ id_oferta: id.toString(), id_tipo_oferta: tipoOferta })
       .then(() => {
         setOpenConfirmDelete(false);
         setOfertas((prev: any[]) =>
@@ -82,8 +86,9 @@ const OfertaCard: React.FC<OfertaCardProps> = ({ nombre, descripcion, id, setOfe
                     "--background": "transparent",
                     "--color": "#F08408",
                   }}
+                  onClick={() => handlePublicar()}
                 >
-                  VER
+                  PUBLICAR
                 </IonButton>
                 <IonButton
                   fill="solid"

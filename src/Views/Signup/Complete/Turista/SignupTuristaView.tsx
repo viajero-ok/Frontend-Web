@@ -26,7 +26,7 @@ export default function SignupTuristaView() {
   };
   return (
     <UncompleteLoggedLayout>
-      <img
+     {/*  <img
         src="/3.2. Principal/Fondo.jpg"
         style={{
           display: "flex",
@@ -34,7 +34,7 @@ export default function SignupTuristaView() {
           width: "auto",
           minHeight: "100%",
         }}
-      />
+      /> */}
       <IonCard
         style={{
           position: "relative",

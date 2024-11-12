@@ -6,10 +6,12 @@ import {
   IonImg,
   IonInput,
   IonItem,
+  IonLabel,
   IonList,
   IonRow,
   IonText,
   IonTitle,
+  useIonRouter,
 } from "@ionic/react";
 import { FormProvider, useForm } from "../../hooks/UseForm/FormProvider";
 import { SetStateAction, useEffect, useState } from "react";
@@ -21,6 +23,7 @@ type TProps = {
   setIdUsuario: React.Dispatch<React.SetStateAction<string>>;
 };
 export default function SignupForm(props: TProps) {
+  const router = useIonRouter();
   const form = useForm();
 
   useEffect(() => {
@@ -61,7 +64,7 @@ export default function SignupForm(props: TProps) {
             textAlign: "center",
           }}
         >
-          <IonImg src="icon.png" style={{ width: "100pt" }} />
+          <IonImg src="/icon.png" style={{ width: "55pt" }} />
           <IonTitle
             style={{
               fontSize: "24pt",
@@ -72,7 +75,9 @@ export default function SignupForm(props: TProps) {
             }}
           >
             ¡Hola, viajero!
-            <br /> Creá tu cuenta
+            <IonLabel style={{ fontSize: "16pt", fontWeight: "bold", textAlign: "center" }}>
+              <br /> Creá tu cuenta
+            </IonLabel>
           </IonTitle>
         </div>
       </IonCardHeader>
@@ -158,7 +163,8 @@ export default function SignupForm(props: TProps) {
           }}
         >
           Ya posee una cuenta?
-          <IonButton fill="clear" size="small" style={{ "--color": "#F08408" }}>
+          <IonButton fill="clear" size="small" style={{ "--color": "#F08408" }}
+          onClick={() => router.push("/login")}>
             Iniciar sesión
           </IonButton>
         </div>

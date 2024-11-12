@@ -62,7 +62,7 @@ export default function DefaultLoggedLayout({ children }: any) {
 							{perfilSeleccionado === PERFILES.TURISTA.id ? (
 								<>
 									<IonMenuToggle>
-										<IonItem button onClick={() => push("/")}>
+										<IonItem  button onClick={() => push("/")}>
 											Inicio
 										</IonItem>
 									</IonMenuToggle>
@@ -94,13 +94,19 @@ export default function DefaultLoggedLayout({ children }: any) {
 											Mis ofertas turísticas
 										</IonItem>
 									</IonMenuToggle>
+									<IonMenuToggle>
+										<IonItem button onClick={() => push("/mis-reservas")}>
+											Mis reservas
+										</IonItem>
+									</IonMenuToggle>
+									<IonMenuToggle>
+										<IonItem button disabled>
+											Reportes
+										</IonItem>
+									</IonMenuToggle>
 								</>
 							)}
-							<IonMenuToggle>
-								<IonItem button disabled>
-									Reportes
-								</IonItem>
-							</IonMenuToggle>
+
 						</IonList>
 					</IonContent>
 				</IonMenu>
@@ -145,8 +151,8 @@ export default function DefaultLoggedLayout({ children }: any) {
 							{perfilSeleccionado == -1
 								? "viajero"
 								: perfilSeleccionado == PERFILES.TURISTA.id
-								? "turista"
-								: "prestador"}
+									? "turista"
+									: "prestador"}
 							!
 						</IonTitle>
 						<div

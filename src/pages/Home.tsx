@@ -59,10 +59,10 @@ const Home: React.FC = () => {
               backgroundSize: "cover",
             }}
           ></div>
-          <HomeVisitanteView />
-          {/* {perfil == PERFILES.INVITADO.id && <HomeVisitanteView />}
+          {/* <HomeVisitanteView /> */}
+          {perfil == PERFILES.INVITADO.id && <HomeVisitanteView />}
           {perfil == PERFILES.TURISTA.id && <HomeVisitanteView />}
-          {perfil == PERFILES.PRESTADOR.id && <HomePrestadorView />} */}
+          {perfil == PERFILES.PRESTADOR.id && <HomePrestadorView />}
         </IonContent>
       </IonContent>
     </DefaultLoggedLayout>

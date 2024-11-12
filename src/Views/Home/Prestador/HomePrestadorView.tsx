@@ -18,37 +18,6 @@ export default function HomePrestadorView(props: any) {
         justifyContent: "center",
       }}>
       <IonCol>
-        <IonCard button onClick={() => push("/my-offers")}>
-          <IonHeader
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "13pt",
-            }}
-          >
-            <img
-              alt="Silhouette of mountains"
-              src="public\3.4. Menu prestador\Mis ofertas turisticas.png"
-              width={"100pt"}
-              height={"auto"}
-              style={{}}
-            />
-            <IonCardTitle
-              style={{
-                fontSize: "16pt",
-                fontWeight: "bold",
-                paddingTop: "13pt",
-              }}
-            >
-              Mis ofertas
-            </IonCardTitle>
-          </IonHeader>
-        </IonCard>
-      </IonCol>
-      <IonCol>
         <IonCard button onClick={() => push("/my-places")}>
           <IonHeader
             style={{
@@ -75,6 +44,38 @@ export default function HomePrestadorView(props: any) {
               }}
             >
               Mis Establecimientos
+            </IonCardTitle>
+          </IonHeader>
+        </IonCard>
+
+      </IonCol>
+      <IonCol>
+        <IonCard button onClick={() => push("/my-offers")}>
+          <IonHeader
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignContent: "center",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "13pt",
+            }}
+          >
+            <img
+              alt="Silhouette of mountains"
+              src="public\3.4. Menu prestador\Mis ofertas turisticas.png"
+              width={"100pt"}
+              height={"auto"}
+              style={{}}
+            />
+            <IonCardTitle
+              style={{
+                fontSize: "16pt",
+                fontWeight: "bold",
+                paddingTop: "13pt",
+              }}
+            >
+              Mis ofertas
             </IonCardTitle>
           </IonHeader>
         </IonCard>

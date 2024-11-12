@@ -1,9 +1,10 @@
 import {
   IonButton,
   IonList,
-  IonTitle,
+  IonLabel,
   IonToast,
   useIonRouter,
+  IonRow,
 } from "@ionic/react";
 import { alertCircleOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
@@ -46,16 +47,17 @@ export default function LoginForm() {
 
   return (
     <>
-      <IonTitle
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-        }}
-      >
-        Ingresar
-      </IonTitle>
+
       <IonList
+        /* style={{
+          display: "flex",
+          flexDirection: "column",
+          margin: "13pt",
+          marginTop: "0",
+          marginLeft: "34pt",
+          marginRight: "34pt",
+          paddingRight: "12pt",
+        }} */
         style={{
           display: "flex",
           flexDirection: "column",
@@ -86,16 +88,23 @@ export default function LoginForm() {
           valid={v().required("El campo es obligatorio")}
         ></Field>
       </IonList>
+      <IonRow
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "row",
+            alignContent: "center",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
       <IonButton
-        expand="block"
+
+        size="default"
         style={{
-          display: "flex",
-          flexDirection: "column",
           margin: "13pt",
           marginLeft: "89pt",
           marginRight: "89pt",
-          paddingLeft: "12pt",
-          paddingRight: "12pt",
           "--background": "#F08408",
           "--color": "white",
         }}
@@ -103,6 +112,7 @@ export default function LoginForm() {
       >
         Ingresá
       </IonButton>
+      </IonRow>
       <div
         style={{
           display: "flex",

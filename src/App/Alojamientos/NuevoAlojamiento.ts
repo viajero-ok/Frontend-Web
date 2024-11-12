@@ -10,6 +10,11 @@ export const registrarNuevoAlojamiento = async (
   body: TBodyRegistrarNuevoAlojamiento
 ) => await AUTH_API.post(`/ofertas-turisticas/registrar-oferta-turistica`, body);
 
+export const finalizarRegistroAlojamiento = async (id_oferta: string) =>
+  await AUTH_API.post(
+    `/alojamientos/finalizar-registro-alojamiento/${id_oferta}`
+  );
+
 export const getDatosDeRegistroNuevoAlojamiento = async () =>
   await AUTH_API.get(`/alojamientos/datos-registro-alojamiento`);
 

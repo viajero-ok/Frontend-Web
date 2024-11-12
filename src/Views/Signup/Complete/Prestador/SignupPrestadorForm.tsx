@@ -248,7 +248,7 @@ export default function SignupPrestadorForm(props: any) {
               margin: "13pt",
             }}
           >
-            <IonButton onClick={() => handleRegistrarme()} style={{}}>
+            <IonButton onClick={() => handleRegistrarme()} style={{ "--background": "#F08408" }}>
               Registrarme
             </IonButton>
           </IonCol>

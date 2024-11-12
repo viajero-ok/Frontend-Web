@@ -5,6 +5,7 @@ import {
   IonGrid,
   IonIcon,
   IonRow,
+  IonTitle,
 } from "@ionic/react";
 import { add } from "ionicons/icons";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
@@ -18,14 +19,14 @@ type TTarifas = {
 export default function Tarifas(props: TTarifas) {
   return (
     <>
-      <IonCard style={{ display: "flex", flexDirection: "row", width: "100%" }}>
+      <IonCard style={{ display: "flex", flexDirection: "row", width: "600pt" }}>
         <IonGrid
           style={{
             marginLeft: "60pt",
             marginRight: "60pt",
-            paddingLeft: "31pt",
-            paddingRight: "31pt",
-            padding: "31pt",
+            paddingLeft: "10pt",
+            paddingRight: "10pt",
+            padding: "10pt",
           }}
         >
           <IonRow
@@ -36,7 +37,9 @@ export default function Tarifas(props: TTarifas) {
               justifyContent: "center",
             }}
           >
-            <h2 style={{ fontWeight: "bold" }}>Tarifas</h2>
+            <IonTitle style={{ fontSize: "18pt", fontWeight: "bolder", textAlign: "center", color: "black", margin: "10pt" }}>
+              Tarifas
+            </IonTitle>
           </IonRow>
           <IonRow
             style={{
@@ -63,7 +66,7 @@ export default function Tarifas(props: TTarifas) {
                 justifyContent: "center",
               }}
             >
-              <h4 style={{ fontWeight: "bold" }}>Periodo</h4>
+              <h4 style={{ fontWeight: "bold", fontSize: "14pt" }}>Periodo</h4>
             </IonCol>
             <IonCol
               style={{
@@ -73,7 +76,7 @@ export default function Tarifas(props: TTarifas) {
                 justifyContent: "center",
               }}
             >
-              <h4 style={{ fontWeight: "bold" }}>Nombre habitación</h4>
+              <h4 style={{ fontWeight: "bold", fontSize: "14pt" }}>Nombre habitación</h4>
             </IonCol>
             <IonCol
               style={{
@@ -83,7 +86,7 @@ export default function Tarifas(props: TTarifas) {
                 justifyContent: "center",
               }}
             >
-              <h4 style={{ fontWeight: "bold" }}>Tarifa por noche</h4>
+              <h4 style={{ fontWeight: "bold", fontSize: "14pt" }}>Tarifa por noche</h4>
             </IonCol>
           </IonRow>
           {props.tarifas && props.tarifas.map((tarifa: any, index: any) => (

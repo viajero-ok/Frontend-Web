@@ -26,11 +26,28 @@ type TNewPlaceForm = {
   idEstablecimiento: number;
 };
 
+type TDatosRegistrados = {
+  id_establecimiento: number;
+  nombre: string;
+  descripcion: string;
+  numero_habilitacion: string;
+  telefono: string;
+  mail: string;
+  calle: string;
+  sin_numero: string;
+  numero: string;
+  id_localidad: number;
+  id_departamento: number;
+  id_provincia: number;
+  latitud: string;
+  longitud: string;
+};
+
 export default function NewPlaceForm(props: TNewPlaceForm) {
   const [markerPos, setMarkerPos] = useState<LatLng>();
   const [provincias, setProvincias] = useState<any[]>();
   const [ubicaciones, setUbicaciones] = useState<any[]>();
-  const [datosRegistrados, setDatosRegistrados] = useState<any[]>();
+  const [datosRegistrados, setDatosRegistrados] = useState<TDatosRegistrados>();
   const [showToast, setShowToast] = useState(false);
   const [errorMessage, setErrorMessage] = useState<any[]>();;
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -91,10 +108,9 @@ export default function NewPlaceForm(props: TNewPlaceForm) {
   useEffect(() => {
     obtenerDatosRegistradosEstablecimiento(props.idEstablecimiento)
       .then((response: any) => {
-        setDatosRegistrados(response.data.datos);
-        console.log(response.data.datos);
+        setDatosRegistrados(response);
       });
-
+      console.log(datosRegistrados);
   }, []);
 
   const handleOnClick = (e: LeafletMouseEvent) => {
@@ -129,10 +145,19 @@ export default function NewPlaceForm(props: TNewPlaceForm) {
       });
   };
 
-  useEffect(() => {/* 
+  useEffect(() => {
     if (!form) return;
-    form.setValue("id_establecimiento", props.idEstablecimiento?.toString() ?? "");
-    form.setValue("numeroDeHabilitacionMunicipal", datosRegistrados?.numero_habilitacion ?? ""); */
+    if (!datosRegistrados) return;
+    form.setValue("nombreDelEstablecimiento", datosRegistrados?.nombre ?? "");
+    form.setValue("numeroDeHabilitacionMunicipal", datosRegistrados?.numero_habilitacion ?? "");
+    form.setValue("descripcion", datosRegistrados?.descripcion ?? "");
+    form.setValue("telefono", datosRegistrados?.telefono ?? "");
+    form.setValue("mail", datosRegistrados?.mail ?? "");
+    form.setValue("calle", datosRegistrados?.calle ?? "");
+    form.setValue("numero", datosRegistrados?.numero ?? "");
+    form.setValue("provincia", datosRegistrados?.id_provincia.toString() ?? "");
+    form.setValue("departamento", datosRegistrados?.id_departamento.toString() ?? "");
+    form.setValue("localidad", datosRegistrados?.id_localidad.toString() ?? "");
   }, [datosRegistrados]);
 
   return (

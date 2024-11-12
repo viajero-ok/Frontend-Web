@@ -1,24 +1,30 @@
-import { Wallet } from "@mercadopago/sdk-react";
+import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
+import { useEffect } from "react";
 
 type TCheckoutProps = {
   preferenceId: string;
+  publicKey: string;
+  style?: any;
 };
 export default function Checkout(props: TCheckoutProps) {
-  // useEffect(() => {
-  //   initMercadoPago("APP_USR-df748500-705e-4007-a307-a2072f78d3f0");
+  useEffect(() => {
+    if (!props.publicKey) return;
+    initMercadoPago(props.publicKey);
 
-  //   return () => {
-  //     //   window?.cardPaymentBrickController?.unmount();
-  //   };
-  // }, []);
+    return () => {
+      //   window?.cardPaymentBrickController?.unmount();
+    };
+  }, []);
 
   return (
-    <Wallet
-      initialization={{
-        preferenceId: props.preferenceId,
-      }}
-      customization={{ texts: { valueProp: "smart_option" } }}
-      locale="es-AR"
-    />
+    <div style={props.style ?? {}}>
+      <Wallet
+        initialization={{
+          preferenceId: props.preferenceId,
+        }}
+        customization={{ texts: { valueProp: "smart_option" } }}
+        locale="es-AR"
+      />
+    </div>
   );
 }

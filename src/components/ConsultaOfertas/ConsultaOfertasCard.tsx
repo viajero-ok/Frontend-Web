@@ -7,6 +7,7 @@ import {
   IonCardTitle,
   IonCol,
   IonGrid,
+  IonIcon,
   IonLabel,
   IonRow,
   IonSegment,
@@ -143,7 +144,7 @@ export function OfertaCard({
 
   const handleGuardarOferta = () => {
     // Aquí puedes agregar la lógica para guardar la oferta
-    console.log('Guardando oferta:', oferta.id);
+    console.log("Guardando oferta:", oferta.id);
   };
 
   const handleEliminarGuardado = () => {
@@ -158,7 +159,7 @@ export function OfertaCard({
         }
       })
       .catch(() => {});
-    console.log('Eliminando oferta guardada:', oferta.id);
+    console.log("Eliminando oferta guardada:", oferta.id);
   };
 
   return (
@@ -298,33 +299,20 @@ export function OfertaCard({
           </IonCardContent>
         </IonCol>
       </IonRow>
-      {/* <IonButton
-        style={{
-          "--background": "#F08408",
-          "--color": "white",
-          position: "absolute",
-          float: "right",
-          right: "150pt",
-          bottom: "20pt",
-        }}
-      >
-        Ver disponibilidad&nbsp;
-        <IonIcon icon={chevronForward} />
-      </IonButton>
       <IonIcon
         icon={bookmark}
         style={{
-          position: 'absolute',
-          right: '20pt',
-          top: '20pt',
-          fontSize: '24px',
-          cursor: 'pointer',
-          color: isFavorite ? '#53992B' : '#999',
+          position: "absolute",
+          right: "20pt",
+          top: "20pt",
+          fontSize: "24px",
+          cursor: "pointer",
+          color: isFavorite ? "#53992B" : "#999",
         }}
         onClick={() => {
           const nuevoEstado = !isFavorite;
           setIsFavorite(nuevoEstado);
-          
+
           if (nuevoEstado) {
             handleGuardarOferta();
           } else {

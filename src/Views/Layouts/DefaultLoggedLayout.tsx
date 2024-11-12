@@ -62,7 +62,7 @@ export default function DefaultLoggedLayout({ children }: any) {
 							{perfilSeleccionado === PERFILES.TURISTA.id ? (
 								<>
 									<IonMenuToggle>
-										<IonItem button onClick={() => push("/")}>
+										<IonItem  button onClick={() => push("/")}>
 											Inicio
 										</IonItem>
 									</IonMenuToggle>

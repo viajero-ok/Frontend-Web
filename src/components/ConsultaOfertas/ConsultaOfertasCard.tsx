@@ -20,7 +20,7 @@ import { consultarOfertasTurista } from "../../App/Ofertas/Ofertas";
 import MapView from "../MapView/MapView";
 import FiltrosConsultaOfertas from "./FiltrosConsultaOfertas";
 import { chevronForward, bookmark } from "ionicons/icons";
-import { eliminarOfertaGuardada } from "../../App/Ofertas/Ofertas";
+import { eliminarOfertaGuardada, guardarOfertaGuardada } from "../../App/Ofertas/Ofertas";
 
 interface Oferta {
   id: number;
@@ -37,6 +37,7 @@ type TConsultaOfertasCard = {
   fechas: { fecha_desde: string | null; fecha_hasta: string | null };
   personas: number | null;
   ofertas: any[];
+  setOfertasGuardadas?: React.Dispatch<React.SetStateAction<any[]>>;
 };
 export default function ConsultaOfertasCard(props: TConsultaOfertasCard) {
   const [selectedSegment, setSelectedSegment] = useState<
@@ -132,19 +133,31 @@ export function OfertaCard({
   fecha_desde,
   fecha_hasta,
   posicionar,
+  setOfertasGuardadas,
 }: {
   oferta: any;
   fecha_desde: string;
   fecha_hasta: string;
   posicionar: (latitud: number, longitud: number) => void;
+  setOfertasGuardadas?: React.Dispatch<React.SetStateAction<any[]>>;
 }) {
   const router = useIonRouter();
 
   const [isFavorite, setIsFavorite] = useState(false);
 
-  const handleGuardarOferta = () => {
-    // Aquí puedes agregar la lógica para guardar la oferta
-    console.log("Guardando oferta:", oferta.id);
+  const handleGuardarOferta = async (id: number) => {
+    setIsFavorite(true);
+    
+    if (setOfertasGuardadas) {
+      setOfertasGuardadas((prev: any[]) => [...prev, oferta]);
+    }
+
+    try {
+      await guardarOfertaGuardada({ id_oferta: oferta.id_oferta });
+      console.log("Oferta guardada:", id);
+    } catch (error) {
+      console.error("Error al guardar la oferta:", error);
+    }
   };
 
   const handleEliminarGuardado = () => {
@@ -152,8 +165,8 @@ export function OfertaCard({
     eliminarOfertaGuardada(oferta.id)
       .then(() => {
         setIsFavorite(false);
-        if (oferta.setOfertasGuardadas) {
-          oferta.setOfertasGuardadas((prev: any[]) =>
+        if (setOfertasGuardadas) {
+          setOfertasGuardadas((prev: any[]) =>
             prev.filter((item: any) => item.id_oferta !== oferta.id)
           );
         }
@@ -299,7 +312,7 @@ export function OfertaCard({
           </IonCardContent>
         </IonCol>
       </IonRow>
-       <IonButton
+       {/* <IonButton
         style={{
           "--background": "#F08408",
           "--color": "white",
@@ -311,7 +324,7 @@ export function OfertaCard({
       >
         Ver disponibilidad&nbsp;
         <IonIcon icon={chevronForward} />
-      </IonButton>
+      </IonButton> */}
       <IonIcon
         icon={bookmark}
         style={{
@@ -327,7 +340,8 @@ export function OfertaCard({
           setIsFavorite(nuevoEstado);
 
           if (nuevoEstado) {
-            handleGuardarOferta();
+            handleGuardarOferta(oferta.id_oferta);
+            console.log("Guardando oferta:", oferta.id_oferta);
           } else {
             handleEliminarGuardado();
           }

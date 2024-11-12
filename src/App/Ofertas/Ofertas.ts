@@ -3,8 +3,15 @@ import AUTH_API from "../AuthBackendApi";
 export const obtenerOfertasPorPrestador = async () =>
   await AUTH_API.get(`ofertas-turisticas/por-prestador`);
 
-export const eliminarOferta = async (idOferta: number) =>
-  await AUTH_API.delete(`/alojamientos/eliminar-alojamiento/${idOferta}`);
+type TEliminarOferta = {
+  id_oferta: string;
+  id_tipo_oferta: number;
+};
+
+export const eliminarOferta = async (data: TEliminarOferta) =>
+  await AUTH_API.delete(`/ofertas-turisticas/eliminar-oferta-turistica`, {
+    data,
+  });
 
 //&id_tipo_oferta=2&id_establecimiento=4&nombre_oferta=Hotel%20de%20Montaña&id_provincia=7&id_departamento=12&id_localidad=25&min_monto_garantia=100&max_monto_garantia=500&min_dias_estadia=3
 type TFiltros = {
@@ -63,3 +70,10 @@ export const obtenerOfertasReservadas = async () =>
 
 export const eliminarOfertaGuardada = async (idOfertaGuardada: number) =>
   await AUTH_API.delete(`/ofertas-turisticas/eliminar-oferta-turistica-guardada/${idOfertaGuardada}`);
+
+type TParamsGuardarOfertaGuardada = {
+  id_oferta: string;
+};
+
+export const guardarOfertaGuardada = async (data: TParamsGuardarOfertaGuardada) =>
+  await AUTH_API.post(`/ofertas-turisticas/guardar-oferta-turistica`, data);

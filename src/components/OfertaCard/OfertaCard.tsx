@@ -21,7 +21,7 @@ interface OfertaCardProps {
   descripcion: string;
   id: number;
   setOfertas: React.Dispatch<React.SetStateAction<any[]>>;
-  tipoOferta?: number;
+  tipoOferta: number;
 }
 
 const OfertaCard: React.FC<OfertaCardProps> = ({ nombre, descripcion, id, setOfertas, tipoOferta }) => {
@@ -38,7 +38,7 @@ const OfertaCard: React.FC<OfertaCardProps> = ({ nombre, descripcion, id, setOfe
   };
   const handleDelete = () => {
     if (!id) return;
-    eliminarOferta(id)
+    eliminarOferta({ id_oferta: id.toString(), id_tipo_oferta: tipoOferta })
       .then(() => {
         setOpenConfirmDelete(false);
         setOfertas((prev: any[]) =>

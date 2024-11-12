@@ -28,6 +28,10 @@ const OfertaCard: React.FC<OfertaCardProps> = ({ nombre, descripcion, id, setOfe
   const [openConfirmDelete, setOpenConfirmDelete] = useState<boolean>(false);
   const router = useIonRouter();
 
+  const handlePublicar = () => {
+    if (!id) return;
+    router.push(`/my-offers/publicar/${id}`);
+  }
   const handleEditar = () => {
     if (!id) return;
     if (tipoOferta === 1) {
@@ -82,8 +86,9 @@ const OfertaCard: React.FC<OfertaCardProps> = ({ nombre, descripcion, id, setOfe
                     "--background": "transparent",
                     "--color": "#F08408",
                   }}
+                  onClick={() => handlePublicar()}
                 >
-                  VER
+                  PUBLICAR
                 </IonButton>
                 <IonButton
                   fill="solid"

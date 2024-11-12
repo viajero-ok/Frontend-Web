@@ -7,7 +7,9 @@ import {
   IonCol,
   IonContent,
   IonGrid,
+  IonIcon,
   IonRow,
+  IonTitle,
 } from "@ionic/react";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -18,6 +20,7 @@ import {
 import DialogTarifa from "./Tarifas/DialogTarifa";
 import DialogTarifaNueva from "./Tarifas/DialogTarifaNueva";
 import Tarifas from "./Tarifas/Tarifas";
+import { paperPlaneOutline } from "ionicons/icons";
 
 type TPublicarOfertaView = {
   idOferta: string;
@@ -80,9 +83,9 @@ export default function PublicarOfertaView(props: TPublicarOfertaView) {
             marginTop: "20pt",
           }}
         >
-          <h3 style={{ fontSize: "24pt", fontWeight: "bold" }}>
-            Publicar oferta
-          </h3>
+          <IonTitle style={{ fontSize: "20pt", fontWeight: "bolder", textAlign: "center" }}>
+            Publicar Oferta
+          </IonTitle>
         </IonRow>
         <IonRow
           style={{
@@ -106,7 +109,7 @@ export default function PublicarOfertaView(props: TPublicarOfertaView) {
                 display: "flex",
                 flexDirection: "row",
                 height: "100%",
-                width: "800pt",
+                width: "600pt",
               }}
             >
               <img
@@ -120,7 +123,7 @@ export default function PublicarOfertaView(props: TPublicarOfertaView) {
                 }}
               />
               <IonCardHeader style={{ marginTop: "20pt" }}>
-                <IonCardTitle style={{ fontSize: "24pt", fontWeight: "bold" }}>
+                <IonCardTitle style={{ fontSize: "18pt", fontWeight: "bold" }}>
                   {datosRegistrados &&
                     datosRegistrados.datos_oferta.datos_oferta.nombre}
                 </IonCardTitle>
@@ -130,11 +133,12 @@ export default function PublicarOfertaView(props: TPublicarOfertaView) {
                 </IonCardSubtitle>
               </IonCardHeader>
               <IonButton
-                color="success"
-                style={{ position: "absolute", bottom: "12pt", right: "12pt" }}
+                style={{ position: "absolute", bottom: "12pt", right: "12pt", "--background": "#53992B" }}
                 onClick={() => handlePublicar()}
               >
+                <IonIcon icon={paperPlaneOutline} style={{ marginRight: "8pt", color: "white" }} />
                 PUBLICAR
+                
               </IonButton>
             </IonCard>
           </IonCol>

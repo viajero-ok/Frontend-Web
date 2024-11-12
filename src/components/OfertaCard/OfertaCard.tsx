@@ -10,8 +10,9 @@ import {
   IonIcon,
   IonModal,
   IonRow,
+  useIonRouter,
 } from "@ionic/react";
-import { close, trash } from "ionicons/icons";
+import { close, pencil, trash } from "ionicons/icons";
 import { Dispatch, SetStateAction, useState } from "react";
 import { eliminarOferta } from "../../App/Ofertas/Ofertas";
 
@@ -20,10 +21,21 @@ interface OfertaCardProps {
   descripcion: string;
   id: number;
   setOfertas: React.Dispatch<React.SetStateAction<any[]>>;
+  tipoOferta?: number;
 }
 
-const OfertaCard: React.FC<OfertaCardProps> = ({ nombre, descripcion, id, setOfertas }) => {
+const OfertaCard: React.FC<OfertaCardProps> = ({ nombre, descripcion, id, setOfertas, tipoOferta }) => {
   const [openConfirmDelete, setOpenConfirmDelete] = useState<boolean>(false);
+  const router = useIonRouter();
+
+  const handleEditar = () => {
+    if (!id) return;
+    if (tipoOferta === 1) {
+      router.push(`/my-offers/alojamiento/en-habitaciones/edit/${id}`);
+    } else if (tipoOferta === 2) {
+      router.push(`/my-offers/actividad/edit/${id}`); // Redirige a la URL para tipo 2
+    }
+  };
   const handleDelete = () => {
     if (!id) return;
     eliminarOferta(id)
@@ -35,7 +47,7 @@ const OfertaCard: React.FC<OfertaCardProps> = ({ nombre, descripcion, id, setOfe
           )
         );
       })
-      .catch(() => {});
+      .catch(() => { });
   };
 
   return (
@@ -74,11 +86,22 @@ const OfertaCard: React.FC<OfertaCardProps> = ({ nombre, descripcion, id, setOfe
                   VER
                 </IonButton>
                 <IonButton
+                  fill="solid"
+                  style={{
+                    "--background": "#F08408",
+                    "--color": "#FFFFFF",
+                  }}
+                  onClick={() => handleEditar()}
+                >
+                  <IonIcon icon={pencil}></IonIcon>
+                </IonButton>
+                <IonButton
                   color="danger"
                   onClick={() => setOpenConfirmDelete(true)}
                 >
                   <IonIcon icon={trash}></IonIcon>
                 </IonButton>
+
               </IonCardContent>
             </IonRow>
           </IonCol>
@@ -128,6 +151,7 @@ const OfertaCard: React.FC<OfertaCardProps> = ({ nombre, descripcion, id, setOfe
               <IonButton color="danger" onClick={() => handleDelete()}>
                 Eliminar
               </IonButton>
+
             </IonRow>
           </IonGrid>
         </div>

@@ -51,6 +51,7 @@ import MisReservas from "./pages/MisReservas/MisReservas";
 import VerOfertaPage from "./pages/VerOferta/VerOfertaPage";
 import ReservarOfertaPage from "./pages/ReservarOferta/ReservarOfertaPage";
 import ResultadoReservaView from "./Views/ResultadosReserva/ResultadoReservaView";
+import PruebaFormView from "./Views/PruebaForm/PruebaFormView";
 
 setupIonicReact();
 
@@ -114,6 +115,7 @@ const App: React.FC = () => {
             />
             <Route exact path="/resultado-reserva" component={ResultadoReservaView} />
             <Route exact path="/itinerary" component={ItineraryView} />
+            <Route exact path="/prueba-form" component={PruebaFormView} />
         </IonRouterOutlet>
         </IonReactRouter>
       </AuthProvider>

@@ -6,9 +6,7 @@ type TGuia = {
   nombre_y_apellido: string;
   id_guia?: number;
 };
-
 export const guardarGuia = async (guia: TGuia) => {
-  console.log(guia);
   return await AUTH_API.post(`/actividades/registrar-guia`, guia);
 };
 
@@ -16,13 +14,11 @@ type TEliminarGuia = {
   id_guia: number;
   id_oferta: string;
 }
-
 export const eliminarGuia = async (guia: TEliminarGuia) =>
   await AUTH_API.delete(`/actividades/eliminar-guia`, { data: guia });
 
 
 export const modificarGuia = async (guia: TGuia) => {
-  console.log(guia);
   return await AUTH_API.patch(`/actividades/modificar-guia`, guia);
 };
 

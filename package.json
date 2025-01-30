@@ -33,11 +33,13 @@
     "ol": "^9.2.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-hook-form": "^7.54.2",
     "react-leaflet": "^4.2.1",
     "react-router": "^5.3.4",
     "react-router-dom": "^5.3.4",
     "styled-components": "^6.1.13",
-    "swiper": "^11.1.14"
+    "swiper": "^11.1.14",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@capacitor/cli": "6.1.0",

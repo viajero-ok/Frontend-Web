@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+:root {
+  --color-viajero: #f08408;
+}
+
+.viajero-button {
+    cursor: pointer;
+    display: flex;
+    background-color: var(--color-viajero);
+    border-radius: var(--radius-md);
+    justify-content: center;
+    color: white;
+}
+.viajero-button:hover {
+    background-color: color-mix(in srgb, var(--color-viajero) 90%, transparent);
+    box-shadow: var(--shadow-md);
+}

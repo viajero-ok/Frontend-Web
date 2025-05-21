@@ -13,10 +13,8 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import { useEffect, useState } from "react";
-import LoginNavbar from "../../components/LoginNavbar/LoginNavbar";
-import ProfileChip from "../../components/ProfileChip/ProfileChip";
-import { useAuth } from "../../hooks/UseAuth/AuthProvider";
 import { clearJWT } from "../../App/Token";
+import { useAuth } from "../../hooks/UseAuth/AuthProvider";
 
 export default function UncompleteLoggedLayout({ children }: any) {
   const [logged, setLogged] = useState<boolean>();
@@ -58,7 +56,7 @@ export default function UncompleteLoggedLayout({ children }: any) {
                 marginLeft: "13pt",
               }}
             >
-              viajero
+              VIAJERO
             </IonTitle>
           </IonToolbar>
         </IonHeader>
@@ -94,50 +92,25 @@ export default function UncompleteLoggedLayout({ children }: any) {
       </IonMenu>
       <IonPage id="burger">
         <IonHeader>
-          <IonToolbar>
-            <IonMenuToggle
-              slot="start"
-              style={{ display: "inline-block", marginLeft: "13pt" }}
-            >
-              <IonMenuButton style={{ fontSize: "24pt" }}></IonMenuButton>
-            </IonMenuToggle>
-            <IonTitle
-              style={{
-                display: "flex",
-                position: "absolute",
-                float: "left",
-                top: "calc(50% - 1.5pt)",
-                transform: "translateY(-50%)",
-                fontWeight: "bolder",
-                fontSize: "21pt",
-                marginLeft: "-13pt",
-              }}
-            >
-              viajero
-            </IonTitle>
-            <IonTitle
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                transform: "translateX(-50%) translateY(-50%)",
-              }}
-            >
-              ¡Hola, viajero!
-            </IonTitle>
-            <div
-              style={{
-                display: "flex",
-                position: "relative",
-                float: "right",
-                marginRight: "31pt",
-              }}
-            >
-              <IonButton color="light" onClick={() => handleCerrarSesion()}>
+          <div className="grid grid-cols-3 h-[50pt]">
+            <div className="flex flex-row items-center h-full text-gray-800">
+              <IonMenuToggle
+                slot="start"
+                style={{ display: "inline-block", marginLeft: "13pt" }}
+              >
+                <IonMenuButton style={{ fontSize: "24pt" }}></IonMenuButton>
+              </IonMenuToggle>
+              <div className="text-xl font-bold w-fit">VIAJERO</div>
+            </div>
+            <div className="flex flex-row justify-center items-center">
+              <div className="text-2xl">¡Hola, viajero!</div>
+            </div>
+            <div className="flex flex-row justify-end items-center">
+              <IonButton className="mr-8 h-3/5" color="light" onClick={() => handleCerrarSesion()}>
                 Salir
               </IonButton>
             </div>
-          </IonToolbar>
+          </div>
         </IonHeader>
         <IonContent fullscreen>
           <IonHeader collapse="condense">

@@ -45,110 +45,71 @@ export default function VerifyForm(props: any) {
   };
 
   return (
-    <IonCard
-      style={{
-        position: "fixed",
-        width: "50%",
-        left: "50%",
-        top: "50%",
-        transform: "translateX(-50%) translateY(-50%)",
-      }}
-    >
-      <IonCardHeader style={{ padding: "31pt", paddingTop: "40pt" }}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
-          }}
-        >
-          <IonImg src="icon.png" style={{ width: "100pt" }} />
-          <IonTitle
-            style={{
-              fontSize: "16pt",
-              fontWeight: "bolder",
-              color: "#F08408",
-              marginTop: "13pt",
-              marginBottom: "13pt",
-              textAlign: "center",
-            }}
-          >
-            Verificá tu cuenta
-            <IonLabel style={{ fontSize: "12pt", fontWeight: "normal", textAlign: "center", color: "gray" }}>
-              <br /> Enviamos un mail al correo ingresado para que puedas validar tu cuenta
-            </IonLabel>
-          </IonTitle>
-          {/* <IonText
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-            }}
-          >
-            <h1>Validar Cuenta</h1>
-          </IonText>
-          <div style={{ marginTop: "13pt" }}>
-            <IonText color="medium">
-              Enviamos un mail a viajeroapp2024@gmail.com <br />
-              con el código de validación
-            </IonText>
-          </div> */}
+    <div className="w-full p-4">
+      <div className="flex flex-col justify-start ">
+        <div className="flex flex-row gap-2 mb-4">
+          <IonImg src="/icon.png" style={{ width: "16pt" }} />
+          <div className="text-[var(--color-viajero)] font-bold text-md">
+            VIAJERO
+          </div>
         </div>
-      </IonCardHeader>
-      <IonCardContent>
-        <IonInput
-          ref={async (cardRef) => {
-            if (cardRef) {
-              const input = await cardRef.getInputElement();
-              codeMask(input);
-            }
-          }}
-          onInput={(e: any) => setCode(e.target.value)}
-          maxlength={8}
-          placeholder="00000000"
-          style={{
-            letterSpacing: "21pt",
-            fontSize: "21pt",
-            textAlign: "center",
-            marginLeft: "11pt",
-            width: "auto",
-          }}
-        ></IonInput>
-        <IonRow
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            alignContent: "center",
-            justifyContent: "center",
-          }}
+        <div className="text-gray-600 text-3xl font-bold mb-4">
+          El viaje empieza acá
+        </div>
+      </div>
+      <div className="flex flex-col w-full content-center items-center justify-center">
+        <span className="text-gray-600 text-xl font-bold w-fit">
+          Validá tu correo electrónico
+        </span>
+        <span className="text-gray-400 text-sm w-fit">
+          Te enviamos un código de validación a tu correo electrónico
+        </span>
+      </div>
+      <IonInput
+        ref={async (cardRef) => {
+          if (cardRef) {
+            const input = await cardRef.getInputElement();
+            codeMask(input);
+          }
+        }}
+        onInput={(e: any) => setCode(e.target.value)}
+        maxlength={8}
+        placeholder="00000000"
+        style={{
+          letterSpacing: "21pt",
+          fontSize: "21pt",
+          textAlign: "center",
+          marginLeft: "11pt",
+          width: "auto",
+        }}
+      ></IonInput>
+      <IonRow
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          alignContent: "center",
+          justifyContent: "center",
+        }}
+      >
+        <button
+          disabled={code.length != 8}
+          className="viajero-button w-full py-3 mt-4"
+          onClick={() => handleVerificar()}
         >
-          <IonButton
-            disabled={code.length != 8}
-            style={{
-              margin: "13pt",
-              "--background": "#F08408",
-              "--color": "white",
-            }}
-            onClick={() => handleVerificar()}
-          >
-            VALIDAR
-          </IonButton>
-        </IonRow>
-        <IonToast
-          isOpen={openToast}
-          message={ToastMessage}
-          duration={5000}
-          icon={alertCircleOutline}
-          onDidDismiss={() => {
-            setOpenToast(false);
-            setToastMessage("");
-          }}
-        ></IonToast>
-      </IonCardContent>
-    </IonCard>
+          VALIDAR
+        </button>
+      </IonRow>
+      <IonToast
+        isOpen={openToast}
+        message={ToastMessage}
+        duration={5000}
+        icon={alertCircleOutline}
+        onDidDismiss={() => {
+          setOpenToast(false);
+          setToastMessage("");
+        }}
+      ></IonToast>
+    </div>
   );
 }

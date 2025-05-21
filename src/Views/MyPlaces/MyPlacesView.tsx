@@ -42,28 +42,9 @@ export default function MyPlacesView() {
           <IonRow>
             <IonCol>
               <IonRow>
-                <IonTitle style={{ fontSize: "20pt", fontWeight: "bolder" }}>
+                <div className="text-3xl text-gray-600 font-bold">
                   Mis establecimientos
-                </IonTitle>
-              </IonRow>
-              <IonRow
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  alignContent: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <IonButton
-                  style={{ marginTop: "13pt", "--background": "#F08408" }}
-                  onClick={() => {
-                    if (!router) return;
-                    router.push("/my-places/new-place");
-                  }}
-                >
-                  <IonIcon icon={addCircle} />
-                  &nbsp;NUEVO ESTABLECIMIENTO
-                </IonButton>
+                </div>
               </IonRow>
             </IonCol>
           </IonRow>
@@ -77,28 +58,29 @@ export default function MyPlacesView() {
               flexGrow: 1,
             }}
           >
-            <IonCol
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                padding: "13pt",
-                margin: "31pt",
-                flexGrow: 1,
-                alignItems: "center",
-                alignContent: "center",
-                justifyContent: "center",
-              }}
-            >
+            <div className="flex gap-4">
+              <div
+                onClick={() => {
+                  if (!router) return;
+                  router.push("/my-places/new-place");
+                }}
+                className="group cursor-pointer transtion-colors duration-400 hover:shadow-md w-[200pt] hover:border-[var(--color-viajero)]/100 p-4 aspect-square border border-[var(--color-viajero)]/25 rounded-md flex flex-col"
+              >
+                <div className="bg-[var(--color-viajero)]/5 group-hover:bg-[var(--color-viajero)]/15 transition-colors duration-400 rounded-md w-full aspect-6/4" />
+                <button className="cursor-pointer text-[var(--color-viajero)] transition-all duration-400 rounded-md group-hover:bg-[var(--color-viajero)] group-hover:text-white mt-4 px-4 py-2 flex flex-row items-center content-center justify-center">
+                  <IonIcon icon={addCircle} />
+                  &nbsp;NUEVO
+                </button>
+              </div>
               {establecimientos.map((establecimiento: any) => (
-                <IonRow style={{ width: "100%" }}>
-                  <EstablecimientoCard
-                    nombre={establecimiento.nombre}
-                    descripcion={establecimiento.descripcion}
-                    id={establecimiento.id_establecimiento}
-                  />
-                </IonRow>
+                <EstablecimientoCard
+                  key={establecimiento.id_establecimiento}
+                  nombre={establecimiento.nombre}
+                  descripcion={establecimiento.descripcion}
+                  id={establecimiento.id_establecimiento}
+                />
               ))}
-            </IonCol>
+            </div>
           </IonRow>
         </IonGrid>
       </IonContent>

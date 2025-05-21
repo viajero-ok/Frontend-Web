@@ -1,7 +1,9 @@
-import { IonImg } from "@ionic/react";
+import { IonImg, useIonRouter } from "@ionic/react";
 import LoginForm from "./LoginForm";
 
 export default function LoginView(props: any) {
+  const router = useIonRouter();
+
   return (
     <div className="grid grid-cols-2 gap-2 w-1/2">
       <div className="flex flex-col rounded-3xl bg-gray-50">
@@ -35,7 +37,10 @@ export default function LoginView(props: any) {
           <LoginForm />
           <div className="text-sm text-gray-600 mt-2 w-full justify-center flex flex-row gap-1">
             No tenés cuenta?{" "}
-            <span className="font-bold cursor-pointer hover:underline">
+            <span
+              className="font-bold cursor-pointer hover:underline"
+              onClick={() => router.push("signup")}
+            >
               Registrate
             </span>
           </div>

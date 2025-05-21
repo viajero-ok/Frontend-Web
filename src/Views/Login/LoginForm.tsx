@@ -1,16 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useIonRouter } from "@ionic/react";
+import { IonToast, useIonRouter } from "@ionic/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { iniciarSesion } from "../../App/Auth/Cuenta";
 import {
   cn,
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
-  FormMessage,
+  FormMessage
 } from "../../components/ui/Form/Field";
 import { Input } from "../../components/ui/Input/Input";
 
@@ -21,28 +21,28 @@ const formSchema = z.object({
 
 export default function LoginForm() {
   const [openToast, setOpenToast] = useState<boolean>(false);
-  const [ToastMessage, setToastMessage] = useState<string>("");
+  const [toastMessage, setToastMessage] = useState<string>("");
 
   const router = useIonRouter();
 
-  // const handleIniciarSesion = () => {
-  //   if (!form) return;
-  //   if (!router) return;
-  //   if (!auth) return;
-  //   // Acá se tiene ejecutar la validación del schema
-  //   iniciarSesion({
-  //     mail: form.schema.email,
-  //     contraseña: form.schema.password,
-  //   })
-  //     .then((response: any) => {
-  //       auth.login();
-  //       router.push("/");
-  //     })
-  //     .catch((error: any) => {
-  //       setToastMessage(error.response.data.message);
-  //       setOpenToast(true);
-  //     });
-  // };
+  const handleIniciarSesion = () => {
+    if (!form) return;
+    if (!router) return;
+    //if (!auth) return;
+    // Acá se tiene ejecutar la validación del schema
+    iniciarSesion({
+      mail: form.getValues().email,
+      contraseña: form.getValues().password,
+    })
+      .then((response: any) => {
+        //auth.login();
+        router.push("/");
+      })
+      .catch((error: any) => {
+        setToastMessage(error.response.data.message);
+        setOpenToast(true);
+      });
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -54,8 +54,7 @@ export default function LoginForm() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("VALUES");
-    console.log(values);
+    handleIniciarSesion();
   }
 
   return (
@@ -82,7 +81,7 @@ export default function LoginForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Contraseña" {...field} />
+                <Input type="password" placeholder="Contraseña" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -92,6 +91,7 @@ export default function LoginForm() {
           Ingresar
         </button>
       </form>
+      <IonToast onDidDismiss={() => setOpenToast(false)} duration={1000} isOpen={openToast} message={toastMessage} />
     </Form>
   );
 }

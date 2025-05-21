@@ -36,6 +36,7 @@
     "ionicons": "^7.0.0",
     "leaflet": "^1.9.4",
     "leaflet-control-geocoder": "^2.4.0",
+    "lucide-react": "^0.510.0",
     "ol": "^9.2.4",
     "postcss": "^8.5.1",
     "react": "^18.3.1",

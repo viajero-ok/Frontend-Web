@@ -33,6 +33,8 @@ const Home: React.FC = () => {
     setPerfil(auth.getPerfil());
   }, [auth]);
 
+  console.log("is home")
+
   return (
     <DefaultLoggedLayout>
       <IonContent style={{ overflowY: "hidden" }}>
@@ -40,16 +42,9 @@ const Home: React.FC = () => {
           <IonToolbar>
             <IonTitle size="large">Blank</IonTitle>
           </IonToolbar>
-          <h1>Perfil: {perfil}</h1>
         </IonHeader>
         <IonContent style={{ overflowY: "hidden" }}>
-          {/* <div className="logo-container">
-						<IonImg
-							src={`../public/3.1. Logos/Logo con nombre.png`}
-							className="logo"
-						/>
-					</div> */}
-          <div
+          {/* <div
             style={{
               width: "100%",
               height: "400pt",
@@ -58,7 +53,7 @@ const Home: React.FC = () => {
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
             }}
-          ></div>
+          ></div> */}
           {/* <HomeVisitanteView /> */}
           {perfil == PERFILES.INVITADO.id && <HomeVisitanteView />}
           {perfil == PERFILES.TURISTA.id && <HomeVisitanteView />}

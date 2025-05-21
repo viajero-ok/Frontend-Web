@@ -11,11 +11,12 @@ import {
   IonModal,
   IonRow,
   useIonRouter,
-  IonToast
+  IonToast,
 } from "@ionic/react";
-import { pencil, trash, close } from "ionicons/icons";
-import { useState} from "react";
+import { pencil, trash, close, settings, hammer } from "ionicons/icons";
+import { useState } from "react";
 import { eliminarEstablecimiento } from "../../App/Establecimientos/Establecimientos";
+import { cn } from "../ui/Form/Field";
 
 type TEstablecimientoCard = {
   nombre: string;
@@ -42,8 +43,9 @@ export default function EstablecimientoCard(props: TEstablecimientoCard) {
         setOpenConfirmDelete(false);
         setEstablecimientos((prev: any[]) => {
           [...prev].filter(
-            (establecimiento: any) => establecimiento.id_establecimiento != props.id
-          )
+            (establecimiento: any) =>
+              establecimiento.id_establecimiento != props.id
+          );
           return establecimientos;
         });
       })
@@ -51,66 +53,59 @@ export default function EstablecimientoCard(props: TEstablecimientoCard) {
         setOpenConfirmDelete(false);
         setErrorMessage(error.response.data.message);
         setShowToast(true);
-        
       });
   };
 
   return (
-    <>
-      <IonCard style={{ display: "flex", flexDirection: "row", width: "100%" }}>
-        <IonGrid style={{ padding: 0, top: 0, position: "relative" }}>
-          <IonRow>
-            <IonCol size="auto">
-              <IonRow>
-                <img
-                  src="public\images\hipocampus.jpg"
-                  width={"175pt"}
-                  height={"150pt"}
-                  style={{}}
-                />
-              </IonRow>
-            </IonCol>
-            <IonCol>
-              <IonRow>
-                <IonCardHeader style={{}}>
-                  <IonCardTitle>{props.nombre}</IonCardTitle>
-                  <IonCardSubtitle>{props.descripcion}</IonCardSubtitle>
-                </IonCardHeader>
-              </IonRow>
-              <IonRow>
-                <IonCardContent style={{}}>
-                  <IonButton
-                    fill="outline"
-                    style={{
-                      "--border": "1pt solid #F08408",
-                      "--border-color": "#F08408",
-                      "--background": "transparent",
-                      "--color": "#F08408",
-                    }}
-                  >
-                    VER
-                  </IonButton>
-                  <IonButton
-                    fill="solid"
-                    style={{
-                      "--background": "#F08408",
-                      "--color": "#FFFFFF",
-                    }}
-                    onClick={() => handleEditar()}
-                  >
-                    <IonIcon icon={pencil}></IonIcon>
-                  </IonButton>
-                  <IonButton
-                    color="danger"
-                    onClick={() => setOpenConfirmDelete(true)}
-                  >
-                    <IonIcon icon={trash}></IonIcon>
-                  </IonButton>
-                </IonCardContent>
-              </IonRow>
-            </IonCol>
-          </IonRow>
-        </IonGrid>
+    <div
+      className="relative border border-gray-100 rounded-md w-[200pt] aspect-square p-4 hover:shadow-md cursor-pointer"
+      onClick={() => handleEditar()}
+    >
+      <div className="absolute left-0 top-0 w-full h-full opacity-0 hover:opacity-100 transition-opacity duration-400">
+        <div className="w-full h-full bg-white/40 flex items-center content-center justify-center text-gray-800">
+          <IonIcon icon={hammer} className="text-gray-100 text-[56px]" />
+        </div>
+      </div>
+      <div className="flex flex-col">
+        <img
+          src="public\images\hipocampus.jpg"
+          className="w-full aspect-auto rounded-md"
+        />
+
+        <div className="text-xl text-gray-600 font-bold mt-2">
+          {props.nombre}
+        </div>
+        <div className="text-sm text-gray-600">{props.descripcion}</div>
+
+        {/* <div
+          className={cn(expand ? "visible" : "hidden", "flex flex-row justify-center gap-2 mt-4")}
+        >
+          <IonButton
+            fill="outline"
+            style={{
+              "--border": "1pt solid #F08408",
+              "--border-color": "#F08408",
+              "--background": "transparent",
+              "--color": "#F08408",
+            }}
+          >
+            VER
+          </IonButton>
+          <IonButton
+            fill="solid"
+            style={{
+              "--background": "#F08408",
+              "--color": "#FFFFFF",
+            }}
+            onClick={() => handleEditar()}
+          >
+            <IonIcon icon={pencil}></IonIcon>
+          </IonButton>
+          <IonButton color="danger" onClick={() => setOpenConfirmDelete(true)}>
+            <IonIcon icon={trash}></IonIcon>
+          </IonButton>
+        </div> */}
+
         <IonModal
           isOpen={openConfirmDelete}
           onDidDismiss={() => setOpenConfirmDelete(false)}
@@ -123,7 +118,9 @@ export default function EstablecimientoCard(props: TEstablecimientoCard) {
               <IonRow>
                 <IonCol></IonCol>
                 <IonCol>
-                  <h4 style={{ fontWeight: "bold" }}>Eliminar establecimiento</h4>
+                  <h4 style={{ fontWeight: "bold" }}>
+                    Eliminar establecimiento
+                  </h4>
                 </IonCol>
                 <IonCol style={{ display: "flex", justifyContent: "right" }}>
                   <IonButton
@@ -155,13 +152,12 @@ export default function EstablecimientoCard(props: TEstablecimientoCard) {
                 <IonButton color="danger" onClick={() => handleDelete()}>
                   Eliminar
                 </IonButton>
-
               </IonRow>
             </IonGrid>
           </div>
         </IonModal>
-      </IonCard>
-      
+      </div>
+
       <IonToast
         isOpen={showToast}
         onDidDismiss={() => setShowToast(false)}
@@ -169,9 +165,9 @@ export default function EstablecimientoCard(props: TEstablecimientoCard) {
         duration={5000}
         color="danger"
         style={{
-          fontSize: "12pt"
+          fontSize: "12pt",
         }}
       />
-    </>
+    </div>
   );
 }

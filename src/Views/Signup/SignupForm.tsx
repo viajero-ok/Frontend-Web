@@ -1,174 +1,134 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { IonImg, useIonRouter } from "@ionic/react";
+import { z } from "zod";
 import {
-  IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonImg,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonRow,
-  IonText,
-  IonTitle,
-  useIonRouter,
-} from "@ionic/react";
-import { FormProvider, useForm } from "../../hooks/UseForm/FormProvider";
-import { SetStateAction, useEffect, useState } from "react";
-import Field from "../../components/Field/Field";
-import { Validator as v } from "../../hooks/UseForm/Validator/Validator";
+  cn,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "../../components/ui/Form/Field";
+import { Input } from "../../components/ui/Input/Input";
+import { useForm } from "react-hook-form";
 import { registrarCuenta } from "../../App/Auth/Cuenta";
+import { useState } from "react";
+
+const formSchema = z.object({
+  email: z.string({ message: "Campo requerido" }),
+  password: z.string({ message: "Campo requerido" }),
+  repeatPassword: z.string({ message: "Campo requerido" }),
+});
 
 type TProps = {
   setIdUsuario: React.Dispatch<React.SetStateAction<string>>;
 };
 export default function SignupForm(props: TProps) {
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useIonRouter();
-  const form = useForm();
 
-  useEffect(() => {
-    if (!form) return;
-  }, [form]);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    mode: "onSubmit",
+    defaultValues: {
+      email: "",
+      password: "",
+      repeatPassword: "",
+    },
+  });
 
   const handleCrearCuenta = () => {
     if (!form) return;
-    // [!] Acá se debe llamar a la validación de los campos
+    setLoading(true);
     registrarCuenta({
-      mail: form.schema.email,
-      contraseña: form.schema.password,
+      mail: form.getValues().email,
+      contraseña: form.getValues().password,
     })
       .then((response: any) => {
         props.setIdUsuario(response.data.id_usuario);
       })
-      .catch((error) => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   };
 
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    handleCrearCuenta();
+  }
+
   return (
-    <IonCard
-      style={{
-        position: "fixed",
-        width: "50%",
-        left: "50%",
-        top: "50%",
-        transform: "translateX(-50%) translateY(-50%)",
-      }}
-    >
-      <IonCardHeader style={{ padding: "31pt", paddingTop: "40pt" }}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
-          }}
-        >
-          <IonImg src="/icon.png" style={{ width: "55pt" }} />
-          <IonTitle
-            style={{
-              fontSize: "24pt",
-              fontWeight: "bolder",
-              color: "#F08408",
-              marginTop: "13pt",
-              marginBottom: "13pt",
-            }}
-          >
-            ¡Hola, viajero!
-            <IonLabel style={{ fontSize: "16pt", fontWeight: "bold", textAlign: "center" }}>
-              <br /> Creá tu cuenta
-            </IonLabel>
-          </IonTitle>
+    <div className="w-full p-4">
+      <div className="flex flex-col justify-start ">
+        <div className="flex flex-row gap-2 mb-4">
+          <IonImg src="/icon.png" style={{ width: "16pt" }} />
+          <div className="text-[var(--color-viajero)] font-bold text-md">
+            VIAJERO
+          </div>
         </div>
-      </IonCardHeader>
-      <IonCardContent>
-        {/* <IonText
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-        }}
-      >
-        <h1>Crear Cuenta</h1>
-      </IonText> */}
-        <IonList
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            margin: "13pt",
-            marginTop: "0",
-            marginLeft: "34pt",
-            marginRight: "34pt",
-            paddingRight: "12pt",
-          }}
+        <div className="text-gray-600 text-3xl font-bold mb-4">
+          El viaje empieza acá
+        </div>
+      </div>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col gap-2"
         >
-          <Field
+          <FormField
+            control={form.control}
             name="email"
-            label="Correo Electrónico"
-            required
-            value={form?.schema?.email}
-            form={form}
-            valid={v()
-              .required("El campo es obligatorio")
-              .isEmail("Ingrese un correo electrónico válido")}
-          ></Field>
-          <Field
-            password
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="Correo electrónico" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="password"
-            label="Contraseña"
-            required
-            value={form?.schema?.password}
-            form={form}
-            valid={v().required("El campo es obligatorio")}
-          ></Field>
-          <Field
-            password
-            name="passwordRepeated"
-            label="Repetir Contraseña"
-            required
-            value={form?.schema?.passwordRepeated}
-            form={form}
-            valid={v().required("Ingrese una contraseña válida")}
-          ></Field>
-        </IonList>
-        <IonRow
-          style={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "row",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <IonButton
-            size="default"
-            style={{
-              margin: "13pt",
-              marginLeft: "89pt",
-              marginRight: "89pt",
-              "--background": "#F08408",
-              "--color": "white",
-            }}
-            onClick={() => handleCrearCuenta()}
-          >
-            CREAR CUENTA
-          </IonButton>
-        </IonRow>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          Ya posee una cuenta?
-          <IonButton fill="clear" size="small" style={{ "--color": "#F08408" }}
-          onClick={() => router.push("/login")}>
-            Iniciar sesión
-          </IonButton>
-        </div>
-      </IonCardContent>
-    </IonCard>
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input type="password" placeholder="Contraseña" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="repeatPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    type="password"
+                    disableShowPassword
+                    placeholder="Repetir contraseña"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <button type="submit" className={cn("viajero-button w-full py-3")}>
+            Registrarme
+          </button>
+          <div className="text-sm text-gray-600 mt-2 w-full justify-center flex flex-row gap-1">
+            Ya estás registrado?{" "}
+            <span
+              className="font-bold cursor-pointer hover:underline"
+              onClick={() => router.push("login")}
+            >
+              Iniciá sesión
+            </span>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 }

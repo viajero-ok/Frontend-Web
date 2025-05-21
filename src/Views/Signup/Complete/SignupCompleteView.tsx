@@ -1,165 +1,100 @@
-import {
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonContent,
-  IonGrid,
-  IonImg,
-  IonRow,
-  IonTitle,
-  IonButton,
-  useIonRouter,
-  IonCol,
-} from "@ionic/react";
-import UncompleteLoggedLayout from "../../Layouts/UncompleteLoggedLayout";
+import { IonButton, IonImg, useIonRouter } from "@ionic/react";
 
 export default function SignupCompleteView() {
   const router = useIonRouter();
   return (
-    <IonContent className="ion-padding">
-      {/* <img
-        src="/3.2. Principal/Fondo.jpg"
-        style={{
-          position: "fixed",
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          zIndex: -1,
-        }}
-      /> */}
-      <IonCard
-        style={{
-          width: "100%",
-          maxWidth: "1000px",
-          margin: "auto",
-          padding: "20px",
-        }}
-      >
-        <IonCardHeader>
-          <IonGrid style={{}}>
-            <IonRow
+    <div className="p-4 flex flex-col w-ful h-full content-center items-center justify-center">
+      <div className="flex flex-col items-center">
+        <div className="text-3xl font-bold text-gray-600">
+          Completá tu registro
+        </div>
+        <div className="">
+          <h3>Elegí cómo querés registrarte</h3>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 mt-8">
+        <div className="grid grid-cols-2 mx-4 border border-gray-100 shadow-md rounded-md h-fit p-4">
+          <div>
+            <IonImg
+              src="/public/3.3. Registro de usuario/Prestador.png"
               style={{
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
+                width: "100%",
+                marginTop: "10pt",
+                marginBottom: "10pt",
+              }}
+            />
+          </div>
+          <div className="flex flex-col items-start content-center justify-center ml-8">
+            <div className="text-3xl text-[var(--color-viajero)] font-bold">
+              Prestador
+            </div>
+            <span className="mt-4">
+              &bull; Registrá y publicá tus establecimientos y ofertas
+              turísticas.
+            </span>
+            <span>
+              &bull; Gestioná todas tus reservas desde un solo lugar y accedé a
+              reportes detallados para optimizar tu negocio.
+            </span>
+            <IonButton
+              expand="block"
+              style={{
+                "--background": "#F08408",
+                "--color": "white",
+                "--border-radius": "20px",
+              }}
+              className="animate-pulse hover:animate-none mt-6"
+              onClick={() => {
+                if (!router) return;
+                router.push("/signup/complete/prestador");
               }}
             >
-              <h1
-                style={{
-                  borderBottom: "2pt solid #F08408",
-                  paddingBottom: "13pt",
-                  display: "inline-block",
-                  fontWeight: "bold",
-                  color: "#F08408",
-                }}
-              >
-                Completá tu registro
-              </h1>
-            </IonRow>
-            <IonRow
-              style={{
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <h3>Elegí cómo querés registrarte</h3>
-            </IonRow>
-          </IonGrid>
-        </IonCardHeader>
-        <IonCardContent style={{
-          backgroundColor: "#FAD2A4",
-          padding: "20px",
-        }}>
-          <IonGrid>
-            <IonRow>
-              <IonCol size="12" sizeMd="6" style={{ display: "flex", marginBottom: "20px" }}>
-                <IonCard style={{
-                  width: "100%",
-                  margin: "10pt",
-                  display: "flex",
-                  flexDirection: "column",
-                  backgroundColor: "white" // Asegura que las tarjetas sean blancas
-                }}>
-                  <IonCardHeader>
-                    <IonTitle style={{
-                      fontWeight: "bold",
-                      fontSize: "20pt",
-                      color: "#F08408",
-                      borderBottom: "2pt solid #F08408",
-                      paddingBottom: "10pt",
-                      marginBottom: "10pt",
-                      textAlign: "center"
-                    }}>Prestador</IonTitle>
-                  </IonCardHeader>
-                  <IonCardContent style={{ textAlign: "center", flex: 1, display: "flex", flexDirection: "column" }}>
-                    <p>Registrá y publicá tus establecimientos y ofertas turísticas.</p>
-                    <IonImg
-                      src="/public/3.3. Registro de usuario/Prestador.png"
-                      style={{ width: "100%", marginTop: "10pt", marginBottom: "10pt" }}
-                    />
-                    <IonButton expand="block" style={{
-                      "--background": "#F08408",
-                      "--color": "white",
-                      "--border-radius": "20px",
-                      margin: "10pt 0"
-                    }} onClick={() => {
-                      if (!router) return;
-                      router.push("/signup/complete/prestador");
-                    }}>
-                      Potenciá tus ofertas
-                    </IonButton>
-                    <p>Gestioná todas tus reservas desde un solo lugar y accedé a reportes detallados para optimizar tu negocio.</p>
-                  </IonCardContent>
-                </IonCard>
-              </IonCol>
+              Potenciá tus ofertas
+            </IonButton>
+          </div>
+        </div>
 
-              <IonCol size="12" sizeMd="6" style={{ display: "flex", marginBottom: "20px" }}>
-                <IonCard style={{
-                  width: "100%",
-                  margin: "10pt",
-                  display: "flex",
-                  flexDirection: "column",
-                  backgroundColor: "white" // Asegura que las tarjetas sean blancas
-                }}>
-                  <IonCardHeader>
-                    <IonTitle style={{
-                      fontWeight: "bold",
-                      fontSize: "20pt",
-                      color: "#F08408",
-                      borderBottom: "2pt solid #F08408",
-                      paddingBottom: "10pt",
-                      marginBottom: "10pt",
-                      textAlign: "center"
-                    }}>Turista</IonTitle>
-                  </IonCardHeader>
-                  <IonCardContent style={{ textAlign: "center", flex: 1, display: "flex", flexDirection: "column" }}>
-                    <p>Explorá una amplia variedad de alojamientos, actividades y eventos turísticos.</p>
-                    <IonImg
-                      src="/public/3.3. Registro de usuario/Turista.png"
-                      style={{ width: "95%", marginTop: "10pt", marginBottom: "10pt"  }}
-                    />
-                    <IonButton expand="block" style={{
-                      "--background": "#F08408",
-                      "--color": "white",
-                      "--border-radius": "20px",
-                      margin: "10pt 0"
-                    }} onClick={() => {
-                      if (!router) return;
-                      router.push("/signup/complete/turista");
-                    }}>
-                      Comenzá tu aventura
-                    </IonButton>
-                    <p>Reservá en segundos y llevá un seguimiento de todas tus experiencias desde tu cuenta.</p>
-                  </IonCardContent>
-                </IonCard>
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-        </IonCardContent>
-      </IonCard>
-    </IonContent>
+        <div className="grid grid-cols-2 mx-4 border border-gray-100 shadow-md rounded-md h-fit p-4">
+          <div>
+            <IonImg
+              src="/public/3.3. Registro de usuario/Turista.png"
+              style={{
+                width: "100%",
+                marginTop: "10pt",
+                marginBottom: "10pt",
+              }}
+            />
+          </div>
+          <div className="flex flex-col items-start content-center justify-center ml-8">
+            <div className="text-3xl text-[var(--color-viajero)] font-bold">
+              Turista
+            </div>
+            <div className="text-left mt-4">
+              <span>&bull; Reservá alojamiento</span><br/>
+              <span>&bull; Encontrá nuevas actividades y eventos</span><br/>
+              <span>
+                &bull; Reservá en segundos y llevá un seguimiento de todas tus
+                experiencias desde tu cuenta.
+              </span>
+            </div>
+            <IonButton
+              expand="block"
+              style={{
+                "--background": "#F08408",
+                "--color": "white",
+                "--border-radius": "20px",
+              }}
+              className="animate-pulse hover:animate-none mt-6"
+              onClick={() => {
+                if (!router) return;
+                router.push("/signup/complete/turista");
+              }}
+            >
+              Comenzá tu viaje
+            </IonButton>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -12,20 +12,19 @@ export default function LoginNavbar() {
     router.push("/login");
   };
   return (
-    <>
-      <IonButton
-        style={{ marginLeft: "1rem", "--background": "white", "--color": "#F08408", "--border-color": "#F08408", "--border-style": "solid", "--border-width": "1px"}}
+    <div className="flex flex-row gap-4 items-center">
+      <button
         onClick={() => handleIngresar()}
+        className="cursor-pointer hover:border-[var(--color-viajero)] text-gray-800 border-transparent border-b-2"
       >
-        Ingresá
-      </IonButton>
-      <IonButton 
-        style={{ marginLeft: "1rem", "--background": "#F08408"}} 
+        iniciar sesión
+      </button>
+      <button
         onClick={() => handleRegistrarme()}
+        className="cursor-pointer hover:border-[var(--color-viajero)] text-gray-800 border-transparent border-b-2"
       >
-        Registrate
-      </IonButton>
-      
-    </>
+        registrarme
+      </button>
+    </div>
   );
 }

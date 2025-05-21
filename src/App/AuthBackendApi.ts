@@ -1,7 +1,7 @@
 import axios from "axios";
 import { readJWT, storeJWT } from "./Token";
 
-const apiPath = 'https://dev.viajeroturismo.com.ar/api';
+const apiPath = 'http://localhost:3000/api';
 
 const AUTH_API = axios.create({
   baseURL: apiPath,

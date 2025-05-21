@@ -35,8 +35,8 @@ export default function ProfileChip(props: any) {
   };
 
   return (
-    <>
-      <IonChip id="chip" onClick={() => setOpen(true)}>
+    <div className="flex h-full items-center">
+      <IonChip id="chip" onClick={() => setOpen(true)} className="flex flex-row gap-2 px-2 h-fit">
         <IonAvatar>
           <img
             alt="Silhouette of a person's head"
@@ -65,6 +65,6 @@ export default function ProfileChip(props: any) {
           </IonList>
         </IonContent>
       </IonPopover>
-    </>
+    </div>
   );
 }

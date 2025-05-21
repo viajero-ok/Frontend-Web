@@ -13,6 +13,7 @@ import { CSSOptions } from "vite";
 import MarkerOnClick from "./MarkerOnClick";
 import { LeafletMouseEvent } from "leaflet";
 import MarkerPin from "./MarkerPin";
+import { ClassNameValue } from "tailwind-merge";
 
 const ComponentResize = () => {
   const map = useMap();
@@ -33,7 +34,8 @@ const Recenter = (props: { pos: { lat: number; lng: number } }) => {
 };
 
 type TMap = {
-  initPos?: { lat: number; lgn: number };
+  initPos?: { lat: number; lng: number };
+  initZoom?: number;
   autoLoc?: boolean;
   style?: CSSProperties;
   zoom?: boolean;
@@ -41,14 +43,17 @@ type TMap = {
   markerOnClick?: boolean;
   onClick?: (e: LeafletMouseEvent) => any;
   pos?: { lat: number; lgn: number } | null;
-  setMarker?: { lat: number; lgn: number } | null;
+  setMarker?: { lat: number; lng: number } | null;
 };
 const Map = (props: TMap) => {
-  // get the location from geolocation
-  const [pos, setPos] = useState({
-    lat: (props.initPos && props.initPos.lat) ?? -31.44158447746307,
-    lng: (props.initPos && props.initPos.lgn) ?? -64.19357580741155,
-  });
+  const [pos, setPos] = useState<{ lat: number; lng: number }>(
+    props.initPos
+      ? { ...props.initPos }
+      : {
+          lat: -31.44158447746307,
+          lng: -64.19357580741155,
+        }
+  );
 
   useEffect(() => {
     if (!props.autoLoc) return;
@@ -74,7 +79,7 @@ const Map = (props: TMap) => {
     if (!props.setMarker) return;
     setPos({
       lat: props.setMarker.lat,
-      lng: props.setMarker.lgn,
+      lng: props.setMarker.lng,
     });
   }, [props.setMarker]);
 
@@ -82,7 +87,7 @@ const Map = (props: TMap) => {
     <>
       <MapContainer
         center={[pos.lat, pos.lng]}
-        zoom={13}
+        zoom={props.initZoom ?? 13}
         style={props.style ?? { height: "100vh" }}
         zoomControl={props.zoom ?? false}
       >
@@ -109,11 +114,13 @@ interface IMapView {
   zoom?: boolean;
   search?: boolean;
   autoLoc?: boolean;
-  initPos?: { lat: number; lgn: number };
+  initPos?: { lat: number; lng: number };
+  initZoom?: number;
   markerOnClick?: boolean;
   onClick?: (e: LeafletMouseEvent) => any;
   pos?: { lat: number; lgn: number } | null;
-  setMarker?: { lat: number; lgn: number } | null;
+  setMarker?: { lat: number; lng: number } | null;
+  className?: ClassNameValue;
 }
 export default function MapView(props: IMapView) {
   return <Map {...props} />;

@@ -2,17 +2,37 @@
 
 :root {
   --color-viajero: #f08408;
+  --ion-color-primary: #f08408;
 }
 
 .viajero-button {
-    cursor: pointer;
-    display: flex;
-    background-color: var(--color-viajero);
-    border-radius: var(--radius-md);
-    justify-content: center;
-    color: white;
+  cursor: pointer;
+  display: flex;
+  background-color: var(--color-viajero);
+  border-radius: var(--radius-md);
+  justify-content: center;
+  color: white;
 }
 .viajero-button:hover {
-    background-color: color-mix(in srgb, var(--color-viajero) 90%, transparent);
-    box-shadow: var(--shadow-md);
+  background-color: color-mix(in srgb, var(--color-viajero) 90%, transparent);
+  box-shadow: var(--shadow-md);
 }
+
+.viajero-button-ghost {
+  cursor: pointer;
+  display: flex;
+  background-color: transparent;
+  border-width: 1pt;
+  border-color: transparent;
+  border-radius: var(--radius-md);
+  justify-content: center;
+  color: var(--color-gray-600);
+}
+.viajero-button-ghost:hover {
+  border-width: 1pt;
+  border-color: var(--color-gray-100);
+  border-radius: var(--radius-md);
+  background-color: color-mix(in srgb, var(--color-gray-50) 90%, transparent);
+  
+}
+

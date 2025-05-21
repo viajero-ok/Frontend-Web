@@ -32,7 +32,17 @@ export default function HomeTuristaView() {
   };
 
   return (
-    <>
+    <div className="flex flex-col bg-green-400">
+      {/* <div
+        style={{
+          width: "100%",
+          height: "400pt",
+          backgroundImage: "url(/images/panoramic_1.jpg)",
+          backgroundPosition: "center 25%",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+        }}
+      /> */}
       <FormProvider schema={initialSchema}>
         <HomeTuristaForm />
       </FormProvider>
@@ -51,6 +61,6 @@ export default function HomeTuristaView() {
           setToastMessage("");
         }}
       />
-    </>
+    </div>
   );
 }

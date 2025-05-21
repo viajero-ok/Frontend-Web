@@ -2,8 +2,8 @@ import AUTH_API from "../AuthBackendApi";
 import API from "../BackendApi";
 
 type TBodyRegistrarCuenta = {
-  mail: "string";
-  contraseña: "string";
+  mail: string;
+  contraseña: string;
 };
 type TResponseRegistrarCuenta = {
   resultado: string;

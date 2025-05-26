@@ -79,17 +79,8 @@ export default function MyOffersView() {
               flexGrow: 1,
             }}
           >
-            <IonCol 
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                padding: "13pt",
-                margin: "31pt",
-                flexGrow: 1,
-                alignItems: "center",
-                alignContent: "center",
-                justifyContent: "center",
-              }}
+            <div 
+              className="flex gap-4"
             >
               {ofertas.map((oferta: any) => (
                 <IonRow key={oferta.id_oferta_turistica} style={{ width: "100%" }}>
@@ -102,7 +93,7 @@ export default function MyOffersView() {
                   />
                 </IonRow>
               ))}
-            </IonCol>
+            </div>
           </IonRow>
         </IonGrid>
       </IonContent>

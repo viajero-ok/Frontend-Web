@@ -1,25 +1,14 @@
 import {
-  IonButton,
-  IonCard,
-  IonCardTitle,
-  IonCol,
-  IonContent,
-  IonGrid,
-  IonHeader,
-  IonIcon,
-  IonModal,
-  IonRow,
-  IonSelect,
-  IonSelectOption,
-  IonTitle,
+  SelectChangeEventDetail,
+  SelectCustomEvent,
   useIonRouter,
 } from "@ionic/react";
-import { registrarNuevoAlojamiento } from "../../../../App/Alojamientos/NuevoAlojamiento";
-import { close } from "ionicons/icons";
 import { useEffect, useState } from "react";
-import Field from "../../../../components/Field/Field";
-import { useForm } from "../../../../hooks/UseForm/FormProvider";
+import { registrarNuevoAlojamiento } from "../../../../App/Alojamientos/NuevoAlojamiento";
 import { obtenerEstablecimientos } from "../../../../App/Establecimientos/Establecimientos";
+import { useModal } from "../../../../components/ui/Modal/Modal";
+import { Select, SelectOption } from "../../../../components/ui/Select/Select";
+import { OfferCard } from "../OfferTypeSelection";
 
 type TAlojamientoTypeSelection = {
   setOfferType: any;
@@ -27,31 +16,74 @@ type TAlojamientoTypeSelection = {
 export default function AlojamientoTypeSelection(
   props: TAlojamientoTypeSelection
 ) {
-  const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [selection, setSelection] = useState<number | null>(null);
+  const [establecimiento, setEstablecimiento] = useState<number>();
   const [establecimientos, setEstablecimientos] = useState<any[]>([]);
-  const form = useForm();
+
   const router = useIonRouter();
+  const { modal, setOpen } = useModal();
 
   const handleCrearAlojamiento = (idTipoSuboferta: number) => {
+    if (!establecimiento) return;
+
     registrarNuevoAlojamiento({
       id_tipo_oferta: 1,
       id_sub_tipo_oferta: idTipoSuboferta,
-      id_establecimiento: form?.schema.id_establecimiento,
+      id_establecimiento: establecimiento,
     })
       .then((response: any) => {
-        setOpenConfirm(false);
-        router &&
-          router.push(
-            `/my-offers/alojamiento/en-habitaciones/edit/${response.data.id_oferta}`
-          );
+        modal({
+          variant: "success",
+          title: "Alojamiento creado",
+          description: "El alojamiento fue creado con éxito.",
+          canDismiss: false,
+          actions: (
+            <>
+              <button
+                className="viajero-button bg-green-400! hover:bg-green-400/90 py-2 px-4"
+                onClick={() => {
+                  router.push(
+                    `/my-offers/alojamiento/en-habitaciones/edit/${response.data.id_oferta}`
+                  );
+                  setOpen(false);
+                }}
+              >
+                Aceptar
+              </button>
+            </>
+          ),
+        });
       })
-      .catch((error: any) => { });
+      .catch((error: any) => {});
   };
 
   const handleSelect = (idType: number) => {
     setSelection(idType);
-    setOpenConfirm(true);
+    modal({
+      title: "Confirmar",
+      description: `Estás por crear un alojamiento para el establecimiento: ${
+        establecimientos.filter(
+          (e: any) => e.id_establecimiento == establecimiento
+        )[0]?.nombre
+      }`,
+      actions: (
+        <>
+          <button
+            className="viajero-button-ghost px-4 py-2"
+            onClick={() => setOpen(false)}
+          >
+            Cancelar
+          </button>
+          <button
+            disabled={!selection}
+            className="viajero-button px-4 py-2 disabled:bg-gray-200"
+            onClick={() => selection && handleCrearAlojamiento(selection)}
+          >
+            Crear
+          </button>
+        </>
+      ),
+    });
   };
 
   useEffect(() => {
@@ -61,239 +93,70 @@ export default function AlojamientoTypeSelection(
   }, []);
 
   return (
-    <>
-      <IonGrid
-        style={{
-          display: "flex",
-          alignContent: "center",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <IonCol>
-          <IonRow
-            style={{
-              display: "flex",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "center",
-              paddingTop: "13pt",
-            }}
+    <div className="flex flex-col w-full h-full items-center justify-center">
+      <div className="flex flex-col">
+        <div className="flex flex-row gap-4 items-center justify-between">
+          <div className="text-3xl text-gray-600 font-bold">
+            Elegí el tipo de alojamiento que querés registrar
+          </div>
+          <button
+            className="viajero-button-ghost py-2 px-4"
+            onClick={() => props.setOfferType(null)}
           >
-
-            <h1>Elegí el tipo de alojamiento que querés registrar</h1>
-          </IonRow>
-          <IonRow
-            style={{
-              display: "flex",
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "center",
-              paddingTop: "13pt",
-            }}
-          >
-            <IonCard button onClick={() => handleSelect(1)}>
-              <IonHeader
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: "13pt",
-                }}
-              >
-                <img
-                  alt="Silhouette of mountains"
-                  src="public\3.6. Alojamientos\En habitaciones.png"
-                  width={"300pt"}
-                  height={"auto"}
-                  style={{}}
-                />
-                <IonCardTitle
-                  style={{
-                    fontSize: "16pt",
-                    fontWeight: "bold",
-                    paddingTop: "13pt",
-                  }}
-                >
-                  En habitaciones
-                </IonCardTitle>
-              </IonHeader>
-            </IonCard>
-            <IonCard button disabled>
-              <IonHeader
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: "13pt",
-                }}
-              >
-                <img
-                  alt="Silhouette of mountains"
-                  src="public\3.6. Alojamientos\En unidades de vivienda.png"
-                  width={"300pt"}
-                  height={"auto"}
-                  style={{}}
-                />
-                <IonCardTitle
-                  style={{
-                    fontSize: "16pt",
-                    fontWeight: "bold",
-                    paddingTop: "13pt",
-                  }}
-                >
-                  Unidades de vivienda
-                </IonCardTitle>
-              </IonHeader>
-            </IonCard>
-            <IonCard button disabled>
-              <IonHeader
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: "13pt",
-                }}
-              >
-                <img
-                  alt="Silhouette of mountains"
-                  src="public\3.6. Alojamientos\Casa de alquiler.png"
-                  width={"300pt"}
-                  height={"auto"}
-                  style={{}}
-                />
-                <IonCardTitle
-                  style={{
-                    fontSize: "16pt",
-                    fontWeight: "bold",
-                    paddingTop: "13pt",
-                  }}
-                >
-                  Casa de alquiler
-                </IonCardTitle>
-              </IonHeader>
-            </IonCard>
-            <IonCard button disabled>
-              <IonHeader
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: "13pt",
-                }}
-              >
-                <img
-                  alt="Silhouette of mountains"
-                  src="public\3.6. Alojamientos\Camping.png"
-                  width={"300pt"}
-                  height={"auto"}
-                  style={{}}
-                />
-                <IonCardTitle
-                  style={{
-                    fontSize: "16pt",
-                    fontWeight: "bold",
-                    paddingTop: "13pt",
-                  }}
-                >
-                  Camping
-                </IonCardTitle>
-              </IonHeader>
-            </IonCard>
-          </IonRow>
-          <IonRow
-          style={{justifyContent: "center", padding: "20px"}}>
-            <IonButton
-              color="light"
-              onClick={() => props.setOfferType(null)}
-              style={{ position: "absolute", float: "left", left: "21pt", margin: "0 auto" }}
-            >
-              Volver
-            </IonButton>
-          </IonRow>
-        </IonCol>
-      </IonGrid>
-      <IonModal
-        isOpen={openConfirm}
-        onDidDismiss={() => setOpenConfirm(false)}
-        style={{ "--height": "fit-content" }}
-      >
-        <div className="wrapper">
-          <IonGrid
-            style={{ display: "flex", flexDirection: "column", flexGrow: 0 }}
-          >
-            <IonRow>
-              <IonCol></IonCol>
-              <IonCol>
-                <h4 style={{ fontWeight: "bold" }}>Confirmar creación</h4>
-              </IonCol>
-              <IonCol style={{ display: "flex", justifyContent: "right" }}>
-                <IonButton
-                  size="small"
-                  fill="clear"
-                  onClick={() => setOpenConfirm(false)}
-                >
-                  <IonIcon icon={close} />
-                </IonButton>
-              </IonCol>
-            </IonRow>
-            <IonRow style={{ justifyContent: "center", padding: "8pt" }}>
-              <h3 style={{ color: "black", fontSize: "14pt" }}>
-                Seleccioná el establecimiento al que pertenece la actividad
-              </h3>
-            </IonRow>
-            <IonRow style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingLeft: "10%", paddingRight: "10%" }}>
-
-              <IonSelect
-                label="Establecimiento"
-                placeholder="Seleccioná el establecimiento"
-                value={form?.schema.id_establecimiento}
-                onIonChange={(e: any) => {
-                  form?.setValue("id_establecimiento", e.target.value);
-                }}
-              >
-                {establecimientos.map((establecimiento: any) => (
-                  <IonSelectOption key={establecimiento.id_establecimiento} value={establecimiento.id_establecimiento}>
-                    {establecimiento.nombre}
-                  </IonSelectOption>
-                ))}
-              </IonSelect>
-            </IonRow>
-            <IonRow
-              style={{
-                justifyContent: "right",
-                padding: "8pt",
-                paddingTop: "0",
-              }}
-            >
-              <IonButton
-                onClick={() => setOpenConfirm(false)}
-                style={{
-                  marginRight: "8pt",
-                  "--background": "white",
-                  "--color": "#F08408",
-                }}
-              >
-                Cancelar
-              </IonButton>
-              <IonButton
-                style={{ "--background": "#F08408", "--color": "white" }}
-                onClick={() => selection && handleCrearAlojamiento(selection)}
-              >
-                Crear
-              </IonButton>
-            </IonRow>
-          </IonGrid>
+            Cancelar
+          </button>
         </div>
-      </IonModal>
-    </>
+
+        <div className="">
+          <div>
+            Seleccioná el establecimiento al cual pertenece la actividad
+          </div>
+          <div className="w-fit">
+            <Select
+              placeholder="Seleccioná un establecimiento"
+              onChange={(e: SelectCustomEvent<SelectChangeEventDetail>) =>
+                setEstablecimiento(e.target.value)
+              }
+            >
+              {establecimientos.map((establecimiento: any) => (
+                <SelectOption
+                  key={establecimiento.id_establecimiento}
+                  value={establecimiento.id_establecimiento}
+                >
+                  {establecimiento.nombre}
+                </SelectOption>
+              ))}
+            </Select>
+          </div>
+        </div>
+
+        <div className="flex flex-row gap-4 mt-4">
+          <OfferCard
+            onClick={() => handleSelect(1)}
+            title="En habitaciones"
+            imgSrc="public\3.6. Alojamientos\En habitaciones.png"
+            disabled={!establecimiento}
+          />
+          <OfferCard
+            onClick={() => {}}
+            title="Unidades de vivienda"
+            imgSrc="public\3.6. Alojamientos\En unidades de vivienda.png"
+            disabled
+          />
+          <OfferCard
+            onClick={() => {}}
+            title="Casa de alquiler"
+            imgSrc="public\3.6. Alojamientos\Casa de alquiler.png"
+            disabled
+          />
+          <OfferCard
+            onClick={() => {}}
+            title="Camping"
+            imgSrc="public\3.6. Alojamientos\Camping.png"
+            disabled
+          />
+        </div>
+      </div>
+    </div>
   );
 }

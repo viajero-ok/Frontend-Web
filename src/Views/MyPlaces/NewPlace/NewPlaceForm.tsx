@@ -424,7 +424,7 @@ export default function NewPlaceForm(props: TNewPlaceForm) {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Check {...field}>Es sin número</Check>
+                        <Check className="h-[42pt]" {...field}>Es sin número</Check>
                       </FormControl>
                       <FormMessage />
                     </FormItem>

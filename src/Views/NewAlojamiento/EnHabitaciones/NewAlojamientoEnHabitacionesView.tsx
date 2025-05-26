@@ -6,11 +6,22 @@ import {
   IonSegment,
   IonSegmentButton,
 } from "@ionic/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider } from "../../../hooks/UseForm/FormProvider";
 import AlojamientoForm from "./Forms/AlojamientoForm/AlojamientoForm";
 import DefaultLoggedLayout from "../../Layouts/DefaultLoggedLayout";
 import HabitacionesForm from "./Forms/HabitacionesForm/HabitacionesForm";
+import ImagenesForm from "./Forms/ImagenesForm/ImagenesForm";
+import {
+  obtenerDatosRegistradosAlojamiento,
+  TObtenerDatosRegistradosAlojamientoResponse,
+} from "../../../App/Alojamientos/NuevoAlojamiento";
+
+export type TImagenRegistrada = {
+  id_imagen: number;
+  nombre: string;
+  datos: string;
+};
 
 type TNewAlojamientoEnHabitacionesView = {
   idOferta: string;
@@ -19,7 +30,7 @@ export default function NewAlojamientoEnHabitacionesView(
   props: TNewAlojamientoEnHabitacionesView
 ) {
   const [segment, setSegment] = useState<
-    "alojamiento-form" | "habitaciones-form" | "tarifas-form"
+    "alojamiento-form" | "habitaciones-form" | "imagenes-form"
   >("alojamiento-form");
 
   const schemaAlojamientoForm = {
@@ -49,8 +60,6 @@ export default function NewAlojamientoEnHabitacionesView(
   const schemaHabitacionesForm = {};
   const schemaTarifasForm = {};
 
- 
-
   return (
     <DefaultLoggedLayout>
       <IonGrid>
@@ -70,6 +79,16 @@ export default function NewAlojamientoEnHabitacionesView(
               <IonLabel>Alojamiento</IonLabel>
             </IonSegmentButton>
             <IonSegmentButton
+              value="imagenes-form"
+              style={{
+                "--indicator-color": "#F08408",
+                "--color-hover": "#F08408",
+                "--color-checked": "#F08408",
+              }}
+            >
+              <IonLabel>Imagenes</IonLabel>
+            </IonSegmentButton>
+            <IonSegmentButton
               value="habitaciones-form"
               style={{
                 "--indicator-color": "#F08408",
@@ -80,7 +99,7 @@ export default function NewAlojamientoEnHabitacionesView(
             >
               <IonLabel>Habitaciones</IonLabel>
             </IonSegmentButton>
-           {/*  <IonSegmentButton
+            {/*  <IonSegmentButton
               value="tarifas-form"
               style={{
                 "--indicator-color": "#F08408",
@@ -98,12 +117,13 @@ export default function NewAlojamientoEnHabitacionesView(
               <AlojamientoForm id={props.idOferta} />
             </FormProvider>
           )}
+          {segment == "imagenes-form" && <ImagenesForm id={props.idOferta} />}
           {segment == "habitaciones-form" && (
             <FormProvider schema={schemaHabitacionesForm}>
               <HabitacionesForm id={props.idOferta} />
             </FormProvider>
           )}
-         {/*  {segment == "tarifas-form" && (
+          {/*  {segment == "tarifas-form" && (
             <FormProvider schema={schemaTarifasForm}>
               <TarifasForm id={props.idOferta} />
             </FormProvider>

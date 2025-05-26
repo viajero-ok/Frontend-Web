@@ -14,7 +14,9 @@ type ModalContextValue = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setVariant: React.Dispatch<React.SetStateAction<TModalVariants>>;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
-  setDescription: React.Dispatch<React.SetStateAction<string>>;
+  setDescription: React.Dispatch<
+    React.SetStateAction<string | React.ReactElement>
+  >;
   setActions: React.Dispatch<React.SetStateAction<React.ReactElement>>;
   setCanDismiss: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -25,7 +27,9 @@ const ModalContext = React.createContext<ModalContextValue>(
 export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
   const [open, setOpen] = React.useState<boolean>(false);
   const [title, setTitle] = React.useState<string>("");
-  const [description, setDescription] = React.useState<string>("");
+  const [description, setDescription] = React.useState<
+    string | React.ReactElement
+  >("");
   const [canDismiss, setCanDismiss] = React.useState<boolean>(true);
   const [variant, setVariant] = React.useState<TModalVariants>("default");
   const [actions, setActions] = React.useState<React.ReactElement>(<></>);
@@ -61,7 +65,7 @@ type TModalVariants = "default" | "danger" | "success";
 type TModalParams = {
   variant?: TModalVariants;
   title?: string;
-  description?: string;
+  description?: string | React.ReactElement;
   canDismiss?: boolean;
   actions?: React.ReactElement;
 };
@@ -95,7 +99,7 @@ export const useModal = () => {
 
 type TModalProps = {
   title?: string;
-  description?: string;
+  description?: string | React.ReactElement;
   actions?: React.ReactElement;
   variant?: TModalVariants;
   open: boolean;

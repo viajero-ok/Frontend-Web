@@ -1,6 +1,27 @@
 import { IonCheckbox } from "@ionic/react";
 import * as React from "react";
 import styled from "styled-components";
+import { cn } from "../Form/Field";
+import { ClassNameValue } from "tailwind-merge";
+
+export const CheckSection = ({
+  label,
+  className,
+}: {
+  label: string;
+  className?: ClassNameValue;
+}) => {
+  return (
+    <div
+      className={cn(
+        "text-xl text-gray-600 pl-4 font-bold flex border border-gray-200 rounded-md bg-gray-50 items-center",
+        className
+      )}
+    >
+      {label}
+    </div>
+  );
+};
 
 const StyledIonCheckbox = styled(IonCheckbox)`
   --highlight-color-focused: oklch(0.75 0.183 55.934);
@@ -17,14 +38,16 @@ const StyledIonCheckbox = styled(IonCheckbox)`
 const Check = React.forwardRef<typeof StyledIonCheckbox, any>(
   ({ className, type, disableShowPassword, ...props }, ref) => {
     return (
-      <StyledIonCheckbox
-        checked={props.value}
-        {...props}
-        onIonChange={(e: any) => props.onChange(e.target.checked)}
-        ref={ref}
-        fill="outline"
-        className="!flex !shadow-sm"
-      />
+      <div className={cn(className)}>
+        <StyledIonCheckbox
+          checked={props.value}
+          {...props}
+          onIonChange={(e: any) => props.onChange(e.target.checked)}
+          ref={ref}
+          fill="outline"
+          className={cn("!flex !shadow-sm")}
+        />
+      </div>
     );
   }
 );

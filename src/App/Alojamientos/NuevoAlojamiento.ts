@@ -1,4 +1,24 @@
+import { Dispatch, SetStateAction } from "react";
 import AUTH_API from "../AuthBackendApi";
+import { z } from "zod";
+
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const result = reader.result as string;
+      // This includes the prefix: data:image/png;base64,...
+      resolve(result);
+    };
+
+    reader.onerror = (error) => {
+      reject(error);
+    };
+
+    reader.readAsDataURL(file); // reads file as base64 data URL
+  });
+}
 
 type TBodyRegistrarNuevoAlojamiento = {
   id_tipo_oferta: number;
@@ -8,7 +28,8 @@ type TBodyRegistrarNuevoAlojamiento = {
 
 export const registrarNuevoAlojamiento = async (
   body: TBodyRegistrarNuevoAlojamiento
-) => await AUTH_API.post(`/ofertas-turisticas/registrar-oferta-turistica`, body);
+) =>
+  await AUTH_API.post(`/ofertas-turisticas/registrar-oferta-turistica`, body);
 
 export const finalizarRegistroAlojamiento = async (id_oferta: string) =>
   await AUTH_API.post(
@@ -74,25 +95,54 @@ export type TBodyGuardarAlojamiento = {
 export const guardarAlojamiento = async (body: TBodyGuardarAlojamiento) =>
   await AUTH_API.patch(`/alojamientos/actualizar-alojamiento`, body);
 
+const guardarImagenDeAlojamientoSchema = z.object({
+  id_imagen: z.number(),
+});
+export type TGuardarImagenDeAlojamientoResponse = z.infer<
+  typeof guardarImagenDeAlojamientoSchema
+>;
 type TBodyGuardarImagenDeAlojamiento = {
   imagen: File;
   id_oferta: string;
+  setProgress: Dispatch<SetStateAction<number>>;
 };
 export const guardarImagenDeAlojamiento = async (
   body: TBodyGuardarImagenDeAlojamiento
-) =>
-  await AUTH_API.post(
-    `/ofertas-turisticas/registrar-imagen-oferta-turistica`,
-    {
-      id_oferta: body.id_oferta,
-      imagen: body.imagen,
-    },
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
+) => {
+  try {
+    const response = (
+      await AUTH_API.post(
+        `/ofertas-turisticas/registrar-imagen-oferta-turistica`,
+        {
+          id_oferta: body.id_oferta,
+          imagen: body.imagen,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (progressEvent) => {
+            console.log("event: ", progressEvent);
+            if (!progressEvent.total && !progressEvent.estimated) return;
+            const percent = Math.round(
+              (progressEvent.loaded * 100) /
+                (progressEvent.total
+                  ? progressEvent.total
+                  : progressEvent.estimated!)
+            );
+            body.setProgress(percent);
+          },
+        }
+      )
+    ).data;
+    const parsedResponse = guardarImagenDeAlojamientoSchema.parse(response);
+    const base64 = await fileToBase64(body.imagen);
+
+    return { ...parsedResponse, base64 };
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+};
 
 export const eliminarImagenDeAlojamiento = async (id_imagen: number) =>
   await AUTH_API.delete(`/ofertas-turisticas/eliminar-imagen-oferta-turistica/${id_imagen}
@@ -107,7 +157,37 @@ export const crearHorario = async (body: TBodyCrearHorario) =>
 export const eliminarHorario = async (id_horario: string) =>
   await AUTH_API.delete(`/api/alojamientos/eliminar-horario/${id_horario}`);
 
-export const obtenerDatosRegistradosAlojamiento = async (id_oferta: string) =>
-  await AUTH_API.get(
-    `/alojamientos/obtener-datos-registrados-alojamiento/${id_oferta}`
-  );
+const serverImageSchema = z.object({
+  id_imagen: z.number(),
+  nombre: z.string(),
+  datos: z.string(),
+});
+export type TServerImage = z.infer<typeof serverImageSchema>;
+const obtenerDatosRegistradosAlojamientoSchema = z.object({
+  id_oferta: z.string().optional(),
+  caracteristicas: z.array(z.number()).optional(),
+  metodos_de_pago: z.array(z.number()).optional(),
+  observaciones: z.any().optional(),
+  politicas_reserva_y_datos_basicos: z.any(),
+  check_in_out: z.any(),
+  imagenes: z.array(serverImageSchema),
+});
+export type TObtenerDatosRegistradosAlojamientoResponse = z.infer<
+  typeof obtenerDatosRegistradosAlojamientoSchema
+>;
+export const obtenerDatosRegistradosAlojamiento = async (
+  id_oferta: string
+): Promise<TObtenerDatosRegistradosAlojamientoResponse> => {
+  try {
+    const response = (
+      await AUTH_API.get(
+        `/alojamientos/obtener-datos-registrados-alojamiento/${id_oferta}`
+      )
+    ).data;
+    const parsedResponse =
+      obtenerDatosRegistradosAlojamientoSchema.parse(response);
+    return parsedResponse;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+};

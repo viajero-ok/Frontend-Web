@@ -1,6 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
 import AUTH_API from "../AuthBackendApi";
 import { z } from "zod";
+import {
+  adaptObtenerDatosRegistradosAlojamiento,
+  TAdaptedObtenerDatosRegistradosAlojamientoResponse,
+} from "./NuevoAlojamiento.adapter";
 
 function fileToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -40,7 +44,7 @@ export const getDatosDeRegistroNuevoAlojamiento = async () =>
   await AUTH_API.get(`/alojamientos/datos-registro-alojamiento`);
 
 export type THorariosCheckInCheckOut = {
-  id_horario: number;
+  id_horario: string;
   check_in: {
     hora_check_in: number;
     minuto_check_in: number;
@@ -73,9 +77,6 @@ export type TBodyGuardarAlojamiento = {
   };
   politicas_reserva_y_datos_basicos: {
     datos_basicos: {
-      id_tipo_oferta: number;
-      id_sub_tipo_oferta: number;
-      id_establecimiento: number;
       nombre_alojamiento: string;
       descripcion_alojamiento: string;
     };
@@ -148,14 +149,14 @@ export const eliminarImagenDeAlojamiento = async (id_imagen: number) =>
   await AUTH_API.delete(`/ofertas-turisticas/eliminar-imagen-oferta-turistica/${id_imagen}
 `);
 
-type TBodyCrearHorario = {
+export type TBodyCrearHorario = {
   id_oferta: string;
 };
 export const crearHorario = async (body: TBodyCrearHorario) =>
   await AUTH_API.post(`/alojamientos/registrar-horario`, body);
 
-export const eliminarHorario = async (id_horario: string) =>
-  await AUTH_API.delete(`/api/alojamientos/eliminar-horario/${id_horario}`);
+export const deleteHorario = async (id_horario: string) =>
+  await AUTH_API.delete(`/alojamientos/eliminar-horario/${id_horario}`);
 
 const serverImageSchema = z.object({
   id_imagen: z.number(),
@@ -164,12 +165,13 @@ const serverImageSchema = z.object({
 });
 export type TServerImage = z.infer<typeof serverImageSchema>;
 const obtenerDatosRegistradosAlojamientoSchema = z.object({
-  id_oferta: z.string().optional(),
-  caracteristicas: z.array(z.number()).optional(),
-  metodos_de_pago: z.array(z.number()).optional(),
-  observaciones: z.any().optional(),
-  politicas_reserva_y_datos_basicos: z.any(),
-  check_in_out: z.any(),
+  datos: z.object({
+    datos_basicos: z.any(),
+    caracteristicas: z.array(z.any()).optional(),
+    metodos_de_pago: z.array(z.any()).optional(),
+    observaciones: z.any(),
+    horarios_checkin_checkout: z.any(),
+  }),
   imagenes: z.array(serverImageSchema),
 });
 export type TObtenerDatosRegistradosAlojamientoResponse = z.infer<
@@ -177,7 +179,7 @@ export type TObtenerDatosRegistradosAlojamientoResponse = z.infer<
 >;
 export const obtenerDatosRegistradosAlojamiento = async (
   id_oferta: string
-): Promise<TObtenerDatosRegistradosAlojamientoResponse> => {
+): Promise<TAdaptedObtenerDatosRegistradosAlojamientoResponse> => {
   try {
     const response = (
       await AUTH_API.get(
@@ -186,7 +188,7 @@ export const obtenerDatosRegistradosAlojamiento = async (
     ).data;
     const parsedResponse =
       obtenerDatosRegistradosAlojamientoSchema.parse(response);
-    return parsedResponse;
+    return adaptObtenerDatosRegistradosAlojamiento(parsedResponse);
   } catch (error) {
     throw new Error((error as Error).message);
   }

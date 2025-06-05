@@ -1,12 +1,12 @@
 import { useIonRouter } from "@ionic/react";
 
-import { useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { any, z } from "zod";
 import {
-  getDatosDeRegistroNuevoAlojamiento,
-  obtenerDatosRegistradosAlojamiento,
-  THorariosCheckInCheckOut
+  TBodyGuardarAlojamiento,
+  THorariosCheckInCheckOut,
 } from "../../../../../App/Alojamientos/NuevoAlojamiento";
 import { Check, CheckSection } from "../../../../../components/ui/Check/Check";
 import {
@@ -21,6 +21,21 @@ import {
   Select,
   SelectOption,
 } from "../../../../../components/ui/Select/Select";
+import {
+  THorariosCheckInCheckOutContext,
+  useAlojamientoEnHabitaciones,
+} from "../../Provider/AlojamientoEnHabitacionesProvider";
+import HorariosCheckInOut from "./HorariosCheckInOut";
+import { useModal } from "../../../../../components/ui/Modal/Modal";
+
+const numeric = z
+  .preprocess((val) => {
+    if (typeof val === "string" && /^[0-9]+$/.test(val)) {
+      return Number(val);
+    }
+    return val;
+  }, z.number({ message: "Debe ser un número" }))
+  .optional();
 
 const formSchema = z.object({
   texto_observacion_canchas_deportes: z.string().optional(),
@@ -30,222 +45,206 @@ const formSchema = z.object({
   nombre_alojamiento: z.string({ message: "El campo es requerido." }),
   descripcion_alojamiento: z.string({ message: "El campo es requerido." }),
 
-  caracteristicas: z.array(z.number()),
-
   id_politica_cancelacion: z.number({ message: "El campo es requerido." }),
-  plazo_dias_cancelacion: z.string().optional(),
-  solicita_garantia: z.boolean({ message: "El campo es requerido." }),
-  monto_garantia: z.number().optional(),
+  plazo_dias_cancelacion: numeric,
+  solicita_garantia: z.boolean(),
+  monto_garantia: z.string().optional(),
   id_tipo_pago_anticipado: z.number({ message: "El campo es requerido." }),
-  porcentaje_pago_anticipado: z.number().optional(),
-  minimo_dias_estadia: z.number({ message: "El campo es requerido." }),
+  porcentaje_pago_anticipado: any(),
+  minimo_dias_estadia: numeric,
+
+  horarios: z.any(),
 });
 
 type TAlojamientoForm = {
   id: string;
 };
 export default function AlojamientoForm(props: TAlojamientoForm) {
-  const [caracteristicas, setCaracteristicas] = useState<any>();
-  const [politicasDeCancelacion, setPoliticasDeCancelacion] = useState<any>();
-  const [tiposPagoAnticipado, setTiposPagoAnticipado] = useState<any>();
-  const [metodosDePago, setMetodosDePago] = useState<any>();
-
-  const [datosRegistrados, setDatosRegistrados] = useState<any>();
-
   const [formCaracteristicas, setFormCaracteristicas] = useState<number[]>([]);
   const [formMetodosDePago, setFormMetodosDePago] = useState<number[]>([]);
-  const [formHorarios, setFormHorarios] = useState<THorariosCheckInCheckOut[]>(
-    []
-  );
   const router = useIonRouter();
-  //const form = useForm();
 
-  const handleGuardar = () => {
-    // if (!form) return;
-    // const s = form.schema;
-    // let body: TBodyGuardarAlojamiento = {
-    //   id_oferta: props.id,
-    //   caracteristicas: formCaracteristicas,
-    //   metodos_de_pago: formMetodosDePago,
-    //   observaciones: {
-    //     texto_observacion_comodidades_y_servicios_oferta: "",
-    //     texto_observacion_canchas_deportes: "",
-    //     texto_observacion_normas: "",
-    //     texto_observacion_politica_garantia: "",
-    //   },
-    //   politicas_reserva_y_datos_basicos: {
-    //     datos_basicos: {
-    //       id_tipo_oferta: 0,
-    //       id_sub_tipo_oferta: 0,
-    //       id_establecimiento: 0,
-    //       nombre_alojamiento: s.nombre_alojamiento,
-    //       descripcion_alojamiento: s.descripcion_alojamiento,
-    //     },
-    //     politicas_reserva: {
-    //       id_politica_cancelacion: s.id_politica_cancelacion,
-    //       plazo_dias_cancelacion: parseInt(s.plazo_dias_cancelacion),
-    //       solicita_garantia: false,
-    //       monto_garantia: 0.0, // float
-    //       id_tipo_pago_anticipado: 1,
-    //       porcentaje_pago_anticipado: parseFloat(s.porcentaje_pago_anticipado), // float
-    //       monto_pago_anticipado: 0.0, // float
-    //       minimo_dias_estadia: parseInt(s.minimo_dias_estadia),
-    //     },
-    //   },
-    //   check_in_out: formHorarios,
-    // };
-    // guardarAlojamiento(body)
-    //   .then((response) => {
-    //     console.log("response: ", response);
-    //   })
-    //   .catch(() => {});
+  const { modal, setOpen } = useModal();
+
+  const {
+    datosRegistradosAlojamiento,
+    horarios,
+    datosRegistroAlojamiento,
+    guardarAlojamiento,
+  } = useAlojamientoEnHabitaciones();
+
+  const handleGuardar = (values: z.infer<typeof formSchema>) => {
+    if (horarios.length == 0) {
+      form.setError("horarios", {
+        message: "Debe existir al menos un horario de Check-In y Check-Out",
+      });
+      return;
+    }
+    if (
+      horarios.filter(
+        (horario: THorariosCheckInCheckOutContext) => horario.errors.length > 0
+      ).length > 0
+    )
+      return;
+    let body: TBodyGuardarAlojamiento = {
+      id_oferta: props.id,
+      caracteristicas: formCaracteristicas,
+      metodos_de_pago: formMetodosDePago,
+      observaciones: {
+        texto_observacion_comodidades_y_servicios_oferta: "",
+        texto_observacion_canchas_deportes:
+          values.texto_observacion_canchas_deportes ?? "",
+        texto_observacion_normas: values.texto_observacion_normas ?? "",
+        texto_observacion_politica_garantia:
+          values.texto_observacion_politica_garantia ?? "",
+      },
+      politicas_reserva_y_datos_basicos: {
+        datos_basicos: {
+          nombre_alojamiento: values.nombre_alojamiento,
+          descripcion_alojamiento: values.descripcion_alojamiento,
+        },
+        politicas_reserva: {
+          id_politica_cancelacion: values.id_politica_cancelacion,
+          plazo_dias_cancelacion: Number(values.plazo_dias_cancelacion),
+          solicita_garantia: values.solicita_garantia ?? false,
+          monto_garantia: Number(values.monto_garantia), // float
+          id_tipo_pago_anticipado: values.id_tipo_pago_anticipado,
+          porcentaje_pago_anticipado: 0, // float
+          monto_pago_anticipado: 0.0, // float
+          minimo_dias_estadia: Number(values.minimo_dias_estadia),
+        },
+      },
+      check_in_out: horarios,
+    };
+
+    guardarAlojamiento(body)
+      .then(() => {
+        modal({
+          variant: "success",
+          title: "Cambios guardados",
+          description: "Los cambios fueron guardados con éxito.",
+          actions: (
+            <>
+              <button
+                onClick={() => setOpen(false)}
+                className="viajero-button bg-green-400! hover:bg-green-400/90! px-4 py-2"
+              >
+                Aceptar
+              </button>
+            </>
+          ),
+        });
+      })
+      .catch((error) => {
+        modal({
+          variant: "danger",
+          title: "Error.",
+          description: error.message,
+          actions: (
+            <>
+              <button
+                onClick={() => setOpen(false)}
+                className="viajero-button-ghost px-4 py-2"
+              >
+                Aceptar
+              </button>
+            </>
+          ),
+        });
+      });
   };
 
-  useEffect(() => {
-    getDatosDeRegistroNuevoAlojamiento()
-      .then((response: any) => {
-        setCaracteristicas(response.data.caracteristicas);
-        setPoliticasDeCancelacion(response.data.politicas_cancelacion);
-        setTiposPagoAnticipado(response.data.tipos_pago_anticipado);
-        setMetodosDePago(response.data.metodos_pago);
-      })
-      .catch((error: any) => {});
-  }, []);
+  const handleSelectCheckItem = (
+    id: number,
+    value: boolean,
+    set: Dispatch<SetStateAction<number[]>>
+  ) => {
+    if (!value) {
+      set((prev: number[]) => [...prev].filter((v: number) => v != id));
+      return;
+    }
+
+    set((prev: number[]) => [...prev, id]);
+  };
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    mode: "onSubmit",
+    defaultValues: {
+      solicita_garantia: false,
+    },
+  });
 
   useEffect(() => {
-    obtenerDatosRegistradosAlojamiento(props.id).then((response: any) => {
-      console.log(response.datos);
-      setDatosRegistrados(response);
+    if (horarios.length > 0) form.setError("horarios", { message: "" });
+    else
+      form.setError("horarios", {
+        message: "Debe existir al menos un horario de Check-In y Check-Out",
+      });
+  }, [horarios]);
+
+  useEffect(() => {
+    setFormCaracteristicas(
+      datosRegistradosAlojamiento &&
+        datosRegistradosAlojamiento.datos &&
+        datosRegistradosAlojamiento.datos.caracteristicas
+        ? datosRegistradosAlojamiento.datos.caracteristicas
+        : []
+    );
+    setFormMetodosDePago(
+      datosRegistradosAlojamiento &&
+        datosRegistradosAlojamiento.datos &&
+        datosRegistradosAlojamiento.datos.metodos_de_pago
+        ? datosRegistradosAlojamiento.datos.metodos_de_pago
+        : []
+    );
+    form.reset({
+      // TODO: Agregar al form reset:
+      // texto_observacion_canchas_deportes: z.string().optional(),
+      // texto_observacion_normas: z.string().optional(),
+      // texto_observacion_politica_garantia: z.string().optional(),
+
+      nombre_alojamiento:
+        datosRegistradosAlojamiento?.datos.datos_basicos.nombre,
+      descripcion_alojamiento:
+        datosRegistradosAlojamiento?.datos.datos_basicos.descripcion,
+
+      id_politica_cancelacion:
+        datosRegistradosAlojamiento?.datos.datos_basicos
+          .id_politica_cancelacion,
+      plazo_dias_cancelacion:
+        datosRegistradosAlojamiento?.datos.datos_basicos.plazo_dias_cancelacion,
+      solicita_garantia:
+        datosRegistradosAlojamiento?.datos.datos_basicos.bl_solicita_garantia ==
+        1,
+      monto_garantia:
+        datosRegistradosAlojamiento?.datos.datos_basicos.monto_garantia,
+      id_tipo_pago_anticipado:
+        datosRegistradosAlojamiento?.datos.datos_basicos
+          .id_tipo_pago_anticipado,
+      porcentaje_pago_anticipado:
+        datosRegistradosAlojamiento?.datos.datos_basicos
+          .porcentaje_pago_anticipado,
+      minimo_dias_estadia:
+        datosRegistradosAlojamiento?.datos.datos_basicos.min_dias_estadia,
     });
-  }, []);
-
-  //   useEffect(() => {
-  //     if (!datosRegistrados) return;
-  //     console.log("datos registrados: ", datosRegistrados);
-  //     if (!form) return;
-  //     // Verificar si politicas_reserva está definido antes de acceder a sus propiedades
-  //     if (datosRegistrados.datos_basicos) {
-  //       form.setValue(
-  //         "nombre_alojamiento",
-  //         datosRegistrados.datos_basicos.nombre
-  //       );
-  //       form.setValue(
-  //         "descripcion_alojamiento",
-  //         datosRegistrados.datos_basicos.descripcion
-  //       );
-  //       form.setValue(
-  //         "id_politica_cancelacion",
-  //         datosRegistrados.datos_basicos.id_politica_cancelacion
-  //       );
-  //       form.setValue(
-  //         "plazo_dias_cancelacion",
-  //         datosRegistrados.datos_basicos.plazo_dias_cancelacion
-  //       );
-  //       form.setValue(
-  //         "solicita_garantia",
-  //         datosRegistrados.datos_basicos.bl_solicita_garantia
-  //       );
-  //       form.setValue(
-  //         "monto_garantia",
-  //         datosRegistrados.datos_basicos.monto_garantia
-  //       );
-  //       form.setValue(
-  //         "id_tipo_pago_anticipado",
-  //         datosRegistrados.datos_basicos.id_tipo_pago_anticipado
-  //       );
-  //       form.setValue(
-  //         "porcentaje_pago_anticipado",
-  //         datosRegistrados.datos_basicos.porcentaje_pago_anticipado
-  //       );
-  //       form.setValue(
-  //         "minimo_dias_estadia",
-  //         datosRegistrados.datos_basicos.min_dias_estadia
-  //       );
-  //       /* form.setValue("monto_pago_anticipado", datosRegistrados.politicas_reserva.monto_pago_anticipado); */
-  //     }
-  //     if (datosRegistrados.horarios_checkin_checkout) {
-  //       setFormHorarios(
-  //         datosRegistrados.horarios_checkin_checkout.map((horario: any) => ({
-  //           id_horario: horario.id_horario,
-  //           check_in: {
-  //             hora_check_in: horario.check_in_hora,
-  //             minuto_check_in: horario.check_in_minuto,
-  //           },
-  //           check_out: {
-  //             hora_check_out: horario.check_out_hora,
-  //             minuto_check_out: horario.check_out_minuto,
-  //           },
-  //           /* aplica_todos_los_dias: horario.aplica_todos_los_dias, */
-  //           dias_semana: {
-  //             aplica_lunes: horario.aplica_lunes,
-  //             aplica_martes: horario.aplica_martes,
-  //             aplica_miercoles: horario.aplica_miercoles,
-  //             aplica_jueves: horario.aplica_jueves,
-  //             aplica_viernes: horario.aplica_viernes,
-  //             aplica_sabado: horario.aplica_sabado,
-  //             aplica_domingo: horario.aplica_domingo,
-  //           },
-  //         }))
-  //       );
-  //     }
-  //     if (datosRegistrados.caracteristicas) {
-  //       setFormCaracteristicas(
-  //         datosRegistrados.caracteristicas.map(
-  //           (caracteristica: any) => caracteristica.id_caracteristica
-  //         )
-  //       );
-  //     }
-  //     if (datosRegistrados.metodos_pago) {
-  //       setFormMetodosDePago(
-  //         datosRegistrados.metodos_pago.map(
-  //           (metodo: any) => metodo.id_metodo_pago
-  //         )
-  //       );
-  //     }
-  //     if (datosRegistrados.observaciones) {
-  //       for (const observacion of datosRegistrados.observaciones) {
-  //         if (observacion.id_tipo_observacion == 1) {
-  //           form.setValue(
-  //             "texto_observacion_comodidades_y_servicios_oferta",
-  //             observacion?.observacion || ""
-  //           );
-  //         }
-  //         if (observacion.id_tipo_observacion == 2) {
-  //           form.setValue(
-  //             "texto_observacion_canchas_deportes",
-  //             observacion?.observacion || ""
-  //           );
-  //         }
-  //         if (observacion.id_tipo_observacion == 3) {
-  //           form.setValue(
-  //             "texto_observacion_politica_garantia",
-  //             observacion?.observacion || ""
-  //           );
-  //         }
-  //         if (observacion.id_tipo_observacion == 6) {
-  //           form.setValue(
-  //             "texto_observacion_normas",
-  //             observacion?.observacion || ""
-  //           );
-  //         }
-  //       }
-  //     }
-  //   }, [datosRegistrados]);
-
-  const form = useForm();
+  }, [datosRegistradosAlojamiento]);
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full mt-4">
       <Form {...form}>
-        <form className="flex flex-col mx-8 gap-4">
+        <form
+          onSubmit={form.handleSubmit(handleGuardar)}
+          className="flex flex-col mx-8 gap-4"
+        >
           <div className="grid grid-cols-2">
             <div className="flex flex-col gap-2">
-              <div className="text-3xl text-gray-600 font-bold">
+              <div className="p-4 border border-gray-200 bg-gray-50 rounded-md text-2xl text-gray-600 font-bold">
                 Datos básicos
               </div>
               <FormField
                 control={form.control}
-                name="nombre"
+                name="nombre_alojamiento"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
@@ -257,7 +256,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
               />
               <FormField
                 control={form.control}
-                name="descripcion"
+                name="descripcion_alojamiento"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
@@ -270,18 +269,30 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <div className="text-3xl text-gray-600 font-bold">
+            <div className="p-4 border border-gray-200 bg-gray-50 rounded-md text-2xl text-gray-600 font-bold">
               Comodidades y servicios del establecimiento
             </div>
-            <div className="columns-3 gap-2 mt-2">
+            <div className="columns-3 gap-2">
               <CheckSection
                 label="Espacios de uso comun"
                 className="h-[42pt] break-inside-avoid-column"
               />
-              {caracteristicas &&
-                caracteristicas.caracteristicas_espacios_uso_comun?.map(
+              {datosRegistroAlojamiento.caracteristicas &&
+                datosRegistroAlojamiento.caracteristicas.caracteristicas_espacios_uso_comun?.map(
                   (caracteristica: any) => (
-                    <Check className="h-[42pt] mt-2 break-inside-avoid-column">
+                    <Check
+                      checked={formCaracteristicas.includes(
+                        caracteristica.id_caracteristica
+                      )}
+                      className="h-[42pt] mt-2 break-inside-avoid-column"
+                      onChange={(value: boolean) =>
+                        handleSelectCheckItem(
+                          caracteristica.id_caracteristica,
+                          value,
+                          setFormCaracteristicas
+                        )
+                      }
+                    >
                       {caracteristica.caracteristica}
                     </Check>
                   )
@@ -290,8 +301,8 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
                 label="Servicios"
                 className="h-[42pt] mt-2 break-inside-avoid-column"
               />
-              {caracteristicas &&
-                caracteristicas.caracteristicas_servicios?.map(
+              {datosRegistroAlojamiento.caracteristicas &&
+                datosRegistroAlojamiento.caracteristicas.caracteristicas_servicios?.map(
                   (caracteristica: any) => (
                     <Check className="h-[42pt] mt-2 break-inside-avoid-column">
                       {caracteristica.caracteristica}
@@ -302,8 +313,8 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
                 label="Entretenimiento"
                 className="h-[42pt] mt-2 break-inside-avoid-column"
               />
-              {caracteristicas &&
-                caracteristicas.caracteristicas_entretenimiento?.map(
+              {datosRegistroAlojamiento.caracteristicas &&
+                datosRegistroAlojamiento.caracteristicas.caracteristicas_entretenimiento?.map(
                   (caracteristica: any) => (
                     <Check className="h-[42pt] mt-2 break-inside-avoid-column">
                       {caracteristica.caracteristica}
@@ -325,7 +336,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
             /> */}
           </div>
           <div>
-            <div className="text-3xl text-gray-600 font-bold">
+            <div className="p-4 border border-gray-200 bg-gray-50 rounded-md text-2xl text-gray-600 font-bold">
               Políticas y normas del establecimiento
             </div>
             <div className="columns-3 gap-2 mt-2">
@@ -333,8 +344,8 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
                 label="Normas"
                 className="h-[42pt] break-inside-avoid-column"
               />
-              {caracteristicas &&
-                caracteristicas.caracteristicas_normas?.map(
+              {datosRegistroAlojamiento.caracteristicas &&
+                datosRegistroAlojamiento.caracteristicas.caracteristicas_normas?.map(
                   (caracteristica: any) => (
                     <Check className="h-[42pt] mt-2 break-inside-avoid-column">
                       {caracteristica.caracteristica}
@@ -351,17 +362,34 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
                 render={({ field }) => (
                   <FormItem className="break-inside-avoid-column mt-2">
                     <FormControl>
-                      <Select placeholder="Tipo de política">
-                        {politicasDeCancelacion &&
-                          politicasDeCancelacion.map((politica: any) => (
-                            <SelectOption
-                              key={politica.id_politica_cancelacion}
-                              value={politica.id_politica_cancelacion}
-                            >
-                              {politica.politica_cancelacion}
-                            </SelectOption>
-                          ))}
+                      <Select placeholder="Tipo de política" {...field}>
+                        {datosRegistroAlojamiento.politicasDeCancelacion &&
+                          datosRegistroAlojamiento.politicasDeCancelacion.map(
+                            (politica: any) => (
+                              <SelectOption
+                                key={politica.id_politica_cancelacion}
+                                value={politica.id_politica_cancelacion}
+                              >
+                                {politica.politica_cancelacion}
+                              </SelectOption>
+                            )
+                          )}
                       </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="plazo_dias_cancelacion"
+                render={({ field }) => (
+                  <FormItem className="mt-2 h-[42pt] break-inside-avoid-column">
+                    <FormControl>
+                      <Input
+                        placeholder="Plazo de cancelación (días)"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -383,23 +411,16 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
                 label="Política de garantía"
                 className="h-[42pt] break-inside-avoid-column mt-2"
               />
-              <FormField
-                control={form.control}
-                name="solicita_garantia"
-                render={({ field }) => (
-                  <FormItem className="break-inside-avoid-column">
-                    <FormControl>
-                      <Check
-                        className="h-[42pt] break-inside-avoid-column mt-2"
-                        {...field}
-                      >
-                        Solicita garantía al ingresar
-                      </Check>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <Check
+                checked={form.getValues().solicita_garantia}
+                onChange={(value: boolean) => {
+                  form.setValue("solicita_garantia", value);
+                }}
+                className="h-[42pt] break-inside-avoid-column mt-2"
+              >
+                Solicita garantía al ingresar
+              </Check>
+
               <FormField
                 control={form.control}
                 name="monto_garantia"
@@ -414,8 +435,24 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
               />
             </div>
           </div>
+          <div className="flex flex-col w-full">
+            <FormField
+              control={form.control}
+              name="horarios"
+              render={() => (
+                <FormItem>
+                  <FormControl>
+                    <HorariosCheckInOut form={form} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <div>
-            <div className="text-3xl text-gray-600 font-bold">Reservas</div>
+            <div className="p-4 border border-gray-200 bg-gray-50 rounded-md text-2xl text-gray-600 font-bold">
+              Reservas
+            </div>
             <div className="columns-3 gap-2 mt-2">
               <CheckSection
                 label="Pago anticipado"
@@ -423,20 +460,22 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
               />
               <FormField
                 control={form.control}
-                name="id_tipo_pago"
+                name="id_tipo_pago_anticipado"
                 render={({ field }) => (
                   <FormItem className="mt-2 break-inside-avoid-column">
                     <FormControl>
-                      <Select placeholder="Tipo de pago">
-                        {tiposPagoAnticipado &&
-                          tiposPagoAnticipado.map((tipo: any) => (
-                            <SelectOption
-                              key={tipo.id_tipo_pago_anticipado}
-                              value={tipo.id_tipo_pago_anticipado}
-                            >
-                              {tipo.tipo_pago_anticipado}
-                            </SelectOption>
-                          ))}
+                      <Select placeholder="Tipo de pago" {...field}>
+                        {datosRegistroAlojamiento.tiposPagoAnticipado &&
+                          datosRegistroAlojamiento.tiposPagoAnticipado.map(
+                            (tipo: any) => (
+                              <SelectOption
+                                key={tipo.id_tipo_pago_anticipado}
+                                value={tipo.id_tipo_pago_anticipado}
+                              >
+                                {tipo.tipo_pago_anticipado}
+                              </SelectOption>
+                            )
+                          )}
                       </Select>
                     </FormControl>
                     <FormMessage />
@@ -452,7 +491,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
               </div> */}
               <FormField
                 control={form.control}
-                name="dias_estadia_minima"
+                name="minimo_dias_estadia"
                 render={({ field }) => (
                   <FormItem className="mt-2 break-inside-avoid-column">
                     <FormControl>
@@ -466,41 +505,43 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
                 label="Métodos de pago"
                 className="h-[42pt] mt-2 break-inside-avoid-column"
               />
-              {metodosDePago &&
-                metodosDePago.map((metodo: any) => (
-                  <Check className="h-[42pt] mt-2 break-inside-avoid-column">
+              {datosRegistroAlojamiento.metodosDePago &&
+                datosRegistroAlojamiento.metodosDePago.map((metodo: any) => (
+                  <Check
+                    checked={formMetodosDePago.includes(metodo.id_metodo_pago)}
+                    onChange={(value: boolean) =>
+                      handleSelectCheckItem(
+                        metodo.id_metodo_pago,
+                        value,
+                        setFormMetodosDePago
+                      )
+                    }
+                    className="h-[42pt] mt-2 break-inside-avoid-column"
+                  >
                     {metodo.metodo_pago}
                   </Check>
                 ))}
             </div>
           </div>
+          <div className="flex flex-row justify-between pb-12">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+              className="viajero-button-ghost px-4 py-2"
+            >
+              Volver
+            </button>
+            <button
+              onClick={() => formSchema.parse(form.getValues())}
+              type="submit"
+              className="viajero-button px-4 py-2"
+            >
+              Guardar
+            </button>
+          </div>
         </form>
       </Form>
-      <div className="flex flex-row p-4 px-8 justify-between">
-        <button className="viajero-button-ghost px-4 py-2">Volver</button>
-        <button className="viajero-button px-4 py-2">Guardar</button>
-      </div>
-      {/* <DatosBasicos /> */}
-      {/* <ComodidadesServicios
-        caracteristicas={caracteristicas}
-        formCaracteristicas={formCaracteristicas}
-        setFormCaracteristicas={setFormCaracteristicas}
-      /> */}
-      {/* <PoliticasNormas
-        idOferta={props.id}
-        caracteristicas={caracteristicas}
-        formCaracteristicas={formCaracteristicas}
-        setFormCaracteristicas={setFormCaracteristicas}
-        politicasDeCancelacion={politicasDeCancelacion}
-        horarios={formHorarios}
-        setHorarios={setFormHorarios}
-      /> */}
-      {/* <Reservas
-        tipoPagoAnticipado={tiposPagoAnticipado}
-        formMetodosDePago={formMetodosDePago}
-        metodosDePago={metodosDePago}
-        setFormMetodosDePago={setFormMetodosDePago}
-      /> */}
       {/* <IonRow
         style={{
           justifyContent: "space-around",

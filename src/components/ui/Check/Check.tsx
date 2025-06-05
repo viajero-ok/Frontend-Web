@@ -42,7 +42,9 @@ const Check = React.forwardRef<typeof StyledIonCheckbox, any>(
         <StyledIonCheckbox
           checked={props.value}
           {...props}
-          onIonChange={(e: any) => props.onChange(e.target.checked)}
+          onIonChange={(e: any) =>
+            props.onChange && props.onChange(e.target.checked)
+          }
           ref={ref}
           fill="outline"
           className={cn("!flex !shadow-sm")}

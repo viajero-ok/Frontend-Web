@@ -15,18 +15,17 @@ import {
 import { close, pencil, trash } from "ionicons/icons";
 import { Dispatch, SetStateAction, useState } from "react";
 import { eliminarOferta } from "../../App/Ofertas/Ofertas";
+import { cn } from "../ui/Form/Field";
 
 interface OfertaCardProps {
-  nombre: string;
-  descripcion: string;
+  oferta: any;
   id: number;
   setOfertas: React.Dispatch<React.SetStateAction<any[]>>;
   tipoOferta: number;
 }
 
 const OfertaCard: React.FC<OfertaCardProps> = ({
-  nombre,
-  descripcion,
+  oferta,
   id,
   setOfertas,
   tipoOferta,
@@ -59,17 +58,26 @@ const OfertaCard: React.FC<OfertaCardProps> = ({
   };
 
   return (
-    <div className="border border-gray-200 p-4 rounded-md hover:shadow-sm transition-all duration-400 cursor-pointer">
-      <img
-        alt="Silhouette of mountains"
-        src="public\images\habitacion.jpg"
-        width={"175pt"}
-        height={"150pt"}
-        style={{}}
-      />
-      <div className="flex-col gap-2">
-        <div>{nombre}</div>
-        <div>{descripcion}</div>
+    <div
+      className={cn(
+        "border border-gray-200 p-4 rounded-md hover:shadow-sm",
+        "cursor-pointer w-[250pt] aspect-5/2 break-inside-avoid-column mb-4"
+      )}
+      onClick={() => handleEditar()}
+    >
+      <div className="flex-col gap-2 pl-2">
+        <div className="flex flex-row justify-between items-center gap-4">
+          <div className="flex flex-row text-xs text-gray-500 italic font-light">
+            {oferta.tipo_oferta}
+            {oferta.sub_tipo_oferta && " > "}
+            {oferta.sub_tipo_oferta}
+          </div>
+          <div className="text-xs border border-gray-200 bg-gray-50 text-gray-500 px-2 py-1 lowercase rounded-full items-center content-center justify-center">
+            {oferta.estado}
+          </div>
+        </div>
+        <div className="text-lg text-gray-600 font-bold">{oferta.nombre ?? "Sin nombre"}</div>
+        <div className="text-sm text-gray-600">{oferta.descripcion ?? "Sin descripción"}</div>
       </div>
     </div>
     // <IonCard style={{ display: "flex", flexDirection: "row", width: "100%" }}>

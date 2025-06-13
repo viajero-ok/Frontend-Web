@@ -13,6 +13,7 @@ import { Input } from "../../components/ui/Input/Input";
 import { useForm } from "react-hook-form";
 import { registrarCuenta } from "../../App/Auth/Cuenta";
 import { useState } from "react";
+import { useModal } from "../../components/ui/Modal/Modal";
 
 const formSchema = z.object({
   email: z.string({ message: "Campo requerido" }),
@@ -25,7 +26,9 @@ type TProps = {
 };
 export default function SignupForm(props: TProps) {
   const [loading, setLoading] = useState<boolean>(false);
+
   const router = useIonRouter();
+  const { modal, setOpen } = useModal();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,7 +50,23 @@ export default function SignupForm(props: TProps) {
       .then((response: any) => {
         props.setIdUsuario(response.data.id_usuario);
       })
-      .catch(() => {})
+      .catch((error) => {
+        modal({
+          variant: "danger",
+          title: "Error",
+          description: error.message,
+          actions: (
+            <>
+              <button
+                onClick={() => setOpen(false)}
+                className="viajero-button-ghost px-4 py-2"
+              >
+                Aceptar
+              </button>
+            </>
+          ),
+        });
+      })
       .finally(() => setLoading(false));
   };
 

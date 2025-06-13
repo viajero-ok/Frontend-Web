@@ -5,7 +5,7 @@ export const obtenerDatosRegistroPublicacion = async (idOferta: string) =>
     `/publicaciones/alojamientos/datos-publicacion-alojamiento/${idOferta}`
   );
 
-type TBodyCrearTarifa = {
+export type TBodyCrearTarifa = {
   fecha_desde: string;
   fecha_hasta: string;
   id_oferta: string;
@@ -16,7 +16,7 @@ type TBodyCrearTarifa = {
 export const crearTarifa = async (body: TBodyCrearTarifa) =>
   await AUTH_API.post(`/publicaciones/alojamientos/registrar-tarifa`, body);
 
-type TBodyActualizarTarifa = {
+export type TBodyActualizarTarifa = {
   fecha_desde: string;
   fecha_hasta: string;
   id_oferta: string;

@@ -1,6 +1,4 @@
-import { IonCard, IonCol, IonGrid, IonImg, IonRow } from "@ionic/react";
 import { useState } from "react";
-import { FormProvider } from "../../hooks/UseForm/FormProvider";
 import SignupForm from "./SignupForm";
 import VerifyForm from "./VerifyForm";
 

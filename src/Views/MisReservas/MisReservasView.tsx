@@ -15,6 +15,8 @@ import TipologiaList from "./TipologiaList";
 import { getMargin } from "ol/extent";
 import { useMemo, useState } from "react";
 import { obtenerReservasPorPrestador } from "../../App/Reservas/Reservas";
+import { cn } from "../../components/ui/Form/Field";
+import { Check } from "../../components/ui/Check/Check";
 
 export default function MisReservasView(props: any) {
   const [reservas, setReservas] = useState<any[]>([]);
@@ -56,87 +58,76 @@ export default function MisReservasView(props: any) {
         return selectedEstados.includes(reserva.estado_reserva);
       });
 
-    console.log("filtradas: ", filtradas)
+    console.log("filtradas: ", filtradas);
 
     if (typeof filtradas[0] == "undefined") return [];
     return [filtradas[0]];
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        alignContent: "center",
-        justifyContent: "center",
-      }}
-    >
-      <IonGrid style={{ display: "inline-block" }}>
-        <IonRow
-          style={{
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <h1>Mis reservas</h1>
-        </IonRow>
-        <IonRow
-          style={{
-            display: "flex",
-            alignContent: "start",
-            alignItems: "start",
-            justifyContent: "center",
-          }}
-        >
-          <IonCol size="auto" style={{}}>
-            <IonCard style={{ width: "200pt" }}>
-              <IonCardHeader>
-                <IonCardTitle style={{ fontWeight: "bold" }}>
-                  Ofertas
-                </IonCardTitle>
-              </IonCardHeader>
-              <IonCardContent>
-                <IonList>
-                  {[].map((detalle: any, index: number) => (
-                    <IonItem
-                      key={index}
-                      button
-                      // style={{
-                      //   fontWeight:
-                      //     index == selectedTipologia ? "bold" : "normal",
-                      //   color: index == selectedTipologia ? "#F08408" : "black",
-                      // }}
-                      // onClick={() => handleSelect(detalle.id_tipo_detalle)}
-                    >
-                      {detalle.nombre_tipo_detalle}
-                    </IonItem>
-                  ))}
-                </IonList>
-              </IonCardContent>
-            </IonCard>
+    <div className="flex flex-col w-full px-8 mt-4 pb-12">
+      <div
+        className={cn(
+          "flex flex-row p-4 w-full rounded-md text-3xl text-gray-600 font-bold border border-gray-200 bg-gray-50 "
+        )}
+      >
+        Mis reservas
+      </div>
+      <div className="flex flex-row gap-4 mt-4 w-full">
+        <div className={cn("flex flex-col gap-2 h-fit w-1/3", "")}>
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-row p-4 border border-gray-200 bg-gray-50 rounded-md text-2xl text-gray-600 font-bold">
+              Filtros
+            </div>
+            {[].map((detalle: any, index: number) => (
+              // <IonItem
+              //   key={index}
+              //   button
+              //   // style={{
+              //   //   fontWeight:
+              //   //     index == selectedTipologia ? "bold" : "normal",
+              //   //   color: index == selectedTipologia ? "#F08408" : "black",
+              //   // }}
+              //   // onClick={() => handleSelect(detalle.id_tipo_detalle)}
+              // >
+              //   {detalle.nombre_tipo_detalle}
+              // </IonItem>
+              <Check key={index}>{detalle.nombre_tipo_detalle}</Check>
+            ))}
+            <div className="flex flex-row p-4 border border-gray-200 bg-gray-50 rounded-md text-lg text-gray-600 font-bold">
+              Ofertas
+            </div>
+            {[].map((detalle: any, index: number) => (
+              <Check
+                key={index}
+                // style={{
+                //   fontWeight:
+                //     index == selectedTipologia ? "bold" : "normal",
+                //   color: index == selectedTipologia ? "#F08408" : "black",
+                // }}
+                // onClick={() => handleSelect(detalle.id_tipo_detalle)}
+              >
+                {detalle.nombre_tipo_detalle}
+              </Check>
+            ))}
+            <div className="flex flex-row p-4 border border-gray-200 bg-gray-50 rounded-md text-lg text-gray-600 font-bold">
+              Tipologías
+            </div>
 
-            <TipologiaList detalles={detalles} setSelected={setSelected} />
+            <div className="flex flex-row p-4 border border-gray-200 bg-gray-50 rounded-md text-lg text-gray-600 font-bold">
+              Otros
+            </div>
+          </div>
+          {/* <TipologiaList detalles={detalles} setSelected={setSelected} />
             <FilterList
               estados={estados}
               clientes={clientes}
               setSelectedEstados={setSelectedEstados}
-            />
-          </IonCol>
-          <IonCol
-            size="auto"
-            style={{
-              display: "flex",
-              flexDirection: "row",
-            }}
-          >
-            <Calendar
-              reservas={selected != null ? handleFilter(reservas) : []}
-            />
-          </IonCol>
-        </IonRow>
-      </IonGrid>
+            /> */}
+        </div>
+
+        <Calendar reservas={selected != null ? handleFilter(reservas) : []} />
+      </div>
     </div>
   );
 }

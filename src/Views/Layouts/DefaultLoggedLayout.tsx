@@ -70,7 +70,7 @@ export default function DefaultLoggedLayout({ children }: any) {
             <IonTitle size="large">Blank</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent>{children}</IonContent>
+        <IonContent className="">{children}</IonContent>
       </IonContent>
     </IonPage>
   );

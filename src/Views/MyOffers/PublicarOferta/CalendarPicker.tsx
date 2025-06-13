@@ -67,7 +67,7 @@ export default function CalendarPicker(props: TCalendarPicker) {
                 ? range.map((value: string) => ({
                     date: value,
                     textColor: "white",
-                    backgroundColor: "lightblue",
+                    backgroundColor: "var(--color-orange-200)",
                   }))
                 : []
             }
@@ -84,7 +84,7 @@ export default function CalendarPicker(props: TCalendarPicker) {
                 ? range.map((value: string) => ({
                     date: value,
                     textColor: "white",
-                    backgroundColor: "lightblue",
+                    backgroundColor: "var(--color-orange-200)",
                   }))
                 : []
             }

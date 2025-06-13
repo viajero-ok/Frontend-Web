@@ -32,6 +32,7 @@ import { chevronBack, chevronForward } from "ionicons/icons";
 import { ReactNode, useEffect, useState } from "react";
 import Reservas from "../../Views/NewAlojamiento/EnHabitaciones/Forms/AlojamientoForm/Reservas";
 import { HookOverlayOptions } from "@ionic/react/dist/types/hooks/HookOverlayOptions";
+import { cn } from "../ui/Form/Field";
 
 const daysOfWeek = [
   "Lunes",
@@ -275,152 +276,91 @@ export default function Calendar(props: TCalendarProps) {
   }, [props.reservas]);
 
   return (
-    <IonCard style={{ display: "inline-block" }}>
-      <IonCardHeader>
-        <IonCardTitle style={{ display: "flex" }}>
-          <IonGrid>
-            <IonRow>
-              <IonCol
-                style={{
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "left",
-                }}
-              >
-                <IonButton fill="clear" style={{ color: "#F08408" }}>
-                  Ir al día actual
-                </IonButton>
-              </IonCol>
-              <IonCol
-                style={{
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-                size="small"
-              >
-                <IonButton
-                  fill="clear"
-                  style={{ marginRight: "12pt" }}
-                  onClick={() => navigateCalendar("prev")}
-                >
-                  <IonIcon
-                    icon={chevronBack}
-                    style={{ color: "#F08408", fontSize: "24pt" }}
-                  />
-                </IonButton>
-                <h3
-                  style={{
-                    fontWeight: "bold",
-                    textTransform: "capitalize",
-                    color: "#F08408",
-                  }}
-                >
-                  {format(currentDate, "MMMM yyyy", {
-                    locale: es,
-                  })}
-                </h3>
-                <IonButton
-                  fill="clear"
-                  style={{ marginLeft: "12pt" }}
-                  onClick={() => navigateCalendar("next")}
-                >
-                  <IonIcon
-                    icon={chevronForward}
-                    style={{ color: "#F08408", fontSize: "24pt" }}
-                  />
-                </IonButton>
-              </IonCol>
-              <IonCol>
-                <IonRow
-                  style={{
-                    display: "flex",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "right",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "25pt",
-                      height: "10pt",
-                      borderRadius: "8pt 8pt 8pt 8pt",
-                      backgroundColor: "#38C606",
-                    }}
-                  ></div>
-                  &nbsp;<span style={{ fontSize: "9pt" }}>Reservada</span>
-                </IonRow>
-                <IonRow
-                  style={{
-                    display: "flex",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "right",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "25pt",
-                      height: "10pt",
-                      borderRadius: "8pt 8pt 8pt 8pt",
-                      backgroundColor: "#F08408",
-                    }}
-                  ></div>
-                  &nbsp;
-                  <span style={{ fontSize: "9pt" }}>Pendiente de pago</span>
-                </IonRow>
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-        </IonCardTitle>
-      </IonCardHeader>
-      <IonCardContent>
-        <IonGrid style={{ width: "900pt" }}>
-          <IonRow>
+    <div className="flex flex-col w-full p-4 border border-gray-200 rounded-md">
+      <div className="flex flex-row w-full justify-between">
+        <button className="viajero-button-ghost px-4 py-2 flex items-center text-xs">
+          Ir al día actual
+        </button>
+
+        <div className="flex flex-row gap-2 items-center">
+          <IonButton
+            fill="clear"
+            style={{ marginRight: "12pt" }}
+            onClick={() => navigateCalendar("prev")}
+          >
+            <IonIcon
+              icon={chevronBack}
+              style={{ color: "#F08408", fontSize: "24pt" }}
+            />
+          </IonButton>
+          <h3
+            style={{
+              fontWeight: "bold",
+              textTransform: "capitalize",
+              color: "#F08408",
+            }}
+          >
+            {format(currentDate, "MMMM yyyy", {
+              locale: es,
+            })}
+          </h3>
+          <IonButton
+            fill="clear"
+            style={{ marginLeft: "12pt" }}
+            onClick={() => navigateCalendar("next")}
+          >
+            <IonIcon
+              icon={chevronForward}
+              style={{ color: "#F08408", fontSize: "24pt" }}
+            />
+          </IonButton>
+        </div>
+
+        <div className="flex flex-col">
+          <div className="flex flex-row items-center">
+            <div className="w-[25pt] h-[8pt] bg-green-500 rounded-xl" />
+            &nbsp;
+            <span className="text-xs italic text-gray-600">Reservada</span>
+          </div>
+          <div className="flex flex-row items-center">
+            <div className="w-[25pt] h-[8pt] bg-[var(--color-viajero)] rounded-xl" />
+            &nbsp;
+            <span className="text-xs italic text-gray-600">
+              Pendiente de pago
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-2">
+        <div className="flex flex-col">
+          <div className="flex flex-row">
             {daysOfWeek.map((day: string, index: number) => (
-              <IonCol
+              <div
                 key={day}
-                style={{
-                  width: "100pt",
-                  borderBottom: "2pt solid lightgray",
-                  textAlign: "center",
-                  fontWeight: "bold",
-                }}
+                className="w-1/7 pb-2 border-b border-gray-200 text-center font-bold text-gray-600 text-xs"
               >
                 {day}
-              </IonCol>
+              </div>
             ))}
-          </IonRow>
+          </div>
           {/* ----------------------------------------------------- */}
-          <IonRow>
-            <IonCol style={{ borderRight: "2pt solid lightgray", padding: 0 }}>
+          <div className="flex flex-row">
+            <div className="w-1/7">
               {lunes.length > 0 &&
                 lunes.map((day: Date, index: number) => (
                   <div
                     key={index}
-                    style={{
-                      height: "75pt",
-                      borderBottom:
-                        index < domingos.length - 1
-                          ? "2pt solid lightgray"
-                          : "",
-                      backgroundColor:
-                        (index == 0 && day.getDate() > 7) ||
+                    className={cn(
+                      "h-[75pt] relative",
+                      index < lunes.length ? "border-b border-gray-200" : "",
+                      (index == 0 && day.getDate() > 7) ||
                         (index == lunes.length - 1 && day.getDate() < 7)
-                          ? "#fef3e6"
-                          : "",
-                      position: "relative",
-                    }}
+                        ? "bg-gray-50"
+                        : ""
+                    )}
                   >
-                    <div
-                      style={{
-                        padding: "4pt",
-                        fontSize: "12pt",
-                        position: "absolute",
-                      }}
-                    >
+                    <div className="p-2 text-xs text-gray-600 absolute">
                       {day.getDate()}
                     </div>
                     {drawLanes(
@@ -438,33 +378,22 @@ export default function Calendar(props: TCalendarProps) {
                     )}
                   </div>
                 ))}
-            </IonCol>
-            <IonCol style={{ borderRight: "2pt solid lightgray", padding: 0 }}>
+            </div>
+            <div className="w-1/7">
               {martes.length > 0 &&
                 martes.map((day: Date, index: number) => (
                   <div
                     key={index}
-                    style={{
-                      height: "75pt",
-                      borderBottom:
-                        index < domingos.length - 1
-                          ? "2pt solid lightgray"
-                          : "",
-                      backgroundColor:
-                        (index == 0 && day.getDate() > 7) ||
+                    className={cn(
+                      "h-[75pt] relative",
+                      index < martes.length ? "border-b border-gray-200" : "",
+                      (index == 0 && day.getDate() > 7) ||
                         (index == martes.length - 1 && day.getDate() < 7)
-                          ? "#fef3e6"
-                          : "",
-                      position: "relative",
-                    }}
+                        ? "bg-gray-50"
+                        : ""
+                    )}
                   >
-                    <div
-                      style={{
-                        padding: "4pt",
-                        fontSize: "12pt",
-                        position: "absolute",
-                      }}
-                    >
+                    <div className="p-2 text-xs text-gray-600 absolute">
                       {day.getDate()}
                     </div>
                     {drawLanes(
@@ -482,33 +411,22 @@ export default function Calendar(props: TCalendarProps) {
                     )}
                   </div>
                 ))}
-            </IonCol>
-            <IonCol style={{ borderRight: "2pt solid lightgray", padding: 0 }}>
+            </div>
+            <div className="w-1/7">
               {miercoles.length > 0 &&
                 miercoles.map((day: Date, index: number) => (
                   <div
                     key={index}
-                    style={{
-                      height: "75pt",
-                      borderBottom:
-                        index < domingos.length - 1
-                          ? "2pt solid lightgray"
-                          : "",
-                      backgroundColor:
-                        (index == 0 && day.getDate() > 7) ||
+                    className={cn(
+                      "h-[75pt] relative",
+                      index < miercoles.length ? "border-b border-gray-200" : "",
+                      (index == 0 && day.getDate() > 7) ||
                         (index == miercoles.length - 1 && day.getDate() < 7)
-                          ? "#fef3e6"
-                          : "",
-                      position: "relative",
-                    }}
+                        ? "bg-gray-50"
+                        : ""
+                    )}
                   >
-                    <div
-                      style={{
-                        padding: "4pt",
-                        fontSize: "12pt",
-                        position: "absolute",
-                      }}
-                    >
+                    <div className="p-2 text-xs text-gray-600 absolute">
                       {day.getDate()}
                     </div>
                     {drawLanes(
@@ -526,33 +444,22 @@ export default function Calendar(props: TCalendarProps) {
                     )}
                   </div>
                 ))}
-            </IonCol>
-            <IonCol style={{ borderRight: "2pt solid lightgray", padding: 0 }}>
+            </div>
+            <div className="w-1/7">
               {jueves.length > 0 &&
                 jueves.map((day: Date, index: number) => (
                   <div
                     key={index}
-                    style={{
-                      height: "75pt",
-                      borderBottom:
-                        index < domingos.length - 1
-                          ? "2pt solid lightgray"
-                          : "",
-                      backgroundColor:
-                        (index == 0 && day.getDate() > 7) ||
+                    className={cn(
+                      "h-[75pt] relative",
+                      index < jueves.length ? "border-b border-gray-200" : "",
+                      (index == 0 && day.getDate() > 7) ||
                         (index == jueves.length - 1 && day.getDate() < 7)
-                          ? "#fef3e6"
-                          : "",
-                      position: "relative",
-                    }}
+                        ? "bg-gray-50"
+                        : ""
+                    )}
                   >
-                    <div
-                      style={{
-                        padding: "4pt",
-                        fontSize: "12pt",
-                        position: "absolute",
-                      }}
-                    >
+                    <div className="p-2 text-xs text-gray-600 absolute">
                       {day.getDate()}
                     </div>
                     {drawLanes(
@@ -570,33 +477,22 @@ export default function Calendar(props: TCalendarProps) {
                     )}
                   </div>
                 ))}
-            </IonCol>
-            <IonCol style={{ borderRight: "2pt solid lightgray", padding: 0 }}>
+            </div>
+            <div className="w-1/7">
               {viernes.length > 0 &&
                 viernes.map((day: Date, index: number) => (
                   <div
                     key={index}
-                    style={{
-                      height: "75pt",
-                      borderBottom:
-                        index < domingos.length - 1
-                          ? "2pt solid lightgray"
-                          : "",
-                      backgroundColor:
-                        (index == 0 && day.getDate() > 7) ||
+                    className={cn(
+                      "h-[75pt] relative",
+                      index < viernes.length ? "border-b border-gray-200" : "",
+                      (index == 0 && day.getDate() > 7) ||
                         (index == viernes.length - 1 && day.getDate() < 7)
-                          ? "#fef3e6"
-                          : "",
-                      position: "relative",
-                    }}
+                        ? "bg-gray-50"
+                        : ""
+                    )}
                   >
-                    <div
-                      style={{
-                        padding: "4pt",
-                        fontSize: "12pt",
-                        position: "absolute",
-                      }}
-                    >
+                    <div className="p-2 text-xs text-gray-600 absolute">
                       {day.getDate()}
                     </div>
                     {drawLanes(
@@ -614,33 +510,22 @@ export default function Calendar(props: TCalendarProps) {
                     )}
                   </div>
                 ))}
-            </IonCol>
-            <IonCol style={{ borderRight: "2pt solid lightgray", padding: 0 }}>
+            </div>
+            <div className="w-1/7">
               {sabados.length > 0 &&
                 sabados.map((day: Date, index: number) => (
                   <div
                     key={index}
-                    style={{
-                      height: "75pt",
-                      borderBottom:
-                        index < domingos.length - 1
-                          ? "2pt solid lightgray"
-                          : "",
-                      backgroundColor:
-                        (index == 0 && day.getDate() > 7) ||
+                    className={cn(
+                      "h-[75pt] relative",
+                      index < sabados.length ? "border-b border-gray-200" : "",
+                      (index == 0 && day.getDate() > 7) ||
                         (index == sabados.length - 1 && day.getDate() < 7)
-                          ? "#fef3e6"
-                          : "",
-                      position: "relative",
-                    }}
+                        ? "bg-gray-50"
+                        : ""
+                    )}
                   >
-                    <div
-                      style={{
-                        padding: "4pt",
-                        fontSize: "12pt",
-                        position: "absolute",
-                      }}
-                    >
+                    <div className="p-2 text-xs text-gray-600 absolute">
                       {day.getDate()}
                     </div>
                     {drawLanes(
@@ -658,33 +543,22 @@ export default function Calendar(props: TCalendarProps) {
                     )}
                   </div>
                 ))}
-            </IonCol>
-            <IonCol style={{ padding: 0 }}>
+            </div>
+            <div className="w-1/7">
               {domingos.length > 0 &&
                 domingos.map((day: Date, index: number) => (
                   <div
                     key={index}
-                    style={{
-                      height: "75pt",
-                      borderBottom:
-                        index < domingos.length - 1
-                          ? "2pt solid lightgray"
-                          : "",
-                      backgroundColor:
-                        (index == 0 && day.getDate() > 7) ||
+                    className={cn(
+                      "h-[75pt] relative",
+                      index < domingos.length ? "border-b border-gray-200" : "",
+                      (index == 0 && day.getDate() > 7) ||
                         (index == domingos.length - 1 && day.getDate() < 7)
-                          ? "#fef3e6"
-                          : "",
-                      position: "relative",
-                    }}
+                        ? "bg-gray-50"
+                        : ""
+                    )}
                   >
-                    <div
-                      style={{
-                        padding: "4pt",
-                        fontSize: "12pt",
-                        position: "absolute",
-                      }}
-                    >
+                    <div className="p-2 text-xs text-gray-600 absolute">
                       {day.getDate()}
                     </div>
                     {drawLanes(
@@ -702,10 +576,10 @@ export default function Calendar(props: TCalendarProps) {
                     )}
                   </div>
                 ))}
-            </IonCol>
-          </IonRow>
-        </IonGrid>
-      </IonCardContent>
-    </IonCard>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

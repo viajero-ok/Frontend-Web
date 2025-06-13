@@ -1,4 +1,4 @@
-import { IonInput } from "@ionic/react";
+import { IonInput, IonLabel, IonText, IonTitle } from "@ionic/react";
 import * as React from "react";
 import styled from "styled-components";
 import { cn } from "../Form/Field";
@@ -187,4 +187,84 @@ const TimeInput = React.forwardRef<HTMLInputElement, any>(
 );
 TimeInput.displayName = "TimeInput";
 
-export { TimeInput, Input, NumberInput };
+const formatValue = (v: string): string => {
+  const cleaned = v
+    .replaceAll("$", "")
+    .replaceAll(",", "")
+    .replaceAll(".", "")
+    .replaceAll(/^0+/g, "");
+  const splitted = cleaned.split("");
+  const intPart = splitted
+    .slice(0, -2)
+    .reverse()
+    .map((s: string, index: number, arr: string[]) => {
+      return (index + 1) % 3 == 0 && index + 1 < arr.length ? "," + s : s;
+    })
+    .reverse()
+    .join("");
+  const floatPart = splitted.slice(-2).join("");
+  return `$${intPart.length > 0 ? intPart : "0"}.${floatPart}`;
+};
+
+const MoneyInput = React.forwardRef<HTMLInputElement, any>(
+  ({ className, ...props }, ref) => {
+    const [value, setValue] = React.useState<string>(props.value ?? "");
+
+    const formatValue = (v: string): string => {
+      const cleaned = v
+        .replaceAll("$", "")
+        .replaceAll(",", "")
+        .replaceAll(".", "")
+        .replaceAll(/^0+/g, "");
+      const splitted = cleaned.split("");
+      const intPart = splitted
+        .slice(0, -2)
+        .reverse()
+        .map((s: string, index: number, arr: string[]) => {
+          return (index + 1) % 3 == 0 && index + 1 < arr.length ? "," + s : s;
+        })
+        .reverse()
+        .join("");
+      const floatPart = splitted.slice(-2).join("");
+      return `$${intPart.length > 0 ? intPart : "0"}.${floatPart}`;
+    };
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "flex flex-row items-center",
+          "border border-[#bbb] rounded-md hover:border-black",
+          "focus-visible:outline-[var(--color-viajero)] focus-visible:outline-2 -outline-offset-1"
+        )}
+      >
+        <div className="text-nowrap mx-4 text-gray-600 text-md font-bold">
+          Monto de la tarifa:
+        </div>
+        <input
+          type="text"
+          onKeyDown={(e) => {
+            if (e.key.length > 1) return;
+            if (/^\d$/.test(e.key)) return;
+            e.preventDefault();
+          }}
+          {...props}
+          value={value != "$0." ? formatValue(value) : ""}
+          onChange={(e) => {
+            setValue(e.target.value);
+            if (!props.onChange) return;
+            props.onChange(formatValue(e.target.value));
+          }}
+          fill="outline"
+          className={cn(
+            "!flex !shadow-none w-full p-4 focus-visible:outline-none text-right text-gray-600 "
+          )}
+          placeholder={"$0.00"}
+        />
+      </div>
+    );
+  }
+);
+MoneyInput.displayName = "MoneyInput";
+
+export { Input, MoneyInput, formatValue as formatMoneyValue ,NumberInput, TimeInput };

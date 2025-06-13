@@ -2,6 +2,7 @@ import { IonPage } from "@ionic/react";
 import PublicarOfertaView from "../../../Views/MyOffers/PublicarOferta/PublicarOfertaView";
 import DefaultLoggedLayout from "../../../Views/Layouts/DefaultLoggedLayout";
 import { useParams } from "react-router";
+import { PublicarOfertaProvider } from "../../../Views/MyOffers/PublicarOferta/Provider/PublicarOfertaProvider";
 
 const PublicarOfertaPage: React.FC = () => {
   const params: any = useParams();
@@ -11,7 +12,9 @@ const PublicarOfertaPage: React.FC = () => {
     params.id && (
       <IonPage>
         <DefaultLoggedLayout>
-          <PublicarOfertaView idOferta={params.id} />
+          <PublicarOfertaProvider idOferta={params.id}>
+            <PublicarOfertaView />
+          </PublicarOfertaProvider>
         </DefaultLoggedLayout>
       </IonPage>
     )

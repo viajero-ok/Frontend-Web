@@ -72,12 +72,26 @@ const OfertaCard: React.FC<OfertaCardProps> = ({
             {oferta.sub_tipo_oferta && " > "}
             {oferta.sub_tipo_oferta}
           </div>
-          <div className="text-xs border border-gray-200 bg-gray-50 text-gray-500 px-2 py-1 lowercase rounded-full items-center content-center justify-center">
+          <div
+            className={cn(
+              "text-xs border px-2 py-1 lowercase rounded-full items-center content-center justify-center",
+              oferta.id_estado == 1
+                ? "border-gray-200 bg-gray-50 text-gray-500"
+                : "",
+              oferta.id_estado == 2
+                ? "border-purple-200 bg-purple-50 text-purple-500"
+                : ""
+            )}
+          >
             {oferta.estado}
           </div>
         </div>
-        <div className="text-lg text-gray-600 font-bold">{oferta.nombre ?? "Sin nombre"}</div>
-        <div className="text-sm text-gray-600">{oferta.descripcion ?? "Sin descripción"}</div>
+        <div className="text-lg text-gray-600 font-bold">
+          {oferta.nombre ?? "Sin nombre"}
+        </div>
+        <div className="text-sm text-gray-600">
+          {oferta.descripcion ?? "Sin descripción"}
+        </div>
       </div>
     </div>
     // <IonCard style={{ display: "flex", flexDirection: "row", width: "100%" }}>

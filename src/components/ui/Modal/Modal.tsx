@@ -17,7 +17,9 @@ type ModalContextValue = {
   setDescription: React.Dispatch<
     React.SetStateAction<string | React.ReactElement>
   >;
-  setActions: React.Dispatch<React.SetStateAction<React.ReactElement>>;
+  setActions: React.Dispatch<
+    React.SetStateAction<React.ReactElement | undefined>
+  >;
   setCanDismiss: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const ModalContext = React.createContext<ModalContextValue>(
@@ -32,7 +34,9 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
   >("");
   const [canDismiss, setCanDismiss] = React.useState<boolean>(true);
   const [variant, setVariant] = React.useState<TModalVariants>("default");
-  const [actions, setActions] = React.useState<React.ReactElement>(<></>);
+  const [actions, setActions] = React.useState<React.ReactElement | undefined>(
+    undefined
+  );
 
   const contextValue = {
     isInit: true,
@@ -83,7 +87,7 @@ export const useModal = () => {
   const modal = (params: TModalParams) => {
     if (params.title) modalContext.setTitle(params.title);
     if (params.description) modalContext.setDescription(params.description);
-    if (params.actions) modalContext.setActions(params.actions);
+    modalContext.setActions(params.actions);
     if (params.variant) modalContext.setVariant(params.variant);
     if (params.canDismiss != undefined)
       modalContext.setCanDismiss(params.canDismiss);
@@ -171,18 +175,20 @@ export const Modal = ({
               {description}
             </div>
           </div>
-          <div
-            className={cn(
-              "border-t border-gray-100 p-4 flex flex-row justify-end gap-2",
-              variant == "danger" ? "bg-red-500/10" : "",
-              variant == "success" ? "bg-green-500/10" : "",
-              !variant || variant == "default"
-                ? "bg-[var(--color-viajero)]/3"
-                : ""
-            )}
-          >
-            {actions}
-          </div>
+          {actions && (
+            <div
+              className={cn(
+                "border-t border-gray-100 p-4 flex flex-row justify-end gap-2",
+                variant == "danger" ? "bg-red-500/10" : "",
+                variant == "success" ? "bg-green-500/10" : "",
+                !variant || variant == "default"
+                  ? "bg-[var(--color-viajero)]/3"
+                  : ""
+              )}
+            >
+              {actions}
+            </div>
+          )}
         </div>
       </div>
     </IonModal>

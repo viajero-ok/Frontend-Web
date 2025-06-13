@@ -32,8 +32,8 @@ export default function HomeTuristaView() {
   };
 
   return (
-    <div className="flex flex-col bg-green-400">
-      {/* <div
+    <div className="flex flex-col pb-12">
+      <div
         style={{
           width: "100%",
           height: "400pt",
@@ -42,7 +42,7 @@ export default function HomeTuristaView() {
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
         }}
-      /> */}
+      />
       <FormProvider schema={initialSchema}>
         <HomeTuristaForm />
       </FormProvider>

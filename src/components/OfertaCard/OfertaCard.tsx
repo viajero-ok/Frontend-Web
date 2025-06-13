@@ -80,6 +80,9 @@ const OfertaCard: React.FC<OfertaCardProps> = ({
                 : "",
               oferta.id_estado == 2
                 ? "border-purple-200 bg-purple-50 text-purple-500"
+                : "",
+              oferta.id_estado == 4
+                ? "border-green-200 bg-green-50 text-green-500"
                 : ""
             )}
           >

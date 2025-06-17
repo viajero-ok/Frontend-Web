@@ -5,6 +5,35 @@
   --ion-color-primary: #f08408;
 }
 
+ion-range::part(pin) {
+  display: flex !important;
+  opacity: 1 !important;
+  transform: translateY(0px) scale(1) !important;
+  z-index: 3;
+  
+  border-radius: 16px; /* makes it a circle */
+  transform: translateY(100%) translateX(0) !important; /* removes the pin-like rotation */
+
+  width: 48px; /* 24pt */
+  height: 28px;
+  font-size: 14px;
+
+}
+
+ion-range::part(pin)::before {
+  display: block !important;
+  opacity: 0 !important;
+  transform: translateY(0px) scale(1) !important;
+  z-index: 3;
+  
+  border-radius: 50%; /* makes it a circle */
+  transform: none !important; /* removes the pin-like rotation */
+
+  width: 32px; /* 24pt */
+  height: 32px;
+  font-size: 12px;
+}
+
 .viajero-button {
   cursor: pointer;
   display: flex;
@@ -33,6 +62,4 @@
   border-color: var(--color-gray-100);
   border-radius: var(--radius-md);
   background-color: color-mix(in srgb, var(--color-gray-50) 90%, transparent);
-  
 }
-

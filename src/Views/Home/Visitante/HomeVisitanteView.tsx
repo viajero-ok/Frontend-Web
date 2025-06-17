@@ -22,7 +22,6 @@ interface Oferta {
   imagen: string;
 }
 
-
 export default function HomeVisitanteView() {
   const [openToast, setOpenToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
@@ -49,21 +48,41 @@ export default function HomeVisitanteView() {
   };
 
   return (
-    <>
-      <FormProvider schema={initialSchema}>
-        <HomeVisitanteForm setFechas={setFechas} setPersonas={setPersonas} setOfertas={setOfertas} />
-      </FormProvider>
-      <ConsultaOfertasCard fechas={fechas} personas={personas} ofertas={ofertas} />
-      <IonToast
-        isOpen={openToast}
-        message={toastMessage}
-        duration={5000}
-        icon={alertCircleOutline}
-        onDidDismiss={() => {
-          setOpenToast(false);
-          setToastMessage("");
+    <div className="flex flex-col">
+      <div
+        style={{
+          width: "100%",
+          height: "400pt",
+          backgroundImage: "url(/images/panoramic_1.jpg)",
+          backgroundPosition: "center 25%",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
         }}
       />
-    </>
+      <div className="flex flex-col px-8 w-full justify-center">
+        <FormProvider schema={initialSchema}>
+          <HomeVisitanteForm
+            setFechas={setFechas}
+            setPersonas={setPersonas}
+            setOfertas={setOfertas}
+          />
+        </FormProvider>
+        <ConsultaOfertasCard
+          fechas={fechas}
+          personas={personas}
+          ofertas={ofertas}
+        />
+        <IonToast
+          isOpen={openToast}
+          message={toastMessage}
+          duration={5000}
+          icon={alertCircleOutline}
+          onDidDismiss={() => {
+            setOpenToast(false);
+            setToastMessage("");
+          }}
+        />
+      </div>
+    </div>
   );
 }

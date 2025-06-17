@@ -54,43 +54,40 @@ export default function CalendarPicker(props: TCalendarPicker) {
   };
 
   return (
-    <IonGrid style={{ width: "600pt" }}>
-      <IonRow>
-        <IonCol style={{ display: "flex", justifyContent: "right" }}>
-          <IonDatetime
-            preferWheel={false}
-            presentation="date"
-            max={to != null ? to : "01/01/99"}
-            onIonChange={(e: any) => handleSetFrom(e.target.value)}
-            highlightedDates={
-              range != null
-                ? range.map((value: string) => ({
-                    date: value,
-                    textColor: "white",
-                    backgroundColor: "var(--color-orange-200)",
-                  }))
-                : []
-            }
-          />
-        </IonCol>
-        <IonCol>
-          <IonDatetime
-            preferWheel={false}
-            presentation="date"
-            min={from}
-            onIonChange={(e: any) => handleSetTo(e.target.value)}
-            highlightedDates={
-              range != null
-                ? range.map((value: string) => ({
-                    date: value,
-                    textColor: "white",
-                    backgroundColor: "var(--color-orange-200)",
-                  }))
-                : []
-            }
-          />
-        </IonCol>
-      </IonRow>
-    </IonGrid>
+    <div className="flex flex-row p-2 gap-2 items-center justify-center content-center">
+      <IonDatetime
+        preferWheel={false}
+        presentation="date"
+        max={to != null ? to : "01/01/99"}
+        onIonChange={(e: any) => handleSetFrom(e.target.value)}
+        highlightedDates={
+          range != null
+            ? range.map((value: string) => ({
+                date: value,
+                textColor: "white",
+                backgroundColor: "var(--color-orange-200)",
+              }))
+            : []
+        }
+        className="flex flex-col border border-[#bbb] hover:border-black rounded-md"
+      />
+
+      <IonDatetime
+        preferWheel={false}
+        presentation="date"
+        min={from}
+        onIonChange={(e: any) => handleSetTo(e.target.value)}
+        highlightedDates={
+          range != null
+            ? range.map((value: string) => ({
+                date: value,
+                textColor: "white",
+                backgroundColor: "var(--color-orange-200)",
+              }))
+            : []
+        }
+        className="flex flex-col border border-[#bbb] hover:border-black rounded-md"
+      />
+    </div>
   );
 }

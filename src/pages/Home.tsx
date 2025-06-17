@@ -56,7 +56,7 @@ const Home: React.FC = () => {
           ></div> */}
           {/* <HomeVisitanteView /> */}
           {perfil == PERFILES.INVITADO.id && <HomeVisitanteView />}
-          {perfil == PERFILES.TURISTA.id && <HomeTuristaView />}
+          {perfil == PERFILES.TURISTA.id && <HomeVisitanteView />}
           {perfil == PERFILES.PRESTADOR.id && <HomePrestadorView />}
         </IonContent>
       </IonContent>

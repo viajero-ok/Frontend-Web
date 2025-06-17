@@ -8,6 +8,7 @@ import AlojamientoForm from "./Forms/AlojamientoForm/AlojamientoForm";
 import HabitacionesForm from "./Forms/HabitacionesForm/HabitacionesForm";
 import ImagenesForm from "./Forms/ImagenesForm/ImagenesForm";
 import { AlojamientoEnHabitacionesProvider } from "./Provider/AlojamientoEnHabitacionesProvider";
+import { ClassNameValue } from "tailwind-merge";
 
 export type TImagenRegistrada = {
   id_imagen: number;
@@ -15,18 +16,20 @@ export type TImagenRegistrada = {
   datos: string;
 };
 
-const Segment = ({
+export const Segment = ({
   segment,
   label,
   value,
   set,
   disabled,
+  className,
 }: {
   segment: string;
   label: string;
   value: string;
   set: Dispatch<SetStateAction<string>>;
   disabled?: boolean;
+  className?: ClassNameValue;
 }) => {
   return (
     <div
@@ -37,7 +40,8 @@ const Segment = ({
           : "bg-gray-50 border-gray-200",
         disabled
           ? "text-gray-400 cursor-default"
-          : "cursor-pointer hover:border-[var(--color-viajero)] hover:bg-[var(--color-viajero)]/5"
+          : "cursor-pointer hover:border-[var(--color-viajero)] hover:bg-[var(--color-viajero)]/5",
+        className
       )}
       onClick={() => !disabled && set(value)}
     >

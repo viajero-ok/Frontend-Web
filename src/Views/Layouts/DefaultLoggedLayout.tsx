@@ -52,7 +52,7 @@ export default function DefaultLoggedLayout({ children }: any) {
             {/* <div className="text-lg italic font-light text-gray-600">¡Hola, {}viajero!</div> */}
           </div>
 
-          <div className="flex flex-row gap-8 justify-end items-center">
+          <div className="flex flex-row gap-8 justify-end items-center pr-4">
             <div className="flex flex-row gap-4 text-gray-800 select-none h-full">
               <div onClick={() => router.push("/")} className="cursor-pointer px-2 hover:underline hover:bg-[var(--color-viajero)]/5 h-full flex items-center">Inicio</div>
               <div onClick={() => router.push("my-places")} className="cursor-pointer px-2 hover:underline hover:bg-[var(--color-viajero)]/5 h-full flex items-center">Establecimientos</div>

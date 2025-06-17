@@ -14,6 +14,7 @@ import MarkerOnClick from "./MarkerOnClick";
 import { LeafletMouseEvent } from "leaflet";
 import MarkerPin from "./MarkerPin";
 import { ClassNameValue } from "tailwind-merge";
+import { cn } from "../ui/Form/Field";
 
 const ComponentResize = () => {
   const map = useMap();
@@ -25,10 +26,13 @@ const ComponentResize = () => {
   return null;
 };
 
-const Recenter = (props: { pos: { lat: number; lng: number } }) => {
+const Recenter = (props: {
+  pos: { lat: number; lng: number };
+  zoom?: number;
+}) => {
   const map = useMap();
   useEffect(() => {
-    map.setView([props.pos.lat, props.pos.lng]);
+    map.setView([props.pos.lat, props.pos.lng], props.zoom);
   }, [props.pos]);
   return null;
 };
@@ -44,6 +48,7 @@ type TMap = {
   onClick?: (e: LeafletMouseEvent) => any;
   pos?: { lat: number; lgn: number } | null;
   setMarker?: { lat: number; lng: number } | null;
+  className?: ClassNameValue;
 };
 const Map = (props: TMap) => {
   const [pos, setPos] = useState<{ lat: number; lng: number }>(
@@ -54,6 +59,7 @@ const Map = (props: TMap) => {
           lng: -64.19357580741155,
         }
   );
+  const [zoom, setZoom] = useState<number>(13);
 
   useEffect(() => {
     if (!props.autoLoc) return;
@@ -81,6 +87,7 @@ const Map = (props: TMap) => {
       lat: props.setMarker.lat,
       lng: props.setMarker.lng,
     });
+    setZoom(15);
   }, [props.setMarker]);
 
   return (
@@ -88,8 +95,9 @@ const Map = (props: TMap) => {
       <MapContainer
         center={[pos.lat, pos.lng]}
         zoom={props.initZoom ?? 13}
-        style={props.style ?? { height: "100vh" }}
+        style={props.style ?? {}}
         zoomControl={props.zoom ?? false}
+        className={cn(props.className)}
       >
         <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -98,7 +106,7 @@ const Map = (props: TMap) => {
           //url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png" --> clarito
         />
         <ComponentResize />
-        <Recenter pos={pos} />
+        <Recenter pos={pos} zoom={zoom} />
         {props.search && <LeafletControlGeocoder />}
         {props.markerOnClick && (
           <MarkerOnClick onClick={props.onClick ?? undefined} />

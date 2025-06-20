@@ -1,4 +1,11 @@
-import { IonButton, IonCol, IonGrid, IonIcon, IonRow, useIonRouter } from "@ionic/react";
+import {
+  IonButton,
+  IonCol,
+  IonGrid,
+  IonIcon,
+  IonRow,
+  useIonRouter,
+} from "@ionic/react";
 import { useEffect, useState } from "react";
 import TurnosForm from "./Turnos/TurnosForm";
 import EntradasForm from "./Entradas/EntradasForm";
@@ -14,41 +21,46 @@ export default function TurnosyEntradasForm(props: TTurnosyEntradasForm) {
   const [entradas, setEntradas] = useState<any[]>([]);
   const router = useIonRouter();
 
-  
   const handleAgregarEntrada = () => {
-        setEntradas((prev: any[]) => [...prev, {}]);
+    setEntradas((prev: any[]) => [...prev, {}]);
   };
 
   const handleAgregarHorario = () => {
     setHorarios((prev: any[]) => [...prev, {}]);
   };
 
-
   const handleObtenerDatos = () => {
-    obtenerDatosRegistradosHorariosyEntradas(props.idOferta).then((response: any) => {
-      console.log("llamada");
-      setHorarios(response.data.horarios_turnos);
-      setEntradas(response.data.entradas);
-    });
+    obtenerDatosRegistradosHorariosyEntradas(props.idOferta).then(
+      (response: any) => {
+        console.log("llamada");
+        setHorarios(response.data.horarios_turnos);
+        setEntradas(response.data.entradas);
+      }
+    );
   };
 
   useEffect(() => {
-    console.log("turnosID",props.idOferta);
+    console.log("turnosID", props.idOferta);
     handleObtenerDatos();
-    
   }, []);
 
   return (
-    <IonGrid>
+    <div className="flex flex-col mt-4 gap-2">
       <TurnosForm
         idOferta={props.idOferta}
         handleAgregar={handleAgregarHorario}
       />
-      <EntradasForm
-        idOferta={props.idOferta }
+      {/* <EntradasForm
+        idOferta={props.idOferta}
         handleAgregar={handleAgregarEntrada}
-      />
-      <IonRow style={{ justifyContent: "space-around", marginTop: "10pt", marginBottom: "10pt" }}>
+      /> */}
+      <div
+        style={{
+          justifyContent: "space-around",
+          marginTop: "10pt",
+          marginBottom: "10pt",
+        }}
+      >
         <IonButton
           color="light"
           onClick={() => router && router.push("/my-offers")}
@@ -63,9 +75,7 @@ export default function TurnosyEntradasForm(props: TTurnosyEntradasForm) {
         >
           Registrar
         </IonButton>
-
-      </IonRow>
-    </IonGrid>
-    
+      </div>
+    </div>
   );
 }

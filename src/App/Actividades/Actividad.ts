@@ -52,7 +52,7 @@ export type TBodyGuardarActividad = {
       porcentaje_pago_anticipado: number;
       id_tipo_pago_anticipado: number;
     },
-    metodos_de_pago: []
+    metodos_de_pago: number[]
   };
   export const guardarActividad = async (body: TBodyGuardarActividad) =>
     await AUTH_API.patch(`/actividades/actualizar-actividad`, body);

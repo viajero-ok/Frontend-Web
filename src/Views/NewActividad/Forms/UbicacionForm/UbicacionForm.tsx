@@ -1,11 +1,46 @@
-import { IonButton, IonCheckbox, IonCol, IonGrid, IonRow, IonToggle, useIonRouter } from "@ionic/react";
+import {
+  IonButton,
+  IonCheckbox,
+  IonCol,
+  IonGrid,
+  IonRow,
+  IonToggle,
+  useIonRouter,
+} from "@ionic/react";
 import MapView from "../../../../components/MapView/MapView";
 import Field from "../../../../components/Field/Field";
-import { useForm } from "../../../../hooks/UseForm/FormProvider";
 import { useEffect, useState } from "react";
 import { LatLng, LeafletMouseEvent } from "leaflet";
-import { TUbicacion, guardarUbicacion } from "../../../../App/Actividades/Ubicacion";
+import {
+  TUbicacion,
+  guardarUbicacion,
+} from "../../../../App/Actividades/Ubicacion";
 import { getUbicaciones } from "../../../../App/Ubicaciones/Ubicaciones";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "../../../../components/ui/Form/Field";
+import { Input } from "../../../../components/ui/Input/Input";
+import { Check } from "../../../../components/ui/Check/Check";
+import { Select, SelectOption } from "../../../../components/ui/Select/Select";
+
+const formSchema = z.object({
+  calle: z.string({ message: "El campo es requerido" }),
+  sin_numero: z.boolean().optional(),
+  numero: z.string({ message: "El campo es requerido" }),
+  id_localidad: z.number({ message: "El campo es requerido" }),
+  id_departamento: z.number({ message: "El campo es requerido" }),
+  id_provincia: z.number({ message: "El campo es requerido" }),
+  latitud: z.string({ message: "El campo es requerido" }),
+  longitud: z.string({ message: "El campo es requerido" }),
+  observaciones: z.string().optional(),
+});
 
 type TUbicacionForm = {
   idOferta: string;
@@ -14,7 +49,7 @@ type TUbicacionForm = {
 export default function UbicacionForm(props: TUbicacionForm) {
   const [markerPos, setMarkerPos] = useState<LatLng>();
   const router = useIonRouter();
-  const form = useForm();
+
   const [ubicaciones, setUbicaciones] = useState<any[]>();
   const [provincias, setProvincias] = useState<any[]>();
   const [sinNumero, setSinNumero] = useState<boolean>(false);
@@ -66,43 +101,44 @@ export default function UbicacionForm(props: TUbicacionForm) {
             })
         );
       })
-      .catch((error: any) => { });
+      .catch((error: any) => {});
   }, []);
 
   const handleOnClick = (e: LeafletMouseEvent) => {
+    setUbiEstablecimiento(false);
     setMarkerPos(e.latlng);
   };
 
   const handleRegistrarUbicacion = () => {
-    if (!form) return;
-    if (!form.schema) return;
-    const schema = form?.schema;
-    if (ubiEstablecimiento) {
-      guardarUbicacion({
-        id_oferta: props.idOferta,
-        id_establecimiento: props.id_establecimiento,
-        misma_ubicacion_establecimiento: ubiEstablecimiento,
-        observaciones: schema.observaciones
-      })
-    }
-    else {
-      guardarUbicacion({
-        id_oferta: props.idOferta,
-        calle: schema.calle,
-        sin_numero: sinNumero,
-        numero: schema.numero,
-        id_localidad: parseInt(schema.localidad),
-        id_departamento: parseInt(schema.departamento),
-        id_provincia: 6,
-        latitud: markerPos ? markerPos.lat.toString() : "0.0",
-        longitud: markerPos ? markerPos.lng.toString() : "0.0",
-        observaciones: schema.observaciones,
-      })
-        .then((response: any) => {
-          console.log(response);
-        })
-        .then((error: any) => { });
-    }
+    // if (!form) return;
+    // if (!form.schema) return;
+    // const schema = form?.schema;
+    // if (ubiEstablecimiento) {
+    //   guardarUbicacion({
+    //     id_oferta: props.idOferta,
+    //     id_establecimiento: props.id_establecimiento,
+    //     misma_ubicacion_establecimiento: ubiEstablecimiento,
+    //     observaciones: schema.observaciones
+    //   })
+    // }
+    // else {
+    //   guardarUbicacion({
+    //     id_oferta: props.idOferta,
+    //     calle: schema.calle,
+    //     sin_numero: sinNumero,
+    //     numero: schema.numero,
+    //     id_localidad: parseInt(schema.localidad),
+    //     id_departamento: parseInt(schema.departamento),
+    //     id_provincia: 6,
+    //     latitud: markerPos ? markerPos.lat.toString() : "0.0",
+    //     longitud: markerPos ? markerPos.lng.toString() : "0.0",
+    //     observaciones: schema.observaciones,
+    //   })
+    //     .then((response: any) => {
+    //       console.log(response);
+    //     })
+    //     .then((error: any) => { });
+    // }
   };
 
   const handleCheckboxChange = (event: any) => {
@@ -110,24 +146,156 @@ export default function UbicacionForm(props: TUbicacionForm) {
     setSinNumero(isChecked);
   };
 
+  /** REFACTOR */
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    mode: "onSubmit",
+    defaultValues: {
+      sin_numero: false,
+    },
+  });
+
   return (
-    <IonGrid>
-      <IonRow>
-        <IonToggle
-          name="ubiEstablecimiento"
-          checked={ubiEstablecimiento}
-          onIonChange={(e) => setUbiEstablecimiento(e.target.checked)}
-          style={{ margin: "10pt", paddingLeft: "40%" }}
-        >
-          Usar ubicación del establecimiento
-        </IonToggle>
-      </IonRow>
-      <IonRow>
-        <IonCol
-          size="medium"
-          style={{ paddingLeft: "20pt", paddingRight: "24pt" }}
-        >
-          <IonRow
+    <Form {...form}>
+      <form className="flex flex-col gap-2 mt-4">
+        <div className="p-4 w-full rounded-md border border-gray-200 bg-gray-50 text-2xl text-gray-600 font-bold">
+          Datos de la ubicación
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <div className="flex flex-col gap-2">
+            <FormField
+              control={form.control}
+              name="calle"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormControl>
+                    <Input placeholder="Calle" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex flex-row gap-2">
+              <Check className="h-[42pt]">Sin número</Check>
+              <FormField
+                control={form.control}
+                name="numero"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormControl>
+                      <Input placeholder="Número" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex flex-row gap-2">
+              <FormField
+                control={form.control}
+                name="id_provincia"
+                render={({ field }) => (
+                  <FormItem className="break-inside-avoid-column w-full">
+                    <FormControl>
+                      <Select placeholder="Provincia" {...field}>
+                        {[].map((provincia: any) => (
+                          <SelectOption
+                            key={provincia.id_provincia}
+                            value={provincia.id_provincia}
+                          >
+                            {provincia.provincia}
+                          </SelectOption>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="id_departamento"
+                render={({ field }) => (
+                  <FormItem className="break-inside-avoid-column w-full">
+                    <FormControl>
+                      <Select placeholder="Provincia" {...field}>
+                        {[].map((departamento: any) => (
+                          <SelectOption
+                            key={departamento.id_departamento}
+                            value={departamento.id_departamento}
+                          >
+                            {departamento.departamento}
+                          </SelectOption>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="id_localidad"
+                render={({ field }) => (
+                  <FormItem className="break-inside-avoid-column w-full">
+                    <FormControl>
+                      <Select placeholder="Localidad" {...field}>
+                        {[].map((localidad: any) => (
+                          <SelectOption
+                            key={localidad.id_localidad}
+                            value={localidad.id_localidad}
+                          >
+                            {localidad.localidad}
+                          </SelectOption>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormField
+              control={form.control}
+              name="observaciones"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormControl>
+                    <Input placeholder="Observaciones" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Check
+              className="h-[42pt]"
+              checked={ubiEstablecimiento}
+              onChange={(v: boolean) => {
+                if (v) {
+                  console.log("set marker");
+                  setMarkerPos(new LatLng(23, -53));
+                }
+                setUbiEstablecimiento(v);
+              }}
+            >
+              Usar ubicación del establecimiento
+            </Check>
+            <div className="flex flex-row justify-between">
+              <button
+                className="viajero-button-ghost px-4 py-2"
+                onClick={() => router && router.push("/my-offers")}
+              >
+                Volver
+              </button>
+              <button
+                className="viajero-button px-4 py-2"
+                onClick={() => handleRegistrarUbicacion()}
+              >
+                Guardar
+              </button>
+            </div>
+            {/* <IonRow
             style={{ marginBottom: "10pt", marginTop: "10pt" }}>
             <Field
               name="calle"
@@ -234,53 +402,28 @@ export default function UbicacionForm(props: TUbicacionForm) {
               name="observaciones"
               label="Observaciones"
             />
-          </IonRow>
-        </IonCol>
-        <IonCol
-          style={{
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <MapView
-            search
-            markerOnClick
-            onClick={handleOnClick}
-            style={{
-              display: "flex",
-              width: "80%",
-              aspectRatio: "2/1",
-              marginLeft: "24pt",
-              marginRight: "24pt",
-            }}
-          />
-        </IonCol>
-      </IonRow>
-      <IonRow
-        style={{
-          justifyContent: "space-around",
-          marginTop: "10pt",
-          marginBottom: "10pt",
-        }}
-      >
-        <IonButton
-          color="light"
-          onClick={() => router && router.push("/my-offers")}
-        >
-          Volver
-        </IonButton>
-        <IonButton
-          style={{
-            "--background": "#F08408",
-          }}
-          onClick={() => handleRegistrarUbicacion()}
-        >
-          Guardar
-        </IonButton>
+          </IonRow> */}
+          </div>
+          <div className="flex flex-col gap-2">
+            {/* <IonToggle
+              name="ubiEstablecimiento"
+              checked={ubiEstablecimiento}a
+              onIonChange={(e) => setUbiEstablecimiento(e.target.checked)}
+              style={{ margin: "10pt", paddingLeft: "40%" }}
+            >
+              Usar ubicación del establecimiento
+            </IonToggle> */}
 
-      </IonRow>
-    </IonGrid>
+            <MapView
+              //pos={ubiEstablecimiento ? { lat: -23, lgn: -53 } : undefined}
+              search
+              markerOnClick
+              onClick={handleOnClick}
+              className="border border-[#bbb] hover:border-black rounded-md w-full aspect-video"
+            />
+          </div>
+        </div>
+      </form>
+    </Form>
   );
 }

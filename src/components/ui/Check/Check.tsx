@@ -23,6 +23,19 @@ export const CheckSection = ({
   );
 };
 
+const handleSelectCheckItem = (
+  id: number,
+  value: boolean,
+  set: React.Dispatch<React.SetStateAction<number[]>>
+) => {
+  if (!value) {
+    set((prev: number[]) => [...prev].filter((v: number) => v != id));
+    return;
+  }
+
+  set((prev: number[]) => [...prev, id]);
+};
+
 const StyledIonCheckbox = styled(IonCheckbox)`
   --highlight-color-focused: oklch(0.75 0.183 55.934);
   --border-radius: 0.375rem;
@@ -55,4 +68,4 @@ const Check = React.forwardRef<typeof StyledIonCheckbox, any>(
 );
 Check.displayName = "Check";
 
-export { Check };
+export { Check, handleSelectCheckItem };

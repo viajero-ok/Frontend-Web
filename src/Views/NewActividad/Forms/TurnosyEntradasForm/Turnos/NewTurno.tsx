@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { maskitoTimeOptionsGenerator } from "@maskito/kit";
 import { useMaskito } from "@maskito/react";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { eliminarHorario } from "../../../../../App/Actividades/TurnosyHorarios";
@@ -14,30 +14,8 @@ import {
   FormMessage,
 } from "../../../../../components/ui/Form/Field";
 import { Input, TimeInput } from "../../../../../components/ui/Input/Input";
-
-type TRowData = {
-  id_horario: number;
-  inicio: {
-    hora_inicio: string;
-    minuto_inicio: string;
-  };
-  fin: {
-    hora_fin: string;
-    minuto_fin: string;
-  };
-  aplica_todos_los_dias: boolean;
-  dias_semana: {
-    aplica_lunes: boolean;
-    aplica_martes: boolean;
-    aplica_miercoles: boolean;
-    aplica_jueves: boolean;
-    aplica_viernes: boolean;
-    aplica_sabado: boolean;
-    aplica_domingo: boolean;
-  };
-  sin_cupo: boolean;
-  cupo_maximo: number;
-};
+import { useActividad } from "../../../Provider/ActividadProvider";
+import { useToast } from "../../../../../components/ui/Toast/Toast";
 
 const numeric = z.preprocess((val) => {
   if (typeof val === "string" && /^[0-9]+$/.test(val)) {
@@ -63,75 +41,112 @@ const formSchema = z.object({
   cupo_maximo: numeric.optional(),
 });
 
-export default function TurnosRow({ turno }: { turno: any }) {
-  const [sinCupo, setSinCupo] = useState<boolean>(false);
-  const [aplicaTodosLosDias, setAplicaTodosLosDias] = useState<boolean>(false);
-
-  const handleEliminar = () => {
-    // eliminarHorario({ id_horario: props.id })
-    //   .then((response: any) => {
-    //     props.setRows((prev: any[]) => [
-    //       ...prev.filter((row: any) => row.id_horario != props.id),
-    //     ]);
-    //   })
-    //   .catch((_) => {});
-  };
-
-  const horaInicioMask = useMaskito({
-    options: maskitoTimeOptionsGenerator({
-      mode: "HH:MM",
-      step: 1,
-    }),
-  });
-  const horaFinMask = useMaskito({
-    options: maskitoTimeOptionsGenerator({
-      mode: "HH:MM",
-      step: 1,
-    }),
-  });
-
-  /** REFACTOR */
+export default function NewTurno({ cerrar }: { cerrar: () => void }) {
+  const { idOferta, agregarTurno } = useActividad();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     mode: "onSubmit",
+    defaultValues: {
+      aplica_todos_los_dias: false,
+      aplica_lunes: false,
+      aplica_martes: false,
+      aplica_miercoles: false,
+      aplica_jueves: false,
+      aplica_viernes: false,
+      aplica_sabado: false,
+      aplica_domingo: false,
+      sin_cupo: false,
+    },
   });
 
-  useEffect(() => {
-    form.reset({
-      hora_inicio: turno.check_in_hora,
-      minuto_inicio: turno.check_in_minuto,
-      hora_fin: turno.check_out_hora,
-      minuto_fin: turno.check_out_minuto,
-      aplica_todos_los_dias: false, // TODO: calcular acá en base al resto
-      aplica_lunes: turno.aplica_lunes,
-      aplica_martes: turno.aplica_martes,
-      aplica_miercoles: turno.aplica_miercoles,
-      aplica_jueves: turno.aplica_jueves,
-      aplica_viernes: turno.aplica_viernes,
-      aplica_sabado: turno.aplica_sabado,
-      aplica_domingo: turno.aplica_domingo,
-      sin_cupo: turno.sin_cupo ?? false,
-      cupo_maximo: turno.cupo_maximo ?? undefined,
-    });
-  }, [turno]);
+  const handleSetTime = (value: string, key: "inicio" | "fin") => {
+    const hora = value.split(":")[0];
+    const minuto = value.split(":")[1];
+    form.setValue(key == "inicio" ? "hora_inicio" : "hora_fin", parseInt(hora));
+    form.setValue(
+      key == "inicio" ? "minuto_inicio" : "minuto_fin",
+      parseInt(minuto)
+    );
+  };
+
+  const selectAllDays = (value: boolean) => {
+    form.setValue("aplica_todos_los_dias", value);
+  };
+
+  const selectDay = (
+    value: boolean,
+    key:
+      | "aplica_lunes"
+      | "aplica_martes"
+      | "aplica_miercoles"
+      | "aplica_jueves"
+      | "aplica_viernes"
+      | "aplica_sabado"
+      | "aplica_domingo"
+  ) => {
+    form.setValue(key, value);
+  };
+
+  const handleAgregar = (values: z.infer<typeof formSchema>) => {
+    agregarTurno({
+      id_oferta: idOferta,
+      check_in: {
+        hora_check_in: values.hora_inicio,
+        minuto_check_in: values.minuto_inicio,
+      },
+      check_out: {
+        hora_check_out: values.hora_fin,
+        minuto_check_out: values.minuto_fin,
+      },
+      aplica_todos_los_dias: values.aplica_todos_los_dias,
+      dias_semana: {
+        aplica_lunes: values.aplica_lunes,
+        aplica_martes: values.aplica_lunes,
+        aplica_miercoles: values.aplica_martes,
+        aplica_jueves: values.aplica_miercoles,
+        aplica_viernes: values.aplica_jueves,
+        aplica_sabado: values.aplica_viernes,
+        aplica_domingo: values.aplica_sabado,
+      },
+      cupo_maximo: values.cupo_maximo ?? 0,
+      bl_sin_cupo: values.sin_cupo,
+    })
+      .then(() => {
+        toast({
+          variant: "success",
+          title: "Turno creado.",
+        });
+        cerrar();
+      })
+      .catch(() => {
+        toast({
+          variant: "success",
+          title: "Error al crear el turno, intente nuevamente.",
+        });
+      });
+  };
 
   return (
     <Form {...form}>
-      <form className="grid grid-cols-12 w-full gap-2">
+      <form
+        onSubmit={form.handleSubmit(handleAgregar)}
+        className="grid grid-cols-12 w-full gap-2"
+      >
         <div className="col-span-4">
           <div className="flex flex-col gap-2">
             <TimeInput
               className="h-[42pt]"
               placeholder="00:00"
-              //onChange={(e: any) => handleSetTime(e.target.value, "inicio")}
+              onChange={(e: any) => handleSetTime(e.target.value, "inicio")}
               hora={form.getValues().hora_inicio}
               minuto={form.getValues().minuto_inicio}
             />
             <TimeInput
               className="h-[42pt]"
               placeholder="00:00"
-              // onChange={(e: any) => handleSetTime(e.target.value, "fin")}
+              onChange={(e: any) => handleSetTime(e.target.value, "fin")}
               hora={form.getValues().hora_fin}
               minuto={form.getValues().minuto_fin}
             />
@@ -140,7 +155,7 @@ export default function TurnosRow({ turno }: { turno: any }) {
         <div className="col-span-5 flex flex-col justify-center gap-2">
           <Check
             className=" h-[42pt]"
-            //onChange={(v: boolean) => selectAllDays(v)}
+            onChange={(v: boolean) => selectAllDays(v)}
           >
             Aplica todos los días
           </Check>
@@ -151,7 +166,7 @@ export default function TurnosRow({ turno }: { turno: any }) {
                 form.getValues().aplica_todos_los_dias
               }
               className="w-full h-[42pt]"
-              //onChange={(v: boolean) => selectDay(v, "aplica_lunes")}
+              onChange={(v: boolean) => selectDay(v, "aplica_lunes")}
             >
               L
             </Check>
@@ -161,7 +176,7 @@ export default function TurnosRow({ turno }: { turno: any }) {
                 form.getValues().aplica_todos_los_dias
               }
               className="w-full h-[42pt]"
-              //onChange={(v: boolean) => selectDay(v, "aplica_martes")}
+              onChange={(v: boolean) => selectDay(v, "aplica_martes")}
             >
               M
             </Check>
@@ -171,7 +186,7 @@ export default function TurnosRow({ turno }: { turno: any }) {
                 form.getValues().aplica_todos_los_dias
               }
               className="w-full h-[42pt]"
-              //onChange={(v: boolean) => selectDay(v, "aplica_miercoles")}
+              onChange={(v: boolean) => selectDay(v, "aplica_miercoles")}
             >
               M
             </Check>
@@ -181,7 +196,7 @@ export default function TurnosRow({ turno }: { turno: any }) {
                 form.getValues().aplica_todos_los_dias
               }
               className="w-full h-[42pt]"
-              //onChange={(v: boolean) => selectDay(v, "aplica_jueves")}
+              onChange={(v: boolean) => selectDay(v, "aplica_jueves")}
             >
               J
             </Check>
@@ -191,7 +206,7 @@ export default function TurnosRow({ turno }: { turno: any }) {
                 form.getValues().aplica_todos_los_dias
               }
               className="w-full h-[42pt]"
-              // onChange={(v: boolean) => selectDay(v, "aplica_viernes")}
+              onChange={(v: boolean) => selectDay(v, "aplica_viernes")}
             >
               V
             </Check>
@@ -201,7 +216,7 @@ export default function TurnosRow({ turno }: { turno: any }) {
                 form.getValues().aplica_todos_los_dias
               }
               className="w-full h-[42pt]"
-              // onChange={(v: boolean) => selectDay(v, "aplica_sabado")}
+              onChange={(v: boolean) => selectDay(v, "aplica_sabado")}
             >
               S
             </Check>
@@ -211,7 +226,7 @@ export default function TurnosRow({ turno }: { turno: any }) {
                 form.getValues().aplica_todos_los_dias
               }
               className="w-full h-[42pt]"
-              //onChange={(v: boolean) => selectDay(v, "aplica_domingo")}
+              onChange={(v: boolean) => selectDay(v, "aplica_domingo")}
             >
               D
             </Check>
@@ -239,12 +254,12 @@ export default function TurnosRow({ turno }: { turno: any }) {
         </div>
         <div className="col-span-1 flex flex-col gap-2">
           {/* <IonButton color="danger" onClick={() => handleEliminar()}>
-                <IonIcon icon={trash} />
-              </IonButton> */}
+            <IonIcon icon={trash} />
+          </IonButton> */}
           <button
             onClick={(e) => {
               e.preventDefault();
-              //cerrar();
+              cerrar();
             }}
             className="viajero-button-ghost px-4 py-2 h-full items-center"
           >

@@ -1,20 +1,15 @@
 import "leaflet/dist/leaflet.css";
-import {
-  LayerGroup,
-  LayersControl,
-  MapContainer,
-  TileLayer,
-  useMap,
-} from "react-leaflet";
+import { MapContainer, TileLayer, useMap, useMapEvents } from "react-leaflet";
 
-import { CSSProperties, useEffect, useMemo, useState } from "react";
-import LeafletControlGeocoder from "./LeafletControlGeocoder";
-import { CSSOptions } from "vite";
-import MarkerOnClick from "./MarkerOnClick";
 import { LeafletMouseEvent } from "leaflet";
-import MarkerPin from "./MarkerPin";
+import { CSSProperties, useEffect, useMemo, useState } from "react";
 import { ClassNameValue } from "tailwind-merge";
 import { cn } from "../ui/Form/Field";
+import LeafletControlGeocoder from "./LeafletControlGeocoder";
+import MarkerOnClick from "./MarkerOnClick";
+import MarkerPin from "./MarkerPin";
+import { TMarker, useMapView } from "./useMapView";
+import SingleMarkerOnClick from "./SingleMarkerOnClick";
 
 const ComponentResize = () => {
   const map = useMap();
@@ -43,8 +38,6 @@ type TMap = {
   autoLoc?: boolean;
   style?: CSSProperties;
   zoom?: boolean;
-  search?: boolean;
-  markerOnClick?: boolean;
   onClick?: (e: LeafletMouseEvent) => any;
   pos?: { lat: number; lgn: number } | null;
   setMarker?: { lat: number; lng: number } | null;
@@ -90,6 +83,8 @@ const Map = (props: TMap) => {
     setZoom(15);
   }, [props.setMarker]);
 
+  const { autoLoc, search, markerOnClick, markerList } = useMapView();
+
   return (
     <>
       <MapContainer
@@ -107,11 +102,15 @@ const Map = (props: TMap) => {
         />
         <ComponentResize />
         <Recenter pos={pos} zoom={zoom} />
-        {props.search && <LeafletControlGeocoder />}
-        {props.markerOnClick && (
-          <MarkerOnClick onClick={props.onClick ?? undefined} />
+
+        {search && <LeafletControlGeocoder />}
+        {markerOnClick && (
+          <SingleMarkerOnClick onClick={props.onClick ?? undefined} />
         )}
-        {props.setMarker != null && <MarkerPin pos={props.setMarker} />}
+
+        {markerList.map((marker: TMarker) => (
+          <MarkerPin key={marker.id} marker={marker} />
+        ))}
       </MapContainer>
     </>
   );
@@ -120,11 +119,9 @@ const Map = (props: TMap) => {
 interface IMapView {
   style?: any;
   zoom?: boolean;
-  search?: boolean;
   autoLoc?: boolean;
   initPos?: { lat: number; lng: number };
   initZoom?: number;
-  markerOnClick?: boolean;
   onClick?: (e: LeafletMouseEvent) => any;
   pos?: { lat: number; lgn: number } | null;
   setMarker?: { lat: number; lng: number } | null;

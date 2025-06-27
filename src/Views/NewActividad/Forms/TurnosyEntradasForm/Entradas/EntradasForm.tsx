@@ -1,119 +1,53 @@
-import {
-    IonButton,
-    IonCheckbox,
-    IonCol,
-    IonIcon,
-    IonRow,
-    IonTitle,
-    useIonRouter,
-} from "@ionic/react";
-import Field from "../../../../../components/Field/Field";
+import { IonIcon } from "@ionic/react";
 import { add } from "ionicons/icons";
-import { useForm } from "../../../../../hooks/UseForm/FormProvider";
-import { Dispatch, SetStateAction, useState } from "react";
-import Check from "../../../../../components/Check/Check";
-import EntradasRow from "./EntradasRow";
-import {
-    guardarEntrada,
-    TEntrada
-} from "../../../../../App/Actividades/TurnosyHorarios";
+import { useState } from "react";
+import EntradaNueva from "./EntradaNueva";
+import { EntradaProvider } from "./EntradaProvider";
+import { useActividad } from "../../../Provider/ActividadProvider";
+import EntradaRow from "./EntradaRow";
 
-type TEntradas = {
-    idOferta: string;
-    handleAgregar: () => void;
-};
+type TEntradas = {};
 export default function EntradasForm(props: TEntradas) {
-    const form = useForm();
-    const [entradas, setEntradas] = useState<TEntrada[]>([]);
-    const router = useIonRouter();
+  const [agregarEntrada, setAgregarEntrada] = useState<boolean>(false);
 
+  const { entradas } = useActividad();
 
-    const handleAgregarEntrada = () => {
-        console.log("llama");
-        guardarEntrada(props.idOferta).then((response: any) => {
-            console.log("id: ", response.data.id_entrada);
-            setEntradas((prev: TEntrada[]) => [
-                ...prev,
-                {
-                    entradas: {
-                        id_entrada: response.data.id_entrada,
-                        nombre: "",
-                        descripcion: "",
-                    },
-                },
-            ]);
-        }).catch(error => {
-            console.error("Error al guardar la entrada:", error);
-        });
-    };
-
-
-
-    return (
-        <div
-            style={{
-                padding: "10pt",
-                paddingBottom: "20pt",
-                marginBottom: "30pt",
-                width: "80%",
-                marginLeft: "10%",
-                border: "2px solid #F08408",
-                borderRadius: "10pt",
-            }}
+  return (
+    <div className="mt-4">
+      <div className="p-4 border border-gray-200 bg-gray-50 rounded-md flex flex-row justify-between items-center">
+        <div className="text-gray-600 text-xl font-bold">Entradas</div>
+        <button
+          className="viajero-button px-4 py-2 flex flex-row items-center text-sm disabled:bg-gray-200!"
+          onClick={() => setAgregarEntrada(true)}
+          disabled={agregarEntrada}
         >
-            <IonRow
-                style={{
-                    display: "flex",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
-                }}
-            >
-                <h3 style={{ fontWeight: "bold" }}>Entradas</h3>
-            </IonRow>
-            <IonRow
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginBottom: "13pt",
-                }}
-            >
-                {entradas.length > 0 &&
-                    entradas.map((entrada: any, index: number) => (
-                        <EntradasRow
-                            key={index}
-                            id={entrada.entradas.id_entrada}
-                            setRows={setEntradas}
-                        />
-                    ))}
-                {entradas.length == 0 && (
-                    <IonButton
-                        style={{ "--background": "#F08408" }}
-                        onClick={() => handleAgregarEntrada()}
-                    >
-                        <IonIcon icon={add} />
-                        &nbsp;AGREGAR UNA ENTRADA
-                    </IonButton>
-                )}
-                {entradas.length > 0 && (
-                    <IonButton
-                        style={{ "--background": "#F08408" }}
-                        onClick={() =>
-                            setEntradas((prev: any[]) => [
-                                ...prev,
-                                {},
-                            ])
-                        }
-                    >
-                        <IonIcon icon={add} />
-                        &nbsp;AGREGAR OTRA
-                    </IonButton>
-                )}
-            </IonRow>
+          <IonIcon icon={add} />
+          &nbsp;Agregar nueva
+        </button>
+      </div>
+      <div className="grid grid-cols-12 gap-2 mt-2">
+        <div className="border border-gray-200 bg-gray-50 text-md text-gray-600 font-bold p-4 col-span-5 rounded-md">
+          Nombre
         </div>
-    );
+        <div className="border border-gray-200 bg-gray-50 text-md text-gray-600 font-bold p-4 col-span-5 rounded-md">
+          Descripción
+        </div>
+        <div className="border border-gray-200 bg-gray-50 text-md text-gray-600 font-bold p-4 col-span-2 rounded-md">
+          Acciones
+        </div>
+      </div>
+      <div className="flex flex-col gap-2 mt-2">
+        {agregarEntrada && (
+          <EntradaProvider>
+            <EntradaNueva setAgregarEntrada={setAgregarEntrada} />
+          </EntradaProvider>
+        )}
+        {entradas.map((entrada: any) => (
+          <EntradaProvider>
+            <EntradaRow key={entrada.id_tipo_entrada} entrada={entrada} />
+          </EntradaProvider>
+        ))}
+      </div>
+    </div>
+  );
 }
-

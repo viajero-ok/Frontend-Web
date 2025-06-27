@@ -84,6 +84,7 @@ export default function GuiaForm(props: TGuiaForm) {
     setOpen(true);
   } */
 
+<<<<<<< Updated upstream
   const doGuardarGuia = () => {
     guardarGuia({
       id_oferta: props.idOferta,
@@ -150,6 +151,18 @@ export default function GuiaForm(props: TGuiaForm) {
             alignContent: "center",
             alignItems: "center",
             justifyContent: "center",
+=======
+  return esConGuia ? (
+    <div className="flex flex-col gap-2 w-full">
+      <div className="p-4 border border-gray-200 bg-gray-50 rounded-md flex flex-row justify-between items-center">
+        <div className="text-gray-600 text-2xl font-bold">Guías turísticos</div>
+        <button
+          disabled={!esConGuia || agregarRow}
+          onClick={(e) => {
+            e.preventDefault();
+            formCrear.reset();
+            setAgregarRow(true);
+>>>>>>> Stashed changes
           }}
         >
           <IonToggle

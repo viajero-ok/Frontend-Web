@@ -11,33 +11,18 @@ const StyledIonSelect = styled(IonSelect)`
 `;
 
 const Select = React.forwardRef<typeof StyledIonSelect, any>(
-  (
-    { className, type, disableShowPassword, onChange, ...props },
-    ref
-  ) => {
-    const [showPassword, setShowPassword] = React.useState<boolean>(false);
-
+  ({ className, type, onChange, ...props }, ref) => {
     return (
       <div className="flex flex-col items-end">
         <StyledIonSelect
           onIonChange={onChange}
-          type={showPassword ? "text" : type}
           {...props}
           value={props.value}
-          onIonInput={props.onChange}
           ref={ref}
           fill="outline"
           className="!flex !shadow-sm"
           placeholder={props.placeholder}
         />
-        {type == "password" && !disableShowPassword ? (
-          <span
-            className="text-gray-600 text-sm hover:underline cursor-pointer select-none"
-            onClick={() => setShowPassword((prev: boolean) => !prev)}
-          >
-            {showPassword ? "ocultar" : "mostrar"}
-          </span>
-        ) : null}
       </div>
     );
   }

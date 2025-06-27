@@ -99,6 +99,7 @@ const NumberInput = React.forwardRef<typeof StyledNumberIonInput, any>(
 NumberInput.displayName = "NumberInput";
 
 const formatTime = (time: number | undefined): string => {
+  if (time == null) return "";
   if (typeof time == "undefined") return "";
   if (time < 0) return "";
   if (time <= 9) return `0${time}`;
@@ -108,22 +109,29 @@ const formatTime = (time: number | undefined): string => {
 const TimeInput = React.forwardRef<HTMLInputElement, any>(
   ({ className, ...props }, ref) => {
     const [hours, setHours] = React.useState<string>(formatTime(props.hora));
-    const [minutes, setMinutes] = React.useState<string>(
+    const [minutes, setMinutes] = React.useState<string | undefined>(
       formatTime(props.minuto)
     );
 
     const refHours = React.useRef<HTMLInputElement>(null);
     const refMinutes = React.useRef<HTMLInputElement>(null);
 
+    React.useEffect(() => {
+      setHours(formatTime(props.hora));
+      setMinutes(formatTime(props.minuto));
+    }, [props.hora, props.minuto]);
+
     return (
       <div
         ref={ref}
         className={cn(
-          "flex flex-row justify-center items-center content-center h-[42pt] w-full border border-[#bbb] rounded-md hover:border-black px-2",
-          "text-gray-600"
+          "flex flex-row justify-center items-center content-center h-[42pt] w-full border border-[#bbb] rounded-md px-2",
+          props.disabled
+            ? "hover:border-[#bbb] border-gray-200 text-gray-400"
+            : "hover:border-black border-[#bbb] text-gray-600"
         )}
         onClick={() =>
-          hours.length == 2
+          hours?.length == 2
             ? refMinutes.current?.focus()
             : refHours.current?.focus()
         }
@@ -138,6 +146,7 @@ const TimeInput = React.forwardRef<HTMLInputElement, any>(
         }}
       >
         <input
+          disabled={props.disabled}
           value={hours}
           ref={refHours}
           type="text"
@@ -145,7 +154,7 @@ const TimeInput = React.forwardRef<HTMLInputElement, any>(
             if (e.key === "Tab") {
               refMinutes.current?.focus(); // move to next
             }
-            if (hours.length == 2) refMinutes.current?.focus();
+            if (hours?.length == 2) refMinutes.current?.focus();
             if (e.key.length > 1) return;
             if (/^\d$/.test(e.key)) return;
             e.preventDefault();
@@ -161,11 +170,12 @@ const TimeInput = React.forwardRef<HTMLInputElement, any>(
         />
         <div className="flex h-full items-center pb-1 text-lg">:</div>
         <input
+          disabled={props.disabled}
           value={minutes}
           ref={refMinutes}
           type="text"
           onKeyDown={(e) => {
-            if (e.key === "Backspace" && minutes.length == 0) {
+            if (e.key === "Backspace" && minutes?.length == 0) {
               refHours.current?.focus(); // move to previous
             }
             if (e.key.length > 1) return;
@@ -267,4 +277,10 @@ const MoneyInput = React.forwardRef<HTMLInputElement, any>(
 );
 MoneyInput.displayName = "MoneyInput";
 
-export { Input, MoneyInput, formatValue as formatMoneyValue ,NumberInput, TimeInput };
+export {
+  Input,
+  MoneyInput,
+  formatValue as formatMoneyValue,
+  NumberInput,
+  TimeInput,
+};

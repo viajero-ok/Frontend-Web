@@ -1,4 +1,6 @@
+import { Dispatch, SetStateAction } from "react";
 import AUTH_API from "../AuthBackendApi";
+import { z } from "zod";
 
 export const obtenerOfertasPorPrestador = async () =>
   await AUTH_API.get(`ofertas-turisticas/por-prestador`);
@@ -63,17 +65,89 @@ export const obtenerResumenOferta = async (data: TParamsObtenerResumenOferta) =>
   });
 
 export const obtenerOfertasGuardadas = async () =>
-  await AUTH_API.get(`/ofertas-turisticas/obtener-ofertas-guardadas-por-usuario`);
+  await AUTH_API.get(
+    `/ofertas-turisticas/obtener-ofertas-guardadas-por-usuario`
+  );
 
 export const obtenerOfertasReservadas = async () =>
   await AUTH_API.get(`/reservas/obtener-ofertas-reservadas-por-usuario`);
 
 export const eliminarOfertaGuardada = async (idOfertaGuardada: number) =>
-  await AUTH_API.delete(`/ofertas-turisticas/eliminar-oferta-turistica-guardada/${idOfertaGuardada}`);
+  await AUTH_API.delete(
+    `/ofertas-turisticas/eliminar-oferta-turistica-guardada/${idOfertaGuardada}`
+  );
 
 type TParamsGuardarOfertaGuardada = {
   id_oferta: string;
 };
 
-export const guardarOfertaGuardada = async (data: TParamsGuardarOfertaGuardada) =>
-  await AUTH_API.post(`/ofertas-turisticas/guardar-oferta-turistica`, data);
+export const guardarOfertaGuardada = async (
+  data: TParamsGuardarOfertaGuardada
+) => await AUTH_API.post(`/ofertas-turisticas/guardar-oferta-turistica`, data);
+
+/** TODO: mover a utils */
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const result = reader.result as string;
+      // This includes the prefix: data:image/png;base64,...
+      resolve(result);
+    };
+
+    reader.onerror = (error) => {
+      reject(error);
+    };
+
+    reader.readAsDataURL(file); // reads file as base64 data URL
+  });
+}
+const guardarImagenOfertaTuristicaSchema = z.object({
+  id_imagen: z.number(),
+});
+export type TGuardarImagenOfertaTuristicaResponse = z.infer<
+  typeof guardarImagenOfertaTuristicaSchema
+>;
+export type TBodyGuardarImagenOfertaTuristica = {
+  imagen: File;
+  id_oferta: string;
+  setProgress: Dispatch<SetStateAction<number>>;
+};
+export const guardarImagenOfertaTuristica = async (
+  body: TBodyGuardarImagenOfertaTuristica
+) => {
+  try {
+    const response = (
+      await AUTH_API.post(
+        `/ofertas-turisticas/registrar-imagen-oferta-turistica`,
+        {
+          id_oferta: body.id_oferta,
+          imagen: body.imagen,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (progressEvent) => {
+            console.log("event: ", progressEvent);
+            if (!progressEvent.total && !progressEvent.estimated) return;
+            const percent = Math.round(
+              (progressEvent.loaded * 100) /
+                (progressEvent.total
+                  ? progressEvent.total
+                  : progressEvent.estimated!)
+            );
+            body.setProgress(percent);
+          },
+        }
+      )
+    ).data;
+    const parsedResponse = guardarImagenOfertaTuristicaSchema.parse(response);
+    const base64 = await fileToBase64(body.imagen);
+
+    return { ...parsedResponse, base64 };
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+};

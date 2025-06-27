@@ -15,12 +15,14 @@ export type TUbicacion = {
 
 export type TUbicacionEstablecimiento = {
     id_oferta: string;
-    id_establecimiento: number;
+    id_establecimiento?: number;
     misma_ubicacion_establecimiento: boolean;
 }
 
-export const guardarUbicacion = async (ubicacion: TUbicacion | TUbicacionEstablecimiento) => {
-  return await AUTH_API.post(`/actividades/registrar-ubicacion-actividad`, ubicacion);
+export type TBodyGuardarUbicacion = TUbicacion | TUbicacionEstablecimiento
+
+export const guardarUbicacion = async (body: TBodyGuardarUbicacion) => {
+  return await AUTH_API.post(`/actividades/registrar-ubicacion-actividad`, body);
 };
 
 export const obtenerDatosRegistradosUbicacion = async (id_oferta: string) => {

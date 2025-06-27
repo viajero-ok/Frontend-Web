@@ -60,7 +60,7 @@ const OfertaCard: React.FC<OfertaCardProps> = ({
   return (
     <div
       className={cn(
-        "border border-gray-200 p-4 rounded-md hover:shadow-sm",
+        "border border-[#bbb] p-4 rounded-md hover:border-black",
         "cursor-pointer w-[250pt] aspect-5/2 break-inside-avoid-column mb-4"
       )}
       onClick={() => handleEditar()}
@@ -97,113 +97,6 @@ const OfertaCard: React.FC<OfertaCardProps> = ({
         </div>
       </div>
     </div>
-    // <IonCard style={{ display: "flex", flexDirection: "row", width: "100%" }}>
-    //   <IonGrid style={{ padding: 0, top: 0, position: "relative" }}>
-    //     <IonRow>
-    //       <IonCol size="auto">
-    //         <IonRow>
-    //           <img
-    //             alt="Silhouette of mountains"
-    //             src="public\images\habitacion.jpg"
-    //             width={"175pt"}
-    //             height={"150pt"}
-    //             style={{}}
-    //           />
-    //         </IonRow>
-    //       </IonCol>
-    //       <IonCol>
-    //         <IonRow>
-    //           <IonCardHeader style={{}}>
-    //             <IonCardTitle>{nombre}</IonCardTitle>
-    //             <IonCardSubtitle>{descripcion}</IonCardSubtitle>
-    //           </IonCardHeader>
-    //         </IonRow>
-    //         <IonRow>
-    //           <IonCardContent style={{}}>
-    //             <IonButton
-    //               fill="outline"
-    //               style={{
-    //                 "--border": "1pt solid #F08408",
-    //                 "--border-color": "#F08408",
-    //                 "--background": "transparent",
-    //                 "--color": "#F08408",
-    //               }}
-    //               onClick={() => handlePublicar()}
-    //             >
-    //               PUBLICAR
-    //             </IonButton>
-    //             <IonButton
-    //               fill="solid"
-    //               style={{
-    //                 "--background": "#F08408",
-    //                 "--color": "#FFFFFF",
-    //               }}
-    //               onClick={() => handleEditar()}
-    //             >
-    //               <IonIcon icon={pencil}></IonIcon>
-    //             </IonButton>
-    //             <IonButton
-    //               color="danger"
-    //               onClick={() => setOpenConfirmDelete(true)}
-    //             >
-    //               <IonIcon icon={trash}></IonIcon>
-    //             </IonButton>
-
-    //           </IonCardContent>
-    //         </IonRow>
-    //       </IonCol>
-    //     </IonRow>
-    //   </IonGrid>
-    //   <IonModal
-    //     isOpen={openConfirmDelete}
-    //     onDidDismiss={() => setOpenConfirmDelete(false)}
-    //     style={{ "--height": "fit-content" }}
-    //   >
-    //     <div className="wrapper">
-    //       <IonGrid
-    //         style={{ display: "flex", flexDirection: "column", flexGrow: 0 }}
-    //       >
-    //         <IonRow>
-    //           <IonCol></IonCol>
-    //           <IonCol>
-    //             <h4 style={{ fontWeight: "bold" }}>Eliminar oferta</h4>
-    //           </IonCol>
-    //           <IonCol style={{ display: "flex", justifyContent: "right" }}>
-    //             <IonButton
-    //               size="small"
-    //               fill="clear"
-    //               onClick={() => setOpenConfirmDelete(false)}
-    //             >
-    //               <IonIcon icon={close} />
-    //             </IonButton>
-    //           </IonCol>
-    //         </IonRow>
-    //         <IonRow style={{ justifyContent: "center", padding: "8pt" }}>
-    //           <h3>Esta acción no se puede deshacer</h3>
-    //         </IonRow>
-    //         <IonRow
-    //           style={{
-    //             justifyContent: "right",
-    //             padding: "8pt",
-    //             paddingTop: "0",
-    //           }}
-    //         >
-    //           <IonButton
-    //             color="light"
-    //             onClick={() => setOpenConfirmDelete(false)}
-    //             style={{ marginRight: "8pt" }}
-    //           >
-    //             Cancelar
-    //           </IonButton>
-    //           <IonButton color="danger" onClick={() => handleDelete()}>
-    //             Eliminar
-    //           </IonButton>
-
-    //         </IonRow>
-    //       </IonGrid>
-    //     </div>
-    //   </IonModal>
-    // </IonCard>
   );
 };
 

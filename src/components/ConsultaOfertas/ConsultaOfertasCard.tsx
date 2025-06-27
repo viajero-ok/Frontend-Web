@@ -1,31 +1,15 @@
-import {
-  IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
-  IonCol,
-  IonGrid,
-  IonIcon,
-  IonLabel,
-  IonRow,
-  IonSegment,
-  IonSegmentButton,
-  useIonRouter,
-} from "@ionic/react";
-import { useMemo, useState } from "react";
+import { IonIcon, useIonRouter } from "@ionic/react";
+import { bookmark, locate, location } from "ionicons/icons";
+import { useState } from "react";
 import styled from "styled-components";
-import { consultarOfertasTurista } from "../../App/Ofertas/Ofertas";
-import MapView from "../MapView/MapView";
-import FiltrosConsultaOfertas from "./FiltrosConsultaOfertas";
-import { chevronForward, bookmark, location, locate } from "ionicons/icons";
 import {
   eliminarOfertaGuardada,
   guardarOfertaGuardada,
 } from "../../App/Ofertas/Ofertas";
+import MapView from "../MapView/MapView";
 import { cn } from "../ui/Form/Field";
-import { Segment } from "../../Views/NewAlojamiento/EnHabitaciones/NewAlojamientoEnHabitacionesView";
+import FiltrosConsultaOfertas from "./FiltrosConsultaOfertas";
+import { Segment } from "../ui/Segment/Segment";
 
 interface Oferta {
   id: number;
@@ -48,7 +32,7 @@ export default function ConsultaOfertasCard(props: TConsultaOfertasCard) {
   const [selectedSegment, setSelectedSegment] =
     useState<string>("alojamientos");
   const [pos, setPos] = useState<{ lat: number; lng: number } | null>(null);
-  
+
   // const filteredOfertas = ofertas.filter((oferta) => {
   //   if (selectedSegment === "alojamientos")
   //     return oferta.tipo === "alojamiento";

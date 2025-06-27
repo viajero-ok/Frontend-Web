@@ -141,7 +141,7 @@ export default function SignupForm(props: TProps) {
             Ya estás registrado?{" "}
             <span
               className="font-bold cursor-pointer hover:underline"
-              onClick={() => router.push("login")}
+              onClick={() => router.push("/login")}
             >
               Iniciá sesión
             </span>

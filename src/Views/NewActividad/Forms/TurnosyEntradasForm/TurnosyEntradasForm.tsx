@@ -10,10 +10,9 @@ type TTurnosyEntradasForm = {
 };
 
 export default function TurnosyEntradasForm(props: TTurnosyEntradasForm) {
-  const [horarios, setHorarios] = useState<any[]>([]);
-  const [entradas, setEntradas] = useState<any[]>([]);
   const router = useIonRouter();
 
+<<<<<<< Updated upstream
   
   const handleAgregarEntrada = () => {
         setEntradas((prev: any[]) => [...prev, {}]);
@@ -67,5 +66,16 @@ export default function TurnosyEntradasForm(props: TTurnosyEntradasForm) {
       </IonRow>
     </IonGrid>
     
+=======
+  return (
+    <div className="flex flex-col gap-2">
+      <TurnosForm />
+      <EntradasForm />
+      <div className="flex flex-row w-full justify-between mt-4 pb-12">
+        <button>Volver</button>
+        <button>Registrar</button>
+      </div>
+    </div>
+>>>>>>> Stashed changes
   );
 }

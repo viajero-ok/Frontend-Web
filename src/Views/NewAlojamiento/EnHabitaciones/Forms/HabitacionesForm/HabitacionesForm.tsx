@@ -44,8 +44,8 @@ export default function HabitacionesForm(props: { idOferta: string }) {
   };
 
   return (
-    <div className="grid grid-cols-12 w-full pb-[62pt]">
-      <div className="flex flex-col p-4 pr-2 pl-8 col-span-4 gap-2">
+    <div className="grid grid-cols-12 w-full">
+      <div className="flex flex-col col-span-4 gap-2">
         <div className="flex flex-row h-[42pt] items-center p-4 justify-between border border-gray-200 bg-gray-50 rounded-md">
           <div className="text-gray-600 text-xl font-bold">
             Tipologias ({habitaciones.length})
@@ -82,7 +82,7 @@ export default function HabitacionesForm(props: { idOferta: string }) {
           ))}
         </div>
       </div>
-      <div className="col-span-8 mt-4 ml-2 mr-8">
+      <div className="col-span-8 ml-4">
         {habitacionSelected &&
           habitaciones.filter(
             (habitacion: any) =>

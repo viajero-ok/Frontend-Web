@@ -19,15 +19,13 @@ export default function ImagenesForm({ id }: { id: string }) {
   }, []);
 
   return (
-    <div className="flex flex-row w-full mt-4">
-      <div className="flex flex-row w-full justify-center pb-[62pt]">
-        <MultimediaUpload
-          className="w-1/3"
-          service={guardarImagenDeAlojamiento}
-          idOferta={id}
-          uploaded={imagenesRegistradas ?? []}
-        />
-      </div>
+    <div className="flex flex-row w-full justify-start">
+      <MultimediaUpload
+        className="w-1/3"
+        service={guardarImagenDeAlojamiento}
+        idOferta={id}
+        uploaded={imagenesRegistradas ?? []}
+      />
     </div>
   );
 }

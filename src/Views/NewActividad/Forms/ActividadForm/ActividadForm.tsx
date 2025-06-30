@@ -198,7 +198,7 @@ export default function ActividadForm(props: TActividadForm) {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleGuardar)}
-          className="flex flex-col gap-2 mt-4"
+          className="flex flex-col gap-2"
         >
           <div className="p-4 border border-gray-200 bg-gray-50 rounded-md text-2xl text-gray-600 font-bold">
             Datos básicos

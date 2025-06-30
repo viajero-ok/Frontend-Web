@@ -39,7 +39,7 @@ export default function LoginView(props: any) {
             No tenés cuenta?{" "}
             <span
               className="font-bold cursor-pointer hover:underline"
-              onClick={() => router.push("signup")}
+              onClick={() => router.push("/signup")}
             >
               Registrate
             </span>

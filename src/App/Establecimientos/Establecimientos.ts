@@ -6,7 +6,7 @@ import {
 } from "./Establecimientos.Models";
 import { adaptObtenerDatosRegistradosEstablecimiento } from "./Establecimientos.Adapters";
 
-type TBodyRegistrarEstablecimiento = {
+export type TBodyRegistrarEstablecimiento = {
   nombre: string;
   numero_habilitacion: string;
   descripcion: string;
@@ -21,12 +21,11 @@ type TBodyRegistrarEstablecimiento = {
   latitud: string;
   longitud: string;
 };
-type TRegistrarEstablecimiento = (body: TBodyRegistrarEstablecimiento) => any;
-export const registrarEstablecimiento: TRegistrarEstablecimiento = async (
+export const registrarEstablecimiento = async (
   body: TBodyRegistrarEstablecimiento
 ) => await AUTH_API.post(`/establecimientos/registrar-establecimiento`, body);
 
-type TBodyActualizarEstablecimiento = TBodyRegistrarEstablecimiento & {
+export type TBodyActualizarEstablecimiento = TBodyRegistrarEstablecimiento & {
   id_establecimiento: number;
 };
 export const actualizarEstablecimiento = async (

@@ -1,18 +1,38 @@
+import { LatLng } from "leaflet";
 import * as React from "react";
 import {
+  eliminarGuia as eliminarGuiaService,
   getDatosDeRegistroNuevaActividad,
+  guardarActividad as guardarActividadService,
   guardarGuia,
   modificarGuia as modificarGuiaService,
-  eliminarGuia as eliminarGuiaService,
   obtenerDatosRegistradosActividad,
+  obtenerUbicacionEstablecimiento,
   TBodyGuardarActividad,
-  guardarActividad as guardarActividadService,
 } from "../../../App/Actividades/Actividad";
 import {
-    obtenerDatosRegistradosHorariosyEntradas,
+  actualizarEntrada as actualizarEntradaService,
+  actualizarHorario,
+  eliminarEntrada as eliminarEntradaService,
+  eliminarHorario,
+  obtenerDatosRegistradosHorariosyEntradas,
+  registrarEntrada,
   registrarHorario,
+  TBodyActualizarEntrada,
+  TBodyActualizarHorario,
+  TBodyRegistrarEntrada,
   TBodyRegistrarHorario,
 } from "../../../App/Actividades/TurnosyHorarios";
+import { getUbicaciones } from "../../../App/Ubicaciones/Ubicaciones";
+import {
+  TBodyGuardarUbicacion,
+  guardarUbicacion as guardarUbicacionService,
+  obtenerDatosRegistradosUbicacion,
+} from "../../../App/Actividades/Ubicacion";
+import {
+  guardarImagenOfertaTuristica,
+  TBodyGuardarImagenOfertaTuristica,
+} from "../../../App/Ofertas/Ofertas";
 
 type ActividadContextValue = {
   idOferta: string;
@@ -51,12 +71,29 @@ type ActividadContextValue = {
   datosRegistradosActividad: any;
 
   /** imagenes */
+  guardarImagen: (body: TBodyGuardarImagenOfertaTuristica) => Promise<any>;
 
   /** ubicación */
+  ubicacionesDomicilio: {
+    provincias: any[];
+    departamentos: any[];
+    localidades: any[];
+  };
+  ubicacionEstablecimiento: LatLng | null;
+  guardarUbicacion: (body: TBodyGuardarUbicacion) => Promise<void>;
+  datosRegistradosUbicacion: any;
 
   /** turnos y entradas */
+  /** turnos */
   turnos: any[];
   agregarTurno: (body: TBodyRegistrarHorario) => Promise<any>;
+  actualizarTurno: (body: TBodyActualizarHorario) => Promise<void>;
+  eliminarTurno: (idHorario: number) => Promise<void>;
+  /** entradas */
+  entradas: any[];
+  agregarEntrada: (body: TBodyRegistrarEntrada) => Promise<void>;
+  actualizarEntrada: (body: TBodyActualizarEntrada) => Promise<void>;
+  eliminarEntrada: (idEntrada: number) => Promise<void>;
 };
 
 const ActividadContext = React.createContext<ActividadContextValue>(
@@ -93,9 +130,19 @@ const ActividadProvider = ({
   /** imagenes */
 
   /** ubicación */
+  const [ubicacionEstablecimiento, setUbicacionEstablecimiento] =
+    React.useState<LatLng | null>(null);
+  const [provincias, setProvincias] = React.useState<any[]>([]);
+  const [departamentos, setDepartamentos] = React.useState<any[]>([]);
+  const [localidades, setLocalidades] = React.useState<any[]>([]);
+  const [datosRegistradosUbicacion, setDatosRegistradosUbicacion] =
+    React.useState<any>();
 
   /** turnos y entradas */
+  /** turnos */
   const [turnos, setTurnos] = React.useState<any[]>([]);
+  /** entradas */
+  const [entradas, setEntradas] = React.useState<any[]>([]);
 
   const getDatosRegistrados = () => {
     obtenerDatosRegistradosActividad(idOferta)
@@ -111,12 +158,35 @@ const ActividadProvider = ({
       })
       .catch(() => {});
 
-      obtenerDatosRegistradosHorariosyEntradas(idOferta).then((response) => {
-        setTurnos(response.data.datos_horarios_entradas.horarios_turnos)
-      }).catch(() => {})
+    obtenerDatosRegistradosHorariosyEntradas(idOferta)
+      .then((response) => {
+        setTurnos(response.data.datos_horarios_entradas.horarios_turnos);
+        setEntradas(response.data.datos_horarios_entradas.entradas);
+      })
+      .catch(() => {});
+
+    obtenerUbicacionEstablecimiento(idOferta)
+      .then((response: any) => {
+        setUbicacionEstablecimiento(
+          response.data.datos_ubicacion.sin_establecimiento
+            ? null
+            : new LatLng(
+                parseFloat(response.data.datos_ubicacion.latitud),
+                parseFloat(response.data.datos_ubicacion.longitud)
+              )
+        );
+      })
+      .catch(() => {});
+
+    obtenerDatosRegistradosUbicacion(idOferta)
+      .then((response) => {
+        setDatosRegistradosUbicacion(response.data.datos_ubicacion);
+      })
+      .catch(() => {});
   };
 
   React.useEffect(() => {
+    /** actividades */
     getDatosDeRegistroNuevaActividad()
       .then((response: any) => {
         setCategorias(response.data.tipos_y_subtipos.subtipos);
@@ -130,6 +200,13 @@ const ActividadProvider = ({
         getDatosRegistrados();
       })
       .catch(() => {});
+
+    /** ubicaciones */
+    getUbicaciones().then((response) => {
+      setProvincias(response.data.ubicaciones.provincias);
+      setDepartamentos(response.data.ubicaciones.departamentos);
+      setLocalidades(response.data.ubicaciones.localidades);
+    });
   }, []);
 
   /** Handlers */
@@ -196,7 +273,26 @@ const ActividadProvider = ({
     }
   };
 
+  /** imagenes */
+  const guardarImagen = async (body: TBodyGuardarImagenOfertaTuristica) => {
+    try {
+      await guardarImagenOfertaTuristica(body);
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  /** ubicacion */
+  const guardarUbicacion = async (body: TBodyGuardarUbicacion) => {
+    try {
+      await guardarUbicacionService(body);
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
   /** turnos y entradas */
+  /** turnos */
   const agregarTurno = async (body: TBodyRegistrarHorario) => {
     try {
       const response = (await registrarHorario(body)).data;
@@ -206,19 +302,54 @@ const ActividadProvider = ({
     }
   };
 
-  const context = {
+  const actualizarTurno = async (body: TBodyActualizarHorario) => {
+    try {
+      await actualizarHorario(body);
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  const eliminarTurno = async (idHorario: number) => {
+    try {
+      await eliminarHorario(idHorario);
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  /** entradas */
+  const agregarEntrada = async (body: TBodyRegistrarEntrada) => {
+    try {
+      await registrarEntrada(body);
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  const actualizarEntrada = async (body: TBodyActualizarEntrada) => {
+    try {
+      await actualizarEntradaService(body);
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  const eliminarEntrada = async (idEntrada: number) => {
+    try {
+      await eliminarEntradaService(idEntrada);
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  const context: ActividadContextValue = {
     idOferta,
     actualizar,
     isDirty,
     dirt,
 
     /** activiadad */
-    guias,
-    esConGuia,
-    checkEsConGuia,
-    crearGuia,
-    modificarGuia,
-    eliminarGuia,
     categorias,
     subCategorias,
     tiposPagoAnticipado,
@@ -229,14 +360,37 @@ const ActividadProvider = ({
     datosRegistradosActividad,
 
     /** guias */
+    guias,
+    esConGuia,
+    checkEsConGuia,
+    crearGuia,
+    modificarGuia,
+    eliminarGuia,
 
     /** imagenes */
+    guardarImagen,
 
     /** ubicación */
+    ubicacionesDomicilio: {
+      provincias,
+      departamentos,
+      localidades,
+    },
+    ubicacionEstablecimiento,
+    guardarUbicacion,
+    datosRegistradosUbicacion,
 
     /** turnos y entradas */
+    /** turnos */
     turnos,
     agregarTurno,
+    actualizarTurno,
+    eliminarTurno,
+    /** entradas */
+    entradas,
+    agregarEntrada,
+    actualizarEntrada,
+    eliminarEntrada,
   };
   return (
     <ActividadContext.Provider value={context}>

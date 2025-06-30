@@ -17,64 +17,15 @@ type TTurnosyEntradasForm = {
 };
 
 export default function TurnosyEntradasForm(props: TTurnosyEntradasForm) {
-  const [horarios, setHorarios] = useState<any[]>([]);
-  const [entradas, setEntradas] = useState<any[]>([]);
   const router = useIonRouter();
 
-  const handleAgregarEntrada = () => {
-    setEntradas((prev: any[]) => [...prev, {}]);
-  };
-
-  const handleAgregarHorario = () => {
-    setHorarios((prev: any[]) => [...prev, {}]);
-  };
-
-  const handleObtenerDatos = () => {
-    obtenerDatosRegistradosHorariosyEntradas(props.idOferta).then(
-      (response: any) => {
-        console.log("llamada");
-        setHorarios(response.data.horarios_turnos);
-        setEntradas(response.data.entradas);
-      }
-    );
-  };
-
-  useEffect(() => {
-    console.log("turnosID", props.idOferta);
-    handleObtenerDatos();
-  }, []);
-
   return (
-    <div className="flex flex-col mt-4 gap-2">
-      <TurnosForm
-        idOferta={props.idOferta}
-        handleAgregar={handleAgregarHorario}
-      />
-      {/* <EntradasForm
-        idOferta={props.idOferta}
-        handleAgregar={handleAgregarEntrada}
-      /> */}
-      <div
-        style={{
-          justifyContent: "space-around",
-          marginTop: "10pt",
-          marginBottom: "10pt",
-        }}
-      >
-        <IonButton
-          color="light"
-          onClick={() => router && router.push("/my-offers")}
-        >
-          Volver
-        </IonButton>
-        <IonButton
-          style={{
-            "--background": "#F08408",
-          }}
-          onClick={() => router && router.push("/my-offers")}
-        >
-          Registrar
-        </IonButton>
+    <div className="flex flex-col gap-2">
+      <TurnosForm />
+      <EntradasForm />
+      <div className="flex flex-row w-full justify-between mt-4 pb-12">
+        <button>Volver</button>
+        <button>Registrar</button>
       </div>
     </div>
   );

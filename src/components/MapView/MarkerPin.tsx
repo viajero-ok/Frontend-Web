@@ -1,35 +1,19 @@
-import { LatLng, LeafletMouseEvent } from "leaflet";
-import { useMemo, useState } from "react";
-import { Marker, Popup, useMap, useMapEvents } from "react-leaflet";
+import { LeafletMouseEvent } from "leaflet";
+import { Marker, Popup } from "react-leaflet";
+import { TMarker } from "./useMapView";
 
-type TMarker = {
+export default function MarkerPin(props: {
   onClick?: (e: LeafletMouseEvent) => any;
-  pos: { lat: number; lng: number };
-};
-export default function MarkerPin(props: TMarker) {
-  const [position, setPosition] = useState<{ lat: number; lng: number }>();
-
-  //   const map = useMapEvents({
-  //     click(e) {
-  //       setPosition(e.latlng);
-  //       if (props.onClick) props.onClick(e);
-  //       map.flyTo(e.latlng, map.getZoom());
-  //     },
-  //   });
-
-  const map = useMap();
-
-  useMemo(() => {
-    if (!map) return;
-    setPosition(props.pos);
-    map.flyTo([props.pos.lat, props.pos.lng], map.getZoom());
-  }, []);
-
+  marker: TMarker;
+}) {
   return (
-    position != undefined && (
-      <Marker position={[position.lat, position.lng]}>
-        <Popup>Usted se encuentra aquí</Popup>
-      </Marker>
-    )
+    <Marker position={[props.marker.pos.lat, props.marker.pos.lng]}>
+      <Popup>
+        <div className="flex flex-col gap-2 p-2">
+          <h1>Hello, World</h1>
+          <p>andsasndklasnldasdas.</p>
+        </div>
+      </Popup>
+    </Marker>
   );
 }

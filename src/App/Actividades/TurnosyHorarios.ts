@@ -6,12 +6,12 @@ import AUTH_API from "../AuthBackendApi";
 export type TBodyRegistrarHorario = {
   id_oferta: string;
   check_in: {
-    hora_check_in: number;
-    minuto_check_in: number;
+    hora_check_in?: number;
+    minuto_check_in?: number;
   };
   check_out: {
-    hora_check_out: number;
-    minuto_check_out: number;
+    hora_check_out?: number;
+    minuto_check_out?: number;
   };
   aplica_todos_los_dias: boolean;
   dias_semana: {
@@ -23,7 +23,7 @@ export type TBodyRegistrarHorario = {
     aplica_sabado: boolean;
     aplica_domingo: boolean;
   };
-  cupo_maximo: number;
+  cupo_maximo?: number;
   bl_sin_cupo: boolean;
 };
 export const registrarHorario = async (body: TBodyRegistrarHorario) =>
@@ -31,12 +31,16 @@ export const registrarHorario = async (body: TBodyRegistrarHorario) =>
     ...body,
   });
 
-type TBodyEliminarHorario = {
+export type TBodyActualizarHorario = TBodyRegistrarHorario & {
   id_horario: number;
 };
+export const actualizarHorario = async (body: TBodyActualizarHorario) =>
+  await AUTH_API.post(`/actividades/actualizar-horario`, {
+    ...body,
+  });
 
-export const eliminarHorario = async (body: TBodyEliminarHorario) =>
-  await AUTH_API.delete(`/actividades/eliminar-horario/${body.id_horario}`);
+export const eliminarHorario = async (idHorario: number) =>
+  await AUTH_API.delete(`/actividades/eliminar-horario/${idHorario}`);
 
 export type THorarios = {
   id_horario: number;
@@ -62,16 +66,17 @@ export type THorarios = {
   cupo_maximo: number;
 };
 
-export type TEntrada = {
-  entradas: {
-    id_entrada: number;
-    nombre: string;
-    descripcion: string;
-  };
+export type TBodyRegistrarEntrada = {
+  id_oferta: string;
+  nombre: string;
+  descripcion: string;
 };
+export const registrarEntrada = async (body: TBodyRegistrarEntrada) =>
+  await AUTH_API.post(`/actividades/registrar-entrada`, body);
 
-export const guardarEntrada = async (id_oferta: string) =>
-  await AUTH_API.post(`/actividades/registrar-entrada`, { id_oferta });
+export type TBodyActualizarEntrada = TBodyRegistrarEntrada & { id_entrada: number };
+export const actualizarEntrada = async (body: TBodyActualizarEntrada) =>
+  await AUTH_API.post(`/actividades/actualizar-entrada`, body);
 
 export const eliminarEntrada = async (id_entrada: number) =>
   await AUTH_API.delete(`/actividades/eliminar-entrada/${id_entrada}`);

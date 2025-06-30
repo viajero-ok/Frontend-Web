@@ -2,15 +2,15 @@ import { LeafletMouseEvent } from "leaflet";
 import { useMapEvents } from "react-leaflet";
 import { useMapView } from "./useMapView";
 
-type TMarkerOnClick = {
+type TSingleMarkerOnClick = {
   onClick?: (e: LeafletMouseEvent) => any;
 };
-export default function MarkerOnClick(props: TMarkerOnClick) {
-  const { newMarker } = useMapView();
+export default function SingleMarkerOnClick(props: TSingleMarkerOnClick) {
+  const { relocateMarker } = useMapView();
 
   const map = useMapEvents({
     click(e) {
-      newMarker(e.latlng);
+      relocateMarker(e.latlng);
       if (props.onClick) props.onClick(e);
       map.flyTo(e.latlng, map.getZoom());
     },

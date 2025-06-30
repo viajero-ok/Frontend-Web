@@ -13,10 +13,9 @@ export const guardarGuia = async (guia: TGuia) => {
 type TEliminarGuia = {
   id_guia: number;
   id_oferta: string;
-}
+};
 export const eliminarGuia = async (guia: TEliminarGuia) =>
   await AUTH_API.delete(`/actividades/eliminar-guia`, { data: guia });
-
 
 export const modificarGuia = async (guia: TGuia) => {
   return await AUTH_API.patch(`/actividades/modificar-guia`, guia);
@@ -24,41 +23,47 @@ export const modificarGuia = async (guia: TGuia) => {
 
 type TBodyRegistrarNuevaActividad = {
   id_tipo_oferta: number;
-    id_sub_tipo_oferta?: number;
-    id_establecimiento: number;
+  id_sub_tipo_oferta?: number;
+  id_establecimiento: number;
 };
 
 export const registrarNuevaActividad = async (
-    body: TBodyRegistrarNuevaActividad
-) => await AUTH_API.post(`/ofertas-turisticas/registrar-oferta-turistica`, body);
+  body: TBodyRegistrarNuevaActividad
+) =>
+  await AUTH_API.post(`/ofertas-turisticas/registrar-oferta-turistica`, body);
 
 export const getDatosDeRegistroNuevaActividad = async () =>
-    await AUTH_API.get(`/actividades/datos-registro-actividades`);
+  await AUTH_API.get(`/actividades/datos-registro-actividades`);
 
 export type TBodyGuardarActividad = {
-    id_oferta: string;
-    id_sub_tipo_oferta: number;
-    id_sub_categoria: number;
-    nombre_actividad: string;
-    descripcion_actividad: string;
-    requisitos_actividad: string;
-    id_dificultad: number;
-    duracion_actividad: number;
-    distancia_actividad: number;
-    bl_con_guia: boolean;
-    politicas_reserva: {
-      id_politica_cancelacion: number;
-      plazo_dias_cancelacion: number;
-      porcentaje_pago_anticipado: number;
-      id_tipo_pago_anticipado: number;
-    },
-    metodos_de_pago: number[]
+  id_oferta: string;
+  id_sub_tipo_oferta: number;
+  id_sub_categoria: number;
+  nombre_actividad: string;
+  descripcion_actividad: string;
+  requisitos_actividad: string;
+  id_dificultad: number;
+  duracion_actividad: number;
+  distancia_actividad: number;
+  bl_con_guia: boolean;
+  politicas_reserva: {
+    id_politica_cancelacion: number;
+    plazo_dias_cancelacion: number;
+    porcentaje_pago_anticipado: number;
+    id_tipo_pago_anticipado: number;
   };
-  export const guardarActividad = async (body: TBodyGuardarActividad) =>
-    await AUTH_API.patch(`/actividades/actualizar-actividad`, body);
+  metodos_de_pago: number[];
+};
+export const guardarActividad = async (body: TBodyGuardarActividad) =>
+  await AUTH_API.patch(`/actividades/actualizar-actividad`, body);
 
-  export const obtenerDatosRegistradosActividad = async (id_oferta: string) => {
-    return await AUTH_API.get(
-      `/actividades/obtener-datos-registrados-actividad/${id_oferta}`
-    );
-  }
+export const obtenerDatosRegistradosActividad = async (id_oferta: string) => {
+  return await AUTH_API.get(
+    `/actividades/obtener-datos-registrados-actividad/${id_oferta}`
+  );
+};
+
+export const obtenerUbicacionEstablecimiento = async (id_oferta: string) =>
+  await AUTH_API.get(
+    `/actividades/obtener-ubicacion-establecimiento/${id_oferta}`
+  );

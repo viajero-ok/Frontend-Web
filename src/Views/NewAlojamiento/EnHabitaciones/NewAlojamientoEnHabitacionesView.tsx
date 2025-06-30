@@ -1,53 +1,27 @@
-import { IonGrid, IonRow } from "@ionic/react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { IonIcon, useIonRouter } from "@ionic/react";
+import {
+  arrowUndo,
+  bedOutline,
+  homeOutline,
+  imageOutline,
+} from "ionicons/icons";
+import { useState } from "react";
 import { finalizarRegistroAlojamiento } from "../../../App/Alojamientos/NuevoAlojamiento";
-import { cn } from "../../../components/ui/Form/Field";
+import FormSideMenu, {
+  Sidebar,
+} from "../../../components/ui/FormSideMenu/FormSideMenu";
 import { useModal } from "../../../components/ui/Modal/Modal";
+import { Segment } from "../../../components/ui/Segment/Segment";
 import DefaultLoggedLayout from "../../Layouts/DefaultLoggedLayout";
 import AlojamientoForm from "./Forms/AlojamientoForm/AlojamientoForm";
 import HabitacionesForm from "./Forms/HabitacionesForm/HabitacionesForm";
 import ImagenesForm from "./Forms/ImagenesForm/ImagenesForm";
 import { AlojamientoEnHabitacionesProvider } from "./Provider/AlojamientoEnHabitacionesProvider";
-import { ClassNameValue } from "tailwind-merge";
 
 export type TImagenRegistrada = {
   id_imagen: number;
   nombre: string;
   datos: string;
-};
-
-export const Segment = ({
-  segment,
-  label,
-  value,
-  set,
-  disabled,
-  className,
-}: {
-  segment: string;
-  label: string;
-  value: string;
-  set: Dispatch<SetStateAction<string>>;
-  disabled?: boolean;
-  className?: ClassNameValue;
-}) => {
-  return (
-    <div
-      className={cn(
-        "flex flex-row items-center p-4 text-gray-600 font-bold text-xl border rounded-md",
-        segment == value
-          ? "bg-[var(--color-viajero)]/5 border-[var(--color-viajero)]"
-          : "bg-gray-50 border-gray-200",
-        disabled
-          ? "text-gray-400 cursor-default"
-          : "cursor-pointer hover:border-[var(--color-viajero)] hover:bg-[var(--color-viajero)]/5",
-        className
-      )}
-      onClick={() => !disabled && set(value)}
-    >
-      {label}
-    </div>
-  );
 };
 
 type TNewAlojamientoEnHabitacionesView = {
@@ -97,12 +71,69 @@ export default function NewAlojamientoEnHabitacionesView(
       });
   };
 
+  const router = useIonRouter();
+
   return (
     <DefaultLoggedLayout>
       <AlojamientoEnHabitacionesProvider idOferta={props.idOferta}>
-        <IonGrid>
-          <IonRow style={{ marginTop: "12pt" }}>
-            <div className="flex flex-row gap-2 w-full justify-center">
+        <FormSideMenu
+          renderSidebar={() => (
+            <>
+              <Sidebar title="Editar alojamiento">
+                <Segment
+                  segment={segment}
+                  value="alojamiento-form"
+                  label="Datos del alojamiento"
+                  set={setSegment}
+                  icon={homeOutline}
+                />
+                <Segment
+                  segment={segment}
+                  value="imagenes-form"
+                  label="Imágenes del alojamiento"
+                  set={setSegment}
+                  icon={imageOutline}
+                />
+                <Segment
+                  segment={segment}
+                  value="habitaciones-form"
+                  label="Datos de las habitaciones"
+                  set={setSegment}
+                  icon={bedOutline}
+                />
+                <button
+                  onClick={() => router.push("/my-offers")}
+                  className="viajero-button-ghost text-sm justify-start! w-full px-4 py-2 flex flex-row gap-1 items-center -mb-2"
+                >
+                  <IonIcon icon={arrowUndo} />
+                  Volver
+                </button>
+              </Sidebar>
+              <div className="flex flex-col gap-2 w-fit p-4 border border-gray-200 rounded-md">
+                <div className="text-md font-bold text-gray-600">
+                  ¡Ya podés registrar tu oferta!
+                </div>
+                <div className="text-sm text-gray-600">
+                  Todos los datos necesarios han sido registrados
+                </div>
+                <button className="viajero-button px-4 py-2 animate-pulse">
+                  Registrar oferta
+                </button>
+              </div>
+            </>
+          )}
+        >
+          {segment == "alojamiento-form" && (
+            <AlojamientoForm id={props.idOferta} />
+          )}
+          {segment == "imagenes-form" && <ImagenesForm id={props.idOferta} />}
+          {segment == "habitaciones-form" && (
+            <HabitacionesForm idOferta={props.idOferta} />
+          )}
+        </FormSideMenu>
+        {/* <div className="mt-4">
+          <div>
+            <FormSideMenu title="Editar alojamiento">
               <Segment
                 segment={segment}
                 value="alojamiento-form"
@@ -134,9 +165,9 @@ export default function NewAlojamientoEnHabitacionesView(
                   Registrar oferta
                 </button>
               </div>
-            </div>
-          </IonRow>
-          <IonRow>
+            </FormSideMenu>
+          </div>
+          <div>
             {segment == "alojamiento-form" && (
               <AlojamientoForm id={props.idOferta} />
             )}
@@ -144,8 +175,8 @@ export default function NewAlojamientoEnHabitacionesView(
             {segment == "habitaciones-form" && (
               <HabitacionesForm idOferta={props.idOferta} />
             )}
-          </IonRow>
-        </IonGrid>
+          </div>
+        </div> */}
       </AlojamientoEnHabitacionesProvider>
     </DefaultLoggedLayout>
   );

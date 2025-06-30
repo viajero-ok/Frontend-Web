@@ -1,19 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IonIcon, IonToast, useIonRouter } from "@ionic/react";
+import { IonIcon, useIonRouter } from "@ionic/react";
 import { returnDownBack } from "ionicons/icons";
-import { LeafletMouseEvent } from "leaflet";
+import { LatLng } from "leaflet";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {
-  actualizarEstablecimiento,
-  eliminarEstablecimiento,
-  obtenerDatosRegistradosEstablecimiento,
-  registrarEstablecimiento,
-} from "../../../App/Establecimientos/Establecimientos";
-import { EstablecimientoModel } from "../../../App/Establecimientos/Establecimientos.Models";
-import { getUbicaciones } from "../../../App/Ubicaciones/Ubicaciones";
+import { useDomicilioSelection } from "../../../components/Domicilio/useDomicilioSelection";
 import MapView from "../../../components/MapView/MapView";
+import {
+  MapViewProvider,
+  useMapView,
+} from "../../../components/MapView/useMapView";
 import { Check } from "../../../components/ui/Check/Check";
 import {
   Form,
@@ -23,46 +20,9 @@ import {
   FormMessage,
 } from "../../../components/ui/Form/Field";
 import { Input } from "../../../components/ui/Input/Input";
-import { Select, SelectOption } from "../../../components/ui/Select/Select";
 import { useModal } from "../../../components/ui/Modal/Modal";
-
-type ProvinciaModel = { id_provincia: number; provincia: string };
-type DepartamentoModel = {
-  id_departamento: number;
-  id_provincia: number;
-  departamento: string;
-};
-type LocalidadModel = {
-  id_localidad: number;
-  id_provincia: number;
-  id_departamento: number;
-  localidad: string;
-};
-
-function getDepartamentosFor(
-  id_provincia: number | undefined,
-  departamentos: DepartamentoModel[]
-): DepartamentoModel[] {
-  if (!id_provincia) return [];
-  return departamentos.filter(
-    (departamento: DepartamentoModel) =>
-      departamento.id_provincia == id_provincia
-  );
-}
-
-function getLocalidadesFor(
-  id_departamento: number | undefined,
-  localidades: LocalidadModel[]
-): LocalidadModel[] {
-  if (!id_departamento) return [];
-  return localidades.filter(
-    (localidad: LocalidadModel) => localidad.id_departamento == id_departamento
-  );
-}
-
-type TNewPlaceForm = {
-  idEstablecimiento: number;
-};
+import { Select, SelectOption } from "../../../components/ui/Select/Select";
+import { useEstablecimiento } from "./EstablecimientoProvider";
 
 const BotoneraRegister = ({ onCancelar }: { onCancelar: () => void }) => {
   return (
@@ -140,20 +100,28 @@ const formSchema = z.object({
   id_localidad: z.number({ message: "El campo es requerido" }),
   id_departamento: z.number({ message: "El campo es requerido" }),
   id_provincia: z.number({ message: "El campo es requerido" }),
-  latitud: z.string({ message: "El campo es requerido" }),
-  longitud: z.string({ message: "El campo es requerido" }),
+  ubicacion: z.object(
+    {
+      latitud: z.number(),
+      longitud: z.number(),
+    },
+    {
+      message: "La ubicación es requerida.",
+    }
+  ),
 });
 
-export default function NewPlaceForm(props: TNewPlaceForm) {
-  const [showToast, setShowToast] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<any[]>();
-
-  const [pos, setPos] = useState<{ lat: number; lng: number } | null>();
-  const [provincias, setProvincias] = useState<ProvinciaModel[]>([]);
-  const [departamentos, setDepartamentos] = useState<DepartamentoModel[]>([]);
-  const [localidades, setLocalidades] = useState<LocalidadModel[]>([]);
+export default function NewPlaceForm() {
   const [esSinNumero, setEsSinNumero] = useState<boolean>(false);
 
+  const {
+    idEstablecimiento,
+    datosRegistradosEstablecimiento,
+    registrarEstablecimiento,
+    actualizarEstablecimiento,
+    eliminarEstablecimiento,
+    actualizar,
+  } = useEstablecimiento();
   const router = useIonRouter();
   const { modal, setOpen } = useModal();
 
@@ -162,39 +130,20 @@ export default function NewPlaceForm(props: TNewPlaceForm) {
     mode: "onSubmit",
     defaultValues: { sin_numero: false },
   });
-
-  useEffect(() => {
-    getUbicaciones()
-      .then((response: any) => {
-        const ubicaciones = response.data.ubicaciones;
-
-        setProvincias(ubicaciones.provincias);
-        setDepartamentos(ubicaciones.departamentos);
-        setLocalidades(ubicaciones.localidades);
-      })
-      .catch((error) => {});
-  }, []);
-
-  useEffect(() => {
-    if (!props.idEstablecimiento) return;
-    obtenerDatosRegistradosEstablecimiento(props.idEstablecimiento).then(
-      (response: EstablecimientoModel) => {
-        form.reset({ ...response, sin_numero: response.sin_numero.value });
-        const lat = Number(response.latitud);
-        const lng = Number(response.longitud);
-        if (lat && lng) setPos({ lat: lat, lng: lng });
-        else setPos(null);
-      }
-    );
-  }, []);
-
-  const handleOnClick = (e: LeafletMouseEvent) => {
-    form.setValue("latitud", e.latlng.lat.toString());
-    form.setValue("longitud", e.latlng.lng.toString());
-  };
+  const formWatch = form.watch();
+  const { provincias, departamentos, localidades } = useDomicilioSelection({
+    provinciaSelection: formWatch.id_provincia,
+    departamentoSelection: formWatch.id_departamento,
+    localidadSelection: formWatch.id_localidad,
+  });
+  const mapView = useMapView({ search: true, markerOnClick: true });
 
   const onRegistrar = (values: z.infer<typeof formSchema>) => {
-    registrarEstablecimiento(values)
+    registrarEstablecimiento({
+      ...values,
+      latitud: values.ubicacion.latitud.toString(),
+      longitud: values.ubicacion.longitud.toString(),
+    })
       .then((response: any) => {
         modal({
           variant: "success",
@@ -219,15 +168,17 @@ export default function NewPlaceForm(props: TNewPlaceForm) {
         });
       })
       .catch((error: any) => {
-        setErrorMessage(error.response.data.message);
-        setShowToast(true);
+        // setErrorMessage(error.response.data.message);
+        // setShowToast(true);
       });
   };
 
   const onGuardar = (values: z.infer<typeof formSchema>) => {
     actualizarEstablecimiento({
       ...values,
-      id_establecimiento: Number(props.idEstablecimiento),
+      id_establecimiento: Number(idEstablecimiento),
+      latitud: values.ubicacion.latitud.toString(),
+      longitud: values.ubicacion.longitud.toString(),
     })
       .then(() => {
         modal({
@@ -248,6 +199,7 @@ export default function NewPlaceForm(props: TNewPlaceForm) {
               <button
                 className="viajero-button bg-green-400! hover:bg-green-400/90! px-4 py-2"
                 onClick={() => {
+                  actualizar();
                   setOpen(false);
                 }}
               >
@@ -258,13 +210,14 @@ export default function NewPlaceForm(props: TNewPlaceForm) {
         });
       })
       .catch((error: any) => {
-        setErrorMessage(error.response.data.message);
-        setShowToast(true);
+        // setErrorMessage(error.response.data.message);
+        // setShowToast(true);
       });
   };
 
   const onEliminar = () => {
-    eliminarEstablecimiento(props.idEstablecimiento)
+    if (!idEstablecimiento) return;
+    eliminarEstablecimiento(idEstablecimiento)
       .then(() => {
         modal({
           variant: "success",
@@ -287,8 +240,8 @@ export default function NewPlaceForm(props: TNewPlaceForm) {
         });
       })
       .catch((error: any) => {
-        setErrorMessage(error.response.data.message);
-        setShowToast(true);
+        // setErrorMessage(error.response.data.message);
+        // setShowToast(true);
       });
   };
 
@@ -321,256 +274,262 @@ export default function NewPlaceForm(props: TNewPlaceForm) {
     });
   };
 
-  const formWatch = form.watch();
+  useEffect(() => {
+    if (!datosRegistradosEstablecimiento) return;
+    form.reset({
+      ...datosRegistradosEstablecimiento,
+      sin_numero: datosRegistradosEstablecimiento.sin_numero.value,
+      ubicacion: {
+        latitud: parseFloat(datosRegistradosEstablecimiento.latitud),
+        longitud: parseFloat(datosRegistradosEstablecimiento.longitud),
+      },
+    });
+    if (!mapView) return;
+    mapView.newMarker(
+      new LatLng(
+        parseFloat(datosRegistradosEstablecimiento.latitud),
+        parseFloat(datosRegistradosEstablecimiento.longitud)
+      )
+    );
+  }, [datosRegistradosEstablecimiento]);
+
+  useEffect(() => {
+    if (mapView.markerList.length == 0) return;
+    form.setValue("ubicacion", {
+      latitud: mapView.markerList[0].pos.lat,
+      longitud: mapView.markerList[0].pos.lng,
+    });
+  }, [mapView.markerList]);
+
   useEffect(() => {
     setEsSinNumero(formWatch.sin_numero);
     form.setValue("numero", formWatch.sin_numero ? "S/N" : undefined);
   }, [formWatch.sin_numero]);
 
   return (
-    <div className="ml-8 mt-8 pb-12">
-      <div className="text-3xl font-bold text-gray-600">
+    <div className="mx-8 mt-4">
+      <div className="text-2xl font-bold text-gray-600 bg-gray-50 border border-gray-200 p-4 rounded-md w-full">
         Completá los datos de tu establecimiento
       </div>
-      <div className="grid grid-cols-2 mt-4">
-        <div className="flex flex-col justify-between">
-          <div className="text-xl font-bold text-gray-600">Datos generales</div>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(
-                props.idEstablecimiento ? onGuardar : onRegistrar
-              )}
-              className="flex flex-col mr-2 mt-4 h-full justify-between"
-            >
-              <div className="grid grid-cols-2 gap-2">
-                <FormField
-                  control={form.control}
-                  name="nombre"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input placeholder="Nombre" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="numero_habilitacion"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input
-                          placeholder="Número de habilitacion"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="descripcion"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input placeholder="Descripción" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="telefono"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input placeholder="Teléfono" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="mail"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input placeholder="Email" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="calle"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input placeholder="Calle" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="sin_numero"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Check className="h-[42pt]" {...field}>Es sin número</Check>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="numero"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input
-                          disabled={esSinNumero}
-                          placeholder="Número"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="id_provincia"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Select placeholder="Provincia" {...field}>
-                          {provincias.map((provincia: any) => (
-                            <SelectOption
-                              key={provincia.id_provincia}
-                              value={provincia.id_provincia}
-                            >
-                              {provincia.provincia}
-                            </SelectOption>
-                          ))}
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="id_departamento"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Select placeholder="Departamento" {...field}>
-                          {getDepartamentosFor(
-                            form.getValues().id_provincia,
-                            departamentos as DepartamentoModel[]
-                          ).map((departamento: any) => (
-                            <SelectOption
-                              key={departamento.id_departamento}
-                              value={departamento.id_departamento}
-                            >
-                              {departamento.departamento}
-                            </SelectOption>
-                          ))}
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="id_localidad"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Select placeholder="Localidad" {...field}>
-                          {getLocalidadesFor(
-                            form.getValues().id_departamento,
-                            localidades as LocalidadModel[]
-                          ).map((localidad: any) => (
-                            <SelectOption
-                              key={localidad.id_localidad}
-                              value={localidad.id_localidad}
-                            >
-                              {localidad.localidad}
-                            </SelectOption>
-                          ))}
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              {props.idEstablecimiento ? (
-                <BotoneraEdit
-                  onConfirm={onAskConfirmEliminar}
-                  onCancelar={() => router.push("/my-places")}
-                />
-              ) : (
-                <BotoneraRegister onCancelar={() => router.goBack()} />
-              )}
-            </form>
-          </Form>
-        </div>
-        <div className="pr-8 pl-2">
-          <div className="text-xl font-bold text-gray-600">
-            Ubicá en el mapa tu establecimiento turístico
-          </div>
-          {(pos != undefined || !props.idEstablecimiento) && (
-            <MapView
-              initZoom={
-                form.getValues().latitud && form.getValues().longitud ? 20 : 13
-              }
-              initPos={
-                form.getValues().latitud && form.getValues().longitud
-                  ? {
-                      lat: Number(form.getValues().latitud),
-                      lng: Number(form.getValues().longitud),
-                    }
-                  : undefined
-              }
-              setMarker={
-                form.getValues().latitud && form.getValues().longitud
-                  ? {
-                      lat: Number(form.getValues().latitud),
-                      lng: Number(form.getValues().longitud),
-                    }
-                  : null
-              }
-              search
-              markerOnClick
-              onClick={handleOnClick}
-              style={{ marginTop: "10pt", height: "350pt", aspect: "square" }}
-            />
-          )}
-        </div>
-      </div>
 
-      <IonToast
-        isOpen={showToast}
-        onDidDismiss={() => setShowToast(false)}
-        message={errorMessage?.[1]}
-        duration={5000}
-        color="danger"
-        style={{
-          fontSize: "12pt",
-        }}
-      />
+      <div className="flex flex-col justify-between mt-2">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(
+              idEstablecimiento ? onGuardar : onRegistrar
+            )}
+            className="flex flex-col h-full justify-between"
+          >
+            <div className="grid grid-cols-2 gap-2">
+              <div className="flex flex-col gap-2">
+                <div className="text-xl font-bold text-gray-600 bg-gray-50 border border-gray-200 p-4 rounded-md w-full">
+                  Datos generales
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <FormField
+                    control={form.control}
+                    name="nombre"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input placeholder="Nombre" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="numero_habilitacion"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            placeholder="Número de habilitacion"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="descripcion"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input placeholder="Descripción" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="telefono"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input placeholder="Teléfono" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="mail"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input placeholder="Email" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="calle"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input placeholder="Calle" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="sin_numero"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Check className="h-[42pt]" {...field}>
+                            Es sin número
+                          </Check>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="numero"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            disabled={esSinNumero}
+                            placeholder="Número"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="id_provincia"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Select placeholder="Provincia" {...field}>
+                            {provincias.map((provincia: any) => (
+                              <SelectOption
+                                key={provincia.id_provincia}
+                                value={provincia.id_provincia}
+                              >
+                                {provincia.provincia}
+                              </SelectOption>
+                            ))}
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="id_departamento"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Select placeholder="Departamento" {...field}>
+                            {departamentos.map((departamento: any) => (
+                              <SelectOption
+                                key={departamento.id_departamento}
+                                value={departamento.id_departamento}
+                              >
+                                {departamento.departamento}
+                              </SelectOption>
+                            ))}
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="id_localidad"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Select placeholder="Localidad" {...field}>
+                            {localidades.map((localidad: any) => (
+                              <SelectOption
+                                key={localidad.id_localidad}
+                                value={localidad.id_localidad}
+                              >
+                                {localidad.localidad}
+                              </SelectOption>
+                            ))}
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <div className="text-xl font-bold text-gray-600 bg-gray-50 border border-gray-200 p-4 rounded-md w-full">
+                  Ubicación
+                </div>
+                <FormField
+                  control={form.control}
+                  name="ubicacion"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <MapViewProvider {...mapView}>
+                        <MapView
+                          //onClick={handleOnClick}
+                          className="border border-[#bbb] hover:border-black rounded-md w-full aspect-video"
+                        />
+                      </MapViewProvider>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="p-2 border border-gray-200 bg-gray-50 rounded-md w-full">
+                  {idEstablecimiento ? (
+                    <BotoneraEdit
+                      onConfirm={onAskConfirmEliminar}
+                      onCancelar={() => router.push("/my-places")}
+                    />
+                  ) : (
+                    <BotoneraRegister onCancelar={() => router.goBack()} />
+                  )}
+                </div>
+              </div>
+            </div>
+          </form>
+        </Form>
+      </div>
     </div>
   );
 }

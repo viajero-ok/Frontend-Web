@@ -12,7 +12,14 @@ import {
   cloudUploadOutline,
   imageOutline,
 } from "ionicons/icons";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { ClassNameValue } from "tailwind-merge";
 import {
   eliminarImagenDeAlojamiento,
@@ -21,6 +28,7 @@ import {
 } from "../../App/Alojamientos/NuevoAlojamiento";
 import { cn } from "../ui/Form/Field";
 import { useModal } from "../ui/Modal/Modal";
+import { useMultimediaUpload } from "./MultimediaUploadProvider";
 
 export const FileUploading = ({
   file,
@@ -256,54 +264,45 @@ type TMedia = {
 };
 
 type TMultimediaUpload = {
-  service: (body: {
-    imagen: File;
-    id_oferta: string;
-    setProgress: Dispatch<SetStateAction<number>>;
-  }) => Promise<any>;
-  uploaded: TServerImage[];
-  idOferta: string;
   className?: ClassNameValue;
+  children: ReactNode;
 };
 export default function MultimediaUpload(props: TMultimediaUpload) {
   const fileInput = useRef<HTMLInputElement>(null);
-  const [uploaded, setUploaded] = useState<TFilePreview[]>([]);
   const [uploading, setUploading] = useState<File[]>([]);
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
 
-  useEffect(() => {
-    setUploaded(() => [
-      ...props.uploaded.map((serverImage: TServerImage) => ({
-        id: serverImage.id_imagen.toString(),
-        file: { nombre: serverImage.nombre, size: 0 },
-        datos: serverImage.datos,
-      })),
-    ]);
-  }, [props.uploaded]);
+  const { images, upload } = useMultimediaUpload();
 
-  const onUpload = async ({
-    imagen,
-    setProgress,
-  }: {
-    imagen: File;
-    setProgress: Dispatch<SetStateAction<number>>;
-  }) => {
-    return await props.service({
-      imagen,
-      id_oferta: props.idOferta,
-      setProgress,
-    });
-  };
+  // useEffect(() => {
+  //   setUploaded(() => [
+  //     ...props.uploaded.map((serverImage: TServerImage) => ({
+  //       id: serverImage.id_imagen.toString(),
+  //       file: { nombre: serverImage.nombre, size: 0 },
+  //       datos: serverImage.datos,
+  //     })),
+  //   ]);
+  // }, [props.uploaded]);
+
+  // const onUpload = async ({
+  //   imagen,
+  //   setProgress,
+  // }: {
+  //   imagen: File;
+  //   setProgress: Dispatch<SetStateAction<number>>;
+  // }) => {
+  //   upload(imagen);
+  // };
 
   return (
     <div className={cn("w-fit", props.className)}>
-      <div className="text-2xl text-gray-600 font-bold bg-gray-50 border border-gray-200 rounded-md w-full h-[42pt] content-center pl-4">
+      <div className="text-2xl text-gray-600 font-bold bg-gray-50 border border-gray-200 rounded-md w-full p-4 content-center pl-4">
         <div>
-          Imagenes <span className="">({uploaded.length})</span>
+          Imagenes <span className="">({images.length})</span>
         </div>
       </div>
       <div className="flex mt-2 p-4 gap-4 border border-[#b3b3b3] shadow-sm rounded-md min-h-[200pt] hover:border-black">
-        <div className="flex flex-col aspect-square gap-2">
+        <div className="flex flex-col w-1/2 aspect-video gap-2">
           <div
             onDragEnter={(e) => {
               e.preventDefault();
@@ -327,7 +326,7 @@ export default function MultimediaUpload(props: TMultimediaUpload) {
               const files = e.dataTransfer.files;
 
               const fileArray = Array.from(files);
-              setUploading(fileArray);
+              upload(fileArray);
 
               setIsDragOver(false);
             }}
@@ -362,7 +361,7 @@ export default function MultimediaUpload(props: TMultimediaUpload) {
             accept="image/*"
             multiple
             onChange={(e: any) => {
-              setUploading((prev: File[]) => [...e.target.files]);
+              upload(e.target.files);
             }}
           />
         </div>
@@ -371,10 +370,10 @@ export default function MultimediaUpload(props: TMultimediaUpload) {
             "w-full aspect-video flex flex-col gap-2 overflow-y-scroll pr-2 [scrollbar-width:thin]"
           )}
         >
-          {uploading.length > 0 && (
+          {/* {uploading.length > 0 && (
             <div className="text-md text-gray-600 font-bold">Subiendo</div>
-          )}
-          {uploading.map((uploadingFile: File, index: number) => (
+          )} */}
+          {/* {uploading.map((uploadingFile: File, index: number) => (
             <FileUploading
               key={index}
               file={uploadingFile}
@@ -382,17 +381,18 @@ export default function MultimediaUpload(props: TMultimediaUpload) {
               setUploaded={setUploaded}
               upload={onUpload}
             />
-          ))}
-          {uploaded.length > 0 && (
+          ))} */}
+          {/* {images.length > 0 && (
             <div className="text-md text-gray-600 font-bold">Subidas</div>
-          )}
-          {[...uploaded].reverse().map((uploadedFile: TFilePreview) => (
+          )} */}
+          {/* {[...uploaded].reverse().map((uploadedFile: TFilePreview) => (
             <FilePreview
               key={uploadedFile.id}
               file={uploadedFile}
               setFiles={setUploaded}
             />
-          ))}
+          ))} */}
+          {props.children}
         </div>
       </div>
     </div>

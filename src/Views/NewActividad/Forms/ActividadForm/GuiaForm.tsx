@@ -292,7 +292,7 @@ export default function GuiaForm() {
   };
 
   return esConGuia ? (
-    <div className="flex flex-col gap-2 w-full mt-4">
+    <div className="flex flex-col gap-2 w-full">
       <div className="p-4 border border-gray-200 bg-gray-50 rounded-md flex flex-row justify-between items-center">
         <div className="text-gray-600 text-2xl font-bold">Guías turísticos</div>
         <button

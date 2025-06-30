@@ -1,4 +1,5 @@
 import DefaultLoggedLayout from "../../Layouts/DefaultLoggedLayout";
+import { EstablecimientoProvider } from "./EstablecimientoProvider";
 import NewPlaceForm from "./NewPlaceForm";
 
 type TNewPlaceView = {
@@ -7,7 +8,9 @@ type TNewPlaceView = {
 export default function NewPlaceView(props: TNewPlaceView) {
   return (
     <DefaultLoggedLayout>
-      <NewPlaceForm idEstablecimiento={props.idEstablecimiento} />
+      <EstablecimientoProvider idEstablecimiento={props.idEstablecimiento}>
+        <NewPlaceForm />
+      </EstablecimientoProvider>
     </DefaultLoggedLayout>
   );
 }

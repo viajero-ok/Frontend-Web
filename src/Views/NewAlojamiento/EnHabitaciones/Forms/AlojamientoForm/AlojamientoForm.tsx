@@ -231,11 +231,11 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
   }, [datosRegistradosAlojamiento]);
 
   return (
-    <div className="flex flex-col w-full mt-4">
+    <div className="flex flex-col w-full">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleGuardar)}
-          className="flex flex-col mx-8 gap-4"
+          className="flex flex-col gap-4"
         >
           <div className="grid grid-cols-2">
             <div className="flex flex-col gap-2">

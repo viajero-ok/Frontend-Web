@@ -21,6 +21,7 @@ type ModalContextValue = {
     React.SetStateAction<React.ReactElement | undefined>
   >;
   setCanDismiss: React.Dispatch<React.SetStateAction<boolean>>;
+  setOnDidDismiss: Function;
 };
 const ModalContext = React.createContext<ModalContextValue>(
   {} as ModalContextValue
@@ -33,6 +34,7 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
     string | React.ReactElement
   >("");
   const [canDismiss, setCanDismiss] = React.useState<boolean>(true);
+  const [onDidDismiss, setOnDidDismiss] = React.useState<Function>();
   const [variant, setVariant] = React.useState<TModalVariants>("default");
   const [actions, setActions] = React.useState<React.ReactElement | undefined>(
     undefined
@@ -47,6 +49,7 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
     setDescription,
     setActions,
     setCanDismiss,
+    setOnDidDismiss,
   };
 
   return (
@@ -71,6 +74,7 @@ type TModalParams = {
   title?: string;
   description?: string | React.ReactElement;
   canDismiss?: boolean;
+  onDidDismiss?: Function;
   actions?: React.ReactElement;
 };
 export const useModal = () => {
@@ -92,6 +96,8 @@ export const useModal = () => {
     if (params.canDismiss != undefined)
       modalContext.setCanDismiss(params.canDismiss);
     else modalContext.setCanDismiss(true);
+    if (params.onDidDismiss) modalContext.setOnDidDismiss(params.onDidDismiss);
+    else modalContext.setOnDidDismiss(undefined);
     modalContext.setOpen(true);
   };
 
@@ -109,6 +115,7 @@ type TModalProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   canDismiss: boolean;
+  onDidDismiss?: Function;
 };
 export const Modal = ({
   open,
@@ -118,12 +125,16 @@ export const Modal = ({
   actions,
   variant,
   canDismiss,
+  onDidDismiss,
 }: TModalProps) => {
   return (
     <IonModal
       isOpen={open}
       backdropDismiss={canDismiss}
-      onDidDismiss={() => setOpen(false)}
+      onDidDismiss={() => {
+        setOpen(false);
+        onDidDismiss && onDidDismiss();
+      }}
       style={{
         "--height": "fit-content",
         "--width": "fit-content",

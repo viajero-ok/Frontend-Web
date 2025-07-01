@@ -1,18 +1,84 @@
 import { Dispatch, SetStateAction } from "react";
-import MultimediaUpload from "../../../../components/MultimediaUpload/MultimediaUpload";
+import {
+  ImageUpload,
+  useImageUpload,
+} from "../../../../components/MultimediaUpload/ImageUploadProvider";
 import { useActividad } from "../../Provider/ActividadProvider";
-import { MultimediaUploadProvider } from "../../../../components/MultimediaUpload/MultimediaUploadProvider";
+import {
+  guardarImagenOfertaTuristica,
+  eliminarImagenOfertaTuristica,
+} from "../../../../App/Ofertas/Ofertas";
+import { useModal } from "../../../../components/ui/Modal/Modal";
+import { useToast } from "../../../../components/ui/Toast/Toast";
 
 export default function Imagenes() {
-  const { idOferta, guardarImagen } = useActividad();
+  const { idOferta, imagenes, setImagenes } = useActividad();
 
-  return (
-    <MultimediaUploadProvider
-      idOferta={idOferta}
-      service={guardarImagen}
-      className="w-1/2"
-    >
-      <></>
-    </MultimediaUploadProvider>
-  );
+  const { modal, setOpen } = useModal();
+  const { toast } = useToast();
+
+  const handleGuardar = () => {};
+
+  const handleDelete = (idImagen: number) => {
+    const eliminarImagen = () => {
+      eliminarImagenOfertaTuristica(idImagen)
+        .then(() => {
+          imageUpload.removeImage(idImagen);
+          setOpen(false);
+          toast({
+            variant: "success",
+            title: "Imagen eliminada.",
+          });
+        })
+        .catch(() => {
+          setOpen(false);
+          toast({
+            variant: "danger",
+            title: "Error al intentar eliminar la imagen, intente nuevamente.",
+          });
+        });
+    };
+
+    modal({
+      variant: "danger",
+      title: "Eliminar imagen",
+      description: "Esta acción es irreversible. ¿Estás seguro?",
+      actions: (
+        <div className="flex flex-row justify-between w-full">
+          <button
+            onClick={() => setOpen(false)}
+            className="viajero-button-ghost px-4 py-2"
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={() => eliminarImagen()}
+            className="viajero-button px-4 py-2 bg-red-400! hover:bg-red-400/90!"
+          >
+            Eliminar
+          </button>
+        </div>
+      ),
+    });
+  };
+
+  const imageUpload = useImageUpload({
+    imagenes,
+    setImagenes,
+    service: async ({
+      imagen,
+      setProgress,
+    }: {
+      imagen: File;
+      setProgress: Dispatch<SetStateAction<number>>;
+    }) =>
+      await guardarImagenOfertaTuristica({
+        imagen,
+        setProgress,
+        id_oferta: idOferta,
+      }),
+    deleteService: handleDelete,
+  });
+
+  return <ImageUpload {...imageUpload} className="w-1/2" />;
 }

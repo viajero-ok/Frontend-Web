@@ -392,7 +392,7 @@ export default function GuiaForm() {
       </div>
     </div>
   ) : (
-    <div className="p-4 w-full border border-gray-200 bg-gray-50 rounded-md mt-4">
+    <div className="p-4 w-full border border-gray-200 bg-gray-50 rounded-md h-[42pt]">
       <div className="text-gray-600 flex flex-row items-center gap-2">
         <IonIcon className="text-2xl mr-2" icon={informationCircleOutline} />
         Para poder agregar guías turísticos es necesario seleccionar la opción

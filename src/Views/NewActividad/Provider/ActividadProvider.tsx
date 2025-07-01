@@ -30,9 +30,14 @@ import {
   obtenerDatosRegistradosUbicacion,
 } from "../../../App/Actividades/Ubicacion";
 import {
+  eliminarImagenOfertaTuristica,
   guardarImagenOfertaTuristica,
   TBodyGuardarImagenOfertaTuristica,
 } from "../../../App/Ofertas/Ofertas";
+import {
+  LocalOrRemoteImage,
+  renderRemoteImage,
+} from "../../../components/MultimediaUpload/ImageUploadProvider";
 
 type ActividadContextValue = {
   idOferta: string;
@@ -71,7 +76,8 @@ type ActividadContextValue = {
   datosRegistradosActividad: any;
 
   /** imagenes */
-  guardarImagen: (body: TBodyGuardarImagenOfertaTuristica) => Promise<any>;
+  imagenes: LocalOrRemoteImage[];
+  setImagenes: React.Dispatch<React.SetStateAction<LocalOrRemoteImage[]>>;
 
   /** ubicación */
   ubicacionesDomicilio: {
@@ -128,6 +134,7 @@ const ActividadProvider = ({
   const [dificultades, setDificultades] = React.useState<any[]>([]);
 
   /** imagenes */
+  const [imagenes, setImagenes] = React.useState<LocalOrRemoteImage[]>([]);
 
   /** ubicación */
   const [ubicacionEstablecimiento, setUbicacionEstablecimiento] =
@@ -155,6 +162,16 @@ const ActividadProvider = ({
           bl_con_guia: datos_basicos.bl_con_guia == 1 ? true : false,
         });
         setEsConGuia(datos_basicos.bl_con_guia == 1 ? true : false);
+        setImagenes(
+          response.data.imagenes.map((i: any) => ({
+            getId: () => i.id_imagen,
+            getNombre: () => i.nombre,
+            render: () => renderRemoteImage(`data:image/png;base64,${i.datos}`),
+            isRemote: () => true,
+            getDatos: () => i.datos,
+            getSize: () => i.datos.length,
+          }))
+        );
       })
       .catch(() => {});
 
@@ -276,7 +293,18 @@ const ActividadProvider = ({
   /** imagenes */
   const guardarImagen = async (body: TBodyGuardarImagenOfertaTuristica) => {
     try {
-      await guardarImagenOfertaTuristica(body);
+      return await guardarImagenOfertaTuristica(body);
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  const eliminarImagen = async (idImagen: number) => {
+    try {
+      await eliminarImagenOfertaTuristica(idImagen);
+      setImagenes((prev: any[]) => [
+        ...prev.filter((i: any) => i.id_imagen != idImagen),
+      ]);
     } catch (error) {
       throw new Error((error as Error).message);
     }
@@ -368,7 +396,8 @@ const ActividadProvider = ({
     eliminarGuia,
 
     /** imagenes */
-    guardarImagen,
+    imagenes,
+    setImagenes,
 
     /** ubicación */
     ubicacionesDomicilio: {

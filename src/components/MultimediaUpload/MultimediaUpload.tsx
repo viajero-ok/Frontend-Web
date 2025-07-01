@@ -1,16 +1,9 @@
 import {
-  IonButton,
-  IonCol,
-  IonGrid,
-  IonIcon,
-  IonModal,
-  IonRow,
+  IonIcon
 } from "@ionic/react";
 import {
-  checkmarkCircleOutline,
-  close,
   cloudUploadOutline,
-  imageOutline,
+  imageOutline
 } from "ionicons/icons";
 import {
   Dispatch,
@@ -23,12 +16,10 @@ import {
 import { ClassNameValue } from "tailwind-merge";
 import {
   eliminarImagenDeAlojamiento,
-  TGuardarImagenDeAlojamientoResponse,
-  TServerImage,
+  TGuardarImagenDeAlojamientoResponse
 } from "../../App/Alojamientos/NuevoAlojamiento";
 import { cn } from "../ui/Form/Field";
 import { useModal } from "../ui/Modal/Modal";
-import { useMultimediaUpload } from "./MultimediaUploadProvider";
 
 export const FileUploading = ({
   file,
@@ -39,7 +30,7 @@ export const FileUploading = ({
   file: File;
   setUploading: Dispatch<SetStateAction<File[]>>;
   setUploaded: Dispatch<SetStateAction<TFilePreview[]>>;
-  upload: (data: {
+  upload: (body: {
     imagen: File;
     setProgress: Dispatch<SetStateAction<number>>;
   }) => Promise<any>;
@@ -272,7 +263,7 @@ export default function MultimediaUpload(props: TMultimediaUpload) {
   const [uploading, setUploading] = useState<File[]>([]);
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
 
-  const { images, upload } = useMultimediaUpload();
+  //const { images, upload } = useMultimediaUpload();
 
   // useEffect(() => {
   //   setUploaded(() => [
@@ -298,7 +289,7 @@ export default function MultimediaUpload(props: TMultimediaUpload) {
     <div className={cn("w-fit", props.className)}>
       <div className="text-2xl text-gray-600 font-bold bg-gray-50 border border-gray-200 rounded-md w-full p-4 content-center pl-4">
         <div>
-          Imagenes <span className="">({images.length})</span>
+          {/* Imagenes <span className="">({images.length})</span> */}
         </div>
       </div>
       <div className="flex mt-2 p-4 gap-4 border border-[#b3b3b3] shadow-sm rounded-md min-h-[200pt] hover:border-black">
@@ -326,7 +317,7 @@ export default function MultimediaUpload(props: TMultimediaUpload) {
               const files = e.dataTransfer.files;
 
               const fileArray = Array.from(files);
-              upload(fileArray);
+              // upload(fileArray);
 
               setIsDragOver(false);
             }}
@@ -361,7 +352,7 @@ export default function MultimediaUpload(props: TMultimediaUpload) {
             accept="image/*"
             multiple
             onChange={(e: any) => {
-              upload(e.target.files);
+             // upload(e.target.files);
             }}
           />
         </div>

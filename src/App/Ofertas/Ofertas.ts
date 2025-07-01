@@ -86,7 +86,7 @@ export const guardarOfertaGuardada = async (
 ) => await AUTH_API.post(`/ofertas-turisticas/guardar-oferta-turistica`, data);
 
 /** TODO: mover a utils */
-function fileToBase64(file: File): Promise<string> {
+export function fileToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
@@ -116,7 +116,7 @@ export type TBodyGuardarImagenOfertaTuristica = {
 };
 export const guardarImagenOfertaTuristica = async (
   body: TBodyGuardarImagenOfertaTuristica
-) => {
+): Promise<{ id_imagen: number; base64: string }> => {
   try {
     const response = (
       await AUTH_API.post(
@@ -130,8 +130,7 @@ export const guardarImagenOfertaTuristica = async (
             "Content-Type": "multipart/form-data",
           },
           onUploadProgress: (progressEvent) => {
-            console.log("event: ", progressEvent);
-            if (!progressEvent.total && !progressEvent.estimated) return;
+            // if (!progressEvent.total && !progressEvent.estimated) return;
             const percent = Math.round(
               (progressEvent.loaded * 100) /
                 (progressEvent.total
@@ -142,12 +141,15 @@ export const guardarImagenOfertaTuristica = async (
           },
         }
       )
-    ).data;
-    const parsedResponse = guardarImagenOfertaTuristicaSchema.parse(response);
+    ).data as { id_imagen: number };
     const base64 = await fileToBase64(body.imagen);
-
-    return { ...parsedResponse, base64 };
+    return { id_imagen: response.id_imagen, base64 };
   } catch (error) {
     throw new Error((error as Error).message);
   }
 };
+
+export const eliminarImagenOfertaTuristica = async (idImagen: number) =>
+  await AUTH_API.delete(
+    `/ofertas-turisticas/eliminar-imagen-oferta-turistica/${idImagen}`
+  );

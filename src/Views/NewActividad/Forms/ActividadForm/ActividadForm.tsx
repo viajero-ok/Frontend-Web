@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useIonRouter } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -16,90 +15,59 @@ import {
 } from "../../../../components/ui/Form/Field";
 import { Input } from "../../../../components/ui/Input/Input";
 import { Select, SelectOption } from "../../../../components/ui/Select/Select";
-import { useActividad } from "../../Provider/ActividadProvider";
-import GuiaForm from "./GuiaForm";
 import { useToast } from "../../../../components/ui/Toast/Toast";
+import { useActividad } from "../../Provider/ActividadProvider";
 
-const numeric = z.preprocess((val) => {
-  if (typeof val === "string" && /^[0-9]+$/.test(val)) {
-    return Number(val);
-  }
-  return val;
-}, z.number({ message: "Debe ser un número" }));
+// const numeric = z.preprocess((val) => {
+//   if (typeof val === "string" && /^[0-9]+$/.test(val)) {
+//     return Number(val);
+//   }
+//   return val;
+// }, z.number({ message: "Debe ser un número" }));
 
-const formSchema = z.object({
-  nombre_actividad: z.string({ message: "El campo es requerido" }),
-  descripcion_actividad: z.string({ message: "El campo es requerido" }),
-  id_sub_tipo_oferta: z.number({ message: "El campo es requerido" }),
-  id_sub_categoria: z.number({ message: "El campo es requerido" }),
-  requisitos_actividad: z.string({ message: "El campo es requerido" }),
-  id_dificultad: z.number({ message: "El campo es requerido" }),
-  duracion_actividad: numeric,
-  distancia_actividad: numeric,
-  bl_con_guia: z.boolean({ message: "El campo es requerido" }).optional(),
+// const formSchema = z.object({
+//   nombre_actividad: z.string({ message: "El campo es requerido" }),
+//   descripcion_actividad: z.string({ message: "El campo es requerido" }),
+//   id_sub_tipo_oferta: z.number({ message: "El campo es requerido" }),
+//   id_sub_categoria: z.number({ message: "El campo es requerido" }),
+//   requisitos_actividad: z.string({ message: "El campo es requerido" }),
+//   id_dificultad: z.number({ message: "El campo es requerido" }),
+//   duracion_actividad: numeric,
+//   distancia_actividad: numeric,
+//   bl_con_guia: z.boolean({ message: "El campo es requerido" }).optional(),
 
-  // politicas_reserva
-  id_politica_cancelacion: z.number({ message: "El campo es requerido" }),
-  //plazo_dias_cancelacion: z.any(),
-  id_tipo_pago_anticipado: z.number({ message: "El campo es requerido" }),
-  //porcentaje_pago_anticipado: z.any(), // float
-});
+//   // politicas_reserva
+//   id_politica_cancelacion: z.number({ message: "El campo es requerido" }),
+//   //plazo_dias_cancelacion: z.any(),
+//   id_tipo_pago_anticipado: z.number({ message: "El campo es requerido" }),
+//   //porcentaje_pago_anticipado: z.any(), // float
+// });
 
 type TActividadForm = {
   idOferta: string;
 };
 export default function ActividadForm(props: TActividadForm) {
-  const router = useIonRouter();
-
-  // const handleGuardar = () => {
-  //   if (!form) return;
-  //   const s = form.schema;
-  //   let body: TBodyGuardarActividad = {
-  //     id_oferta: props.idOferta,
-  //     id_sub_tipo_oferta: s.id_sub_tipo_oferta,
-  //     id_sub_categoria: s.id_sub_categoria,
-  //     nombre_actividad: s.nombre_actividad,
-  //     descripcion_actividad: s.descripcion_actividad,
-  //     requisitos_actividad: s.requisitos_actividad,
-  //     id_dificultad: parseInt(s.id_dificultad),
-  //     duracion_actividad: parseInt(s.duracion_actividad),
-  //     distancia_actividad: parseInt(s.distancia_actividad),
-  //     bl_con_guia: esConGuia,
-  //     politicas_reserva: {
-  //       id_politica_cancelacion: s.id_politica_cancelacion,
-  //       plazo_dias_cancelacion: parseInt(s.plazo_dias_cancelacion),
-  //       id_tipo_pago_anticipado: 1,
-  //       porcentaje_pago_anticipado: 0.0, // float
-  //     },
-  //     metodos_de_pago: [],
-  //   };
-  //   console.log("body: ", body);
-  //   guardarActividad(body)
-  //     .then((response) => {
-  //       setDatosRegistrados(response.data.datos_actividad);
-  //       setOpenConfirm(true);
-  //     })
-  //     .catch(() => {});
-  //   setOpenConfirm(true);
-  // };
-
-  /** REFACTOR */
-
   const [formMetodosDePago, setFormMetodosDePago] = useState<number[]>([]);
 
   const {
     idOferta,
-    actualizar,
-    dirt,
+
+    actividadSchema,
+    actividadForm,
+    actualizarActividadTab,
+    actividadIsDirty,
+
     categorias,
     subCategorias,
     politicasDeCancelacion,
     tiposPagoAnticipado,
     metodosDePago,
     dificultades,
+
     guardarActividad,
     datosRegistradosActividad,
   } = useActividad();
+  const form = actividadForm;
 
   useEffect(() => {
     if (!datosRegistradosActividad) return;
@@ -130,40 +98,11 @@ export default function ActividadForm(props: TActividadForm) {
     );
   }, [datosRegistradosActividad]);
 
-  // useEffect(() => {
-  //   getDatosDeRegistroNuevaActividad()
-  //     .then((response: any) => {
-  //       setCategoria(response.data.tipos_y_subtipos.subtipos);
-  //       setSubcategoria(response.data.sub_categorias_actividades);
-  //       setTiposPagoAnticipado(response.data.tipos_pago_anticipado);
-  //       setPoliticasDeCancelacion(response.data.politicas_cancelacion);
-  //       setMetodosDePago(response.data.metodos_pago);
-  //       setDificultad(response.data.dificultad_actividades);
-  //     })
-  //     .catch((error: any) => {});
-  //   obtenerDatosRegistradosActividad(props.idOferta)
-  //     .then((response: any) => {
-  //       setGuias(response.data.datos_actividad.guias);
-  //       /*  console.log("guias: ", response.data.datos_actividad.guias); */
-  //     })
-  //     .catch((error: any) => {
-  //       console.log("error: ", error);
-  //     });
-  // }, []);
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    mode: "onSubmit",
-    defaultValues: {
-      bl_con_guia: false,
-    },
-  });
-
   const toastCtx = useToast();
   const toast = toastCtx.toast;
   const setToastOpen = toastCtx.setOpen;
 
-  const handleGuardar = (values: z.infer<typeof formSchema>) => {
+  const handleGuardar = (values: z.infer<typeof actividadSchema>) => {
     toast({
       variant: "success",
       title: "Datos guardados",
@@ -181,17 +120,12 @@ export default function ActividadForm(props: TActividadForm) {
       bl_con_guia: values.bl_con_guia ?? false,
     })
       .then(() => {
-        actualizar();
+        actualizarActividadTab();
       })
       .catch(() => {});
   };
 
   const formWatch = form.watch();
-
-  useEffect(() => {
-    if (!form.formState.isDirty) return;
-    dirt();
-  }, [form.formState.isDirty]);
 
   return (
     <div className="">

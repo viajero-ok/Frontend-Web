@@ -2,11 +2,8 @@ import { LatLng } from "leaflet";
 import * as React from "react";
 import {
   eliminarGuia as eliminarGuiaService,
-  getDatosDeRegistroNuevaActividad,
-  guardarActividad as guardarActividadService,
   guardarGuia,
   modificarGuia as modificarGuiaService,
-  obtenerDatosRegistradosActividad,
   obtenerUbicacionEstablecimiento,
   TBodyGuardarActividad,
 } from "../../../App/Actividades/Actividad";
@@ -23,32 +20,41 @@ import {
   TBodyRegistrarEntrada,
   TBodyRegistrarHorario,
 } from "../../../App/Actividades/TurnosyHorarios";
-import { getUbicaciones } from "../../../App/Ubicaciones/Ubicaciones";
 import {
-  TBodyGuardarUbicacion,
   guardarUbicacion as guardarUbicacionService,
   obtenerDatosRegistradosUbicacion,
+  TBodyGuardarUbicacion,
 } from "../../../App/Actividades/Ubicacion";
 import {
   eliminarImagenOfertaTuristica,
   guardarImagenOfertaTuristica,
   TBodyGuardarImagenOfertaTuristica,
 } from "../../../App/Ofertas/Ofertas";
-import {
-  LocalOrRemoteImage,
-  renderRemoteImage,
-} from "../../../components/MultimediaUpload/ImageUploadProvider";
+import { getUbicaciones } from "../../../App/Ubicaciones/Ubicaciones";
+import { LocalOrRemoteImage } from "../../../components/MultimediaUpload/ImageUploadProvider";
+import { ActividadTabContextValue, useActividadTab } from "./useActividadTab";
 
 type ActividadContextValue = {
+  /** commons */
   idOferta: string;
   actualizar: () => void;
   isDirty: boolean;
   dirt: () => void;
+  puedeRegistrar: boolean;
 
   /** activiadad */
+  // categorias: any[];
+  // subCategorias: any[];
+  // tiposPagoAnticipado: any[];
+  // politicasDeCancelacion: any[];
+  // metodosDePago: any[];
+  // dificultades: any[];
+  // guardarActividad: (body: TBodyGuardarActividad) => Promise<void>;
+  // datosRegistradosActividad: any;
+
+  /** guias turísticos  */
+
   guias: any[];
-  esConGuia: boolean;
-  checkEsConGuia: () => void;
   crearGuia: ({
     nro_resolucion,
     nombre_y_apellido,
@@ -66,14 +72,6 @@ type ActividadContextValue = {
     nombre_y_apellido: string;
   }) => Promise<void>;
   eliminarGuia: (idGuia: number) => Promise<void>;
-  categorias: any[];
-  subCategorias: any[];
-  tiposPagoAnticipado: any[];
-  politicasDeCancelacion: any[];
-  metodosDePago: any[];
-  dificultades: any[];
-  guardarActividad: (body: TBodyGuardarActividad) => Promise<void>;
-  datosRegistradosActividad: any;
 
   /** imagenes */
   imagenes: LocalOrRemoteImage[];
@@ -100,7 +98,7 @@ type ActividadContextValue = {
   agregarEntrada: (body: TBodyRegistrarEntrada) => Promise<void>;
   actualizarEntrada: (body: TBodyActualizarEntrada) => Promise<void>;
   eliminarEntrada: (idEntrada: number) => Promise<void>;
-};
+} & ActividadTabContextValue;
 
 const ActividadContext = React.createContext<ActividadContextValue>(
   {} as ActividadContextValue
@@ -114,24 +112,15 @@ const ActividadProvider = ({
   idOferta: string;
 }) => {
   const [isDirty, setIsDirty] = React.useState<boolean>(false);
+  const [puedeRegistrar, setPuedeRegistrar] = React.useState<boolean>(false);
 
   const dirt = () => setIsDirty(true);
 
-  /** activiadad */
-  const [datosRegistradosActividad, setDatosRegistradosActividad] =
-    React.useState<any>();
+  /** Hooks para cada tab del dashboard */
+  const actividad = useActividadTab({ idOferta });
+
+  /** guías turísticos */
   const [guias, setGuias] = React.useState<any[]>([]);
-  const [esConGuia, setEsConGuia] = React.useState<boolean>(false);
-  const [categorias, setCategorias] = React.useState<any[]>([]);
-  const [subCategorias, setSubCategorias] = React.useState<any[]>([]);
-  const [tiposPagoAnticipado, setTiposPagoAnticipado] = React.useState<any[]>(
-    []
-  );
-  const [politicasDeCancelacion, setPoliticasDeCancelacion] = React.useState<
-    any[]
-  >([]);
-  const [metodosDePago, setMetodosDePago] = React.useState<any[]>([]);
-  const [dificultades, setDificultades] = React.useState<any[]>([]);
 
   /** imagenes */
   const [imagenes, setImagenes] = React.useState<LocalOrRemoteImage[]>([]);
@@ -152,28 +141,28 @@ const ActividadProvider = ({
   const [entradas, setEntradas] = React.useState<any[]>([]);
 
   const getDatosRegistrados = () => {
-    obtenerDatosRegistradosActividad(idOferta)
-      .then((response) => {
-        setGuias(response.data.datos_actividad.guias);
-        const { datos_basicos, metodos_pago } = response.data.datos_actividad;
-        setDatosRegistradosActividad({
-          ...datos_basicos,
-          metodos_pago,
-          bl_con_guia: datos_basicos.bl_con_guia == 1 ? true : false,
-        });
-        setEsConGuia(datos_basicos.bl_con_guia == 1 ? true : false);
-        setImagenes(
-          response.data.imagenes.map((i: any) => ({
-            getId: () => i.id_imagen,
-            getNombre: () => i.nombre,
-            render: () => renderRemoteImage(`data:image/png;base64,${i.datos}`),
-            isRemote: () => true,
-            getDatos: () => i.datos,
-            getSize: () => i.datos.length,
-          }))
-        );
-      })
-      .catch(() => {});
+    // obtenerDatosRegistradosActividad(idOferta)
+    //   .then((response) => {
+    //     setGuias(response.data.datos_actividad.guias);
+    //     const { datos_basicos, metodos_pago } = response.data.datos_actividad;
+    //     setDatosRegistradosActividad({
+    //       ...datos_basicos,
+    //       metodos_pago,
+    //       bl_con_guia: datos_basicos.bl_con_guia == 1 ? true : false,
+    //     });
+    //     setEsConGuia(datos_basicos.bl_con_guia == 1 ? true : false);
+    //     setImagenes(
+    //       response.data.imagenes.map((i: any) => ({
+    //         getId: () => i.id_imagen,
+    //         getNombre: () => i.nombre,
+    //         render: () => renderRemoteImage(`data:image/png;base64,${i.datos}`),
+    //         isRemote: () => true,
+    //         getDatos: () => i.datos,
+    //         getSize: () => i.datos.length,
+    //       }))
+    //     );
+    //   })
+    //   .catch(() => {});
 
     obtenerDatosRegistradosHorariosyEntradas(idOferta)
       .then((response) => {
@@ -203,21 +192,6 @@ const ActividadProvider = ({
   };
 
   React.useEffect(() => {
-    /** actividades */
-    getDatosDeRegistroNuevaActividad()
-      .then((response: any) => {
-        setCategorias(response.data.tipos_y_subtipos.subtipos);
-        setSubCategorias(response.data.sub_categorias_actividades);
-        setTiposPagoAnticipado(response.data.tipos_pago_anticipado);
-        setPoliticasDeCancelacion(response.data.politicas_cancelacion);
-        setMetodosDePago(response.data.metodos_pago);
-        setDificultades(response.data.dificultad_actividades);
-      })
-      .then(() => {
-        getDatosRegistrados();
-      })
-      .catch(() => {});
-
     /** ubicaciones */
     getUbicaciones().then((response) => {
       setProvincias(response.data.ubicaciones.provincias);
@@ -226,13 +200,14 @@ const ActividadProvider = ({
     });
   }, []);
 
+  React.useEffect(() => {
+    setPuedeRegistrar(actividad.actividadEsCompleta);
+  }, [actividad.actividadEsCompleta]);
+
   /** Handlers */
   const actualizar = () => getDatosRegistrados();
 
-  /** actividades */
-  const checkEsConGuia = () => {
-    setEsConGuia((prev: boolean) => !prev);
-  };
+  /** guías turísticos */
 
   const crearGuia = async ({
     nro_resolucion,
@@ -276,15 +251,6 @@ const ActividadProvider = ({
   const eliminarGuia = async (idGuia: number) => {
     try {
       await eliminarGuiaService({ id_guia: idGuia, id_oferta: idOferta });
-    } catch (error) {
-      throw new Error((error as Error).message);
-    }
-  };
-
-  const guardarActividad = async (body: TBodyGuardarActividad) => {
-    try {
-      await guardarActividadService(body);
-      setIsDirty(true);
     } catch (error) {
       throw new Error((error as Error).message);
     }
@@ -376,21 +342,23 @@ const ActividadProvider = ({
     actualizar,
     isDirty,
     dirt,
+    puedeRegistrar,
 
-    /** activiadad */
-    categorias,
-    subCategorias,
-    tiposPagoAnticipado,
-    politicasDeCancelacion,
-    metodosDePago,
-    dificultades,
-    guardarActividad,
-    datosRegistradosActividad,
+    /** activiadad TODO: reemplazar por ...actividad cuando se consuma useActividadTab */
+    // categorias,
+    // subCategorias,
+    // tiposPagoAnticipado,
+    // politicasDeCancelacion,
+    // metodosDePago,
+    // dificultades,
+    // guardarActividad,
+    // datosRegistradosActividad,
+    // checkEsConGuia,
+    ...actividad,
 
     /** guias */
     guias,
-    esConGuia,
-    checkEsConGuia,
+    //esConGuia,
     crearGuia,
     modificarGuia,
     eliminarGuia,

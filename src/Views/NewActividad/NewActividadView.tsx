@@ -5,7 +5,7 @@ import {
   imagesOutline,
   locationOutline,
   personOutline,
-  walkOutline
+  walkOutline,
 } from "ionicons/icons";
 import { useState } from "react";
 import FormSideMenu, {
@@ -26,7 +26,7 @@ type TNewActividadView = {
 export default function NewActividadView(props: TNewActividadView) {
   const [segment, setSegment] = useState<string>("actividad-form");
 
-  const { datosRegistradosActividad } = useActividad();
+  const { puedeRegistrar } = useActividad();
 
   const router = useIonRouter();
 
@@ -89,17 +89,19 @@ export default function NewActividadView(props: TNewActividadView) {
               Volver
             </button>
           </Sidebar>
-          <div className="flex flex-col gap-2 w-fit p-4 border border-gray-200 rounded-md">
-            <div className="text-md font-bold text-gray-600">
-              ¡Ya podés registrar tu oferta!
+          {puedeRegistrar && (
+            <div className="flex flex-col gap-2 w-fit p-4 border border-gray-200 rounded-md">
+              <div className="text-md font-bold text-gray-600">
+                ¡Ya podés registrar tu oferta!
+              </div>
+              <div className="text-sm text-gray-600">
+                Todos los datos necesarios han sido registrados
+              </div>
+              <button className="viajero-button px-4 py-2 animate-pulse">
+                Registrar oferta
+              </button>
             </div>
-            <div className="text-sm text-gray-600">
-              Todos los datos necesarios han sido registrados
-            </div>
-            <button className="viajero-button px-4 py-2 animate-pulse">
-              Registrar oferta
-            </button>
-          </div>
+          )}
         </>
       )}
     >

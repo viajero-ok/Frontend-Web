@@ -1,18 +1,5 @@
 import * as React from "react";
 import {
-  actualizarEntrada as actualizarEntradaService,
-  actualizarHorario,
-  eliminarEntrada as eliminarEntradaService,
-  eliminarHorario,
-  obtenerDatosRegistradosHorariosyEntradas,
-  registrarEntrada,
-  registrarHorario,
-  TBodyActualizarEntrada,
-  TBodyActualizarHorario,
-  TBodyRegistrarEntrada,
-  TBodyRegistrarHorario,
-} from "../../../App/Actividades/TurnosyHorarios";
-import {
   eliminarImagenOfertaTuristica,
   guardarImagenOfertaTuristica,
   TBodyGuardarImagenOfertaTuristica,
@@ -20,6 +7,10 @@ import {
 import { LocalOrRemoteImage } from "../../../components/MultimediaUpload/ImageUploadProvider";
 import { ActividadTabContextValue, useActividadTab } from "./useActividadTab";
 import { GuiasTabContextValue, useGuiasTab } from "./useGuiasTab";
+import {
+  TurnosEntradasContextValue,
+  useTurnosEntradasTab,
+} from "./useTurnosEntradasTab";
 import { UbicacionContextValue, useUbicacionTab } from "./useUbicacionTab";
 
 type ActividadContextValue = {
@@ -33,21 +24,10 @@ type ActividadContextValue = {
   /** imagenes */
   imagenes: LocalOrRemoteImage[];
   setImagenes: React.Dispatch<React.SetStateAction<LocalOrRemoteImage[]>>;
-
-  /** turnos y entradas */
-  /** turnos */
-  turnos: any[];
-  agregarTurno: (body: TBodyRegistrarHorario) => Promise<any>;
-  actualizarTurno: (body: TBodyActualizarHorario) => Promise<void>;
-  eliminarTurno: (idHorario: number) => Promise<void>;
-  /** entradas */
-  entradas: any[];
-  agregarEntrada: (body: TBodyRegistrarEntrada) => Promise<void>;
-  actualizarEntrada: (body: TBodyActualizarEntrada) => Promise<void>;
-  eliminarEntrada: (idEntrada: number) => Promise<void>;
 } & ActividadTabContextValue &
   GuiasTabContextValue &
-  UbicacionContextValue;
+  UbicacionContextValue &
+  TurnosEntradasContextValue;
 
 const ActividadContext = React.createContext<ActividadContextValue>(
   {} as ActividadContextValue
@@ -69,15 +49,10 @@ const ActividadProvider = ({
   const actividad = useActividadTab({ idOferta });
   const guias = useGuiasTab({ idOferta });
   const ubicacion = useUbicacionTab({ idOferta });
+  const turnosEntradas = useTurnosEntradasTab({ idOferta });
 
   /** imagenes */
   const [imagenes, setImagenes] = React.useState<LocalOrRemoteImage[]>([]);
-
-  /** turnos y entradas */
-  /** turnos */
-  const [turnos, setTurnos] = React.useState<any[]>([]);
-  /** entradas */
-  const [entradas, setEntradas] = React.useState<any[]>([]);
 
   const getDatosRegistrados = () => {
     // obtenerDatosRegistradosActividad(idOferta)
@@ -102,13 +77,12 @@ const ActividadProvider = ({
     //     );
     //   })
     //   .catch(() => {});
-
-    obtenerDatosRegistradosHorariosyEntradas(idOferta)
-      .then((response) => {
-        setTurnos(response.data.datos_horarios_entradas.horarios_turnos);
-        setEntradas(response.data.datos_horarios_entradas.entradas);
-      })
-      .catch(() => {});
+    // obtenerDatosRegistradosHorariosyEntradas(idOferta)
+    //   .then((response) => {
+    //     setTurnos(response.data.datos_horarios_entradas.horarios_turnos);
+    //     setEntradas(response.data.datos_horarios_entradas.entradas);
+    //   })
+    //   .catch(() => {});
   };
 
   React.useEffect(() => {
@@ -138,58 +112,6 @@ const ActividadProvider = ({
     }
   };
 
-  /** turnos y entradas */
-  /** turnos */
-  const agregarTurno = async (body: TBodyRegistrarHorario) => {
-    try {
-      const response = (await registrarHorario(body)).data;
-      return response.id_horario;
-    } catch (error) {
-      throw new Error((error as Error).message);
-    }
-  };
-
-  const actualizarTurno = async (body: TBodyActualizarHorario) => {
-    try {
-      await actualizarHorario(body);
-    } catch (error) {
-      throw new Error((error as Error).message);
-    }
-  };
-
-  const eliminarTurno = async (idHorario: number) => {
-    try {
-      await eliminarHorario(idHorario);
-    } catch (error) {
-      throw new Error((error as Error).message);
-    }
-  };
-
-  /** entradas */
-  const agregarEntrada = async (body: TBodyRegistrarEntrada) => {
-    try {
-      await registrarEntrada(body);
-    } catch (error) {
-      throw new Error((error as Error).message);
-    }
-  };
-
-  const actualizarEntrada = async (body: TBodyActualizarEntrada) => {
-    try {
-      await actualizarEntradaService(body);
-    } catch (error) {
-      throw new Error((error as Error).message);
-    }
-  };
-
-  const eliminarEntrada = async (idEntrada: number) => {
-    try {
-      await eliminarEntradaService(idEntrada);
-    } catch (error) {
-      throw new Error((error as Error).message);
-    }
-  };
-
   const context: ActividadContextValue = {
     idOferta,
     actualizar,
@@ -200,22 +122,11 @@ const ActividadProvider = ({
     ...actividad,
     ...guias,
     ...ubicacion,
+    ...turnosEntradas,
 
     /** imagenes */
     imagenes,
     setImagenes,
-
-    /** turnos y entradas */
-    /** turnos */
-    turnos,
-    agregarTurno,
-    actualizarTurno,
-    eliminarTurno,
-    /** entradas */
-    entradas,
-    agregarEntrada,
-    actualizarEntrada,
-    eliminarEntrada,
   };
   return (
     <ActividadContext.Provider value={context}>

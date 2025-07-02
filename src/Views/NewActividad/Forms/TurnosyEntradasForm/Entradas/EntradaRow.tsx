@@ -22,7 +22,7 @@ export default function EntradaRow({ entrada }: { entrada: any }) {
   const [isDirty, setIsDirty] = useState<boolean>(false);
 
   const { entradaSchema } = useEntrada();
-  const { idOferta, eliminarEntrada, actualizarEntrada, actualizar } =
+  const { idOferta, eliminarEntrada, actualizarEntrada, actualizarTurnosEntradas } =
     useActividad();
   const { toast } = useToast();
 
@@ -38,7 +38,7 @@ export default function EntradaRow({ entrada }: { entrada: any }) {
           variant: "success",
           title: "Entrada eliminada",
         });
-        actualizar();
+        actualizarTurnosEntradas();
       })
       .catch(() => {});
   };
@@ -54,7 +54,7 @@ export default function EntradaRow({ entrada }: { entrada: any }) {
           variant: "success",
           title: "Entrada actualizada",
         });
-        actualizar();
+        actualizarTurnosEntradas();
         setEditar(false);
       })
       .catch(() => {});

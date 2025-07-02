@@ -23,7 +23,7 @@ export default function EntradaNueva({
   setAgregarEntrada: Dispatch<SetStateAction<boolean>>;
 }) {
   const { entradaSchema } = useEntrada();
-  const { idOferta, agregarEntrada, actualizar } = useActividad();
+  const { idOferta, agregarEntrada, actualizarTurnosEntradas } = useActividad();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof entradaSchema>>({
@@ -38,7 +38,7 @@ export default function EntradaNueva({
           variant: "success",
           title: "Entrada registrada",
         });
-        actualizar();
+        actualizarTurnosEntradas();
         setAgregarEntrada(false);
       })
       .catch(() => {});

@@ -47,7 +47,7 @@ export default function NewTurno({ cerrar }: { cerrar: () => void }) {
   const [errors, setErrors] = useState<any[]>([]);
   const [allDays, setAllDays] = useState<boolean>(false);
 
-  const { idOferta, actualizar, agregarTurno } = useActividad();
+  const { idOferta, actualizarTurnosEntradas, agregarTurno } = useActividad();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -148,7 +148,7 @@ export default function NewTurno({ cerrar }: { cerrar: () => void }) {
           variant: "success",
           title: "Turno creado.",
         });
-        actualizar();
+        actualizarTurnosEntradas();
         cerrar();
       })
       .catch(() => {

@@ -47,14 +47,14 @@ export default function TurnosRow({ turno }: { turno: any }) {
   const [sinCupo, setSinCupo] = useState<boolean>(false);
   const [aplicaTodosLosDias, setAplicaTodosLosDias] = useState<boolean>(false);
 
-  const { idOferta, actualizar, actualizarTurno, eliminarTurno } =
+  const { idOferta, actualizarTurnosEntradas, actualizarTurno, eliminarTurno } =
     useActividad();
   const { toast } = useToast();
 
   const handleEliminar = () => {
     eliminarTurno(turno.id_horario)
       .then(() => {
-        actualizar();
+        actualizarTurnosEntradas();
         toast({
           variant: "success",
           title: "Turno eliminado",
@@ -190,7 +190,7 @@ export default function TurnosRow({ turno }: { turno: any }) {
           variant: "success",
           title: "Turno actualizado.",
         });
-        actualizar();
+        actualizarTurnosEntradas();
         setEditar(false);
       })
       .catch(() => {

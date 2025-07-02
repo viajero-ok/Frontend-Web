@@ -75,6 +75,7 @@ export default function UbicacionForm(props: TUbicacionForm) {
     ubicacionesDomicilio,
     ubicacionEstablecimiento,
     guardarUbicacion,
+    actualizarUbicacion,
     datosRegistradosUbicacion,
   } = useActividad();
 
@@ -105,6 +106,7 @@ export default function UbicacionForm(props: TUbicacionForm) {
           variant: "success",
           title: "Datos de ubicación guardados",
         });
+        actualizarUbicacion();
       })
       .catch(() => {});
   };
@@ -119,6 +121,7 @@ export default function UbicacionForm(props: TUbicacionForm) {
           variant: "success",
           title: "Dato de ubicación guardados",
         });
+        actualizarUbicacion();
       })
       .catch(() => {});
   };

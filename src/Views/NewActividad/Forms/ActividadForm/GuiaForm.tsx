@@ -43,7 +43,7 @@ const GuiaRow = ({
   const [editar, setEditar] = useState<boolean>(false);
 
   const { modal, setOpen } = useModal();
-  const { idOferta, actualizar } = useActividad();
+  const { idOferta, actualizarGuias } = useActividad();
 
   const formEditar = useForm<z.infer<typeof editarGuiaSchema>>({
     resolver: zodResolver(editarGuiaSchema),
@@ -58,7 +58,7 @@ const GuiaRow = ({
   const handleGuardar = (values: z.infer<typeof editarGuiaSchema>) => {
     modificarGuia({ ...values, id_oferta: idOferta })
       .then(() => {
-        actualizar();
+        actualizarGuias();
         setEditar(false);
       })
       .catch((error) => {
@@ -182,7 +182,7 @@ export default function GuiaForm() {
   const [agregarRow, setAgregarRow] = useState<boolean>(false);
 
   const {
-    actualizar,
+    actualizarGuias,
     guias,
     esConGuia,
     checkEsConGuia,
@@ -201,7 +201,7 @@ export default function GuiaForm() {
     crearGuia(values)
       .then(() => {
         setOpen(false);
-        actualizar();
+        actualizarGuias();
       })
       .catch((error) => {
         modal({
@@ -260,7 +260,7 @@ export default function GuiaForm() {
             <>
               <button
                 onClick={() => {
-                  actualizar();
+                  actualizarGuias();
                   setOpen(false);
                 }}
                 className="viajero-button px-4 py-2 bg-green-400! hover:bg-green-400/90!"

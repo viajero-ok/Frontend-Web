@@ -21,6 +21,9 @@ export const modificarGuia = async (guia: TGuia) => {
   return await AUTH_API.patch(`/actividades/modificar-guia`, guia);
 };
 
+export const obtenerGuias = async (idOferta: string) =>
+  await AUTH_API.get(`/actividades/obtener-guias/${idOferta}`);
+
 type TBodyRegistrarNuevaActividad = {
   id_tipo_oferta: number;
   id_sub_tipo_oferta?: number;

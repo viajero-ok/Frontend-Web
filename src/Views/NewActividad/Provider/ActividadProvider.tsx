@@ -12,22 +12,19 @@ import {
   useTurnosEntradasTab,
 } from "./useTurnosEntradasTab";
 import { UbicacionContextValue, useUbicacionTab } from "./useUbicacionTab";
+import { ImagenesContextValue, useImagenesTab } from "./useImagenesTab";
 
 type ActividadContextValue = {
   /** commons */
   idOferta: string;
-  actualizar: () => void;
   isDirty: boolean;
   dirt: () => void;
   puedeRegistrar: boolean;
-
-  /** imagenes */
-  imagenes: LocalOrRemoteImage[];
-  setImagenes: React.Dispatch<React.SetStateAction<LocalOrRemoteImage[]>>;
 } & ActividadTabContextValue &
   GuiasTabContextValue &
   UbicacionContextValue &
-  TurnosEntradasContextValue;
+  TurnosEntradasContextValue &
+  ImagenesContextValue;
 
 const ActividadContext = React.createContext<ActividadContextValue>(
   {} as ActividadContextValue
@@ -50,83 +47,23 @@ const ActividadProvider = ({
   const guias = useGuiasTab({ idOferta });
   const ubicacion = useUbicacionTab({ idOferta });
   const turnosEntradas = useTurnosEntradasTab({ idOferta });
-
-  /** imagenes */
-  const [imagenes, setImagenes] = React.useState<LocalOrRemoteImage[]>([]);
-
-  const getDatosRegistrados = () => {
-    // obtenerDatosRegistradosActividad(idOferta)
-    //   .then((response) => {
-    //     setGuias(response.data.datos_actividad.guias);
-    //     const { datos_basicos, metodos_pago } = response.data.datos_actividad;
-    //     setDatosRegistradosActividad({
-    //       ...datos_basicos,
-    //       metodos_pago,
-    //       bl_con_guia: datos_basicos.bl_con_guia == 1 ? true : false,
-    //     });
-    //     setEsConGuia(datos_basicos.bl_con_guia == 1 ? true : false);
-    //     setImagenes(
-    //       response.data.imagenes.map((i: any) => ({
-    //         getId: () => i.id_imagen,
-    //         getNombre: () => i.nombre,
-    //         render: () => renderRemoteImage(`data:image/png;base64,${i.datos}`),
-    //         isRemote: () => true,
-    //         getDatos: () => i.datos,
-    //         getSize: () => i.datos.length,
-    //       }))
-    //     );
-    //   })
-    //   .catch(() => {});
-    // obtenerDatosRegistradosHorariosyEntradas(idOferta)
-    //   .then((response) => {
-    //     setTurnos(response.data.datos_horarios_entradas.horarios_turnos);
-    //     setEntradas(response.data.datos_horarios_entradas.entradas);
-    //   })
-    //   .catch(() => {});
-  };
+  const imagenes = useImagenesTab({ idOferta });
 
   React.useEffect(() => {
     setPuedeRegistrar(actividad.actividadEsCompleta);
   }, [actividad.actividadEsCompleta]);
 
-  /** Handlers */
-  const actualizar = () => getDatosRegistrados();
-
-  /** imagenes */
-  const guardarImagen = async (body: TBodyGuardarImagenOfertaTuristica) => {
-    try {
-      return await guardarImagenOfertaTuristica(body);
-    } catch (error) {
-      throw new Error((error as Error).message);
-    }
-  };
-
-  const eliminarImagen = async (idImagen: number) => {
-    try {
-      await eliminarImagenOfertaTuristica(idImagen);
-      setImagenes((prev: any[]) => [
-        ...prev.filter((i: any) => i.id_imagen != idImagen),
-      ]);
-    } catch (error) {
-      throw new Error((error as Error).message);
-    }
-  };
-
   const context: ActividadContextValue = {
     idOferta,
-    actualizar,
     isDirty,
     dirt,
     puedeRegistrar,
 
     ...actividad,
     ...guias,
+    ...imagenes,
     ...ubicacion,
     ...turnosEntradas,
-
-    /** imagenes */
-    imagenes,
-    setImagenes,
   };
   return (
     <ActividadContext.Provider value={context}>

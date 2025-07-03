@@ -70,3 +70,6 @@ export const obtenerUbicacionEstablecimiento = async (id_oferta: string) =>
   await AUTH_API.get(
     `/actividades/obtener-ubicacion-establecimiento/${id_oferta}`
   );
+
+export const obtenerImagenesActividad = async (id_oferta: string) =>
+  await AUTH_API.get(`/actividades/obtener-imagenes/${id_oferta}`);

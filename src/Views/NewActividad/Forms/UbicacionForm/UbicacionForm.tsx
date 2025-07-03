@@ -24,24 +24,24 @@ import { useActividad } from "../../Provider/ActividadProvider";
 import { useDomicilioSelection } from "../../../../components/Domicilio/useDomicilioSelection";
 import { useToast } from "../../../../components/ui/Toast/Toast";
 
-const formSchema = z.object({
-  calle: z.string({ message: "El campo es requerido" }),
-  sin_numero: z.boolean().optional(),
-  numero: z.string({ message: "El campo es requerido" }),
-  id_localidad: z.number({ message: "El campo es requerido" }),
-  id_departamento: z.number({ message: "El campo es requerido" }),
-  id_provincia: z.number({ message: "El campo es requerido" }),
-  ubicacion: z.object(
-    {
-      latitud: z.number(),
-      longitud: z.number(),
-    },
-    {
-      message: "La ubicación es requerida.",
-    }
-  ),
-  observaciones: z.string().optional(),
-});
+// const formSchema = z.object({
+//   calle: z.string({ message: "El campo es requerido" }),
+//   sin_numero: z.boolean().optional(),
+//   numero: z.string({ message: "El campo es requerido" }),
+//   id_localidad: z.number({ message: "El campo es requerido" }),
+//   id_departamento: z.number({ message: "El campo es requerido" }),
+//   id_provincia: z.number({ message: "El campo es requerido" }),
+//   ubicacion: z.object(
+//     {
+//       latitud: z.number(),
+//       longitud: z.number(),
+//     },
+//     {
+//       message: "La ubicación es requerida.",
+//     }
+//   ),
+//   observaciones: z.string().optional(),
+// });
 
 type TUbicacionForm = {
   idOferta: string;
@@ -61,14 +61,14 @@ export default function UbicacionForm(props: TUbicacionForm) {
     });
   };
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    mode: "onSubmit",
-    defaultValues: {
-      sin_numero: false,
-    },
-  });
-  const formWatch = form.watch();
+  // const form = useForm<z.infer<typeof formSchema>>({
+  //   resolver: zodResolver(formSchema),
+  //   mode: "onSubmit",
+  //   defaultValues: {
+  //     sin_numero: false,
+  //   },
+  // });
+  // const formWatch = form.watch();
 
   const {
     idOferta,
@@ -77,7 +77,13 @@ export default function UbicacionForm(props: TUbicacionForm) {
     guardarUbicacion,
     actualizarUbicacion,
     datosRegistradosUbicacion,
+    ubicacionSchema,
+    ubicacionForm,
   } = useActividad();
+
+  const formSchema = ubicacionSchema;
+  const form = ubicacionForm;
+  const formWatch = form.watch();
 
   const { provincias, departamentos, localidades } = useDomicilioSelection({
     provinciaSelection: formWatch.id_provincia,

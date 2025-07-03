@@ -50,8 +50,14 @@ const ActividadProvider = ({
   const imagenes = useImagenesTab({ idOferta });
 
   React.useEffect(() => {
-    setPuedeRegistrar(actividad.actividadEsCompleta);
-  }, [actividad.actividadEsCompleta]);
+    setPuedeRegistrar(
+      // actividad.actividadEsCompleta &&
+      (actividad.esConGuia ? guias.guias.length > 0 : true) &&
+        imagenes.imagenes.length > 0 &&
+        ubicacion.ubicacionEsCompleta &&
+        (turnosEntradas.turnos.length > 0 || turnosEntradas.entradas.length > 0)
+    );
+  }, [actividad, guias, imagenes, ubicacion]);
 
   const context: ActividadContextValue = {
     idOferta,

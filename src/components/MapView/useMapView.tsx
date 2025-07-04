@@ -60,7 +60,7 @@ const useMapView = (props?: TMapContextConfig) => {
     setLastMarkerId((prev: number) => newId);
     return newId;
   };
-
+  
   const context: MapViewContextValue = {
     /** Map parameters, setted when the view is created */
     autoLoc:

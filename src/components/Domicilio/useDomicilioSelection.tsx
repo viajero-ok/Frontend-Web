@@ -33,36 +33,34 @@ type DomicilioSelectionContextValue = TUbicaciones & {
 };
 
 const useDomicilioSelection = ({
+  ubicaciones,
   provinciaSelection,
   departamentoSelection,
   localidadSelection,
 }: {
+  ubicaciones: {
+    provincias: TProvincia[];
+    departamentos: TDepartamento[];
+    localidades: TLocalidad[];
+  };
   provinciaSelection: number;
   departamentoSelection: number;
   localidadSelection: number;
 }) => {
-  const [ubicaciones, setUbicaciones] = React.useState<any>();
-  const [provincias, setProvincias] = React.useState<TProvincia[]>([]);
+  const [provincias, setProvincias] = React.useState<TProvincia[]>(
+    ubicaciones.provincias
+  ); /** Esto podria ser `const provincias = ...` pero se deja así por si luego se desea agregar manejo de paises */
   const [departamentos, setDepartamentos] = React.useState<TDepartamento[]>([]);
   const [localidades, setLocalidades] = React.useState<TLocalidad[]>([]);
   const [provinciaSelected, setProvinciaSelected] = React.useState<
     number | null
-  >(provinciaSelection ?? null);
+  >(null);
   const [departamentoSelected, setDepartamentoSelected] = React.useState<
     number | null
   >(departamentoSelection ?? null);
   const [localidadSelected, setLocalidadSelected] = React.useState<
     number | null
   >(localidadSelection ?? null);
-
-  React.useEffect(() => {
-    getUbicaciones()
-      .then((response: any) => {
-        setUbicaciones(response.data.ubicaciones);
-        setProvincias(response.data.ubicaciones.provincias);
-      })
-      .catch((error) => {});
-  }, []);
 
   React.useEffect(
     () => selectProvincia(provinciaSelection ?? null),

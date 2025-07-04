@@ -18,6 +18,7 @@ import TurnosyEntradasForm from "./Forms/TurnosyEntradasForm/TurnosyEntradasForm
 import UbicacionForm from "./Forms/UbicacionForm/UbicacionForm";
 import { useActividad } from "./Provider/ActividadProvider";
 import Imagenes from "./Forms/Imagenes/Imagenes";
+import { useModal } from "../../components/ui/Modal/Modal";
 
 type TNewActividadView = {
   idOferta: string;
@@ -26,9 +27,61 @@ type TNewActividadView = {
 export default function NewActividadView(props: TNewActividadView) {
   const [segment, setSegment] = useState<string>("actividad-form");
 
-  const { puedeRegistrar } = useActividad();
+  const { puedeRegistrar, registrar } = useActividad();
+  const { modal, setOpen } = useModal();
 
   const router = useIonRouter();
+
+  const handleRegistrar = () => {
+    if (!puedeRegistrar) return;
+    registrar()
+      .then(() => {
+        modal({
+          variant: "success",
+          title: "Actividad registrada",
+          description: "La actividad fue registrada con éxito.",
+          actions: (
+            <>
+              <button
+                onClick={() => {
+                  router && router.push("/my-offers");
+                  setOpen(false);
+                }}
+                className="viajero-button px-4 py-2 bg-green-400! hover:bg-green-400/90! text-white!"
+              >
+                Aceptar
+              </button>
+            </>
+          ),
+          canDismiss: false,
+        });
+      })
+      .catch(() => {});
+  };
+
+  const handleConfirmarRegistrar = () => {
+    modal({
+      variant: "default",
+      title: "Registrar actividad",
+      description: "Confirmá el registro de la actividad",
+      actions: (
+        <div className="flex flex-row w-full justify-between">
+          <button
+            onClick={() => setOpen(false)}
+            className="viajero-button-ghost px-4 py-2"
+          >
+            cancelar
+          </button>
+          <button
+            onClick={() => handleRegistrar()}
+            className="viajero-button px-4 py-2"
+          >
+            Registrar
+          </button>
+        </div>
+      ),
+    });
+  };
 
   return (
     <FormSideMenu
@@ -97,7 +150,10 @@ export default function NewActividadView(props: TNewActividadView) {
               <div className="text-sm text-gray-600">
                 Todos los datos necesarios han sido registrados
               </div>
-              <button className="viajero-button px-4 py-2 animate-pulse">
+              <button
+                onClick={() => handleConfirmarRegistrar()}
+                className="viajero-button px-4 py-2 animate-pulse"
+              >
                 Registrar oferta
               </button>
             </div>

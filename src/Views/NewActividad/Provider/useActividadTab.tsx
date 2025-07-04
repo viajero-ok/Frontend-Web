@@ -76,6 +76,7 @@ const useActividadTab = ({ idOferta }: { idOferta: string }) => {
       bl_con_guia: false,
     },
   });
+  const formWatch = actividadForm.watch();
 
   const actualizarActividadTab = () => {
     obtenerDatosRegistradosActividad(idOferta)
@@ -130,7 +131,7 @@ const useActividadTab = ({ idOferta }: { idOferta: string }) => {
     }
 
     setEsCompleto(actividadSchema.safeParse(actividadForm.getValues()).success);
-  }, [actividadForm]);
+  }, [formWatch]);
 
   const guardarActividad = async (body: TBodyGuardarActividad) => {
     try {

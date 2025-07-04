@@ -13,6 +13,7 @@ import {
 } from "./useTurnosEntradasTab";
 import { UbicacionContextValue, useUbicacionTab } from "./useUbicacionTab";
 import { ImagenesContextValue, useImagenesTab } from "./useImagenesTab";
+import { finalizarRegistroActividad } from "../../../App/Actividades/Actividad";
 
 type ActividadContextValue = {
   /** commons */
@@ -20,6 +21,7 @@ type ActividadContextValue = {
   isDirty: boolean;
   dirt: () => void;
   puedeRegistrar: boolean;
+  registrar: () => Promise<any>;
 } & ActividadTabContextValue &
   GuiasTabContextValue &
   UbicacionContextValue &
@@ -51,19 +53,28 @@ const ActividadProvider = ({
 
   React.useEffect(() => {
     setPuedeRegistrar(
-      // actividad.actividadEsCompleta &&
-      (actividad.esConGuia ? guias.guias.length > 0 : true) &&
+      actividad.actividadEsCompleta &&
+        (actividad.esConGuia ? guias.guias.length > 0 : true) &&
         imagenes.imagenes.length > 0 &&
         ubicacion.ubicacionEsCompleta &&
         (turnosEntradas.turnos.length > 0 || turnosEntradas.entradas.length > 0)
     );
-  }, [actividad, guias, imagenes, ubicacion]);
+  }, [actividad, guias, imagenes, ubicacion, turnosEntradas]);
+
+  const registrar = async () => {
+    try {
+      await finalizarRegistroActividad(idOferta);
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
 
   const context: ActividadContextValue = {
     idOferta,
     isDirty,
     dirt,
     puedeRegistrar,
+    registrar,
 
     ...actividad,
     ...guias,

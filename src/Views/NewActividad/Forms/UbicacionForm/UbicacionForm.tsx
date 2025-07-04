@@ -86,6 +86,7 @@ export default function UbicacionForm(props: TUbicacionForm) {
   const formWatch = form.watch();
 
   const { provincias, departamentos, localidades } = useDomicilioSelection({
+    ubicaciones: ubicacionesDomicilio,
     provinciaSelection: formWatch.id_provincia,
     departamentoSelection: formWatch.id_departamento,
     localidadSelection: formWatch.id_localidad,
@@ -148,20 +149,6 @@ export default function UbicacionForm(props: TUbicacionForm) {
 
   useEffect(() => {
     if (!datosRegistradosUbicacion) return;
-    form.reset({
-      calle: datosRegistradosUbicacion.nombre_calle,
-      numero: datosRegistradosUbicacion.numero,
-      id_provincia: datosRegistradosUbicacion.id_provincia,
-      id_departamento: datosRegistradosUbicacion.id_departamento,
-      id_localidad: datosRegistradosUbicacion.id_localidad,
-      ubicacion: {
-        latitud: datosRegistradosUbicacion.latitud,
-        longitud: datosRegistradosUbicacion.longitud,
-      },
-      sin_numero: datosRegistradosUbicacion.sin_numero == "1" ? true : false,
-      observaciones: datosRegistradosUbicacion.observacion,
-    });
-
     if (
       !datosRegistradosUbicacion.latitud ||
       !datosRegistradosUbicacion.longitud
@@ -332,13 +319,7 @@ export default function UbicacionForm(props: TUbicacionForm) {
                 Usar ubicación del establecimiento
               </Check>
             )}
-            <div className="flex flex-row justify-between">
-              <button
-                className="viajero-button-ghost px-4 py-2"
-                onClick={() => router && router.push("/my-offers")}
-              >
-                Volver
-              </button>
+            <div className="flex flex-row justify-end">
               <button
                 type={ubiEstablecimiento ? "button" : "submit"}
                 onClick={() => ubiEstablecimiento && onSubmitWithoutData()}

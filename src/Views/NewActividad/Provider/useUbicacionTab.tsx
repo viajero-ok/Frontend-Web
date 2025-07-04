@@ -81,6 +81,20 @@ const useUbicacionTab = ({ idOferta }: { idOferta: string }) => {
     obtenerDatosRegistradosUbicacion(idOferta)
       .then((response) => {
         setDatosRegistradosUbicacion(response.data.datos_ubicacion);
+        ubicacionForm.reset({
+          calle: response.data.datos_ubicacion.nombre_calle,
+          numero: response.data.datos_ubicacion.numero,
+          id_provincia: response.data.datos_ubicacion.id_provincia,
+          id_departamento: response.data.datos_ubicacion.id_departamento,
+          id_localidad: response.data.datos_ubicacion.id_localidad,
+          ubicacion: {
+            latitud: parseFloat(response.data.datos_ubicacion.latitud),
+            longitud: parseFloat(response.data.datos_ubicacion.longitud),
+          },
+          sin_numero:
+            response.data.datos_ubicacion.sin_numero == "1" ? true : false,
+          observaciones: response.data.datos_ubicacion.observacion,
+        });
       })
       .catch(() => {});
   };
@@ -94,12 +108,12 @@ const useUbicacionTab = ({ idOferta }: { idOferta: string }) => {
   };
 
   React.useEffect(() => {
-    actualizarUbicacion();
-
     getUbicaciones().then((response) => {
       setProvincias(response.data.ubicaciones.provincias);
       setDepartamentos(response.data.ubicaciones.departamentos);
       setLocalidades(response.data.ubicaciones.localidades);
+
+      actualizarUbicacion();
     });
   }, []);
 

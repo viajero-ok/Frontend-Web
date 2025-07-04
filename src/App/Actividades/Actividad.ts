@@ -73,3 +73,6 @@ export const obtenerUbicacionEstablecimiento = async (id_oferta: string) =>
 
 export const obtenerImagenesActividad = async (id_oferta: string) =>
   await AUTH_API.get(`/actividades/obtener-imagenes/${id_oferta}`);
+
+export const finalizarRegistroActividad = async (id_oferta: string) =>
+  await AUTH_API.post(`/actividades/registrar-actividad/${id_oferta}`);

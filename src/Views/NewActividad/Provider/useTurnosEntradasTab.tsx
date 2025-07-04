@@ -43,7 +43,7 @@ const useTurnosEntradasTab = ({ idOferta }: { idOferta: string }) => {
   };
 
   React.useEffect(() => {
-    actualizarTurnosEntradas;
+    actualizarTurnosEntradas();
   }, []);
 
   /** turnos */

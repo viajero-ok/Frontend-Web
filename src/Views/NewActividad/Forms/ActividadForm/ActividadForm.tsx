@@ -356,8 +356,7 @@ export default function ActividadForm(props: TActividadForm) {
               </Check>
             ))}
           </div>
-          <div className="flex flex-row w-full justify-between mt-4">
-            <button className="viajero-button-ghost px-4 py-2">Volver</button>
+          <div className="flex flex-row w-full justify-end mt-4">
             <button type="submit" className="viajero-button px-4 py-2">
               Guardar
             </button>

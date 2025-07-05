@@ -1,13 +1,5 @@
-import { IonIcon, IonModal, IonToast } from "@ionic/react";
-import {
-  alertCircle,
-  checkmark,
-  checkmarkCircle,
-  checkmarkCircleOutline,
-  close,
-  closeSharp,
-  informationCircle,
-} from "ionicons/icons";
+import { IonIcon } from "@ionic/react";
+import { checkmarkCircle, close } from "ionicons/icons";
 import React, { useEffect } from "react";
 import { cn } from "../Form/Field";
 
@@ -124,40 +116,45 @@ export const Toast = ({
   canDismiss,
   dismissIn,
 }: TToastProps) => {
-  const [time, setTime] = React.useState<number | null>(null);
-
   useEffect(() => {
-    setTime(dismissIn ?? 4);
-    setTimeout(() => setOpen(false), dismissIn ? dismissIn * 1000-400 : 4000-400);
-  }, []);
+    if (!open) return;
+
+    setTimeout(
+      () => setOpen(false),
+      dismissIn ? dismissIn * 1000 - 400 : 4000 - 400
+    );
+  }, [open]);
 
   return (
     <div
       onClick={() => setOpen(false)}
       className={cn(
-        "flex flex-col p-4 pb-2 fixed bottom-4 right-8 z-50 border border-[#bbb] rounded-md text-gray-600 shadow-md",
-        "hover:shadow-md cursor-pointer group transition-opacity duration-400",
-        open ? "opacity-100" : "opacity-0",
-        variant == "success" ? "bg-white hover:border-green-400" : ""
+        "flex flex-row gap-2 p-2 w-1/2 fixed bottom-0 left-1/2 -translate-x-1/2 z-50 border border-[#bbb] rounded-xl shadow-lg",
+        "hover:shadow-md cursor-pointer group transition-all duration-400",
+        "bg-white",
+        variant == "success" ? "hover:border-green-400 bg-white" : "",
+        open
+          ? "opacity-100 -translate-y-[12pt]"
+          : "opacity-0 -translate-y-[0pt]"
       )}
     >
-      <div className="text-transparent text-xs group-hover:text-gray-400 absolute top-0.5 right-2">
-        x
-      </div>
-      <div className="flex flex-row items-center gap-2">
-        <IonIcon
-          className="text-green-400 text-xl"
-          icon={checkmarkCircleOutline}
-        />
-        <span>{title}</span>
-      </div>
       <div
-        className={cn("flex flex-row h-1.5 bg-green-200 mt-0.5 transition-all")}
-        style={{
-          width: !time ? "100%" : "0%",
-          transitionDuration: `${time}s`,
-        }}
-      />
+        className={cn(
+          variant == "success"
+            ? "bg-green-400 rounded-2xl flex items-center justify-center px-2 aspect-square"
+            : ""
+        )}
+      >
+        {variant == "success" && (
+          <IonIcon className="text-white text-3xl" icon={checkmarkCircle} />
+        )}
+      </div>
+      <div className="flex flex-row gap-2 w-full p-2">
+        <div className="w-full text-lg text-gray-600">{title}</div>
+        <div className="w-fit aspect-square flex items-center justify-center rounded-md opacity-0 group-hover:opacity-100">
+          <IonIcon className="text-2xl text-gray-600" icon={close} />
+        </div>
+      </div>
     </div>
   );
 };

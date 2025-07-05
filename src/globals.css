@@ -9,6 +9,7 @@
   display: none;
 }
 
+
 ion-range::part(pin) {
   display: flex !important;
   opacity: 1 !important;

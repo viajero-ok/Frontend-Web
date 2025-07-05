@@ -153,3 +153,6 @@ export const eliminarImagenOfertaTuristica = async (idImagen: number) =>
   await AUTH_API.delete(
     `/ofertas-turisticas/eliminar-imagen-oferta-turistica/${idImagen}`
   );
+
+export const obtenerDatosBasicosOfertaTuristica = async (id_oferta: string) =>
+  await AUTH_API.get(`/ofertas-turisticas/obtener-datos-basicos/${id_oferta}`);

@@ -7,7 +7,7 @@ import {
   personOutline,
   walkOutline,
 } from "ionicons/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FormSideMenu, {
   Sidebar,
 } from "../../components/ui/FormSideMenu/FormSideMenu";
@@ -19,6 +19,7 @@ import UbicacionForm from "./Forms/UbicacionForm/UbicacionForm";
 import { useActividad } from "./Provider/ActividadProvider";
 import Imagenes from "./Forms/Imagenes/Imagenes";
 import { useModal } from "../../components/ui/Modal/Modal";
+import { obtenerDatosBasicosOfertaTuristica } from "../../App/Ofertas/Ofertas";
 
 type TNewActividadView = {
   idOferta: string;
@@ -26,8 +27,9 @@ type TNewActividadView = {
 };
 export default function NewActividadView(props: TNewActividadView) {
   const [segment, setSegment] = useState<string>("actividad-form");
+  const [idEstado, setIdEstado] = useState<number | null>(null);
 
-  const { puedeRegistrar, registrar } = useActividad();
+  const { idOferta, puedeRegistrar, registrar } = useActividad();
   const { modal, setOpen } = useModal();
 
   const router = useIonRouter();
@@ -82,6 +84,16 @@ export default function NewActividadView(props: TNewActividadView) {
       ),
     });
   };
+
+  useEffect(() => {
+    obtenerDatosBasicosOfertaTuristica(idOferta)
+      .then((response) => {
+        if (!response.data) return;
+        if (!response.data.estado) return;
+        setIdEstado(response.data.id_estado);
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <FormSideMenu
@@ -142,7 +154,7 @@ export default function NewActividadView(props: TNewActividadView) {
               Volver
             </button>
           </Sidebar>
-          {puedeRegistrar && (
+          {puedeRegistrar && idEstado == 1 && (
             <div className="flex flex-col gap-2 w-fit p-4 border border-gray-200 rounded-md">
               <div className="text-md font-bold text-gray-600">
                 ¡Ya podés registrar tu oferta!

@@ -98,15 +98,9 @@ export default function ActividadForm(props: TActividadForm) {
     );
   }, [datosRegistradosActividad]);
 
-  const toastCtx = useToast();
-  const toast = toastCtx.toast;
-  const setToastOpen = toastCtx.setOpen;
+  const { toast } = useToast();
 
   const handleGuardar = (values: z.infer<typeof actividadSchema>) => {
-    toast({
-      variant: "success",
-      title: "Datos guardados",
-    });
     guardarActividad({
       ...values,
       id_oferta: idOferta,
@@ -121,6 +115,10 @@ export default function ActividadForm(props: TActividadForm) {
     })
       .then(() => {
         actualizarActividadTab();
+        toast({
+          variant: "success",
+          title: "Datos guardados",
+        });
       })
       .catch(() => {});
   };

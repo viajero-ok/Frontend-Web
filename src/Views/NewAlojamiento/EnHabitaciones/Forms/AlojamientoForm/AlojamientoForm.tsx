@@ -24,7 +24,7 @@ import {
 import { useAlojamientoEnHabitaciones } from "../../Provider/AlojamientoEnHabitacionesProvider";
 import HorariosCheckInOut from "./HorariosCheckInOut";
 import { useModal } from "../../../../../components/ui/Modal/Modal";
-import { THorariosCheckInCheckOutContext } from "../../Provider/useAlojamiento";
+import { THorariosCheckInCheckOutContext } from "../../Provider/useAlojamientoTab";
 
 const numeric = z
   .preprocess((val) => {

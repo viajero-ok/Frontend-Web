@@ -57,7 +57,7 @@ export type AlojamientoContextValue = {
   eliminarHorario: (id_oferta: string) => Promise<void>;
 };
 
-const useAlojamiento = ({ idOferta }: { idOferta: string }) => {
+const useAlojamientoTab = ({ idOferta }: { idOferta: string }) => {
   const [datosRegistradosAlojamiento, setDatosRegistradosAlojamiento] =
     React.useState<TObtenerDatosRegistradosAlojamientoResponse>();
   const [datosRegistroAlojamiento, setDatosRegistroAlojamiento] =
@@ -234,4 +234,4 @@ const useAlojamiento = ({ idOferta }: { idOferta: string }) => {
   return context;
 };
 
-export { useAlojamiento };
+export { useAlojamientoTab };

@@ -1,17 +1,13 @@
 import { IonIcon } from "@ionic/react";
 import { chevronUp, trash } from "ionicons/icons";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { THorariosCheckInCheckOut } from "../../../../../App/Alojamientos/NuevoAlojamiento";
+import { useEffect, useState } from "react";
+import { UseFormReturn } from "react-hook-form";
 import { Check, CheckSection } from "../../../../../components/ui/Check/Check";
 import { cn } from "../../../../../components/ui/Form/Field";
 import { TimeInput } from "../../../../../components/ui/Input/Input";
-import { z } from "zod";
-import {
-  useAlojamientoEnHabitaciones,
-} from "../../Provider/AlojamientoEnHabitacionesProvider";
 import { useModal } from "../../../../../components/ui/Modal/Modal";
-import { UseFormReturn } from "react-hook-form";
-import { THorariosCheckInCheckOutContext } from "../../Provider/useAlojamiento";
+import { useAlojamientoEnHabitaciones } from "../../Provider/AlojamientoEnHabitacionesProvider";
+import { THorariosCheckInCheckOutContext } from "../../Provider/useAlojamientoTab";
 
 const Row = ({
   index,
@@ -254,8 +250,14 @@ export default function HorariosCheckInOut({
         </button>
       </div>
       <div className="grid grid-cols-14 w-full mt-2 gap-2">
-        <CheckSection label="Check-In" className="col-span-2 h-[42pt] text-lg" />
-        <CheckSection label="Check-Out" className="col-span-2 h-[42pt] text-lg" />
+        <CheckSection
+          label="Check-In"
+          className="col-span-2 h-[42pt] text-lg"
+        />
+        <CheckSection
+          label="Check-Out"
+          className="col-span-2 h-[42pt] text-lg"
+        />
         <CheckSection label="Días" className="col-span-9 h-[42pt] text-lg" />
         <CheckSection label="" className="col-span-1 h-[42pt] text-lg" />
       </div>

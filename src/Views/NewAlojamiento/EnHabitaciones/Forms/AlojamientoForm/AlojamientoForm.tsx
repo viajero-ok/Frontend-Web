@@ -21,12 +21,10 @@ import {
   Select,
   SelectOption,
 } from "../../../../../components/ui/Select/Select";
-import {
-  THorariosCheckInCheckOutContext,
-  useAlojamientoEnHabitaciones,
-} from "../../Provider/AlojamientoEnHabitacionesProvider";
+import { useAlojamientoEnHabitaciones } from "../../Provider/AlojamientoEnHabitacionesProvider";
 import HorariosCheckInOut from "./HorariosCheckInOut";
 import { useModal } from "../../../../../components/ui/Modal/Modal";
+import { THorariosCheckInCheckOutContext } from "../../Provider/useAlojamiento";
 
 const numeric = z
   .preprocess((val) => {
@@ -82,7 +80,8 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
     }
     if (
       horarios.filter(
-        (horario: THorariosCheckInCheckOutContext) => horario.errors.length > 0
+        (horario: THorariosCheckInCheckOutContext) =>
+          horario.errors && horario.errors.length > 0
       ).length > 0
     )
       return;

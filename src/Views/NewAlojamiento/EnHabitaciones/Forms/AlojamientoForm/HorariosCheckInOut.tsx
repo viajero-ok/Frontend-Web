@@ -7,11 +7,11 @@ import { cn } from "../../../../../components/ui/Form/Field";
 import { TimeInput } from "../../../../../components/ui/Input/Input";
 import { z } from "zod";
 import {
-  THorariosCheckInCheckOutContext,
   useAlojamientoEnHabitaciones,
 } from "../../Provider/AlojamientoEnHabitacionesProvider";
 import { useModal } from "../../../../../components/ui/Modal/Modal";
 import { UseFormReturn } from "react-hook-form";
+import { THorariosCheckInCheckOutContext } from "../../Provider/useAlojamiento";
 
 const Row = ({
   index,
@@ -83,7 +83,7 @@ const Row = ({
   };
 
   return (
-    <div className="grid grid-cols-12 gap-2">
+    <div className="grid grid-cols-14 gap-2">
       <div className="col-span-2 flex flex-col gap-2 mt-2">
         <TimeInput
           className="h-[42pt]"
@@ -102,7 +102,7 @@ const Row = ({
           minuto={horario.check_out.minuto_check_out}
         />
       </div>
-      <div className="col-span-7 flex flex-row gap-2 mt-2 w-full">
+      <div className="col-span-9 flex flex-row gap-2 mt-2 w-full">
         <Check
           checked={
             horario.dias_semana.aplica_lunes || horario.aplica_todos_los_dias
@@ -253,10 +253,11 @@ export default function HorariosCheckInOut({
           Agregar nuevo
         </button>
       </div>
-      <div className="grid grid-cols-12 w-full mt-2 gap-2">
-        <CheckSection label="Check-In" className="col-span-2 h-[42pt]" />
-        <CheckSection label="Check-Out" className="col-span-2 h-[42pt]" />
-        <CheckSection label="Días" className="col-span-8 h-[42pt]" />
+      <div className="grid grid-cols-14 w-full mt-2 gap-2">
+        <CheckSection label="Check-In" className="col-span-2 h-[42pt] text-lg" />
+        <CheckSection label="Check-Out" className="col-span-2 h-[42pt] text-lg" />
+        <CheckSection label="Días" className="col-span-9 h-[42pt] text-lg" />
+        <CheckSection label="" className="col-span-1 h-[42pt] text-lg" />
       </div>
       {horarios.map(
         (horario: THorariosCheckInCheckOutContext, index: number) => (

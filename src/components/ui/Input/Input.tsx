@@ -136,13 +136,10 @@ const TimeInput = React.forwardRef<HTMLInputElement, any>(
             : refHours.current?.focus()
         }
         onChange={(e: any) => {
-          if (!props.onChange) return;
+          if (!props.set) return;
           const h = refHours.current?.value ?? "";
           const m = refMinutes.current?.value ?? "";
-          props.onChange({
-            ...e,
-            target: { ...e.target, value: `${h}:${m}` },
-          });
+          props.set(`${h}:${m}`);
         }}
       >
         <input

@@ -1,13 +1,8 @@
 import { useIonRouter } from "@ionic/react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { any, z } from "zod";
-import {
-  TBodyGuardarAlojamiento,
-  THorariosCheckInCheckOut,
-} from "../../../../../App/Alojamientos/NuevoAlojamiento";
+import { UseFormReturn } from "react-hook-form";
+import { z } from "zod";
+import { TBodyGuardarAlojamiento } from "../../../../../App/Alojamientos/NuevoAlojamiento";
 import { Check, CheckSection } from "../../../../../components/ui/Check/Check";
 import {
   Form,
@@ -17,78 +12,54 @@ import {
   FormMessage,
 } from "../../../../../components/ui/Form/Field";
 import { Input } from "../../../../../components/ui/Input/Input";
+import { useModal } from "../../../../../components/ui/Modal/Modal";
 import {
   Select,
   SelectOption,
 } from "../../../../../components/ui/Select/Select";
 import { useAlojamientoEnHabitaciones } from "../../Provider/AlojamientoEnHabitacionesProvider";
-import HorariosCheckInOut from "./HorariosCheckInOut";
-import { useModal } from "../../../../../components/ui/Modal/Modal";
 import { THorariosCheckInCheckOutContext } from "../../Provider/useAlojamientoTab";
-
-const numeric = z
-  .preprocess((val) => {
-    if (typeof val === "string" && /^[0-9]+$/.test(val)) {
-      return Number(val);
-    }
-    return val;
-  }, z.number({ message: "Debe ser un número" }))
-  .optional();
-
-const formSchema = z.object({
-  texto_observacion_canchas_deportes: z.string().optional(),
-  texto_observacion_normas: z.string().optional(),
-  texto_observacion_politica_garantia: z.string().optional(),
-
-  nombre_alojamiento: z.string({ message: "El campo es requerido." }),
-  descripcion_alojamiento: z.string({ message: "El campo es requerido." }),
-
-  id_politica_cancelacion: z.number({ message: "El campo es requerido." }),
-  plazo_dias_cancelacion: numeric,
-  solicita_garantia: z.boolean(),
-  monto_garantia: z.string().optional(),
-  id_tipo_pago_anticipado: z.number({ message: "El campo es requerido." }),
-  porcentaje_pago_anticipado: any(),
-  minimo_dias_estadia: numeric,
-
-  horarios: z.any(),
-});
+import HorariosCheckInOut from "../HorariosForm/HorariosCheckInOut";
 
 type TAlojamientoForm = {
   id: string;
 };
 export default function AlojamientoForm(props: TAlojamientoForm) {
-  const [formCaracteristicas, setFormCaracteristicas] = useState<number[]>([]);
-  const [formMetodosDePago, setFormMetodosDePago] = useState<number[]>([]);
   const router = useIonRouter();
 
   const { modal, setOpen } = useModal();
 
   const {
-    datosRegistradosAlojamiento,
-    horarios,
     datosRegistroAlojamiento,
     guardarAlojamiento,
+    alojamientoForm,
+    alojamientoSchema,
+    formCaracteristicas,
+    setFormCaracteristicas,
+    formMetodosDePago,
+    setFormMetodosDePago,
   } = useAlojamientoEnHabitaciones();
+  const form = alojamientoForm;
+  const formWatch = form.watch();
 
-  const handleGuardar = (values: z.infer<typeof formSchema>) => {
-    if (horarios.length == 0) {
-      form.setError("horarios", {
-        message: "Debe existir al menos un horario de Check-In y Check-Out",
-      });
-      return;
-    }
-    if (
-      horarios.filter(
-        (horario: THorariosCheckInCheckOutContext) =>
-          horario.errors && horario.errors.length > 0
-      ).length > 0
-    )
-      return;
+  const handleGuardar = (values: z.infer<typeof alojamientoSchema>) => {
+    // if (horarios.length == 0) {
+    //   form.setError("horarios", {
+    //     message: "Debe existir al menos un horario de Check-In y Check-Out",
+    //   });
+    //   return;
+    // }
+    // if (
+    //   horarios.filter(
+    //     (horario: THorariosCheckInCheckOutContext) =>
+    //       horario.errors && horario.errors.length > 0
+    //   ).length > 0
+    // )
+    //   return;
     let body: TBodyGuardarAlojamiento = {
       id_oferta: props.id,
-      caracteristicas: formCaracteristicas,
-      metodos_de_pago: formMetodosDePago,
+      caracteristicas: values.caracteristicas,
+      metodos_de_pago: values.metodosDePago,
       observaciones: {
         texto_observacion_comodidades_y_servicios_oferta: "",
         texto_observacion_canchas_deportes:
@@ -113,7 +84,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
           minimo_dias_estadia: Number(values.minimo_dias_estadia),
         },
       },
-      check_in_out: horarios,
+      //check_in_out: horarios,
     };
 
     guardarAlojamiento(body)
@@ -156,78 +127,28 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
   const handleSelectCheckItem = (
     id: number,
     value: boolean,
-    set: Dispatch<SetStateAction<number[]>>
+    form: UseFormReturn<z.infer<typeof alojamientoSchema>>,
+    name: keyof z.infer<typeof alojamientoSchema>
   ) => {
     if (!value) {
-      set((prev: number[]) => [...prev].filter((v: number) => v != id));
+      form.setValue(
+        name,
+        [...form.getValues()[name]].filter((v: number) => v != id)
+      );
       return;
     }
 
-    set((prev: number[]) => [...prev, id]);
+    form.setValue(name, [...form.getValues()[name], id]);
   };
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    mode: "onSubmit",
-    defaultValues: {
-      solicita_garantia: false,
-    },
-  });
-
-  useEffect(() => {
-    if (horarios.length > 0) form.setError("horarios", { message: "" });
-    else
-      form.setError("horarios", {
-        message: "Debe existir al menos un horario de Check-In y Check-Out",
-      });
-  }, [horarios]);
-
-  useEffect(() => {
-    setFormCaracteristicas(
-      datosRegistradosAlojamiento &&
-        datosRegistradosAlojamiento.datos &&
-        datosRegistradosAlojamiento.datos.caracteristicas
-        ? datosRegistradosAlojamiento.datos.caracteristicas
-        : []
-    );
-    setFormMetodosDePago(
-      datosRegistradosAlojamiento &&
-        datosRegistradosAlojamiento.datos &&
-        datosRegistradosAlojamiento.datos.metodos_de_pago
-        ? datosRegistradosAlojamiento.datos.metodos_de_pago
-        : []
-    );
-    form.reset({
-      // TODO: Agregar al form reset:
-      // texto_observacion_canchas_deportes: z.string().optional(),
-      // texto_observacion_normas: z.string().optional(),
-      // texto_observacion_politica_garantia: z.string().optional(),
-
-      nombre_alojamiento:
-        datosRegistradosAlojamiento?.datos.datos_basicos.nombre,
-      descripcion_alojamiento:
-        datosRegistradosAlojamiento?.datos.datos_basicos.descripcion,
-
-      id_politica_cancelacion:
-        datosRegistradosAlojamiento?.datos.datos_basicos
-          .id_politica_cancelacion,
-      plazo_dias_cancelacion:
-        datosRegistradosAlojamiento?.datos.datos_basicos.plazo_dias_cancelacion,
-      solicita_garantia:
-        datosRegistradosAlojamiento?.datos.datos_basicos.bl_solicita_garantia ==
-        1,
-      monto_garantia:
-        datosRegistradosAlojamiento?.datos.datos_basicos.monto_garantia,
-      id_tipo_pago_anticipado:
-        datosRegistradosAlojamiento?.datos.datos_basicos
-          .id_tipo_pago_anticipado,
-      porcentaje_pago_anticipado:
-        datosRegistradosAlojamiento?.datos.datos_basicos
-          .porcentaje_pago_anticipado,
-      minimo_dias_estadia:
-        datosRegistradosAlojamiento?.datos.datos_basicos.min_dias_estadia,
-    });
-  }, [datosRegistradosAlojamiento]);
+  /** TODO: mover esto al provider */
+  // useEffect(() => {
+  //   if (horarios.length > 0) form.setError("horarios", { message: "" });
+  //   else
+  //     form.setError("horarios", {
+  //       message: "Debe existir al menos un horario de Check-In y Check-Out",
+  //     });
+  // }, [horarios]);
 
   return (
     <div className="flex flex-col w-full">
@@ -280,15 +201,16 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
                 datosRegistroAlojamiento.caracteristicas.caracteristicas_espacios_uso_comun?.map(
                   (caracteristica: any) => (
                     <Check
-                      checked={formCaracteristicas.includes(
+                      className="h-[42pt] mt-2 break-inside-avoid-column"
+                      checked={formWatch.caracteristicas.includes(
                         caracteristica.id_caracteristica
                       )}
-                      className="h-[42pt] mt-2 break-inside-avoid-column"
                       onChange={(value: boolean) =>
                         handleSelectCheckItem(
                           caracteristica.id_caracteristica,
                           value,
-                          setFormCaracteristicas
+                          form,
+                          "caracteristicas"
                         )
                       }
                     >
@@ -303,7 +225,20 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
               {datosRegistroAlojamiento.caracteristicas &&
                 datosRegistroAlojamiento.caracteristicas.caracteristicas_servicios?.map(
                   (caracteristica: any) => (
-                    <Check className="h-[42pt] mt-2 break-inside-avoid-column">
+                    <Check
+                      className="h-[42pt] mt-2 break-inside-avoid-column"
+                      checked={formWatch.caracteristicas.includes(
+                        caracteristica.id_caracteristica
+                      )}
+                      onChange={(value: boolean) =>
+                        handleSelectCheckItem(
+                          caracteristica.id_caracteristica,
+                          value,
+                          form,
+                          "caracteristicas"
+                        )
+                      }
+                    >
                       {caracteristica.caracteristica}
                     </Check>
                   )
@@ -315,7 +250,20 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
               {datosRegistroAlojamiento.caracteristicas &&
                 datosRegistroAlojamiento.caracteristicas.caracteristicas_entretenimiento?.map(
                   (caracteristica: any) => (
-                    <Check className="h-[42pt] mt-2 break-inside-avoid-column">
+                    <Check
+                      className="h-[42pt] mt-2 break-inside-avoid-column"
+                      checked={formWatch.caracteristicas.includes(
+                        caracteristica.id_caracteristica
+                      )}
+                      onChange={(value: boolean) =>
+                        handleSelectCheckItem(
+                          caracteristica.id_caracteristica,
+                          value,
+                          form,
+                          "caracteristicas"
+                        )
+                      }
+                    >
                       {caracteristica.caracteristica}
                     </Check>
                   )
@@ -434,7 +382,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
               />
             </div>
           </div>
-          <div className="flex flex-col w-full">
+          {/* <div className="flex flex-col w-full">
             <FormField
               control={form.control}
               name="horarios"
@@ -447,7 +395,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
                 </FormItem>
               )}
             />
-          </div>
+          </div> */}
           <div>
             <div className="p-4 border border-gray-200 bg-gray-50 rounded-md text-2xl text-gray-600 font-bold">
               Reservas
@@ -507,15 +455,26 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
               {datosRegistroAlojamiento.metodosDePago &&
                 datosRegistroAlojamiento.metodosDePago.map((metodo: any) => (
                   <Check
-                    checked={formMetodosDePago.includes(metodo.id_metodo_pago)}
+                    //checked={formMetodosDePago.includes(metodo.id_metodo_pago)}
+                    // onChange={(value: boolean) =>
+                    //   handleSelectCheckItem(
+                    //     metodo.id_metodo_pago,
+                    //     value,
+                    //     setFormMetodosDePago
+                    //   )
+                    // }
+                    className="h-[42pt] mt-2 break-inside-avoid-column"
+                    checked={formWatch.metodosDePago.includes(
+                      metodo.id_metodo_pago
+                    )}
                     onChange={(value: boolean) =>
                       handleSelectCheckItem(
                         metodo.id_metodo_pago,
                         value,
-                        setFormMetodosDePago
+                        form,
+                        "metodosDePago"
                       )
                     }
-                    className="h-[42pt] mt-2 break-inside-avoid-column"
                   >
                     {metodo.metodo_pago}
                   </Check>
@@ -532,7 +491,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
               Volver
             </button>
             <button
-              onClick={() => formSchema.parse(form.getValues())}
+              //onClick={() => alojamientoSchema.parse(form.getValues())}
               type="submit"
               className="viajero-button px-4 py-2"
             >

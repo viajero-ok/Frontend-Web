@@ -91,7 +91,6 @@ export type TBodyGuardarAlojamiento = {
       minimo_dias_estadia: number;
     };
   };
-  check_in_out: THorariosCheckInCheckOut[];
 };
 export const guardarAlojamiento = async (body: TBodyGuardarAlojamiento) =>
   await AUTH_API.patch(`/alojamientos/actualizar-alojamiento`, body);

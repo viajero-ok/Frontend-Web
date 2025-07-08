@@ -5,10 +5,16 @@ import {
 } from "./useAlojamientoTab";
 import { useHabitacionesTab } from "./useHabitacionesTab";
 import { ImagenesContextValue, useImagenesTab } from "./useImagenesTab";
+import { finalizarRegistroActividad } from "../../../../App/Actividades/Actividad";
+import { HorarioTabContextValue, useHorariosTab } from "./useHorariosTab";
 
 type AlojamientoEnHabitacionesContextValue = {
   idOferta: string;
+  puedeRegistrar: boolean;
+  registrar: () => Promise<any>;
+  isAlojamientoDirty: boolean;
 } & AlojamientoContextValue &
+  HorarioTabContextValue &
   ImagenesContextValue;
 
 const AlojamientoEnHabitacionesContext =
@@ -23,14 +29,32 @@ const AlojamientoEnHabitacionesProvider = ({
   children: React.ReactNode;
   idOferta: string;
 }) => {
+  const [puedeRegistrar, setPuedeRegistrar] = React.useState<boolean>(false);
+
   const alojamiento = useAlojamientoTab({ idOferta });
+  const horarios = useHorariosTab({ idOferta });
   const imagenes = useImagenesTab({ idOferta });
   const habitaciones = useHabitacionesTab({ idOferta });
 
+  React.useEffect(() => {
+    setPuedeRegistrar(alojamiento.alojamientoEsCompleto);
+  }, [alojamiento, imagenes, habitaciones]);
+
+  const registrar = async () => {
+    try {
+      await finalizarRegistroActividad(idOferta);
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
   const context = {
     idOferta,
+    puedeRegistrar,
+    registrar,
 
     ...alojamiento,
+    ...horarios,
     ...imagenes,
     ...habitaciones,
   };

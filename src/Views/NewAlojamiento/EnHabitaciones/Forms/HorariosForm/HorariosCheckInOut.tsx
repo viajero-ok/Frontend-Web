@@ -11,242 +11,432 @@ import {
   FormItem,
   FormMessage,
 } from "../../../../../components/ui/Form/Field";
-import { TimeInput } from "../../../../../components/ui/Input/Input";
+import {
+  formatTime,
+  TimeInput,
+} from "../../../../../components/ui/Input/Input";
 import { useModal } from "../../../../../components/ui/Modal/Modal";
 import { useAlojamientoEnHabitaciones } from "../../Provider/AlojamientoEnHabitacionesProvider";
 import { THorariosCheckInCheckOutContext } from "../../Provider/useAlojamientoTab";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useToast } from "../../../../../components/ui/Toast/Toast";
+
+type DiasSemanaKey = keyof z.infer<typeof crearHorarioSchema.shape.dias_semana>;
 
 const Row = ({
   index,
   handleEliminar,
   form,
   ...horario
-}: THorariosCheckInCheckOutContext & {
+}: any & {
   index: number;
   handleEliminar: (id_horario: string) => Promise<void>;
   form: UseFormReturn<any>;
 }) => {
-  const [errors, setErrors] = useState<string | undefined>();
+  const [editar, setEditar] = useState<boolean>(false);
   //const { updateHorario } = useAlojamientoEnHabitaciones();
 
-  useEffect(() => {
-    setErrors(horario.errors ? horario.errors.join(". ") : "");
-  }, [horario]);
-
-  const handleAplicaTodos = () => {
-    // updateHorario(
-    //   horario.id_horario,
-    //   (prev: THorariosCheckInCheckOutContext) => {
-    //     const copy = { ...prev };
-    //     copy.aplica_todos_los_dias = !horario.aplica_todos_los_dias;
-    //     return copy;
-    //   }
-    // );
-  };
-
-  const handleCheckDay = (
-    key: keyof THorariosCheckInCheckOutContext["dias_semana"]
-  ) => {
-    // updateHorario(
-    //   horario.id_horario,
-    //   (prev: THorariosCheckInCheckOutContext) => {
-    //     const copy = { ...prev };
-    //     copy.dias_semana[key] = !horario.dias_semana[key];
-    //     return copy;
-    //   }
-    // );
-  };
-
-  const handleSetTime = (time: string, key: "check_in" | "check_out") => {
-    // updateHorario(
-    //   horario.id_horario,
-    //   (prev: THorariosCheckInCheckOutContext) => {
-    //     const copy = { ...prev };
-    //     if (key == "check_in") {
-    //       copy.check_in.hora_check_in =
-    //         time.split(":")[0] != "" ? Number(time.split(":")[0]) : -1;
-    //       copy.check_in.minuto_check_in =
-    //         time.split(":")[1] != "" ? Number(time.split(":")[1]) : -1;
-    //       return copy;
-    //     }
-    //     copy.check_out.hora_check_out =
-    //       time.split(":")[0] != "" ? Number(time.split(":")[0]) : -1;
-    //     copy.check_out.minuto_check_out =
-    //       time.split(":")[1] != "" ? Number(time.split(":")[1]) : -1;
-    //     return copy;
-    //   }
-    // );
-  };
+  const { idOferta, eliminarHorario, modificarHorario, actualizarHorarios } =
+    useAlojamientoEnHabitaciones();
+  const { toast } = useToast();
 
   const onEliminar = () => {
-    handleEliminar(horario.id_horario);
+    eliminarHorario(horario.id_horario)
+      .then(() => {
+        toast({
+          variant: "success",
+          title: "Horario eliminado exitosamente.",
+        });
+        actualizarHorarios();
+      })
+      .catch(() => {
+        toast({
+          variant: "danger",
+          title: "Error al intentar elimiinar el horario. Intente nuevamente.",
+        });
+      });
+  };
+
+  const editarHorarioForm = useForm<z.infer<typeof crearHorarioSchema>>({
+    resolver: zodResolver(crearHorarioSchema),
+    mode: "onSubmit",
+    defaultValues: {
+      check_in: `${formatTime(Number(horario.check_in_hora))}:${formatTime(
+        Number(horario.check_in_minuto)
+      )}`,
+      check_out: `${formatTime(Number(horario.check_out_hora))}:${formatTime(
+        Number(horario.check_out_minuto)
+      )}`,
+      dias_semana: {
+        aplica_lunes: horario.aplica_lunes == 1,
+        aplica_martes: horario.aplica_martes == 1,
+        aplica_miercoles: horario.aplica_miercoles == 1,
+        aplica_jueves: horario.aplica_jueves == 1,
+        aplica_viernes: horario.aplica_viernes == 1,
+        aplica_sabado: horario.aplica_sabado == 1,
+        aplica_domingo: horario.aplica_domingo == 1,
+      },
+      aplica_todos_los_dias: horario.aplica_todos_los_dias ?? false,
+    },
+  });
+  const formWatch = editarHorarioForm.watch();
+
+  const handleCheckDay = (nestedKey: DiasSemanaKey) => {
+    const key = `dias_semana.${nestedKey}` as `dias_semana.${DiasSemanaKey}`;
+    editarHorarioForm.setValue(
+      key,
+      !editarHorarioForm.getValues().dias_semana[
+        key.split(".")[1] as DiasSemanaKey
+      ]
+    );
+  };
+
+  const handleAplicaTodos = () => {
+    const prev = editarHorarioForm.getValues().aplica_todos_los_dias;
+    editarHorarioForm.setValue("dias_semana.aplica_lunes", !prev);
+    editarHorarioForm.setValue("dias_semana.aplica_martes", !prev);
+    editarHorarioForm.setValue("dias_semana.aplica_miercoles", !prev);
+    editarHorarioForm.setValue("dias_semana.aplica_jueves", !prev);
+    editarHorarioForm.setValue("dias_semana.aplica_viernes", !prev);
+    editarHorarioForm.setValue("dias_semana.aplica_sabado", !prev);
+    editarHorarioForm.setValue("dias_semana.aplica_domingo", !prev);
+    editarHorarioForm.setValue("aplica_todos_los_dias", !prev);
+  };
+
+  const handleModificar = (values: z.infer<typeof crearHorarioSchema>) => {
+    modificarHorario({
+      id_oferta: idOferta,
+      id_horario: horario.id_horario,
+      check_in: {
+        hora_check_in: Number(values.check_in.split(":")[0]),
+        minuto_check_in: Number(values.check_in.split(":")[1]),
+      },
+      check_out: {
+        hora_check_out: Number(values.check_out.split(":")[0]),
+        minuto_check_out: Number(values.check_out.split(":")[1]),
+      },
+      dias_semana: values.dias_semana,
+      aplica_todos_los_dias: values.aplica_todos_los_dias,
+    })
+      .then(() => {
+        setEditar(false);
+        actualizarHorarios();
+        toast({
+          variant: "success",
+          title: "Horario modificado exitosamente.",
+        });
+      })
+      .catch((error) => {
+        toast({
+          variant: "danger",
+          title: "Error al intentar modificar el horario. Intente nuevamente.",
+        });
+      });
   };
 
   return (
-    <div className="grid grid-cols-14 gap-2">
-      <div className="col-span-2 flex flex-col gap-2 mt-2">
-        <TimeInput
-          className="h-[42pt]"
-          placeholder="00:00"
-          onChange={(e: any) => handleSetTime(e.target.value, "check_in")}
-          hora={horario.check_in.hora_check_in}
-          minuto={horario.check_in.minuto_check_in}
-        />
-      </div>
-      <div className="col-span-2 flex flex-col gap-2 mt-2">
-        <TimeInput
-          className="h-[42pt]"
-          placeholder="00:00"
-          onChange={(e: any) => handleSetTime(e.target.value, "check_out")}
-          hora={horario.check_out.hora_check_out}
-          minuto={horario.check_out.minuto_check_out}
-        />
-      </div>
-      <div className="col-span-9 flex flex-row gap-2 mt-2 w-full">
-        <Check
-          checked={
-            horario.dias_semana.aplica_lunes || horario.aplica_todos_los_dias
-          }
-          className="h-[42pt]"
-          onClick={() => handleCheckDay("aplica_lunes")}
-        >
-          L
-        </Check>
-        <Check
-          checked={
-            horario.dias_semana.aplica_martes || horario.aplica_todos_los_dias
-          }
-          className="h-[42pt]"
-          onClick={() => handleCheckDay("aplica_martes")}
-        >
-          M
-        </Check>
-        <Check
-          checked={
-            horario.dias_semana.aplica_miercoles ||
-            horario.aplica_todos_los_dias
-          }
-          className="h-[42pt]"
-          onClick={() => handleCheckDay("aplica_miercoles")}
-        >
-          M
-        </Check>
-        <Check
-          checked={
-            horario.dias_semana.aplica_jueves || horario.aplica_todos_los_dias
-          }
-          className="h-[42pt]"
-          onClick={() => handleCheckDay("aplica_jueves")}
-        >
-          J
-        </Check>
-        <Check
-          checked={
-            horario.dias_semana.aplica_viernes || horario.aplica_todos_los_dias
-          }
-          className="h-[42pt]"
-          onClick={() => handleCheckDay("aplica_viernes")}
-        >
-          V
-        </Check>
-        <Check
-          checked={
-            horario.dias_semana.aplica_sabado || horario.aplica_todos_los_dias
-          }
-          className="h-[42pt]"
-          onClick={() => handleCheckDay("aplica_sabado")}
-        >
-          S
-        </Check>
-        <Check
-          checked={
-            horario.dias_semana.aplica_domingo || horario.aplica_todos_los_dias
-          }
-          className="h-[42pt]"
-          onClick={() => handleCheckDay("aplica_domingo")}
-        >
-          D
-        </Check>
-        <Check
-          onClick={() => handleAplicaTodos()}
-          checked={
-            horario.aplica_todos_los_dias ||
-            Object.values(horario.dias_semana).filter((v: boolean) => v)
-              .length == 7
-          }
-          className="h-[42pt] w-full"
-        >
-          Todos
-        </Check>
-      </div>
-      <div className="col-span-1 mt-2">
-        <button
-          className={cn(
-            "viajero-button w-full! border bg-transparent! px-2 h-full text-red-400/50! text-xl! border-red-400/25!",
-            "flex items-center content-center justify-center hover:shadow-none hover:bg-red-400/5! hover:border-red-400! hover:text-red-400!"
+    <Form {...editarHorarioForm}>
+      <form onSubmit={editarHorarioForm.handleSubmit(handleModificar)}>
+        <div className="grid grid-cols-11 gap-2">
+          <div className="col-span-1 flex flex-col gap-2 mt-2">
+            <FormField
+              control={editarHorarioForm.control}
+              name="check_in"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <TimeInput
+                      reset={!editar}
+                      hora={horario.check_in_hora}
+                      minuto={horario.check_in_minuto}
+                      disabled={!editar}
+                      className="h-[42pt]"
+                      placeholder="00:00"
+                      set={(time: string) =>
+                        editarHorarioForm.setValue("check_in", time)
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="col-span-1 flex flex-col gap-2 mt-2">
+            <FormField
+              control={editarHorarioForm.control}
+              name="check_out"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <TimeInput
+                      reset={!editar}
+                      hora={horario.check_out_hora}
+                      minuto={horario.check_out_minuto}
+                      disabled={!editar}
+                      className="h-[42pt]"
+                      placeholder="00:00"
+                      set={(time: string) =>
+                        editarHorarioForm.setValue("check_out", time)
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="col-span-7 flex flex-row mt-2 w-full">
+            <FormField
+              control={editarHorarioForm.control}
+              name="dias_semana"
+              render={({ field }) => (
+                <FormItem className="flex flex-col w-full">
+                  <FormControl>
+                    <div className="flex flex-row gap-2 w-full">
+                      <Check
+                        disabled={!editar}
+                        checked={
+                          formWatch.dias_semana?.aplica_lunes ||
+                          formWatch.aplica_todos_los_dias
+                        }
+                        className="h-[42pt]"
+                        onClick={() => handleCheckDay("aplica_lunes")}
+                      >
+                        L
+                      </Check>
+                      <Check
+                        disabled={!editar}
+                        checked={
+                          editarHorarioForm.watch().dias_semana
+                            ?.aplica_martes ||
+                          editarHorarioForm.watch().aplica_todos_los_dias
+                        }
+                        className="h-[42pt]"
+                        onClick={() => handleCheckDay("aplica_martes")}
+                      >
+                        M
+                      </Check>
+                      <Check
+                        disabled={!editar}
+                        checked={
+                          editarHorarioForm.watch().dias_semana
+                            ?.aplica_miercoles ||
+                          editarHorarioForm.watch().aplica_todos_los_dias
+                        }
+                        className="h-[42pt]"
+                        onClick={() => handleCheckDay("aplica_miercoles")}
+                      >
+                        M
+                      </Check>
+                      <Check
+                        disabled={!editar}
+                        checked={
+                          editarHorarioForm.watch().dias_semana
+                            ?.aplica_jueves ||
+                          editarHorarioForm.watch().aplica_todos_los_dias
+                        }
+                        className="h-[42pt]"
+                        onClick={() => handleCheckDay("aplica_jueves")}
+                      >
+                        J
+                      </Check>
+                      <Check
+                        disabled={!editar}
+                        checked={
+                          formWatch.dias_semana?.aplica_viernes ||
+                          formWatch.aplica_todos_los_dias
+                        }
+                        className="h-[42pt]"
+                        onClick={() => handleCheckDay("aplica_viernes")}
+                      >
+                        V
+                      </Check>
+                      <Check
+                        disabled={!editar}
+                        checked={
+                          formWatch.dias_semana?.aplica_sabado ||
+                          formWatch.aplica_todos_los_dias
+                        }
+                        className="h-[42pt]"
+                        onClick={() => handleCheckDay("aplica_sabado")}
+                      >
+                        S
+                      </Check>
+                      <Check
+                        disabled={!editar}
+                        checked={
+                          formWatch.dias_semana?.aplica_domingo ||
+                          formWatch.aplica_todos_los_dias
+                        }
+                        className="h-[42pt]"
+                        onClick={() => handleCheckDay("aplica_domingo")}
+                      >
+                        D
+                      </Check>
+                      <Check
+                        disabled={!editar}
+                        onClick={() => handleAplicaTodos()}
+                        checked={
+                          formWatch.aplica_todos_los_dias ||
+                          formWatch.dias_semana
+                            ? Object.keys(formWatch.dias_semana).filter(
+                                (key: string) =>
+                                  !formWatch.dias_semana[key as DiasSemanaKey]
+                              ).length == 0
+                            : false
+                        }
+                        className="h-[42pt] w-full"
+                      >
+                        Todos
+                      </Check>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          {!editar ? (
+            <div className="col-span-2 mt-2 flex flex-row gap-2">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  setEditar(true);
+                }}
+                className="viajero-button-ghost w-full h-[42pt] flex items-center"
+              >
+                Editar
+              </button>
+              <button
+                className={cn(
+                  "viajero-button w-full! h-[42pt] flex items-center",
+                  "bg-red-400! hover:border-red-400/90!"
+                )}
+                onClick={(e) => {
+                  e.preventDefault();
+                  onEliminar();
+                }}
+              >
+                Eliminar
+              </button>
+            </div>
+          ) : (
+            <div className="col-span-2 mt-2 flex flex-row gap-2">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  setEditar(false);
+                  editarHorarioForm.reset();
+                }}
+                className="viajero-button-ghost w-full h-[42pt] flex items-center"
+              >
+                Cancelar
+              </button>
+              <button
+                className={cn(
+                  "viajero-button w-full! h-[42pt] flex items-center"
+                )}
+                type="submit"
+              >
+                Guardar
+              </button>
+            </div>
           )}
-          onClick={(e) => {
-            e.preventDefault();
-            onEliminar();
-          }}
-        >
-          <IonIcon icon={trash} />
-        </button>
-      </div>
-      <div className="col-span-12 w-full pl-2 text-xs text-red-400">
-        {errors && (
-          <>
-            <IonIcon icon={chevronUp} /> {errors}
-          </>
-        )}
-      </div>
-    </div>
+        </div>
+      </form>
+    </Form>
   );
 };
 
 const crearHorarioSchema = z.object({
-  check_in: z.string(),
-  check_out: z.string(),
-  dias_semana: z.object({
-    aplica_lunes: z.boolean(),
-    aplica_martes: z.boolean(),
-    aplica_miercoles: z.boolean(),
-    aplica_jueves: z.boolean(),
-    aplica_viernes: z.boolean(),
-    aplica_sabado: z.boolean(),
-    aplica_domingo: z.boolean(),
-  }),
-  aplica_todos_los_dias: z.boolean(),
+  check_in: z
+    .string({ message: "El campo es requerido" })
+    .refine((val) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(val), {
+      message: "Hora inválida",
+    }),
+  check_out: z
+    .string({ message: "El campo es requerido" })
+    .refine((val) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(val), {
+      message: "Hora inválida",
+    }),
+  dias_semana: z
+    .object({
+      aplica_lunes: z.boolean(),
+      aplica_martes: z.boolean(),
+      aplica_miercoles: z.boolean(),
+      aplica_jueves: z.boolean(),
+      aplica_viernes: z.boolean(),
+      aplica_sabado: z.boolean(),
+      aplica_domingo: z.boolean(),
+    })
+    .refine(
+      (dias) =>
+        dias.aplica_lunes ||
+        dias.aplica_martes ||
+        dias.aplica_miercoles ||
+        dias.aplica_jueves ||
+        dias.aplica_viernes ||
+        dias.aplica_sabado ||
+        dias.aplica_domingo,
+      {
+        message: "El horario debe aplicar para al menos un día",
+      }
+    ),
+  aplica_todos_los_dias: z.boolean().default(false),
 });
 
 export default function HorariosCheckInOut() {
   const [agregar, setAgregar] = useState<boolean>(false);
 
-  const { idOferta, horarioSchema, horariosForm } =
-    useAlojamientoEnHabitaciones();
+  const {
+    idOferta,
+    horarioSchema,
+    horariosForm,
+    horarios,
+    actualizarHorarios,
+    agregarHorario,
+  } = useAlojamientoEnHabitaciones();
   const form = horariosForm;
   const { modal, setOpen } = useModal();
 
-  const handleAgregar = () => {
-    // registrarHorario({ id_oferta: idOferta }).catch((error) => {
-    //   modal({
-    //     variant: "danger",
-    //     title: "Error",
-    //     description: error.message,
-    //     actions: (
-    //       <>
-    //         <button
-    //           onClick={() => setOpen(false)}
-    //           className="viajero-button-ghost px-4 py-2"
-    //         >
-    //           Aceptar
-    //         </button>
-    //       </>
-    //     ),
-    //   });
-    // });
+  const handleAgregar = (values: z.infer<typeof crearHorarioSchema>) => {
+    agregarHorario({
+      id_oferta: idOferta,
+      check_in: {
+        hora_check_in: Number(values.check_in.split(":")[0]),
+        minuto_check_in: Number(values.check_in.split(":")[1]),
+      },
+      check_out: {
+        hora_check_out: Number(values.check_out.split(":")[0]),
+        minuto_check_out: Number(values.check_out.split(":")[1]),
+      },
+      dias_semana: values.dias_semana,
+      aplica_todos_los_dias: values.aplica_todos_los_dias,
+    })
+      .then(() => {
+        setAgregar(false);
+        crearHorarioForm.reset();
+        actualizarHorarios();
+      })
+      .catch((error) => {
+        modal({
+          variant: "danger",
+          title: "Error",
+          description: error.message,
+          actions: (
+            <>
+              <button
+                onClick={() => setOpen(false)}
+                className="viajero-button-ghost px-4 py-2"
+              >
+                Aceptar
+              </button>
+            </>
+          ),
+        });
+      });
   };
 
   const handleEliminar = (id_horario: string) => {
@@ -256,12 +446,20 @@ export default function HorariosCheckInOut() {
   const crearHorarioForm = useForm<z.infer<typeof crearHorarioSchema>>({
     resolver: zodResolver(crearHorarioSchema),
     mode: "onSubmit",
+    defaultValues: {
+      dias_semana: {
+        aplica_lunes: false,
+        aplica_martes: false,
+        aplica_miercoles: false,
+        aplica_jueves: false,
+        aplica_viernes: false,
+        aplica_sabado: false,
+        aplica_domingo: false,
+      },
+    },
   });
   const formWatch = crearHorarioForm.watch();
 
-  type DiasSemanaKey = keyof z.infer<
-    typeof crearHorarioSchema.shape.dias_semana
-  >;
   const handleCheckDay = (nestedKey: DiasSemanaKey) => {
     const key = `dias_semana.${nestedKey}` as `dias_semana.${DiasSemanaKey}`;
     crearHorarioForm.setValue(
@@ -301,20 +499,17 @@ export default function HorariosCheckInOut() {
         </button>
       </div>
       <div className="grid grid-cols-11 w-full mt-2 gap-2">
-        <CheckSection
-          label="In"
-          className="col-span-1 h-[42pt] text-lg"
-        />
-        <CheckSection
-          label="Out"
-          className="col-span-1 h-[42pt] text-lg"
-        />
+        <CheckSection label="In" className="col-span-1 h-[42pt] text-lg" />
+        <CheckSection label="Out" className="col-span-1 h-[42pt] text-lg" />
         <CheckSection label="Días" className="col-span-7 h-[42pt] text-lg" />
-        <CheckSection label="Acciones" className="col-span-2 h-[42pt] text-lg" />
+        <CheckSection
+          label="Acciones"
+          className="col-span-2 h-[42pt] text-lg"
+        />
       </div>
       {agregar && (
         <Form {...crearHorarioForm}>
-          <form onSubmit={crearHorarioForm.handleSubmit(() => {})}>
+          <form onSubmit={crearHorarioForm.handleSubmit(handleAgregar)}>
             <div className="grid grid-cols-11 gap-2">
               <div className="col-span-1 flex flex-col gap-2 mt-2">
                 <FormField
@@ -339,7 +534,7 @@ export default function HorariosCheckInOut() {
               <div className="col-span-1 flex flex-col gap-2 mt-2">
                 <FormField
                   control={crearHorarioForm.control}
-                  name="check_in"
+                  name="check_out"
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
@@ -361,7 +556,7 @@ export default function HorariosCheckInOut() {
                   control={crearHorarioForm.control}
                   name="dias_semana"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row w-full">
+                    <FormItem className="flex flex-col w-full">
                       <FormControl>
                         <div className="flex flex-row gap-2 w-full">
                           <Check
@@ -465,17 +660,21 @@ export default function HorariosCheckInOut() {
                 />
               </div>
 
-              <div className="col-span-2 flex flex-row gap-2 mt-2 w-full">
+              <div className="col-span-2 flex flex-row gap-2 mt-2 w-full h-[42pt]">
                 <button
                   onClick={(e) => {
                     e.preventDefault();
                     setAgregar(false);
+                    crearHorarioForm.reset();
                   }}
                   className="viajero-button-ghost px-4 py-2 h-full items-center"
                 >
                   Cancelar
                 </button>
-                <button className="viajero-button h-full w-full flex items-center">
+                <button
+                  type="submit"
+                  className="viajero-button h-full w-full flex items-center"
+                >
                   Agregar
                 </button>
               </div>
@@ -483,17 +682,15 @@ export default function HorariosCheckInOut() {
           </form>
         </Form>
       )}
-      {/* {horarios.map(
-        (horario: THorariosCheckInCheckOutContext, index: number) => (
-          <Row
-            key={index}
-            index={index}
-            handleEliminar={eliminarHorario}
-            form={form}
-            {...horario}
-          />
-        )
-      )} */}
+      {horarios.map((horario: any, index: number) => (
+        <Row
+          key={index}
+          index={index}
+          handleEliminar={() => {}}
+          form={form}
+          {...horario}
+        />
+      ))}
     </div>
   );
 }

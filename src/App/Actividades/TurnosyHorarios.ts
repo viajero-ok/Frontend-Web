@@ -6,12 +6,12 @@ import AUTH_API from "../AuthBackendApi";
 export type TBodyRegistrarHorario = {
   id_oferta: string;
   check_in: {
-    hora_check_in?: number;
-    minuto_check_in?: number;
+    hora_check_in: number;
+    minuto_check_in: number;
   };
   check_out: {
-    hora_check_out?: number;
-    minuto_check_out?: number;
+    hora_check_out: number;
+    minuto_check_out: number;
   };
   aplica_todos_los_dias: boolean;
   dias_semana: {
@@ -41,6 +41,7 @@ export const actualizarHorario = async (body: TBodyActualizarHorario) =>
 
 export const eliminarHorario = async (idHorario: number) =>
   await AUTH_API.delete(`/actividades/eliminar-horario/${idHorario}`);
+
 
 export type THorarios = {
   id_horario: number;

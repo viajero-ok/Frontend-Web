@@ -1,12 +1,12 @@
 import React from "react";
 import {
-  deleteHorario,
+  eliminarHorarioAlojamiento,
   getDatosDeRegistroNuevoAlojamiento,
   obtenerDatosRegistradosAlojamiento,
   TBodyGuardarAlojamiento,
   TObtenerDatosRegistradosAlojamientoResponse,
   guardarAlojamiento as guardarAlojamientoService,
-  crearHorario,
+  registrarHorarioAlojamiento,
   THorariosCheckInCheckOut,
 } from "../../../../App/Alojamientos/NuevoAlojamiento";
 import { TAdaptedObtenerDatosRegistradosAlojamientoResponse } from "../../../../App/Alojamientos/NuevoAlojamiento.adapter";
@@ -164,7 +164,7 @@ const useAlojamientoTab = ({ idOferta }: { idOferta: string }) => {
               response.datos.datos_basicos.porcentaje_pago_anticipado,
             minimo_dias_estadia: response.datos.datos_basicos.min_dias_estadia,
 
-           // horarios: response.datos.horarios_checkin_checkout,
+            // horarios: response.datos.horarios_checkin_checkout,
           },
           { keepDefaultValues: false }
         );
@@ -201,42 +201,43 @@ const useAlojamientoTab = ({ idOferta }: { idOferta: string }) => {
 
   /** horarios */
   const registrarHorario = async (body: { id_oferta: string }) => {
-    try {
-      const idHorario = (await crearHorario(body)).data.id_horario;
-      const newHorario = {
-        id_horario: idHorario,
-        check_in: {
-          hora_check_in: -1,
-          minuto_check_in: -1,
-        },
-        check_out: { hora_check_out: -1, minuto_check_out: -1 },
-        aplica_todos_los_dias: false,
-        dias_semana: {
-          aplica_lunes: false,
-          aplica_martes: false,
-          aplica_miercoles: false,
-          aplica_jueves: false,
-          aplica_viernes: false,
-          aplica_sabado: false,
-          aplica_domingo: false,
-        },
-      };
-      const parsed = horarioSchema.safeParse(newHorario);
-      const errorsWithoutDuplicates = [
-        ...new Set(
-          parsed.error?.errors.map((zodIssue: z.ZodIssue) => zodIssue.message)
-        ),
-      ];
-      // setHorarios((prev: THorariosCheckInCheckOutContext[]) => [
-      //   ...prev,
-      //   {
-      //     ...newHorario,
-      //     errors: errorsWithoutDuplicates,
-      //   },
-      // ]);
-    } catch (error) {
-      throw new Error((error as Error).message);
-    }
+    // try {
+    //   const idHorario = (await registrarHorarioAlojamiento(body)).data
+    //     .id_horario;
+    //   const newHorario = {
+    //     id_horario: idHorario,
+    //     check_in: {
+    //       hora_check_in: -1,
+    //       minuto_check_in: -1,
+    //     },
+    //     check_out: { hora_check_out: -1, minuto_check_out: -1 },
+    //     aplica_todos_los_dias: false,
+    //     dias_semana: {
+    //       aplica_lunes: false,
+    //       aplica_martes: false,
+    //       aplica_miercoles: false,
+    //       aplica_jueves: false,
+    //       aplica_viernes: false,
+    //       aplica_sabado: false,
+    //       aplica_domingo: false,
+    //     },
+    //   };
+    //   const parsed = horarioSchema.safeParse(newHorario);
+    //   const errorsWithoutDuplicates = [
+    //     ...new Set(
+    //       parsed.error?.errors.map((zodIssue: z.ZodIssue) => zodIssue.message)
+    //     ),
+    //   ];
+    //   // setHorarios((prev: THorariosCheckInCheckOutContext[]) => [
+    //   //   ...prev,
+    //   //   {
+    //   //     ...newHorario,
+    //   //     errors: errorsWithoutDuplicates,
+    //   //   },
+    //   // ]);
+    // } catch (error) {
+    //   throw new Error((error as Error).message);
+    // }
   };
 
   const updateHorario = (
@@ -260,9 +261,7 @@ const useAlojamientoTab = ({ idOferta }: { idOferta: string }) => {
     //   ][0];
     //   if (!copyItem)
     //     throw new Error("Horario de id_horario: " + id_horario + " no existe");
-
     //   const updatedItem = callback(copyItem);
-
     //   const parsed = horarioSchema.safeParse({
     //     hora_check_in: updatedItem.check_in.hora_check_in,
     //     minuto_check_in: updatedItem.check_in.minuto_check_in,
@@ -277,7 +276,6 @@ const useAlojamientoTab = ({ idOferta }: { idOferta: string }) => {
     //       parsed.error?.errors.map((zodIssue: z.ZodIssue) => zodIssue.message)
     //     ),
     //   ];
-
     //   return [
     //     ...copyList,
     //     { ...updatedItem, errors: errorsWithoutDuplicates },
@@ -290,9 +288,9 @@ const useAlojamientoTab = ({ idOferta }: { idOferta: string }) => {
     // });
   };
 
-  const eliminarHorario = async (id_horario: string) => {
+  const eliminarHorario = async (id_horario: number) => {
     try {
-      await deleteHorario(id_horario);
+      await eliminarHorarioAlojamiento(id_horario);
       // setHorarios((prev: THorariosCheckInCheckOutContext[]) =>
       //   [...prev].filter(
       //     (horario: THorariosCheckInCheckOutContext) =>

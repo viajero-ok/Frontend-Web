@@ -151,10 +151,10 @@ export const eliminarImagenDeAlojamiento = async (id_imagen: number) =>
 export type TBodyCrearHorario = {
   id_oferta: string;
 };
-export const crearHorario = async (body: TBodyCrearHorario) =>
+export const registrarHorario = async (body: TBodyCrearHorario) =>
   await AUTH_API.post(`/alojamientos/registrar-horario`, body);
 
-export const deleteHorario = async (id_horario: string) =>
+export const eliminarHorario = async (id_horario: string) =>
   await AUTH_API.delete(`/alojamientos/eliminar-horario/${id_horario}`);
 
 const serverImageSchema = z.object({
@@ -192,3 +192,50 @@ export const obtenerDatosRegistradosAlojamiento = async (
     throw new Error((error as Error).message);
   }
 };
+
+export type TBodyRegistrarHorarioAlojamiento = {
+  id_oferta: string;
+  check_in: {
+    hora_check_in: number;
+    minuto_check_in: number;
+  };
+  check_out: {
+    hora_check_out: number;
+    minuto_check_out: number;
+  };
+  aplica_todos_los_dias: boolean;
+  dias_semana: {
+    aplica_lunes: boolean;
+    aplica_martes: boolean;
+    aplica_miercoles: boolean;
+    aplica_jueves: boolean;
+    aplica_viernes: boolean;
+    aplica_sabado: boolean;
+    aplica_domingo: boolean;
+  };
+  //cupo_maximo?: number;
+  //bl_sin_cupo: boolean;
+};
+export const registrarHorarioAlojamiento = async (
+  body: TBodyRegistrarHorarioAlojamiento
+) =>
+  await AUTH_API.post(`/alojamientos/registrar-horario`, {
+    ...body,
+  });
+
+export type TBodyActualizarHorarioAlojamiento =
+  TBodyRegistrarHorarioAlojamiento & {
+    id_horario: number;
+  };
+export const actualizarHorarioAlojamiento = async (
+  body: TBodyActualizarHorarioAlojamiento
+) =>
+  await AUTH_API.post(`/alojamientos/modificar-horario`, {
+    ...body,
+  });
+
+export const eliminarHorarioAlojamiento = async (idHorario: number) =>
+  await AUTH_API.delete(`/alojamientos/eliminar-horario/${idHorario}`);
+
+export const obtenerHorariosRegistradosAlojamiento = async (idOferta: string) =>
+  await AUTH_API.get(`/alojamientos/obtener-horarios-registrados/${idOferta}`);

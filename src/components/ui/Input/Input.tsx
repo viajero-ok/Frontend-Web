@@ -98,7 +98,7 @@ const NumberInput = React.forwardRef<typeof StyledNumberIonInput, any>(
 );
 NumberInput.displayName = "NumberInput";
 
-const formatTime = (time: number | undefined): string => {
+export const formatTime = (time: number | undefined): string => {
   if (time == null) return "";
   if (typeof time == "undefined") return "";
   if (time < 0) return "";
@@ -108,18 +108,17 @@ const formatTime = (time: number | undefined): string => {
 
 const TimeInput = React.forwardRef<HTMLInputElement, any>(
   ({ className, ...props }, ref) => {
-    const [hours, setHours] = React.useState<string>(formatTime(props.hora));
-    const [minutes, setMinutes] = React.useState<string | undefined>(
-      formatTime(props.minuto)
-    );
+    const [hours, setHours] = React.useState<string | undefined>();
+    const [minutes, setMinutes] = React.useState<string | undefined>();
 
     const refHours = React.useRef<HTMLInputElement>(null);
     const refMinutes = React.useRef<HTMLInputElement>(null);
 
     React.useEffect(() => {
+      if (!props.reset) return;
       setHours(formatTime(props.hora));
       setMinutes(formatTime(props.minuto));
-    }, [props.hora, props.minuto]);
+    }, [props.hora, props.minuto, props.reset]);
 
     return (
       <div

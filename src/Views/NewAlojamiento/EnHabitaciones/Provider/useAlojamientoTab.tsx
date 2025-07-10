@@ -103,15 +103,17 @@ const useAlojamientoTab = ({ idOferta }: { idOferta: string }) => {
           id_politica_cancelacion:
             response.datos.datos_basicos.id_politica_cancelacion,
           plazo_dias_cancelacion:
-            response.datos.datos_basicos.plazo_dias_cancelacion,
+            response.datos.datos_basicos.plazo_dias_cancelacion.toString(),
           solicita_garantia:
             response.datos.datos_basicos.bl_solicita_garantia == 1,
-          monto_garantia: response.datos.datos_basicos.monto_garantia,
+          monto_garantia:
+            response.datos.datos_basicos.monto_garantia.toString(),
           id_tipo_pago_anticipado:
             response.datos.datos_basicos.id_tipo_pago_anticipado,
           porcentaje_pago_anticipado:
             response.datos.datos_basicos.porcentaje_pago_anticipado,
-          minimo_dias_estadia: response.datos.datos_basicos.min_dias_estadia,
+          minimo_dias_estadia:
+            response.datos.datos_basicos.min_dias_estadia.toString(),
         };
         alojamientoForm.reset(reset);
 

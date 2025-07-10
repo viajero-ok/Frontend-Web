@@ -44,7 +44,10 @@ export default function NewAlojamientoEnHabitacionesView(
           actions: (
             <>
               <button
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  setOpen(false);
+                  router.push("/my-offers");
+                }}
                 className="viajero-button bg-green-400 hover:bg-green-400/90 px-4 py-2"
               >
                 Aceptar

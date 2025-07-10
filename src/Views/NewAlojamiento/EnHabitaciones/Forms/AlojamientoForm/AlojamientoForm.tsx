@@ -134,15 +134,6 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
     );
   };
 
-  /** TODO: mover esto al provider */
-  // useEffect(() => {
-  //   if (horarios.length > 0) form.setError("horarios", { message: "" });
-  //   else
-  //     form.setError("horarios", {
-  //       message: "Debe existir al menos un horario de Check-In y Check-Out",
-  //     });
-  // }, [horarios]);
-
   return (
     <div className="flex flex-col w-full">
       <Form {...form}>
@@ -320,6 +311,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
                   </FormItem>
                 )}
               />
+              <h1>value: {typeof formWatch.plazo_dias_cancelacion}</h1>
               <FormField
                 control={form.control}
                 name="plazo_dias_cancelacion"
@@ -448,14 +440,6 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
               {datosRegistroAlojamiento.metodosDePago &&
                 datosRegistroAlojamiento.metodosDePago.map((metodo: any) => (
                   <Check
-                    //checked={formMetodosDePago.includes(metodo.id_metodo_pago)}
-                    // onChange={(value: boolean) =>
-                    //   handleSelectCheckItem(
-                    //     metodo.id_metodo_pago,
-                    //     value,
-                    //     setFormMetodosDePago
-                    //   )
-                    // }
                     className="h-[42pt] mt-2 break-inside-avoid-column"
                     checked={formWatch.metodosDePago.includes(
                       metodo.id_metodo_pago
@@ -474,47 +458,13 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
                 ))}
             </div>
           </div>
-          <div className="flex flex-row justify-between pb-12">
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-              }}
-              className="viajero-button-ghost px-4 py-2"
-            >
-              Volver
-            </button>
-            <button
-              //onClick={() => alojamientoSchema.parse(form.getValues())}
-              type="submit"
-              className="viajero-button px-4 py-2"
-            >
+          <div className="flex flex-row justify-end pb-12">
+            <button type="submit" className="viajero-button px-4 py-2">
               Guardar
             </button>
           </div>
         </form>
       </Form>
-      {/* <IonRow
-        style={{
-          justifyContent: "space-around",
-          marginTop: "10pt",
-          marginBottom: "10pt",
-        }}
-      >
-        <IonButton
-          color="light"
-          onClick={() => router && router.push("/my-offers")}
-        >
-          Volver
-        </IonButton>
-        <IonButton
-          style={{
-            "--background": "#F08408",
-          }}
-          onClick={() => handleGuardar()}
-        >
-          Guardar
-        </IonButton>
-      </IonRow> */}
     </div>
   );
 }

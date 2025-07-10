@@ -20,6 +20,7 @@ export type HorarioTabContextValue = {
   agregarHorario: (body: TBodyRegistrarHorarioAlojamiento) => Promise<any>;
   modificarHorario: (body: TBodyActualizarHorarioAlojamiento) => Promise<any>;
   eliminarHorario: (idHorario: number) => Promise<void>;
+  horariosEsCompleto: boolean;
 };
 
 const horarioSchema = z.object({
@@ -49,6 +50,7 @@ const horariosFormSchema = z.object({
 
 const useHorariosTab = ({ idOferta }: { idOferta: string }) => {
   const [horarios, setHorarios] = React.useState<any[]>([]);
+  const [esCompleto, setEsCompleto] = React.useState<boolean>(false);
 
   const horariosForm = useForm<z.infer<typeof horariosFormSchema>>({
     resolver: zodResolver(horariosFormSchema),
@@ -59,8 +61,8 @@ const useHorariosTab = ({ idOferta }: { idOferta: string }) => {
   const actualizarHorarios = () => {
     obtenerHorariosRegistradosAlojamiento(idOferta)
       .then((response) => {
-        console.log("response: ", response.data);
         setHorarios(response.data.result);
+        setEsCompleto(response.data.result.length > 0);
       })
       .catch(() => {});
   };
@@ -102,6 +104,7 @@ const useHorariosTab = ({ idOferta }: { idOferta: string }) => {
     agregarHorario,
     modificarHorario,
     eliminarHorario,
+    horariosEsCompleto: esCompleto,
   };
   return context;
 };

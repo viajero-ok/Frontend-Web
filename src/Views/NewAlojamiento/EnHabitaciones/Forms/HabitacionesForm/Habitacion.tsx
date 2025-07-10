@@ -1,6 +1,5 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import {
-  guardarHabitacion,
   guardarImagenDeHabitacion,
   TBodyGuardarHabitacion,
 } from "../../../../../App/Alojamientos/Habitacion";
@@ -20,48 +19,6 @@ import { Input } from "../../../../../components/ui/Input/Input";
 import { useModal } from "../../../../../components/ui/Modal/Modal";
 import { useAlojamientoEnHabitaciones } from "../../Provider/AlojamientoEnHabitacionesProvider";
 
-// id_oferta: props.idOferta,
-//       id_tipo_detalle: props.habitacionSelected,
-//       tipologia: {
-//         nombre_tipologia: nombre ?? "",
-//         cantidad: cantidad ?? 0,
-//       },
-//       plazas: plazas,
-//       baño: {
-//         cantidad_baños: cantidadBaños ?? 0,
-//         bl_baño_compartido: esBañoCompartido ?? false,
-//         bl_baño_adaptado: esAdaptado ?? false,
-//       },
-//       caracteristicas: formCaracteristicas,
-//       observaciones: {
-//         texto_observacion_comodidades_y_servicios_habitacion:
-//           "La habitación cuenta con aire acondicionado.",
-//       },
-
-const numeric = z
-  .preprocess((val) => {
-    if (typeof val === "string" && /^[0-9]+$/.test(val)) {
-      return Number(val);
-    }
-    return val;
-  }, z.number({ message: "Debe ser un número" }))
-  .optional();
-
-const formSchema = z.object({
-  nombre_tipologia: z.string().optional(),
-  cantidad: numeric,
-
-  cantidad_camas_doble: numeric,
-  cantidad_camas_individual: numeric,
-  cantidad_camas_sofa: numeric,
-
-  cantidad_baños: numeric,
-  bl_baño_compartido: z.boolean().optional(),
-  bl_baño_adaptado: z.boolean().optional(),
-  // características
-  texto_observacion_comodidades_y_servicios_habitacion: z.string().optional(),
-});
-
 type THabitacion = {
   habitacion: any;
   habitacionSelected: any;
@@ -69,10 +26,13 @@ type THabitacion = {
   idOferta: string;
 };
 export default function Habitacion(props: THabitacion) {
-  const [formCaracteristicas, setFormCaracteristicas] = useState<number[]>([]);
-
-  const { datosRegistroHabitacion, eliminarTipologia, guardarTipologia } =
-    useAlojamientoEnHabitaciones();
+  const {
+    datosRegistroHabitacion,
+    eliminarTipologia,
+    guardarTipologia,
+    habitacionSchema,
+    habitacionesDirt,
+  } = useAlojamientoEnHabitaciones();
   const { modal, setOpen } = useModal();
 
   const handleEliminar = () => {
@@ -139,7 +99,7 @@ export default function Habitacion(props: THabitacion) {
     });
   };
 
-  const handleGuardar = (values: z.infer<typeof formSchema>) => {
+  const handleGuardar = (values: z.infer<typeof habitacionSchema>) => {
     const body: TBodyGuardarHabitacion = {
       id_oferta: props.idOferta,
       id_tipo_detalle: props.habitacionSelected,
@@ -160,7 +120,7 @@ export default function Habitacion(props: THabitacion) {
         bl_baño_compartido: values.bl_baño_compartido ?? false,
         bl_baño_adaptado: values.bl_baño_adaptado ?? false,
       },
-      caracteristicas: formCaracteristicas,
+      caracteristicas: values.caracteristicas,
       observaciones: {
         texto_observacion_comodidades_y_servicios_habitacion:
           "La habitación cuenta con aire acondicionado.",
@@ -212,45 +172,56 @@ export default function Habitacion(props: THabitacion) {
     });
   };
 
-  useEffect(() => {
-    setFormCaracteristicas(
-      props.habitacion.caracteristicas
-        ? props.habitacion.caracteristicas.map(
-            (caracteristica: any) => caracteristica.id_caracteristica
-          )
-        : []
-    );
-    form.reset({
+  const form = useForm<z.infer<typeof habitacionSchema>>({
+    resolver: zodResolver(habitacionSchema),
+    mode: "onSubmit",
+    defaultValues: {
+      caracteristicas: props.habitacion.caracteristicas
+        .map((caracteristica: any) => caracteristica.id_caracteristica)
+        .sort((a: number, b: number) => a - b),
       nombre_tipologia: props.habitacion.tipo_detalle,
-      cantidad: props.habitacion.cantidad,
-      cantidad_baños: props.habitacion.cantidad_baños,
+      cantidad: props.habitacion.cantidad.toString(),
+      cantidad_baños: props.habitacion.cantidad_baños.toString(),
       bl_baño_adaptado: props.habitacion.bl_baño_adaptado,
       bl_baño_compartido: props.habitacion.bl_baño_compartido,
       cantidad_camas_doble:
-        props.habitacion.plazas && props.habitacion.plazas[0]?.cantidad_camas,
+        props.habitacion.plazas &&
+        props.habitacion.plazas[0]?.cantidad_camas.toString(),
       cantidad_camas_individual:
-        props.habitacion.plazas && props.habitacion.plazas[1]?.cantidad_camas,
+        props.habitacion.plazas &&
+        props.habitacion.plazas[1]?.cantidad_camas.toString(),
       cantidad_camas_sofa:
-        props.habitacion.plazas && props.habitacion.plazas[2]?.cantidad_camas,
+        props.habitacion.plazas &&
+        props.habitacion.plazas[2]?.cantidad_camas.toString(),
       texto_observacion_comodidades_y_servicios_habitacion:
         props.habitacion.texto_observacion_comodiadades_y_servicios_habitacion,
-    });
-  }, [props.habitacion]);
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    mode: "onSubmit",
+    },
   });
+  const formWatch = form.watch();
 
-  const handleCaracteristicaChange = (id: number, value: boolean) => {
-    setFormCaracteristicas((prev: number[]) => {
-      const copy = [...prev];
-      if (!copy.includes(id) && value) return [...copy, id];
-      if (copy.includes(id) && !value)
-        return copy.filter((value: number) => value != id);
-      return copy;
-    });
+  const handleSelectCheckItem = (id: number, value: boolean) => {
+    if (!value) {
+      form.setValue(
+        "caracteristicas",
+        [...form.getValues().caracteristicas]
+          .filter((v: number) => v != id)
+          .sort((a, b) => a - b),
+        { shouldDirty: true }
+      );
+      return;
+    }
+
+    form.setValue(
+      "caracteristicas",
+      [...form.getValues().caracteristicas, id].sort((a, b) => a - b),
+      { shouldDirty: true }
+    );
   };
+
+  useEffect(() => {
+    if (!form.formState) return;
+    habitacionesDirt(form.formState.isDirty);
+  }, [form.formState]);
 
   return (
     <div className="flex flex-col w-full">
@@ -412,12 +383,12 @@ export default function Habitacion(props: THabitacion) {
                     <Check
                       className="h-[42pt]"
                       onChange={(checked: boolean) =>
-                        handleCaracteristicaChange(
+                        handleSelectCheckItem(
                           caracteristica.id_caracteristica,
                           checked
                         )
                       }
-                      checked={formCaracteristicas.includes(
+                      checked={formWatch.caracteristicas.includes(
                         caracteristica.id_caracteristica
                       )}
                       key={caracteristica.id_caracteristica}
@@ -442,7 +413,7 @@ export default function Habitacion(props: THabitacion) {
                 </FormItem>
               )}
             /> */}
-            <div className="flex flex-row mt-2 justify-between">
+            <div className="flex flex-row mt-2 justify-between pb-12">
               <button
                 onClick={(e) => {
                   e.preventDefault();
@@ -452,35 +423,17 @@ export default function Habitacion(props: THabitacion) {
               >
                 Eliminar
               </button>
-              <button type="submit" className="viajero-button px-4 py-2">
+              <button
+                disabled={!form.formState.isDirty}
+                type="submit"
+                className="viajero-button px-4 py-2 disabled:bg-gray-200! disabled:shadow-none!"
+              >
                 Guardar
               </button>
             </div>
           </form>
         </Form>
       </div>
-      {/* <IonRow
-        style={{
-          display: "flex",
-          alignContent: "space-around",
-          alignItems: "center",
-          justifyContent: "space-around",
-          padding: "13pt",
-        }}
-      >
-        <IonButton
-          style={{ "--background": "white", color: "#F08408" }}
-          onClick={() => handleEliminar()}
-        >
-          <IonIcon icon={trash} /> Eliminar
-        </IonButton>
-        <IonButton
-          style={{ "--background": "#F08408" }}
-          onClick={() => handleGuardar()}
-        >
-          Guardar
-        </IonButton>
-      </IonRow> */}
     </div>
   );
 }

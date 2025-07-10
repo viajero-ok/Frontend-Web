@@ -6,7 +6,7 @@ import {
   homeOutline,
   imageOutline,
 } from "ionicons/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { finalizarRegistroAlojamiento } from "../../../App/Alojamientos/NuevoAlojamiento";
 import FormSideMenu, {
   Sidebar,
@@ -18,6 +18,7 @@ import HabitacionesForm from "./Forms/HabitacionesForm/HabitacionesForm";
 import ImagenesForm from "./Forms/ImagenesForm/ImagenesForm";
 import { useAlojamientoEnHabitaciones } from "./Provider/AlojamientoEnHabitacionesProvider";
 import HorariosForm from "./Forms/HorariosForm/HorariosForm";
+import { obtenerDatosBasicosOfertaTuristica } from "../../../App/Ofertas/Ofertas";
 
 export type TImagenRegistrada = {
   id_imagen: number;
@@ -31,6 +32,7 @@ type TNewAlojamientoEnHabitacionesView = {
 export default function NewAlojamientoEnHabitacionesView(
   props: TNewAlojamientoEnHabitacionesView
 ) {
+  const [idEstado, setIdEstado] = useState<number>();
   const [segment, setSegment] = useState<string>("alojamiento-form");
   const { modal, setOpen } = useModal();
 
@@ -76,7 +78,18 @@ export default function NewAlojamientoEnHabitacionesView(
   };
 
   const router = useIonRouter();
-  const { puedeRegistrar, alojamientoForm } = useAlojamientoEnHabitaciones();
+  const { idOferta, puedeRegistrar, alojamientoForm } =
+    useAlojamientoEnHabitaciones();
+
+  useEffect(() => {
+    obtenerDatosBasicosOfertaTuristica(idOferta)
+      .then((response) => {
+        if (!response.data) return;
+        if (!response.data.estado) return;
+        setIdEstado(response.data.id_estado);
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <>
@@ -120,7 +133,7 @@ export default function NewAlojamientoEnHabitacionesView(
                 Volver
               </button>
             </Sidebar>
-            {puedeRegistrar && (
+            {puedeRegistrar && idEstado == 1 && (
               <div className="flex flex-col gap-2 w-fit p-4 border border-gray-200 rounded-md">
                 <div className="text-md font-bold text-gray-600">
                   ¡Ya podés registrar tu oferta!
@@ -128,7 +141,10 @@ export default function NewAlojamientoEnHabitacionesView(
                 <div className="text-sm text-gray-600">
                   Todos los datos necesarios han sido registrados
                 </div>
-                <button className="viajero-button px-4 py-2 animate-pulse">
+                <button
+                  onClick={() => handleRegistrarOferta()}
+                  className="viajero-button px-4 py-2 animate-pulse"
+                >
                   Registrar oferta
                 </button>
               </div>

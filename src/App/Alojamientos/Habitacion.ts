@@ -1,4 +1,6 @@
+import { Dispatch, SetStateAction } from "react";
 import AUTH_API from "../AuthBackendApi";
+import { fileToBase64 } from "../Ofertas/Ofertas";
 
 export const crearHabitacion = async (id_oferta: string) =>
   AUTH_API.post(`/alojamientos/registrar-habitacion`, {
@@ -36,15 +38,38 @@ type TBodyGuardarImagenDeHabitacion = {
   imagen: File;
   id_oferta: string;
   id_tipo_detalle: string;
+  setProgress: Dispatch<SetStateAction<number>>;
 };
 export const guardarImagenDeHabitacion = async (
   body: TBodyGuardarImagenDeHabitacion
-) =>
-  AUTH_API.post(`/alojamientos/registrar-imagen-habitacion`, body, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+) => {
+  const response = (
+    await AUTH_API.post(`/alojamientos/registrar-imagen-habitacion`, body, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      onUploadProgress: (progressEvent) => {
+        // if (!progressEvent.total && !progressEvent.estimated) return;
+        const percent = Math.round(
+          (progressEvent.loaded * 100) /
+            (progressEvent.total
+              ? progressEvent.total
+              : progressEvent.estimated!)
+        );
+        body.setProgress(percent);
+      },
+    })
+  ).data as { id_imagen: number };
+
+  const base64 = await fileToBase64(body.imagen);
+  return { id_imagen: response.id_imagen, base64 };
+};
+
+export const eliminarImagenHabitacion = async (idImagen: number) =>
+  await AUTH_API.delete(
+    `/alojamientos/eliminar-imagen-habitacion/${idImagen}`
+  );
+
 
 export const obtenerDatosRegistroHabitacion = async () =>
   await AUTH_API.get(`/alojamientos/datos-registro-habitacion`);

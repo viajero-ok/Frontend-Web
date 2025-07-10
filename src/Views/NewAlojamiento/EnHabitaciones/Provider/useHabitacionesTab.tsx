@@ -9,6 +9,7 @@ import {
 } from "../../../../App/Alojamientos/Habitacion";
 import { z } from "zod";
 import { UseFormReturn } from "react-hook-form";
+import { LocalOrRemoteImage } from "../../../../components/MultimediaUpload/ImageUploadProvider";
 
 const numeric = z
   .preprocess((val) => {
@@ -47,6 +48,7 @@ export type HabitacionesContextValue = {
   habitacionesEsCompleta: boolean;
   habitacionesDirt: (v: boolean) => void;
   habitacionesIsDirty: boolean;
+  actualizarHabitaciones: () => void;
 };
 
 const useHabitacionesTab = ({ idOferta }: { idOferta: string }) => {
@@ -62,8 +64,9 @@ const useHabitacionesTab = ({ idOferta }: { idOferta: string }) => {
         setHabitaciones(response.data.datos);
         setEsCompleta(
           response.data.datos.filter(
-            (habitacion: any) => !habitacion.tipo_detalle
-          ).length == 0
+            (habitacion: any) =>
+              !habitacion.tipo_detalle || habitacion.imagenes.length == 0
+          ).length == 0 && response.data.datos.length > 0
         );
       })
       .catch(() => {});
@@ -130,6 +133,7 @@ const useHabitacionesTab = ({ idOferta }: { idOferta: string }) => {
     habitacionesEsCompleta: esCompleta,
     habitacionesDirt: (v: boolean) => setIsDirty(v),
     habitacionesIsDirty: isDirty,
+    actualizarHabitaciones: handleObtenerHabitaciones,
   };
   return context;
 };

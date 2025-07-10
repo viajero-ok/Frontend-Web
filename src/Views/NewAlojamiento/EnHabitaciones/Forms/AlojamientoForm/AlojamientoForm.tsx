@@ -311,7 +311,6 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
                   </FormItem>
                 )}
               />
-              <h1>value: {typeof formWatch.plazo_dias_cancelacion}</h1>
               <FormField
                 control={form.control}
                 name="plazo_dias_cancelacion"
@@ -441,7 +440,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
                 datosRegistroAlojamiento.metodosDePago.map((metodo: any) => (
                   <Check
                     className="h-[42pt] mt-2 break-inside-avoid-column"
-                    checked={formWatch.metodosDePago.includes(
+                    checked={formWatch.metodosDePago?.includes(
                       metodo.id_metodo_pago
                     )}
                     onChange={(value: boolean) =>

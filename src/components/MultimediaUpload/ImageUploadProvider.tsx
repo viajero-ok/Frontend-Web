@@ -307,7 +307,7 @@ export const Image = ({
 };
 
 const ImagenDialog = () => {
-  const { selectImage, selectedImage, imagenes, deleteService } =
+  const { selectImage, selectedImage, imagenes, deleteService, removeImage } =
     React.useContext(ImagenUploadContext);
   const { modal, setOpen } = useModal();
 
@@ -328,7 +328,12 @@ const ImagenDialog = () => {
   const handleDelete = () => {
     const img = getImage();
     if (!img) return;
-    deleteService(img.getId());
+    deleteService(img.getId())
+      .then(() => {
+        removeImage(img.getId());
+        setOpen(false);
+      })
+      .catch(() => {});
     selectImage(null);
   };
 

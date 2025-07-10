@@ -1,5 +1,6 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
+  eliminarImagenHabitacion,
   guardarImagenDeHabitacion,
   TBodyGuardarHabitacion,
 } from "../../../../../App/Alojamientos/Habitacion";
@@ -18,6 +19,15 @@ import {
 import { Input } from "../../../../../components/ui/Input/Input";
 import { useModal } from "../../../../../components/ui/Modal/Modal";
 import { useAlojamientoEnHabitaciones } from "../../Provider/AlojamientoEnHabitacionesProvider";
+import { Segment } from "../../../../../components/ui/Segment/Segment";
+import { clipboardOutline, imagesOutline } from "ionicons/icons";
+import {
+  ImageUpload,
+  LocalOrRemoteImage,
+  renderRemoteImage,
+  useImageUpload,
+} from "../../../../../components/MultimediaUpload/ImageUploadProvider";
+import { useToast } from "../../../../../components/ui/Toast/Toast";
 
 type THabitacion = {
   habitacion: any;
@@ -26,12 +36,16 @@ type THabitacion = {
   idOferta: string;
 };
 export default function Habitacion(props: THabitacion) {
+  const [segment, setSegment] = useState<string>("datos");
+
   const {
+    idOferta,
     datosRegistroHabitacion,
     eliminarTipologia,
     guardarTipologia,
     habitacionSchema,
     habitacionesDirt,
+    actualizarHabitaciones,
   } = useAlojamientoEnHabitaciones();
   const { modal, setOpen } = useModal();
 
@@ -164,14 +178,6 @@ export default function Habitacion(props: THabitacion) {
       });
   };
 
-  const handleImageService = (file: File) => {
-    return guardarImagenDeHabitacion({
-      imagen: file,
-      id_oferta: props.idOferta,
-      id_tipo_detalle: props.habitacionSelected,
-    });
-  };
-
   const form = useForm<z.infer<typeof habitacionSchema>>({
     resolver: zodResolver(habitacionSchema),
     mode: "onSubmit",
@@ -223,182 +229,256 @@ export default function Habitacion(props: THabitacion) {
     habitacionesDirt(form.formState.isDirty);
   }, [form.formState]);
 
+  const [imagenes, setImagenes] = useState<LocalOrRemoteImage[]>(
+    props.habitacion.imagenes.map((i: any) => ({
+      getId: () => i.id_imagen,
+      getNombre: () => i.nombre,
+      render: () => renderRemoteImage(`data:image/png;base64,${i.datos}`),
+      isRemote: () => true,
+      getDatos: () => i.datos,
+      getSize: () => i.datos.length,
+    }))
+  );
+
+  const { toast } = useToast();
+
+  const handleDelete = async (idImagen: number) => {
+    try {
+      await eliminarImagenHabitacion(idImagen)
+        .then(() => {
+          actualizarHabitaciones();
+        })
+        .catch(() => {
+          toast({
+            variant: "danger",
+            title: "Error al intentar eliminar la imagen. Intente nuevamente",
+          });
+        });
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  const service = async (data: {
+    imagen: File;
+    setProgress: Dispatch<SetStateAction<number>>;
+  }) => {
+    try {
+      const response = await guardarImagenDeHabitacion({
+        imagen: data.imagen,
+        setProgress: data.setProgress,
+        id_oferta: idOferta,
+        id_tipo_detalle: props.habitacionSelected,
+      });
+      actualizarHabitaciones();
+      return response;
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  const imageUpload = useImageUpload({
+    imagenes,
+    setImagenes,
+    service,
+    deleteService: handleDelete,
+  });
+
   return (
     <div className="flex flex-col w-full">
-      <div className="flex flex-row w-full h-[42pt] items-center p-4 text-xl text-gray-600 font-bold border border-gray-200 bg-gray-50 rounded-md">
-        Editar tipología
+      <div className="flex flex-row w-full h-[42pt] items-center border rounded-md border-gray-200">
+        <div className="flex items-center px-4 border-r h-full text-xl text-gray-600 font-bold text-nowrap border-gray-200 bg-gray-50 rounded-l-md">
+          Editar tipología
+        </div>
+        <div className="flex flex-row gap-2 w-full justify-end pr-4">
+          <Segment
+            label="Datos de la tipología"
+            value="datos"
+            segment={segment}
+            set={setSegment}
+            icon={clipboardOutline}
+          />
+          <Segment
+            label="Imágenes"
+            value="imagenes"
+            segment={segment}
+            set={setSegment}
+            icon={imagesOutline}
+          />
+        </div>
       </div>
-      <div>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleGuardar)} className="mt-2">
-            <div className="grid grid-cols-2 gap-2">
-              <FormField
-                control={form.control}
-                name="nombre_tipologia"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input placeholder="Nombre" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="cantidad"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        placeholder="Cantidad"
-                        label="Cantidad:"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <div className="flex flex-row w-full mt-2 h-[42pt] items-center p-4 text-md text-gray-600 font-bold border border-gray-200 bg-gray-50 rounded-md">
-                  Plazas
-                </div>
-                <div className="flex flex-col mt-2 gap-2">
-                  <FormField
-                    control={form.control}
-                    name="cantidad_camas_doble"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Cantidad"
-                            label="Cama doble:"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="cantidad_camas_individual"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Cantidad"
-                            label="Cama individual:"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="cantidad_camas_sofa"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Cantidad"
-                            label="Sofá-cama:"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+      {segment == "datos" && (
+        <div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleGuardar)} className="mt-2">
+              <div className="grid grid-cols-2 gap-2">
+                <FormField
+                  control={form.control}
+                  name="nombre_tipologia"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="Nombre" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="cantidad"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          placeholder="Cantidad"
+                          label="Cantidad:"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-              <div>
-                <div className="flex flex-row w-full mt-2 h-[42pt] items-center p-4 text-md text-gray-600 font-bold border border-gray-200 bg-gray-50 rounded-md">
-                  Baños
-                </div>
-                <div className="flex flex-col gap-2 mt-2">
-                  <FormField
-                    control={form.control}
-                    name="cantidad_baños"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Cantidad"
-                            label="Cantidad:"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="bl_baño_compartido"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Check className="h-[42pt]" {...field}>
-                            Es baño compartido
-                          </Check>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="bl_baño_adaptado"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Check className="h-[42pt]" {...field}>
-                            Apto personas con movilidad reducida
-                          </Check>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-row w-full mt-2 h-[42pt] items-center p-4 text-md text-gray-600 font-bold border border-gray-200 bg-gray-50 rounded-md">
-              Comodidades y servicios
-            </div>
-            <div className="grid grid-cols-2 mt-2 gap-2">
-              {datosRegistroHabitacion &&
-                datosRegistroHabitacion.caracteristicas_habitaciones?.map(
-                  (caracteristica: any) => (
-                    <Check
-                      className="h-[42pt]"
-                      onChange={(checked: boolean) =>
-                        handleSelectCheckItem(
-                          caracteristica.id_caracteristica,
-                          checked
-                        )
-                      }
-                      checked={formWatch.caracteristicas.includes(
-                        caracteristica.id_caracteristica
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <div className="flex flex-row w-full mt-2 h-[42pt] items-center p-4 text-md text-gray-600 font-bold border border-gray-200 bg-gray-50 rounded-md">
+                    Plazas
+                  </div>
+                  <div className="flex flex-col mt-2 gap-2">
+                    <FormField
+                      control={form.control}
+                      name="cantidad_camas_doble"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              type="text"
+                              placeholder="Cantidad"
+                              label="Cama doble:"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
                       )}
-                      key={caracteristica.id_caracteristica}
-                    >
-                      {caracteristica.caracteristica}
-                    </Check>
-                  )
-                )}
-            </div>
-            {/* <div className="flex flex-row w-full mt-2 h-[42pt] items-center p-4 text-md text-gray-600 font-bold border border-gray-200 bg-gray-50 rounded-md">
+                    />
+                    <FormField
+                      control={form.control}
+                      name="cantidad_camas_individual"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              type="text"
+                              placeholder="Cantidad"
+                              label="Cama individual:"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="cantidad_camas_sofa"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              type="text"
+                              placeholder="Cantidad"
+                              label="Sofá-cama:"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <div className="flex flex-row w-full mt-2 h-[42pt] items-center p-4 text-md text-gray-600 font-bold border border-gray-200 bg-gray-50 rounded-md">
+                    Baños
+                  </div>
+                  <div className="flex flex-col gap-2 mt-2">
+                    <FormField
+                      control={form.control}
+                      name="cantidad_baños"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              type="text"
+                              placeholder="Cantidad"
+                              label="Cantidad:"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="bl_baño_compartido"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Check className="h-[42pt]" {...field}>
+                              Es baño compartido
+                            </Check>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="bl_baño_adaptado"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Check className="h-[42pt]" {...field}>
+                              Apto personas con movilidad reducida
+                            </Check>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-row w-full mt-2 h-[42pt] items-center p-4 text-md text-gray-600 font-bold border border-gray-200 bg-gray-50 rounded-md">
+                Comodidades y servicios
+              </div>
+              <div className="grid grid-cols-2 mt-2 gap-2">
+                {datosRegistroHabitacion &&
+                  datosRegistroHabitacion.caracteristicas_habitaciones?.map(
+                    (caracteristica: any) => (
+                      <Check
+                        className="h-[42pt]"
+                        onChange={(checked: boolean) =>
+                          handleSelectCheckItem(
+                            caracteristica.id_caracteristica,
+                            checked
+                          )
+                        }
+                        checked={formWatch.caracteristicas.includes(
+                          caracteristica.id_caracteristica
+                        )}
+                        key={caracteristica.id_caracteristica}
+                      >
+                        {caracteristica.caracteristica}
+                      </Check>
+                    )
+                  )}
+              </div>
+              {/* <div className="flex flex-row w-full mt-2 h-[42pt] items-center p-4 text-md text-gray-600 font-bold border border-gray-200 bg-gray-50 rounded-md">
               Observaciones
             </div>
             <FormField
@@ -413,27 +493,33 @@ export default function Habitacion(props: THabitacion) {
                 </FormItem>
               )}
             /> */}
-            <div className="flex flex-row mt-2 justify-between pb-12">
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleConfirmarEliminacion();
-                }}
-                className="viajero-button px-4 py-2 bg-red-400! hover:bg-red-400/90!"
-              >
-                Eliminar
-              </button>
-              <button
-                disabled={!form.formState.isDirty}
-                type="submit"
-                className="viajero-button px-4 py-2 disabled:bg-gray-200! disabled:shadow-none!"
-              >
-                Guardar
-              </button>
-            </div>
-          </form>
-        </Form>
-      </div>
+              <div className="flex flex-row mt-2 justify-between pb-12">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleConfirmarEliminacion();
+                  }}
+                  className="viajero-button px-4 py-2 bg-red-400! hover:bg-red-400/90!"
+                >
+                  Eliminar
+                </button>
+                <button
+                  disabled={!form.formState.isDirty}
+                  type="submit"
+                  className="viajero-button px-4 py-2 disabled:bg-gray-200! disabled:shadow-none!"
+                >
+                  Guardar
+                </button>
+              </div>
+            </form>
+          </Form>
+        </div>
+      )}
+      {segment == "imagenes" && (
+        <div className="w-full mt-2">
+          <ImageUpload {...imageUpload} className="w-full" />
+        </div>
+      )}
     </div>
   );
 }

@@ -142,52 +142,6 @@ export default function NewAlojamientoEnHabitacionesView(
           <HabitacionesForm idOferta={props.idOferta} />
         )}
       </FormSideMenu>
-      {/* <div className="mt-4">
-          <div>
-            <FormSideMenu title="Editar alojamiento">
-              <Segment
-                segment={segment}
-                value="alojamiento-form"
-                label="Datos del alojamiento"
-                set={setSegment}
-              />
-              <Segment
-                segment={segment}
-                value="imagenes-form"
-                label="Imágenes del alojamiento"
-                set={setSegment}
-              />
-              <Segment
-                segment={segment}
-                value="habitaciones-form"
-                label="Datos de las habitaciones"
-                set={setSegment}
-              />
-              <div
-                className={cn(
-                  "p-4 border rounded-md",
-                  "bg-gray-50 border-gray-200"
-                )}
-              >
-                <button
-                  onClick={() => handleRegistrarOferta()}
-                  className="viajero-button px-4 py-2"
-                >
-                  Registrar oferta
-                </button>
-              </div>
-            </FormSideMenu>
-          </div>
-          <div>
-            {segment == "alojamiento-form" && (
-              <AlojamientoForm id={props.idOferta} />
-            )}
-            {segment == "imagenes-form" && <ImagenesForm id={props.idOferta} />}
-            {segment == "habitaciones-form" && (
-              <HabitacionesForm idOferta={props.idOferta} />
-            )}
-          </div>
-        </div> */}
     </>
   );
 }

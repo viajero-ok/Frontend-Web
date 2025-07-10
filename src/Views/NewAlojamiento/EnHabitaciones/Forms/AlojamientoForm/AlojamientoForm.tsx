@@ -34,28 +34,12 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
     guardarAlojamiento,
     alojamientoForm,
     alojamientoSchema,
-    formCaracteristicas,
-    setFormCaracteristicas,
-    formMetodosDePago,
-    setFormMetodosDePago,
+    actualizarAlojamiento,
   } = useAlojamientoEnHabitaciones();
   const form = alojamientoForm;
   const formWatch = form.watch();
 
   const handleGuardar = (values: z.infer<typeof alojamientoSchema>) => {
-    // if (horarios.length == 0) {
-    //   form.setError("horarios", {
-    //     message: "Debe existir al menos un horario de Check-In y Check-Out",
-    //   });
-    //   return;
-    // }
-    // if (
-    //   horarios.filter(
-    //     (horario: THorariosCheckInCheckOutContext) =>
-    //       horario.errors && horario.errors.length > 0
-    //   ).length > 0
-    // )
-    //   return;
     let body: TBodyGuardarAlojamiento = {
       id_oferta: props.id,
       caracteristicas: values.caracteristicas,
@@ -104,6 +88,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
             </>
           ),
         });
+        actualizarAlojamiento();
       })
       .catch((error) => {
         modal({
@@ -124,21 +109,29 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
       });
   };
 
+  //keyof z.infer<typeof crearHorarioSchema.shape.dias_semana>
   const handleSelectCheckItem = (
     id: number,
     value: boolean,
     form: UseFormReturn<z.infer<typeof alojamientoSchema>>,
-    name: keyof z.infer<typeof alojamientoSchema>
+    name: keyof typeof alojamientoSchema.shape
   ) => {
     if (!value) {
       form.setValue(
         name,
-        [...form.getValues()[name]].filter((v: number) => v != id)
+        [...form.getValues()[name]]
+          .filter((v: number) => v != id)
+          .sort((a, b) => a - b),
+        { shouldDirty: true }
       );
       return;
     }
 
-    form.setValue(name, [...form.getValues()[name], id]);
+    form.setValue(
+      name,
+      [...form.getValues()[name], id].sort((a, b) => a - b),
+      { shouldDirty: true }
+    );
   };
 
   /** TODO: mover esto al provider */
@@ -202,7 +195,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
                   (caracteristica: any) => (
                     <Check
                       className="h-[42pt] mt-2 break-inside-avoid-column"
-                      checked={formWatch.caracteristicas.includes(
+                      checked={formWatch.caracteristicas?.includes(
                         caracteristica.id_caracteristica
                       )}
                       onChange={(value: boolean) =>
@@ -227,7 +220,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
                   (caracteristica: any) => (
                     <Check
                       className="h-[42pt] mt-2 break-inside-avoid-column"
-                      checked={formWatch.caracteristicas.includes(
+                      checked={formWatch.caracteristicas?.includes(
                         caracteristica.id_caracteristica
                       )}
                       onChange={(value: boolean) =>
@@ -252,7 +245,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
                   (caracteristica: any) => (
                     <Check
                       className="h-[42pt] mt-2 break-inside-avoid-column"
-                      checked={formWatch.caracteristicas.includes(
+                      checked={formWatch.caracteristicas?.includes(
                         caracteristica.id_caracteristica
                       )}
                       onChange={(value: boolean) =>

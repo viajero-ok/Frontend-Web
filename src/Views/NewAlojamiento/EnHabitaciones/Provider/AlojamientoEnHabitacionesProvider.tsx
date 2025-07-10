@@ -38,7 +38,7 @@ const AlojamientoEnHabitacionesProvider = ({
 
   React.useEffect(() => {
     setPuedeRegistrar(alojamiento.alojamientoEsCompleto);
-  }, [alojamiento, imagenes, habitaciones]);
+  }, [alojamiento, horarios, imagenes, habitaciones]);
 
   const registrar = async () => {
     try {

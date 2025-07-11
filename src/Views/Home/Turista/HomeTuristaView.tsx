@@ -43,14 +43,14 @@ export default function HomeTuristaView() {
           backgroundSize: "cover",
         }}
       />
-      <FormProvider schema={initialSchema}>
+      {/* <FormProvider schema={initialSchema}>
         <HomeTuristaForm />
       </FormProvider>
       <ConsultaOfertasCard
         fechas={{ fecha_desde: "", fecha_hasta: "" }}
         personas={0}
         ofertas={[]}
-      />
+      /> */}
       <IonToast
         isOpen={openToast}
         message={toastMessage}

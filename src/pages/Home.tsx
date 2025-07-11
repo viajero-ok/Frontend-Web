@@ -1,65 +1,27 @@
-import {
-  IonAvatar,
-  IonButton,
-  IonChip,
-  IonContent,
-  IonHeader,
-  IonImg,
-  IonLabel,
-  IonPage,
-  IonPopover,
-  IonTitle,
-  IonToolbar,
-} from "@ionic/react";
+import { IonContent, IonHeader, IonTitle, IonToolbar } from "@ionic/react";
 
-import "./Home.css";
-import { getApi } from "../App/Default/DefaultService";
-import { useAuth } from "../hooks/UseAuth/AuthProvider";
-import { transform } from "ol/proj";
-import ProfileChip from "../components/ProfileChip/ProfileChip";
 import DefaultLoggedLayout from "../Views/Layouts/DefaultLoggedLayout";
-import { useEffect, useState } from "react";
-import { PERFILES } from "../App/consts/UsuarioConsts";
+import "./Home.css";
+import { useAuth } from "../Auth/Auth";
+import { useEffect } from "react";
 import HomeVisitanteView from "../Views/Home/Visitante/HomeVisitanteView";
 import HomeTuristaView from "../Views/Home/Turista/HomeTuristaView";
 import HomePrestadorView from "../Views/Home/Prestador/HomePrestadorView";
 
 const Home: React.FC = () => {
-  const [perfil, setPerfil] = useState<number>();
   const auth = useAuth();
 
-  useEffect(() => {
-    if (!auth) return;
-    setPerfil(auth.getPerfil());
-  }, [auth]);
-
-  console.log("is home")
+  console.log("auth: ", auth);
 
   return (
     <DefaultLoggedLayout>
-      <IonContent style={{ overflowY: "hidden" }}>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent style={{ overflowY: "hidden" }}>
-          {/* <div
-            style={{
-              width: "100%",
-              height: "400pt",
-              backgroundImage: "url(/images/panoramic_1.jpg)",
-              backgroundPosition: "center 25%",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-            }}
-          ></div> */}
-          {/* <HomeVisitanteView /> */}
-          {perfil == PERFILES.INVITADO.id && <HomeVisitanteView />}
-          {perfil == PERFILES.TURISTA.id && <HomeVisitanteView />}
-          {perfil == PERFILES.PRESTADOR.id && <HomePrestadorView />}
-        </IonContent>
-      </IonContent>
+      {auth != "failed" && auth != "loading" && (
+        <div>
+          {auth.esTurista && <HomeTuristaView />}
+          {auth.esPrestador && <HomePrestadorView />}
+        </div>
+      )}
+      {auth == "failed" && <HomeVisitanteView />}
     </DefaultLoggedLayout>
   );
 };

@@ -1,10 +1,9 @@
 import {
   IonCard,
-  IonHeader,
   IonCardTitle,
-  useIonRouter,
-  IonGrid,
   IonCol,
+  IonHeader,
+  useIonRouter
 } from "@ionic/react";
 
 export default function HomePrestadorView(props: any) {

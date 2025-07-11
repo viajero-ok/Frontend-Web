@@ -14,8 +14,7 @@ import {
 import { useEffect, useState } from "react";
 import LoginNavbar from "../../components/LoginNavbar/LoginNavbar";
 import ProfileChip from "../../components/ProfileChip/ProfileChip";
-import { useAuth } from "../../hooks/UseAuth/AuthProvider";
-import { PERFILES } from "../../App/consts/UsuarioConsts";
+import { useAuth } from "../../Auth/Auth";
 
 export default function DefaultLoggedLayout({ children }: any) {
   const [logged, setLogged] = useState<boolean>();
@@ -27,13 +26,6 @@ export default function DefaultLoggedLayout({ children }: any) {
     if (!router) return;
     router.push(uri);
   };
-
-  useEffect(() => {
-    if (auth) {
-      setLogged(auth.isLogged);
-      setPerfilSeleccionado(auth.perfilSeleccionado);
-    }
-  }, [auth]);
 
   return (
     <IonPage id="burger">
@@ -52,16 +44,40 @@ export default function DefaultLoggedLayout({ children }: any) {
             {/* <div className="text-lg italic font-light text-gray-600">¡Hola, {}viajero!</div> */}
           </div>
 
-          <div className="flex flex-row gap-8 justify-end items-center pr-4">
-            <div className="flex flex-row gap-4 text-gray-800 select-none h-full">
-              <div onClick={() => router.push("/")} className="cursor-pointer px-2 hover:underline hover:bg-[var(--color-viajero)]/5 h-full flex items-center">Inicio</div>
-              <div onClick={() => router.push("/my-places")} className="cursor-pointer px-2 hover:underline hover:bg-[var(--color-viajero)]/5 h-full flex items-center">Establecimientos</div>
-              <div onClick={() => router.push("/my-offers")} className="cursor-pointer px-2 hover:underline hover:bg-[var(--color-viajero)]/5 h-full flex items-center">Ofertas</div>
-              <div onClick={() => router.push("/mis-reservas")} className="cursor-pointer px-2 hover:underline hover:bg-[var(--color-viajero)]/5 h-full flex items-center">Reservas</div>
+          {auth != "failed" && auth != "loading" && (
+            <div className="flex flex-row gap-8 justify-end items-center pr-4">
+              {auth.esPrestador && (
+                <div className="flex flex-row gap-4 text-gray-800 select-none h-full">
+                  <div
+                    onClick={() => router.push("/")}
+                    className="cursor-pointer px-2 hover:underline hover:bg-[var(--color-viajero)]/5 h-full flex items-center"
+                  >
+                    Inicio
+                  </div>
+                  <div
+                    onClick={() => router.push("/my-places")}
+                    className="cursor-pointer px-2 hover:underline hover:bg-[var(--color-viajero)]/5 h-full flex items-center"
+                  >
+                    Establecimientos
+                  </div>
+                  <div
+                    onClick={() => router.push("/my-offers")}
+                    className="cursor-pointer px-2 hover:underline hover:bg-[var(--color-viajero)]/5 h-full flex items-center"
+                  >
+                    Ofertas
+                  </div>
+                  <div
+                    onClick={() => router.push("/mis-reservas")}
+                    className="cursor-pointer px-2 hover:underline hover:bg-[var(--color-viajero)]/5 h-full flex items-center"
+                  >
+                    Reservas
+                  </div>
+                </div>
+              )}
+              <ProfileChip />
             </div>
-            {auth && logged && <ProfileChip />}
-            {auth && logged == false && <LoginNavbar />}
-          </div>
+          )}
+          {auth == "failed" && <LoginNavbar />}
         </div>
       </IonHeader>
       <IonContent fullscreen>

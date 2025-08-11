@@ -72,7 +72,7 @@ export default function HomeVisitanteView() {
           personas={personas}
           ofertas={ofertas}
         />
-        <IonToast
+        {/* <IonToast
           isOpen={openToast}
           message={toastMessage}
           duration={5000}
@@ -81,7 +81,7 @@ export default function HomeVisitanteView() {
             setOpenToast(false);
             setToastMessage("");
           }}
-        />
+        /> */}
       </div>
     </div>
   );

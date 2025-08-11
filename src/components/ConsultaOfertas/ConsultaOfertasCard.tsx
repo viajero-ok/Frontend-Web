@@ -10,6 +10,8 @@ import MapView from "../MapView/MapView";
 import { cn } from "../ui/Form/Field";
 import FiltrosConsultaOfertas from "./FiltrosConsultaOfertas";
 import { Segment } from "../ui/Segment/Segment";
+import { useAuth } from "../../Auth/Auth";
+import { MapViewProvider, useMapView } from "../MapView/useMapView";
 
 interface Oferta {
   id: number;
@@ -45,10 +47,15 @@ export default function ConsultaOfertasCard(props: TConsultaOfertasCard) {
     setPos((_) => ({ lat: latitud, lng: longitud }));
   };
 
+  const map = useMapView();
+
   return (
     <div className="flex flex-row gap-4 mt-6 w-full justify-center">
       <div style={{}}>
-        <MapView
+        <MapViewProvider {...map}>
+          <MapView className="w-[300pt] aspect-video rounded-md border border-[#bbb] hover:border-black" />
+        </MapViewProvider>
+        {/* <MapView
           setMarker={pos}
           // style={{
           //   height: "200pt",
@@ -56,7 +63,7 @@ export default function ConsultaOfertasCard(props: TConsultaOfertasCard) {
           //   borderRadius: "16pt",
           // }}
           className="w-[300pt] aspect-video rounded-md border border-[#bbb] hover:border-black"
-        />
+        /> */}
         <FiltrosConsultaOfertas />
       </div>
       <div className="flex flex-col w-full">
@@ -121,9 +128,10 @@ export function OfertaCard({
   posicionar: (latitud: number, longitud: number) => void;
   setOfertasGuardadas?: React.Dispatch<React.SetStateAction<any[]>>;
 }) {
-  const router = useIonRouter();
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
-  const [isFavorite, setIsFavorite] = useState(false);
+  const auth = useAuth();
+  const router = useIonRouter();
 
   const handleGuardarOferta = async (id: number) => {
     setIsFavorite(true);
@@ -273,12 +281,16 @@ export function OfertaCard({
           isFavorite ? "text-gray-600" : "text-gray-200"
         )}
         onClick={() => {
+          if (auth == "failed") {
+            router.push("/login");
+            return;
+          }
+
           const nuevoEstado = !isFavorite;
           setIsFavorite(nuevoEstado);
 
           if (nuevoEstado) {
             handleGuardarOferta(oferta.id_oferta);
-            console.log("Guardando oferta:", oferta.id_oferta);
           } else {
             handleEliminarGuardado();
           }

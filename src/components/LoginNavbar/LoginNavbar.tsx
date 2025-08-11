@@ -12,7 +12,7 @@ export default function LoginNavbar() {
     router.push("/login");
   };
   return (
-    <div className="flex flex-row gap-4 items-center">
+    <div className="flex flex-row gap-4 items-center justify-end">
       <button
         onClick={() => handleIngresar()}
         className="cursor-pointer hover:border-[var(--color-viajero)] text-gray-800 border-transparent border-b-2"

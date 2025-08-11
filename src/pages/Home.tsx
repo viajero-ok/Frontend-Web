@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonTitle, IonToolbar } from "@ionic/react";
+import { IonContent, IonHeader, IonTitle, IonToolbar, useIonRouter } from "@ionic/react";
 
 import DefaultLoggedLayout from "../Views/Layouts/DefaultLoggedLayout";
 import "./Home.css";
@@ -10,8 +10,6 @@ import HomePrestadorView from "../Views/Home/Prestador/HomePrestadorView";
 
 const Home: React.FC = () => {
   const auth = useAuth();
-
-  console.log("auth: ", auth);
 
   return (
     <DefaultLoggedLayout>

@@ -1,15 +1,14 @@
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, useMap, useMapEvents } from "react-leaflet";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 
 import { LeafletMouseEvent } from "leaflet";
 import { CSSProperties, useEffect, useMemo, useState } from "react";
 import { ClassNameValue } from "tailwind-merge";
 import { cn } from "../ui/Form/Field";
 import LeafletControlGeocoder from "./LeafletControlGeocoder";
-import MarkerOnClick from "./MarkerOnClick";
 import MarkerPin from "./MarkerPin";
-import { TMarker, useMapView } from "./useMapView";
 import SingleMarkerOnClick from "./SingleMarkerOnClick";
+import { TMarker, useMapView } from "./useMapView";
 
 const ComponentResize = () => {
   const map = useMap();
@@ -108,7 +107,7 @@ const Map = (props: TMap) => {
           <SingleMarkerOnClick onClick={props.onClick ?? undefined} />
         )}
 
-        {markerList.map((marker: TMarker) => (
+        {markerList && markerList.map((marker: TMarker) => (
           <MarkerPin key={marker.id} marker={marker} />
         ))}
       </MapContainer>

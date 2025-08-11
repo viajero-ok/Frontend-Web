@@ -322,7 +322,7 @@ export default function SignupPrestadorForm(props: any) {
           />
         </div>
         <button type="submit" className="viajero-button py-2 mt-4 w-full">
-          REGISTRARME
+          Registrarme
         </button>
       </form>
     </Form>

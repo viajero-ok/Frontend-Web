@@ -17,6 +17,8 @@ import { useForm } from "react-hook-form";
 import { Input } from "../../../../components/ui/Input/Input";
 import { Select, SelectOption } from "../../../../components/ui/Select/Select";
 import { DatePicker } from "../../../../components/ui/DatePicker/DatePicker";
+import { useModal } from "../../../../components/ui/Modal/Modal";
+import { useToast } from "../../../../components/ui/Toast/Toast";
 
 type ProvinciaModel = { id_provincia: number; provincia: string };
 type DepartamentoModel = {
@@ -53,62 +55,92 @@ function getLocalidadesFor(
 }
 
 const formSchema = z.object({
-  nombre: z.string(),
-  apellido: z.string(),
-  id_tipo_documento: z.number(),
-  nro_documento_identidad: z.string(),
-  cuit: z.string(),
-  id_provincia: z.number(),
-  id_departamento: z.number(),
-  id_localidad: z.number(),
-  telefono: z.string(),
-  idioma: z.number(),
-  genero: z.number(),
-  fecha_nacimiento: z.date(),
+  nombre: z
+    .string({ message: "El campo es requerido" })
+    .min(1, "Mínimo 1 caracter")
+    .max(100, "Máximo 100 caracteres"),
+  apellido: z
+    .string({ message: "El campo es requerido" })
+    .min(1, "Mínimo 1 caracter")
+    .max(100, "Máximo 100 caracteres"),
+  nro_documento_identidad: z
+    .string({ message: "El campo es requerido" })
+    .min(7, "Mínimo 7 dígitos")
+    .max(8, "Máximo 8 dígitos")
+    .regex(/^[0-9]+$/, "Solo dígitos"),
+  id_tipo_documento: z.number({ message: "El campo es requerido" }),
+  telefono: z
+    .string({ message: "El campo es requerido" })
+    .regex(/^[0-9]+$/, "Solo dígitos")
+    .length(11, "Debe tener 11 dígitos"),
+  id_localidad: z.number({ message: "El campo es requerido" }),
+  id_departamento: z.number({ message: "El campo es requerido" }),
+  id_provincia: z.number({ message: "El campo es requerido" }),
+  id_idioma: z.number({ message: "El campo es requerido" }),
+  id_genero: z.number({ message: "El campo es requerido" }),
+  fecha_nacimiento: z.string({ message: "El campo es requerido" }),
 });
 
 export default function SignupTuristaForm(props: any) {
-  const [idiomas, setIdiomas] = useState<any[]>();
-  const [generos, setGeneros] = useState<any[]>();
+  const [idiomas, setIdiomas] = useState<any[]>([]);
+  const [generos, setGeneros] = useState<any[]>([]);
   const [tiposDocumento, setTiposDocumento] = useState<any[]>([]);
-  const [ubicaciones, setUbicaciones] = useState<any[]>();
-  const [paises, setPaises] = useState<any[]>();
 
   const [provincias, setProvincias] = useState<any[]>([]);
   const [departamentos, setDepartamentos] = useState<any[]>([]);
   const [localidades, setLocalidades] = useState<any[]>([]);
 
   const router = useIonRouter();
+  const { modal, setOpen } = useModal();
+  const { toast } = useToast();
 
   useEffect(() => {
     getDatosDeRegistro("turista").then((response: any) => {
       const datosRegistro = response.data.datos_registro;
-
-      console.log(datosRegistro.ubicaciones);
 
       setProvincias(datosRegistro.ubicaciones.provincias);
       setDepartamentos(datosRegistro.ubicaciones.departamentos);
       setLocalidades(datosRegistro.ubicaciones.localidades);
 
       setTiposDocumento(datosRegistro.tipos_documento);
+      setIdiomas(datosRegistro.idiomas);
+      setGeneros(datosRegistro.generos);
     });
   }, []);
 
-  const handleRegistrarme = (values: any) => {
-    console.log("llega 1");
+  function onSubmit(values: z.infer<typeof formSchema>) {
     if (!form) return;
     if (!router) return;
-    console.log("llega 2");
-    // registrarPrestador(values).then((response: any) => {
-    //   router.push("/home");
-    // });
-  };
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("llega");
-    // registrarPrestador(values).then((response: any) => {
-    //   router.push("/home");
-    // });
+    registrarTurista(values)
+      .then((response: any) => {
+        modal({
+          variant: "success",
+          title: "Registro completado",
+          description:
+            "El registro como turista ha sido completado exitosamente.",
+          actions: (
+            <>
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  router.push("/");
+                }}
+                className="viajero-button px-4 py-2 bg-green-400! hover:bg-green-400/90!"
+              >
+                Continuar
+              </button>
+            </>
+          ),
+          canDismiss: false,
+        });
+      })
+      .catch(() => {
+        toast({
+          variant: "danger",
+          title:
+            "Error al intentar realizar el registro del turista. Intente nuevamente",
+        });
+      });
   }
 
   // const handleRegistrarme = () => {
@@ -145,172 +177,217 @@ export default function SignupTuristaForm(props: any) {
   useEffect(() => form.resetField("id_localidad"), [formWatch.id_departamento]);
 
   return (
-    <Form {...form}>
-      <form className="flex flex-col gap-2 pb-12">
-        <FormField
-          control={form.control}
-          name="nombre"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input placeholder="Nombre" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="apellido"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input placeholder="Apellido" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="id_tipo_documento"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Select placeholder="Tipo de documento" {...field}>
-                  {tiposDocumento.map((tipoDocumento: any) => (
-                    <SelectOption
-                      key={tipoDocumento.id_tipo_documento_identidad}
-                      value={tipoDocumento.id_tipo_documento_identidad}
-                    >
-                      {tipoDocumento.tipo_documento_identidad}
-                    </SelectOption>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="nro_documento_identidad"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input placeholder="Número de documento" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="cuit"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input placeholder="CUIT" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="id_provincia"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Select placeholder="Provincia" {...field}>
-                  {provincias.map((provincia: any) => (
-                    <SelectOption
-                      key={provincia.id_provincia}
-                      value={provincia.id_provincia}
-                    >
-                      {provincia.provincia}
-                    </SelectOption>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="id_departamento"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Select placeholder="Departamento" {...field}>
-                  {getDepartamentosFor(
-                    form.getValues().id_provincia,
-                    departamentos as DepartamentoModel[]
-                  ).map((departamento: any) => (
-                    <SelectOption
-                      key={departamento.id_departamento}
-                      value={departamento.id_departamento}
-                    >
-                      {departamento.departamento}
-                    </SelectOption>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="id_localidad"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Select placeholder="Localidad" {...field}>
-                  {getLocalidadesFor(
-                    form.getValues().id_departamento,
-                    localidades as LocalidadModel[]
-                  ).map((localidad: any) => (
-                    <SelectOption
-                      key={localidad.id_localidad}
-                      value={localidad.id_localidad}
-                    >
-                      {localidad.localidad}
-                    </SelectOption>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="telefono"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input placeholder="telefono" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="fecha_nacimiento"
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormControl>
-                <DatePicker placeholder="Fecha de nacimiento" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </form>
-    </Form>
+    <div className="flex flex-col gap-2">
+      <div className="border border-gray-200 bg-gray-50 text-2xl text-gray-600 font-bold p-4 rounded-md">
+        Registrarme como turista
+      </div>
+      <Form {...form}>
+        <form
+          className="flex flex-col gap-2 p-4 mb-12 border border-gray-200 rounded-md"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
+          <div className="grid grid-cols-2 gap-2">
+            <FormField
+              control={form.control}
+              name="nombre"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="Nombre" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="apellido"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="Apellido" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="id_tipo_documento"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Select placeholder="Tipo de documento" {...field}>
+                      {tiposDocumento.map((tipoDocumento: any) => (
+                        <SelectOption
+                          key={tipoDocumento.id_tipo_documento_identidad}
+                          value={tipoDocumento.id_tipo_documento_identidad}
+                        >
+                          {tipoDocumento.tipo_documento_identidad}
+                        </SelectOption>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="nro_documento_identidad"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="Número de documento" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="id_provincia"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Select placeholder="Provincia" {...field}>
+                      {provincias.map((provincia: any) => (
+                        <SelectOption
+                          key={provincia.id_provincia}
+                          value={provincia.id_provincia}
+                        >
+                          {provincia.provincia}
+                        </SelectOption>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="id_departamento"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Select placeholder="Departamento" {...field}>
+                      {getDepartamentosFor(
+                        form.getValues().id_provincia,
+                        departamentos as DepartamentoModel[]
+                      ).map((departamento: any) => (
+                        <SelectOption
+                          key={departamento.id_departamento}
+                          value={departamento.id_departamento}
+                        >
+                          {departamento.departamento}
+                        </SelectOption>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="id_localidad"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Select placeholder="Localidad" {...field}>
+                      {getLocalidadesFor(
+                        form.getValues().id_departamento,
+                        localidades as LocalidadModel[]
+                      ).map((localidad: any) => (
+                        <SelectOption
+                          key={localidad.id_localidad}
+                          value={localidad.id_localidad}
+                        >
+                          {localidad.localidad}
+                        </SelectOption>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="telefono"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="telefono" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="id_idioma"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Select placeholder="Idioma" {...field}>
+                      {idiomas &&
+                        idiomas.map((idioma: any) => (
+                          <SelectOption
+                            key={idioma.id_idioma}
+                            value={idioma.id_idioma}
+                          >
+                            {idioma.idioma}
+                          </SelectOption>
+                        ))}
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="id_genero"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Select placeholder="Género" {...field}>
+                      {generos &&
+                        generos.map((genero: any) => (
+                          <SelectOption
+                            key={genero.id_genero}
+                            value={genero.id_genero}
+                          >
+                            {genero.genero}
+                          </SelectOption>
+                        ))}
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="fecha_nacimiento"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormControl>
+                    <DatePicker placeholder="Fecha de nacimiento" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <button type="submit" className="viajero-button py-2 mt-2 w-full">
+            Registrarme
+          </button>
+        </form>
+      </Form>
+    </div>
   );
 
   // return (

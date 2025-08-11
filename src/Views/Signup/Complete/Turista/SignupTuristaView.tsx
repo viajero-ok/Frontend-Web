@@ -4,16 +4,7 @@ import SignupTuristaForm from "./SignupTuristaForm";
 export default function SignupTuristaView() {
   return (
     <UncompleteLoggedLayout>
-      {/*  <img
-        src="/3.2. Principal/Fondo.jpg"
-        style={{
-          display: "flex",
-          position: "absolute",
-          width: "auto",
-          minHeight: "100%",
-        }}
-      /> */}
-      <div className="px-8 mt-12 w-full grid grid-cols-2">
+      <div className="px-8 mt-4 w-full grid grid-cols-2">
         <div className="flex justify-end">
         <img
           src="/3.3. Registro de usuario/Turista.png"

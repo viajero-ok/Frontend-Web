@@ -40,87 +40,39 @@ export default function UncompleteLoggedLayout({ children }: any) {
   };
 
   return (
-    <>
-      <IonMenu contentId="burger">
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle
-              style={{
-                display: "flex",
-                position: "absolute",
-                float: "left",
-                top: "50%",
-                transform: "translateY(-50%)",
-                fontWeight: "bolder",
-                fontSize: "21pt",
-                marginLeft: "13pt",
-              }}
+    <IonPage id="burger">
+      <IonHeader
+        style={{ "webkit-box-shadow": "none", "box-shadow": "none" }}
+        className="shadow-sm! border-b border-gray-100"
+      >
+        <div className="grid grid-cols-2 h-[50pt] mx-8">
+          <div className="flex flex-row items-center h-full gap-4">
+            <div
+              onClick={() => router.push("/")}
+              className="select-none cursor-pointer text-2xl text-[var(--color-viajero)] font-bold w-fit"
             >
               VIAJERO
-            </IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          <IonList lines="none" style={{ marginTop: "13pt" }}>
-            <IonMenuToggle>
-              <IonItem button onClick={() => push("/")} disabled>
-                Inicio
-              </IonItem>
-            </IonMenuToggle>
-            <IonMenuToggle>
-              <IonItem button onClick={() => push("/my-places")} disabled>
-                Mis establecimientos
-              </IonItem>
-            </IonMenuToggle>
-            <IonMenuToggle>
-              <IonItem button onClick={() => push("/my-offers")} disabled>
-                Mis ofertas turísticas
-              </IonItem>
-            </IonMenuToggle>
-            <IonMenuToggle>
-              <IonItem button onClick={() => push("/mis-reservas")} disabled>
-                Mis reservas
-              </IonItem>
-            </IonMenuToggle>
-            <IonMenuToggle>
-              <IonItem button disabled>
-                Informes y estadísticas
-              </IonItem>
-            </IonMenuToggle>
-          </IonList>
-        </IonContent>
-      </IonMenu>
-      <IonPage id="burger">
-        <IonHeader>
-          <div className="grid grid-cols-3 h-[50pt]">
-            <div className="flex flex-row items-center h-full text-gray-800">
-              <IonMenuToggle
-                slot="start"
-                style={{ display: "inline-block", marginLeft: "13pt" }}
-              >
-                <IonMenuButton style={{ fontSize: "24pt" }}></IonMenuButton>
-              </IonMenuToggle>
-              <div className="text-xl font-bold w-fit">VIAJERO</div>
             </div>
-            <div className="flex flex-row justify-center items-center">
-              <div className="text-2xl">¡Hola, viajero!</div>
-            </div>
-            <div className="flex flex-row justify-end items-center">
-              <IonButton className="mr-8 h-3/5" color="light" onClick={() => handleCerrarSesion()}>
-                Salir
-              </IonButton>
+            {/* <div className="text-lg italic font-light text-gray-600">¡Hola, {}viajero!</div> */}
+          </div>
+          <div className="flex flex-row gap-8 justify-end items-center pr-4">
+            <div
+              onClick={() => alert("todo: cerrar session")}
+              className="cursor-pointer px-2 hover:underline hover:bg-[var(--color-viajero)]/5 h-full flex items-center"
+            >
+              Cerrar sesión
             </div>
           </div>
+        </div>
+      </IonHeader>
+      <IonContent fullscreen>
+        <IonHeader collapse="condense">
+          <IonToolbar>
+            <IonTitle size="large">Blank</IonTitle>
+          </IonToolbar>
         </IonHeader>
-        <IonContent fullscreen>
-          <IonHeader collapse="condense">
-            <IonToolbar>
-              <IonTitle size="large">Blank</IonTitle>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent>{children}</IonContent>
-        </IonContent>
-      </IonPage>
-    </>
+        <IonContent className="">{children}</IonContent>
+      </IonContent>
+    </IonPage>
   );
 }

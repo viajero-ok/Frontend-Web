@@ -13,11 +13,14 @@ const StyledIonDateTime = styled(IonDatetime)`
 `;
 
 const DatePicker = React.forwardRef<typeof StyledIonDateTime, any>(
-  ({ className, type, disableShowPassword, onChange, ...props }, ref) => {
+  ({ className, type, onChange, ...props }, ref) => {
     const [open, setOpen] = React.useState<boolean>(false);
 
     return (
-      <div className="flex flex-col items-end relative">
+      <div
+        onBlur={() => setOpen(false)}
+        className="flex flex-col relative w-full items-stretch"
+      >
         <Input
           readonly
           placeholder="Selecciona una fecha"
@@ -30,11 +33,11 @@ const DatePicker = React.forwardRef<typeof StyledIonDateTime, any>(
           {...props}
           value={props.value}
           onIonInput={props.onChange}
-          ref={ref}
           fill="outline"
           className={cn(
             "!flex !shadow-sm absolute mt-14",
-            open ? "!visible" : "!hidden"
+            open ? "!visible" : "!hidden",
+            "w-full"
           )}
           placeholder={props.placeholder}
           presentation="date"

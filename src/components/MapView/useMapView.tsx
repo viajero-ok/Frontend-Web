@@ -13,6 +13,8 @@ type MapViewContextValue = {
   markerList: TMarker[];
   relocateMarker: (pos: LatLng, id?: number) => void;
   newMarker: (pos: LatLng) => number;
+  pos: LatLng;
+  setPos: React.Dispatch<React.SetStateAction<LatLng>>;
 } & TMapContextConfig;
 
 const MapViewContext = React.createContext<MapViewContextValue>(
@@ -40,18 +42,23 @@ const useMapView = (props?: TMapContextConfig) => {
    */
   if (!props) return useMapViewWithin();
 
+  const [pos, setPos] = React.useState<LatLng>(
+    new LatLng(-31.44158447746307, -64.19357580741155)
+  );
   const [markerList, setMarkerList] = React.useState<TMarker[]>([]);
   const [lastMarkerId, setLastMarkerId] = React.useState<number>(0);
 
-  const relocateMarker = (pos: LatLng, id: number = 1) => {
+  const relocateMarker = (newPos: LatLng, id: number = 1) => {
     if (markerList.length == 0) {
-      newMarker(pos);
+      newMarker(newPos);
       return;
+    } else {
+      setMarkerList((prev: TMarker[]) => [
+        ...prev.filter((marker: TMarker) => marker.id != id),
+        { id, pos: newPos },
+      ]);
     }
-    setMarkerList((prev: TMarker[]) => [
-      ...prev.filter((marker: TMarker) => marker.id != id),
-      { id, pos },
-    ]);
+    setPos(newPos);
   };
 
   const newMarker = (pos: LatLng) => {
@@ -60,7 +67,7 @@ const useMapView = (props?: TMapContextConfig) => {
     setLastMarkerId((prev: number) => newId);
     return newId;
   };
-  
+
   const context: MapViewContextValue = {
     /** Map parameters, setted when the view is created */
     autoLoc:
@@ -73,6 +80,8 @@ const useMapView = (props?: TMapContextConfig) => {
     markerList /** List of visible markers */,
     relocateMarker,
     newMarker,
+    pos,
+    setPos,
   };
 
   return context;

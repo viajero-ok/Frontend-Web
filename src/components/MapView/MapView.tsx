@@ -1,7 +1,7 @@
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 
-import { LeafletMouseEvent } from "leaflet";
+import { LatLng, LeafletMouseEvent } from "leaflet";
 import { CSSProperties, useEffect, useMemo, useState } from "react";
 import { ClassNameValue } from "tailwind-merge";
 import { cn } from "../ui/Form/Field";
@@ -43,46 +43,38 @@ type TMap = {
   className?: ClassNameValue;
 };
 const Map = (props: TMap) => {
-  const [pos, setPos] = useState<{ lat: number; lng: number }>(
-    props.initPos
-      ? { ...props.initPos }
-      : {
-          lat: -31.44158447746307,
-          lng: -64.19357580741155,
-        }
-  );
+  // const [pos, setPos] = useState<{ lat: number; lng: number }>(
+  //   props.initPos
+  //     ? { ...props.initPos }
+  //     : {
+  //         lat: -31.44158447746307,
+  //         lng: -64.19357580741155,
+  //       }
+  // );
   const [zoom, setZoom] = useState<number>(13);
+
+  const { autoLoc, search, markerOnClick, markerList, pos, setPos } =
+    useMapView();
 
   useEffect(() => {
     if (!props.autoLoc) return;
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
-        setPos({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
+        setPos(new LatLng(position.coords.latitude, position.coords.longitude));
       });
     }
   }, []);
 
   useMemo(() => {
     if (!props.pos) return;
-    setPos({
-      lat: props.pos.lat,
-      lng: props.pos.lgn,
-    });
+    setPos(new LatLng(props.pos.lat, props.pos.lgn));
   }, [props.pos]);
 
   useMemo(() => {
     if (!props.setMarker) return;
-    setPos({
-      lat: props.setMarker.lat,
-      lng: props.setMarker.lng,
-    });
+    setPos(new LatLng(props.setMarker.lat, props.setMarker.lng));
     setZoom(15);
   }, [props.setMarker]);
-
-  const { autoLoc, search, markerOnClick, markerList } = useMapView();
 
   return (
     <>
@@ -107,9 +99,10 @@ const Map = (props: TMap) => {
           <SingleMarkerOnClick onClick={props.onClick ?? undefined} />
         )}
 
-        {markerList && markerList.map((marker: TMarker) => (
-          <MarkerPin key={marker.id} marker={marker} />
-        ))}
+        {markerList &&
+          markerList.map((marker: TMarker) => (
+            <MarkerPin key={marker.id} marker={marker} />
+          ))}
       </MapContainer>
     </>
   );

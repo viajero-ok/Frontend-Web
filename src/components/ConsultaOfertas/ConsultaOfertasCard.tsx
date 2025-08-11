@@ -13,6 +13,7 @@ import { Segment } from "../ui/Segment/Segment";
 import { useAuth } from "../../Auth/Auth";
 import { MapViewProvider, useMapView } from "../MapView/useMapView";
 import { useConsultaOfertas } from "./ConsultaOfertasProvider";
+import { LatLng } from "leaflet";
 
 interface Oferta {
   id: number;
@@ -44,13 +45,14 @@ export default function ConsultaOfertasCard() {
   //   return false;
   // });
 
+  const map = useMapView({});
   const posicionar = (latitud: number, longitud: number) => {
-    setPos((_) => ({ lat: latitud, lng: longitud }));
+    //setPos((_) => ({ lat: latitud, lng: longitud }));
+    if (!map) return;
+    map.relocateMarker(new LatLng(latitud, longitud));
   };
 
-  const map = useMapView();
-
-  const { localidad, fechas, personas, ofertas } = useConsultaOfertas()
+  const { localidad, fechas, personas, ofertas } = useConsultaOfertas();
 
   return (
     <div className="flex flex-row gap-4 mt-6 w-full justify-center">
@@ -158,12 +160,11 @@ export function OfertaCard({
         setIsFavorite(false);
         if (setOfertasGuardadas) {
           setOfertasGuardadas((prev: any[]) =>
-            prev.filter((item: any) => item.id_oferta !== oferta.id)
+            prev.filter((item: any) => item.id_oferta !== oferta.id_oferta)
           );
         }
       })
       .catch(() => {});
-    console.log("Eliminando oferta guardada:", oferta.id);
   };
 
   return (
@@ -217,6 +218,16 @@ export function OfertaCard({
             "flex flex-row justify-between w-full mt-2 border border-gray-200 rounded-md p-2",
             "cursor-pointer hover:shadow-sm hover:border-black"
           )}
+          onClick={() => {
+            if (auth == "failed") {
+              router.push("/login");
+              return;
+            }
+
+            router.push(
+              `/ver-oferta/${oferta.id_oferta}/${fecha_desde}/${fecha_hasta}/${oferta.cantidad_personas}`
+            );
+          }}
         >
           <div className="flex flex-col text-gray-600 text-sm justify-center">
             <div>{oferta.subtipo_oferta}</div>

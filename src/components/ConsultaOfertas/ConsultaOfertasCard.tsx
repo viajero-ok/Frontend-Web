@@ -12,6 +12,7 @@ import FiltrosConsultaOfertas from "./FiltrosConsultaOfertas";
 import { Segment } from "../ui/Segment/Segment";
 import { useAuth } from "../../Auth/Auth";
 import { MapViewProvider, useMapView } from "../MapView/useMapView";
+import { useConsultaOfertas } from "./ConsultaOfertasProvider";
 
 interface Oferta {
   id: number;
@@ -30,7 +31,7 @@ type TConsultaOfertasCard = {
   ofertas: any[];
   setOfertasGuardadas?: React.Dispatch<React.SetStateAction<any[]>>;
 };
-export default function ConsultaOfertasCard(props: TConsultaOfertasCard) {
+export default function ConsultaOfertasCard() {
   const [selectedSegment, setSelectedSegment] =
     useState<string>("alojamientos");
   const [pos, setPos] = useState<{ lat: number; lng: number } | null>(null);
@@ -48,6 +49,8 @@ export default function ConsultaOfertasCard(props: TConsultaOfertasCard) {
   };
 
   const map = useMapView();
+
+  const { localidad, fechas, personas, ofertas } = useConsultaOfertas()
 
   return (
     <div className="flex flex-row gap-4 mt-6 w-full justify-center">
@@ -91,13 +94,13 @@ export default function ConsultaOfertasCard(props: TConsultaOfertasCard) {
           />
         </div>
         {selectedSegment == "alojamientos" &&
-          props.ofertas.map((oferta) => (
+          ofertas.map((oferta) => (
             <OfertaCard
               key={oferta.id}
               oferta={oferta}
               posicionar={posicionar}
-              fecha_desde={props.fechas.fecha_desde ?? ""}
-              fecha_hasta={props.fechas.fecha_hasta ?? ""}
+              fecha_desde={fechas.fecha_desde ?? ""}
+              fecha_hasta={fechas.fecha_hasta ?? ""}
             />
           ))}
       </div>

@@ -1,12 +1,8 @@
-import { IonContent, IonHeader, IonTitle, IonToolbar, useIonRouter } from "@ionic/react";
-
+import { useAuth } from "../Auth/Auth";
+import HomePrestadorView from "../Views/Home/Prestador/HomePrestadorView";
+import HomeTuristaView from "../Views/Home/Turista/HomeTuristaView";
 import DefaultLoggedLayout from "../Views/Layouts/DefaultLoggedLayout";
 import "./Home.css";
-import { useAuth } from "../Auth/Auth";
-import { useEffect } from "react";
-import HomeVisitanteView from "../Views/Home/Visitante/HomeVisitanteView";
-import HomeTuristaView from "../Views/Home/Turista/HomeTuristaView";
-import HomePrestadorView from "../Views/Home/Prestador/HomePrestadorView";
 
 const Home: React.FC = () => {
   const auth = useAuth();
@@ -19,7 +15,7 @@ const Home: React.FC = () => {
           {auth.esPrestador && <HomePrestadorView />}
         </div>
       )}
-      {auth == "failed" && <HomeVisitanteView />}
+      {auth == "failed" && <HomeTuristaView />}
     </DefaultLoggedLayout>
   );
 };

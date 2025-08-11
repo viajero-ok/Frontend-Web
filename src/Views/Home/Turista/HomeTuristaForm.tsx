@@ -1,128 +1,98 @@
-import React, { useState } from "react";
 import {
-  IonButton,
-  IonCol,
-  IonContent,
-  IonGrid,
   IonIcon,
-  IonInput,
-  IonItem,
-  IonList,
-  IonMenu,
-  IonMenuToggle,
-  IonPopover,
-  IonRow,
-  IonSelect,
-  IonSelectOption,
-  IonTitle,
-  IonToast,
+  IonPopover
 } from "@ionic/react";
 import {
-  alertCircleOutline,
-  bed,
-  bedOutline,
   calendarOutline,
-  colorFill,
   navigateOutline,
-  peopleOutline,
   personOutline,
-  pin,
-  pinOutline,
 } from "ionicons/icons";
-import Field from "../../../components/Field/Field";
-import { useForm } from "../../../hooks/UseForm/FormProvider";
-import { Validator as v } from "../../../hooks/UseForm/Validator/Validator";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useConsultaOfertas } from "../../../components/ConsultaOfertas/ConsultaOfertasProvider";
+import { cn } from "../../../components/ui/Form/Field";
+import CalendarPicker from "../../MyOffers/PublicarOferta/CalendarPicker";
 
-export default function HomeVisitanteForm() {
-  const [openToast, setOpenToast] = useState<boolean>(false);
-  const [toastMessage, setToastMessage] = useState<string>("");
+type THomeVisitanteForm = {
+  setFechas: Dispatch<
+    SetStateAction<{ fecha_desde: string | null; fecha_hasta: string | null }>
+  >;
+  setPersonas: Dispatch<SetStateAction<number | null>>;
+  setOfertas: Dispatch<SetStateAction<any[]>>;
+};
+export default function HomeTuristaForm() {
   const [openPopover, setOpenPopover] = useState<boolean>(false);
 
-  const form = useForm();
+  const { localidad, setLocalidad, fechas, setFechas, personas, setPersonas, buscar } = useConsultaOfertas()
+
+  useEffect(() => {
+    if (!fechas) return;
+    setFechas(fechas);
+  }, [fechas]);
+
+  useEffect(() => {
+    if (!personas) return;
+    setPersonas(personas);
+  }, [personas]);
+
+  // pagina: number;
+  // limite: number;
+  // id_tipo_oferta: number;
+  // id_sub_tipo_oferta?: number;
+  // id_localidad?: number;
+  // min_monto?: number;
+  // max_monto?: number;
+  // latitud?: string;
+  // longitud?: string;
+  // radio?: number;
+  // fecha_desde: Date;
+  // fecha_hasta: Date;
+  // cantidad_personas: number;
 
   return (
-    <div
-      style={{
-        width: "100%",
-        display: "flex",
-        alignContent: "center",
-        alignItems: "center",
-        justifyContent: "center",
-        position: "relative",
-        marginTop: "-28pt",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "80%",
-        }}
-      >
-        <IonGrid
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            width: "100%",
-          }}
-        >
-          <IonRow
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              width: "100%",
-              backgroundColor: "white",
-              boxShadow: "0px 3px 11px 1px rgba(161,161,161,1)",
-            }}
+    <div className="flex flex-row w-full justify-center -mt-6">
+      <div className="w-[80%]">
+        <div className="">
+          <div
+            className={cn(
+              "grid grid-cols-4 h-[42pt] border border-gray-200 rounded-md bg-white shadow-md"
+            )}
           >
-            <IonCol
-              style={{
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-                border: "3pt solid #F08408",
-              }}
-            >
-              <IonIcon
-                icon={navigateOutline}
-                style={{ fontSize: "24pt", color: "gray" }}
-              />
+            <div className="flex flex-row items-center text-md text-gray-600 justify-center ml-4 m-1 pr-1 border-r border-gray-200">
+              <IonIcon icon={navigateOutline} className="text-gray-400" />
               &nbsp;
-              <IonInput placeholder="A dónde vamos?" />
-            </IonCol>
-            <IonCol
-              style={{
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-                border: "3pt solid #F08408",
-                borderLeft: 0,
-              }}
-            >
-              <IonIcon
-                icon={calendarOutline}
-                style={{ fontSize: "24pt", color: "gray" }}
+              <input
+                placeholder="¿A dónde vamos?"
+                className="focus-visible:outline-none w-full h-full"
               />
+            </div>
+            <div className="flex flex-row items-center text-md text-gray-600 justify-left ml-4 m-1 pr-1 border-r border-gray-200">
+              <IonIcon icon={calendarOutline} className="text-gray-400" />
               &nbsp;
-              <IonInput id="click-trigger" placeholder="Fecha de llegada - Fecha de salida" />
-              <IonPopover trigger="click-trigger" triggerAction="click">
-                <IonContent class="ion-padding">Hello World!</IonContent>
+              <input
+                id="click-trigger"
+                placeholder="Llegada - Salida"
+                value={
+                  fechas && fechas.fecha_desde != null && fechas.fecha_hasta != null
+                    ? `Del ${fechas.fecha_desde.split("T")[0]} al ${
+                        fechas.fecha_hasta.split("T")[0]
+                      }`
+                    : ""
+                }
+                className="focus-visible:outline-none h-full w-full"
+              />
+              <IonPopover
+                trigger="click-trigger"
+                triggerAction="click"
+                style={{
+                  "--min-width": "fit-content",
+                }}
+              >
+                <div className="flex flex-row items-center justify-center content-center">
+                  <CalendarPicker setFechas={setFechas} />
+                </div>
               </IonPopover>
-            </IonCol>
-            <IonCol
-              style={{
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "left",
-                border: "3pt solid #F08408",
-                borderLeft: 0,
-                borderRight: 0,
-              }}
-            >
+            </div>
+            <div className="flex flex-row items-center text-md text-gray-600 justify-center ml-4 m-1 pr-1">
               <span
                 id="popover"
                 style={{
@@ -132,140 +102,42 @@ export default function HomeVisitanteForm() {
                   alignContent: "center",
                   alignItems: "center",
                   justifyContent: "left",
-                  cursor: "pointer",
+                  cursor: "text",
                 }}
                 onClick={() => setOpenPopover(true)}
               >
-                <IonIcon
-                  icon={personOutline}
-                  style={{ fontSize: "24pt", color: "gray" }}
-                />
-                &nbsp;2 adultos, 2 niños, 2 habitaciones
+                <IonIcon icon={personOutline} className="text-gray-400" />
+                &nbsp;
+                {personas != null
+                  ? personas + ` persona${personas > 1 ? "s" : ""}`
+                  : "1 persona"}
               </span>
               <IonPopover
                 trigger="popover"
                 isOpen={openPopover}
                 onDidDismiss={() => setOpenPopover(false)}
-                style={{}}
               >
-                <IonList lines="none" style={{}}>
-                  <IonItem style={{ padding: "2pt" }}>
-                    <IonIcon
-                      icon={personOutline}
-                      style={{ fontSize: "24pt" }}
-                    />
-                    &nbsp;&nbsp;
-                    <IonInput
-                      type="number"
-                      placeholder="Adultos"
-                      style={{ fontSize: "16pt" }}
-                    />
-                  </IonItem>
-                  <IonItem style={{ padding: "2pt" }}>
-                    <IonIcon
-                      icon={peopleOutline}
-                      style={{ fontSize: "24pt" }}
-                    />
-                    &nbsp;&nbsp;
-                    <IonInput
-                      type="number"
-                      placeholder="Niños"
-                      style={{ fontSize: "16pt" }}
-                    />
-                  </IonItem>
-                  <IonItem style={{ padding: "2pt" }}>
-                    <IonIcon icon={bedOutline} style={{ fontSize: "24pt" }} />
-                    &nbsp;&nbsp;
-                    <IonInput
-                      type="number"
-                      placeholder="Habitaciones"
-                      style={{ fontSize: "16pt" }}
-                    />
-                  </IonItem>
-                </IonList>
+                <div className="flex flex-row text-md text-gray-600 h-[42pt] items-center p-2">
+                  <IonIcon icon={personOutline} />
+                  &nbsp;&nbsp;
+                  <input
+                    type="number"
+                    min={1}
+                    placeholder="Personas"
+                    onChange={(e) => setPersonas(Number(e.target.value))}
+                    className="focus-visible:outline-none w-full h-full"
+                  />
+                </div>
               </IonPopover>
-            </IonCol>
-            <IonCol
-              style={{ border: "3pt solid #F08408", borderLeft: 0, padding: 0 }}
+            </div>
+            <button
+              className="bg-[var(--color-viajero)] hover:bg-[var(--color-viajero)]/90 text-white font-bold rounded-r-md cursor-pointer"
+              onClick={() => buscar()}
             >
-              <IonButton
-                expand="full"
-                style={{
-                  "--background": "#F08408",
-                  margin: 0,
-                  width: "100%",
-                  height: "100%",
-                  "--box-shadow": 0,
-                }}
-              >
-                Buscar
-              </IonButton>
-            </IonCol>
-          </IonRow>
-        </IonGrid>
-        {/* <IonList
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          margin: "0pt",
-          marginTop: "0pt",
-          width: "50%",
-          left: "50%",
-          paddingRight: "12pt",
-        }}
-      >
-        <Field
-          name="destino"
-          label="Destino"
-          value={form?.schema?.destino}
-          form={form}
-          valid={v().required("El destino es obligatorio")}
-        />
-        <Field
-          name="comienzoViaje"
-          label="Comienzo del viaje"
-          value={form?.schema?.comienzoViaje}
-          form={form}
-        />
-        <Field
-          name="finViaje"
-          label="Fin del viaje"
-          value={form?.schema?.finViaje}
-          form={form}
-        />
-        <Field
-          name="viajeros"
-          label="Viajeros"
-          value={form?.schema?.viajeros}
-          form={form}
-        />
-      </IonList>
-      <IonButton
-        expand="block"
-        style={{
-          "--background": "#F08408",
-          display: "flex",
-          flexDirection: "column",
-          margin: "13pt",
-          marginTop: "0pt",
-          marginLeft: "95pt",
-          marginRight: "95pt",
-          paddingLeft: "12pt",
-          paddingRight: "12pt",
-        }}
-      >
-        Buscar
-      </IonButton>
-      <IonToast
-        isOpen={openToast}
-        message={toastMessage}
-        duration={5000}
-        icon={alertCircleOutline}
-        onDidDismiss={() => {
-          setOpenToast(false);
-          setToastMessage("");
-        }}
-      /> */}
+              Buscar
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

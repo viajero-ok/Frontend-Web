@@ -15,6 +15,8 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import {
+  bedOutline,
+  bookmarkOutline,
   chatbox,
   compass,
   flash,
@@ -32,6 +34,117 @@ import { useMemo, useState } from "react";
 import { obtenerOfertaTuristica } from "../../App/Ofertas/Ofertas";
 import { useParams } from "react-router";
 import styled from "styled-components";
+import {
+  MapViewProvider,
+  useMapView,
+} from "../../components/MapView/useMapView";
+import { Bed, BedDouble, BedSingle, Sofa, User } from "lucide-react";
+
+const imageList = [
+  "/images/cabin1.jpg",
+];
+
+const RenderImages = () => {
+  if (imageList.length == 1)
+    return (
+      <div
+        className="w-full aspect-video bg-center bg-cover"
+        style={{ backgroundImage: `url(${imageList[0]})` }}
+      />
+    );
+
+  if (imageList.length == 2)
+    return (
+      <div className="flex flex-row gap-4 w-full">
+        <div
+          className="w-full aspect-video bg-center bg-cover"
+          style={{ backgroundImage: `url(${imageList[0]})` }}
+        />
+        <div
+          className="w-full aspect-video bg-center bg-cover"
+          style={{ backgroundImage: `url(${imageList[1]})` }}
+        />
+      </div>
+    );
+
+  if (imageList.length == 3)
+    return (
+      <div className="flex flex-row gap-4 w-full">
+        <div
+          className="w-2/3 aspect-video bg-center bg-cover"
+          style={{ backgroundImage: `url(${imageList[0]})` }}
+        />
+        <div className="w-1/3 flex flex-col justify-center gap-4">
+          <div
+            className="w-full aspect-video bg-center bg-cover"
+            style={{ backgroundImage: `url(${imageList[1]})` }}
+          />
+          <div
+            className="w-full aspect-video bg-center bg-cover"
+            style={{ backgroundImage: `url(${imageList[2]})` }}
+          />
+        </div>
+      </div>
+    );
+
+  if (imageList.length == 4)
+    return (
+      <div className="flex flex-col w-full gap-4">
+        <div
+          className="w-full aspect-video bg-center bg-cover"
+          style={{ backgroundImage: `url(${imageList[0]})` }}
+        />
+        <div className="flex flex-row gap-4 justify-center w-full">
+          <div
+            className="w-full aspect-video bg-center bg-cover"
+            style={{ backgroundImage: `url(${imageList[1]})` }}
+          />
+          <div
+            className="w-full aspect-video bg-center bg-cover"
+            style={{ backgroundImage: `url(${imageList[2]})` }}
+          />
+          <div
+            className="w-full aspect-video bg-center bg-cover"
+            style={{ backgroundImage: `url(${imageList[3]})` }}
+          />
+        </div>
+      </div>
+    );
+
+  if (imageList.length > 4)
+    return (
+      <div className="flex flex-col w-full gap-4">
+        <div
+          className="w-full aspect-video bg-center bg-cover"
+          style={{ backgroundImage: `url(${imageList[0]})` }}
+        />
+        <div className="flex flex-row gap-4 justify-center w-full">
+          <div
+            className="w-full aspect-video bg-center bg-cover"
+            style={{ backgroundImage: `url(${imageList[1]})` }}
+          />
+          <div
+            className="w-full aspect-video bg-center bg-cover"
+            style={{ backgroundImage: `url(${imageList[2]})` }}
+          />
+          <div
+            className="w-full aspect-video bg-center bg-cover"
+            style={{ backgroundImage: `url(${imageList[3]})` }}
+          />
+          <div
+            className="relative w-full aspect-video bg-center bg-cover"
+            style={{ backgroundImage: `url(${imageList[4]})` }}
+          >
+            <div className="flex w-full h-full absolute bg-gray-50/45 cursor-pointer hover:bg-[var(--color-viajero)]/50 transition-colors duration-75 text-white font-bold justify-center items-center">
+              Ver más
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+
+  return <div>no images</div>;
+};
 
 export default function VerOfertaView() {
   const [datos, setDatos] = useState<any>();
@@ -88,614 +201,226 @@ export default function VerOfertaView() {
     }
   `;
 
-  return (
-    <IonContent>
-      <IonGrid>
-        <IonRow style={{}}>
-          <IonCol size="small" style={{}}>
-            <IonCard style={{ display: "inline-block" }}>
-              <IonCardHeader
-                style={{
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginTop: "12pt",
-                  paddingLeft: "24pt",
-                  paddingRight: "24pt",
-                }}
-              >
-                <IonCardTitle style={{ fontWeight: "bold", fontSize: "20pt" }}>
-                  {datos && datos.datos_basicos.nombre}
-                </IonCardTitle>
-                <IonCardSubtitle
-                  style={{
-                    fontSize: "12pt",
-                    display: "flex",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <IonIcon icon={location} style={{ fontSize: "16pt" }} />
-                  {datos &&
-                    `${datos.domicilio.nombre_calle}, ${datos.domicilio.localidad}`}
-                </IonCardSubtitle>
-                <IonGrid>
-                  <IonRow>
-                    {/* <IonChip style={{ paddingRight: "16pt" }}>
-                      <IonIcon icon={flash} />
-                      &nbsp;Turismo alernativo
-                    </IonChip>
-                    <IonChip style={{ paddingRight: "16pt" }}>
-                      <IonIcon icon={walk} />
-                      &nbsp;Caminata
-                    </IonChip> */}
-                  </IonRow>
-                  <IonRow>
-                  {/*   <IonCol
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignContent: "center",
-                        alignItems: "center",
-                        justifyContent: "start",
-                        marginTop: "12pt",
-                        paddingRight: "4pt",
-                        paddingLeft: "4pt",
-                      }}
-                    >
-                      <IonIcon style={{ fontSize: "16pt" }} icon={logoUsd} />
-                      Gratis
-                    </IonCol> */}
-                    {/* <IonCol
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignContent: "center",
-                        alignItems: "center",
-                        justifyContent: "start",
-                        marginTop: "12pt",
-                        paddingRight: "4pt",
-                        paddingLeft: "4pt",
-                      }}
-                    >
-                      <IonIcon
-                        style={{ fontSize: "16pt" }}
-                        icon={radioButtonOff}
-                      />
-                      Dificultad baja
-                    </IonCol> */}
-                    <IonCol
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignContent: "center",
-                        alignItems: "center",
-                        justifyContent: "start",
-                        marginTop: "12pt",
-                        paddingRight: "4pt",
-                        paddingLeft: "4pt",
-                      }}
-                    >
-                      <IonIcon style={{ fontSize: "16pt" }} icon={star} />
-                      4.8
-                    </IonCol>
-                    {/* <IonCol
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignContent: "center",
-                        alignItems: "center",
-                        justifyContent: "start",
-                        marginTop: "12pt",
-                        paddingRight: "4pt",
-                        paddingLeft: "4pt",
-                      }}
-                    >
-                      <IonIcon style={{ fontSize: "16pt" }} icon={compass} />
-                      Con guía
-                    </IonCol> */}
-                    <IonCol
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignContent: "center",
-                        alignItems: "center",
-                        justifyContent: "start",
-                        marginTop: "12pt",
-                        paddingRight: "4pt",
-                        paddingLeft: "4pt",
-                      }}
-                    >
-                      <IonIcon style={{ fontSize: "16pt" }} icon={chatbox} />
-                      225
-                    </IonCol>
-                  </IonRow>
-                  <IonRow
-                    style={{
-                      display: "flex",
-                      alignContent: "center",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: "12pt",
-                    }}
-                  >
-                    <IonButton fill="outline" color="success">
-                      Guardar
-                    </IonButton>
-                  </IonRow>
-                </IonGrid>
-              </IonCardHeader>
-              <IonCardContent>
-                <MapView
-                  setMarker={{
-                    lat: datos ? datos.domicilio.latitud : -30,
-                    lgn: datos ? datos.domicilio.longitud : -30,
-                  }}
-                  style={{
-                    width: "100%",
-                    minHeight: "250pt",
-                    aspectRatio: "3/2",
-                  }}
-                />
-              </IonCardContent>
-            </IonCard>
-          </IonCol>
-          <IonCol style={{ paddingTop: "12pt", paddingRight: "6pt" }}>
-            <IonRow style={{ height: "calc(100% - 150pt - 6pt)" }}>
-              <div
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  backgroundImage: "url(/images/cabin1.jpg)",
-                  backgroundPosition: "center center",
-                  backgroundRepeat: "no-repeat",
-                  backgroundSize: "cover",
-                  marginBottom: "3pt",
-                  marginLeft: "3pt",
-                  marginRight: "3pt",
-                }}
-              />
+  const map = useMapView({});
 
-              {/* <IonCol size="small">
-                <IonRow>
-                  <div
-                    style={{
-                      width: "100%",
-                      height: "50%",
-                      backgroundImage: "url(/images/cabin2.jpg)",
-                      backgroundPosition: "center 25%",
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: "cover",
-                    }}
-                  />
-                </IonRow>
-                <IonRow>
-                  <div
-                    style={{
-                      width: "100%",
-                      height: "50%",
-                      backgroundImage: "url(/images/cabin3.jpg)",
-                      backgroundPosition: "center 25%",
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: "cover",
-                    }}
-                  />
-                </IonRow>
-              </IonCol> */}
-            </IonRow>
-            <IonRow style={{ height: "150pt", marginTop: "3pt" }}>
-              <IonCol style={{ margin: "3pt" }}>
-                <div
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    backgroundImage: "url(/images/cabin1.jpg)",
-                    backgroundPosition: "center center",
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "cover",
-                  }}
-                />
-              </IonCol>
-              <IonCol style={{ margin: "3pt", marginLeft: 0 }}>
-                <div
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    backgroundImage: "url(/images/cabin2.jpg)",
-                    backgroundPosition: "center center",
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "cover",
-                  }}
-                />
-              </IonCol>
-              <IonCol style={{ margin: "3pt", marginLeft: 0 }}>
-                <div
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    backgroundImage: "url(/images/cabin3.jpg)",
-                    backgroundPosition: "center center",
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "cover",
-                  }}
-                />
-              </IonCol>
-              <IonCol style={{ margin: "3pt", marginLeft: 0 }}>
-                <div
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    backgroundImage: "url(/images/cabin1.jpg)",
-                    backgroundPosition: "center center",
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "cover",
-                  }}
-                />
-              </IonCol>
-              <IonCol
-                style={{
-                  backgroundColor: "#F08408",
-                  color: "white",
-                  fontWeight: "bold",
-                  fontSize: "18pt",
-                  display: "flex",
-                  alignContent: "center",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  margin: "3pt",
-                  marginTop: "6pt",
-                  marginBottom: "6pt",
-                }}
-              >
-                <span>+16 fotos</span>
-              </IonCol>
-            </IonRow>
-          </IonCol>
-        </IonRow>
-        <IonRow
-          style={{
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: "#F084084D",
-            marginBottom: "12pt"
-          }}
-        >
-          <h3>
-            <q style={{ fontWeight: "normal", fontSize: "14pt", color: "black" }}>
-              {datos && datos.datos_basicos.descripcion}
-            </q>
-          </h3>
-        </IonRow>
-        <IonRow
-          style={{
-            display: "flex",
-            alignContent: "center",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          {datos &&
-            datos.caracteristicas.map((caracteristica: any) => (
-              <IonChip>{caracteristica.caracteristica}</IonChip>
+  const getCamaIcon = (nombreCama: string) => {
+    if (nombreCama == "Cama doble") return <BedDouble className="w-[12pt]" />;
+    if (nombreCama == "Cama individual")
+      return <BedSingle className="w-[12pt]" />;
+    if (nombreCama == "Sofá-cama") return <Sofa className="w-[12pt]" />;
+    return <Bed className="w-[12pt]" />;
+  };
+
+  return (
+    <div className="flex flex-col mx-8 mt-4 pb-12">
+      <div className="flex flex-row justify-between items-center p-4  border border-gray-200 rounded-md">
+        <div className="flex flex-col gap-2">
+          <div className="text-2xl text-gray-600 font-bold">
+            {datos?.datos_basicos.nombre}
+          </div>
+          <div className="flex flex-row gap-1 items-center">
+            <IonIcon
+              className="text-xl text-[var(--color-viajero)]"
+              icon={location}
+            />
+            <span className="text-sm text-gray-600">
+              {datos?.domicilio.numero} {datos?.domicilio.nombre_calle}
+              {", "}
+              {datos?.domicilio.localidad}
+              {", "}Córdoba
+            </span>
+          </div>
+        </div>
+        <div className="flex flex-row items-center gap-2">
+          <IonIcon
+            className="text-3xl text-gray-600 cursor-pointer"
+            icon={bookmarkOutline}
+          />
+          <button className="viajero-button px-4 py-2">Reservar</button>
+        </div>
+      </div>
+      <div className="flex flex-row gap-4 mt-4 justify-between">
+        <div className="flex flex-fow w-full">
+          <RenderImages />
+        </div>
+        <div className="flex flex-col gap-2 w-1/3">
+          <div className="border border-gray-200 bg-gray-50 rounded-md p-4 flex">
+            <span className="text-md text-gray-600 italic">
+              No hay reseñas disponibles para esta oferta
+            </span>
+          </div>
+          <MapViewProvider {...map}>
+            <MapView className="w-full aspect-video rounded-md border border-[#bbb] hover:border-black" />
+          </MapViewProvider>
+        </div>
+      </div>
+
+      <div className="flex flex-row gap-4 items-center mt-4">
+        <div className="mt-4 flex flex-col w-full">
+          <div className="w-full flex flex-row justify-center text-xl text-gray-600">
+            {datos?.datos_basicos.descripcion}
+          </div>
+          <div className="flex flex-row gap-2 justify-center mt-4">
+            {datos?.caracteristicas.map((caracteristica: any) => (
+              <div className="p-4 text-gray-600 border border-gray-200 rounded-md">
+                {caracteristica.caracteristica}
+              </div>
             ))}
-        </IonRow>
-        <IonRow style={{ marginTop: "12pt" }}>
-          <IonCol>
-            <IonCard style={{ padding: "20pt" }}>
-              <IonCardHeader>
-                <IonTitle style={{ textAlign: "center", fontWeight: "bold", fontSize: "18pt", color: "#f08408" }}>Información</IonTitle>
-              </IonCardHeader>
-              <IonCardContent>
-                <IonCardTitle style={{ fontWeight: "bold", fontSize: "12pt", color: "black" }}>Métodos de pago</IonCardTitle>
-                <div style={{ marginTop: "6pt" }} />
-                {datos &&
-                  datos.metodos_pago.map((metodo: any) => (
-                    <IonChip>{metodo.metodo_pago}</IonChip>
+          </div>
+          {/* <div className="mt-4 p-4 bg-blue-50">
+            <div className="text-md font-bold text-gray-600">
+              Métodos de pago
+            </div>
+            <div className="flex flex-row gap-2">
+              {datos?.metodos_pago.map((metodo: any) => (
+                <span className="p-4 border rounded-md border-gray-200 bg-blue-400 text-white">
+                  {metodo.metodo_pago}
+                </span>
+              ))}
+            </div>
+          </div> */}
+        </div>
+
+        <div className="">
+          <div className="flex flex-col gap-2">
+            <div className="p-4 rounded-md text-xl font-bold text-gray-600 bg-gray-50 border border-gray-200">
+              Horarios de check-in y check-out
+            </div>
+            <div className="flex flex-col">
+              <div className="text-md text-gray-600 font-bold p-4 border border-gray-200 bg-gray-50 rounded-t-md">
+                Check-in
+              </div>
+              <div className="flex flex-row gap-1 border-b border-x border-gray-200  rounded-b-md">
+                {[
+                  { tag: "Lun", key: "aplica_lunes" },
+                  { tag: "Mar", key: "aplica_martes" },
+                  { tag: "Mie", key: "aplica_miercoles" },
+                  { tag: "Jue", key: "aplica_jueves" },
+                  { tag: "Vie", key: "aplica_viernes" },
+                  { tag: "Sab", key: "aplica_sabado" },
+                  { tag: "Dom", key: "aplica_domingo" },
+                ].map((dia: { tag: string; key: string }) => (
+                  <div className="flex flex-col">
+                    <div className="text-gray-600 text-md font-bold px-4 py-2">
+                      {dia.tag}
+                    </div>
+                    {datos &&
+                      datos.horarios_check_in_out
+                        .filter((h: any) => h[dia.key] == 1)
+                        .map((h: any, i: number) => (
+                          <div className="text-md text-gray-600 px-4 py-2">{`${
+                            i > 0 ? " - " : ""
+                          }${h.check_in_hora}:${h.check_in_minuto}`}</div>
+                        ))}
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-col mt-2">
+                <div className="text-md text-gray-600 font-bold p-4 border border-gray-200 bg-gray-50 rounded-t-md">
+                  Check-Out
+                </div>
+                <div className="flex flex-row gap-1 border-b border-x border-gray-200 rounded-b-md">
+                  {[
+                    { tag: "Lun", key: "aplica_lunes" },
+                    { tag: "Mar", key: "aplica_martes" },
+                    { tag: "Mie", key: "aplica_miercoles" },
+                    { tag: "Jue", key: "aplica_jueves" },
+                    { tag: "Vie", key: "aplica_viernes" },
+                    { tag: "Sab", key: "aplica_sabado" },
+                    { tag: "Dom", key: "aplica_domingo" },
+                  ].map((dia: { tag: string; key: string }) => (
+                    <div className="flex flex-col">
+                      <div className="text-gray-600 text-md font-bold px-4 py-2">
+                        {dia.tag}
+                      </div>
+                      {datos &&
+                        datos.horarios_check_in_out
+                          .filter((h: any) => h[dia.key] == 1)
+                          .map((h: any, i: number) => (
+                            <div className="text-md text-gray-600 px-4 py-2">{`${
+                              i > 0 ? " - " : ""
+                            }${h.check_out_hora}:${h.check_out_minuto}`}</div>
+                          ))}
+                    </div>
                   ))}
-                <div style={{ marginTop: "12pt" }} />
-                <IonCardTitle style={{ fontWeight: "bold", fontSize: "12pt", color: "black" }}>Horarios de check-in y check-out</IonCardTitle>
-                <div style={{ marginTop: "6pt" }} />
-                <IonGrid>
-                  <IonRow style={{ fontWeight: "bold" }}>Check-in</IonRow>
-                  <IonRow style={{ fontWeight: "bold" }}>
-                    <IonCol>Lun</IonCol>
-                    <IonCol>Mar</IonCol>
-                    <IonCol>Mie</IonCol>
-                    <IonCol>Jue</IonCol>
-                    <IonCol>Vie</IonCol>
-                    <IonCol>Sab</IonCol>
-                    <IonCol>Dom</IonCol>
-                  </IonRow>
-                  <IonRow>
-                    <IonCol>
-                      {datos &&
-                        datos.horarios_check_in_out
-                          .filter((h: any) => h.aplica_lunes == 1)
-                          .map(
-                            (h: any, i: number) =>
-                              `${i > 0 ? " - " : ""}${h.check_in_hora}:${
-                                h.check_in_minuto
-                              }`
-                          )}
-                    </IonCol>
-                    <IonCol>
-                      {datos &&
-                        datos.horarios_check_in_out
-                          .filter((h: any) => h.aplica_martes == 1)
-                          .map(
-                            (h: any, i: number) =>
-                              `${i > 0 ? " - " : ""}${h.check_in_hora}:${
-                                h.check_in_minuto
-                              }`
-                          )}
-                    </IonCol>
-                    <IonCol>
-                      {datos &&
-                        datos.horarios_check_in_out
-                          .filter((h: any) => h.aplica_miercoles == 1)
-                          .map(
-                            (h: any, i: number) =>
-                              `${i > 0 ? " - " : ""}${h.check_in_hora}:${
-                                h.check_in_minuto
-                              }`
-                          )}
-                    </IonCol>
-                    <IonCol>
-                      {datos &&
-                        datos.horarios_check_in_out
-                          .filter((h: any) => h.aplica_jueves == 1)
-                          .map(
-                            (h: any, i: number) =>
-                              `${i > 0 ? " - " : ""}${h.check_in_hora}:${
-                                h.check_in_minuto
-                              }`
-                          )}
-                    </IonCol>
-                    <IonCol>
-                      {datos &&
-                        datos.horarios_check_in_out
-                          .filter((h: any) => h.aplica_viernes == 1)
-                          .map(
-                            (h: any, i: number) =>
-                              `${i > 0 ? " - " : ""}${h.check_in_hora}:${
-                                h.check_in_minuto
-                              }`
-                          )}
-                    </IonCol>
-                    <IonCol>
-                      {datos &&
-                        datos.horarios_check_in_out
-                          .filter((h: any) => h.aplica_sabado == 1)
-                          .map(
-                            (h: any, i: number) =>
-                              `${i > 0 ? " - " : ""}${h.check_in_hora}:${
-                                h.check_in_minuto
-                              }`
-                          )}
-                    </IonCol>
-                    <IonCol>
-                      {datos &&
-                        datos.horarios_check_in_out
-                          .filter((h: any) => h.aplica_domingo == 1)
-                          .map(
-                            (h: any, i: number) =>
-                              `${i > 0 ? " - " : ""}${h.check_in_hora}:${
-                                h.check_in_minuto
-                              }`
-                          )}
-                    </IonCol>
-                  </IonRow>
-                  <IonRow style={{ marginTop: "12pt", fontWeight: "bold" }}>
-                    Check-Out
-                  </IonRow>
-                  <IonRow style={{ fontWeight: "bold" }}>
-                    <IonCol>Lun</IonCol>
-                    <IonCol>Mar</IonCol>
-                    <IonCol>Mie</IonCol>
-                    <IonCol>Jue</IonCol>
-                    <IonCol>Vie</IonCol>
-                    <IonCol>Sab</IonCol>
-                    <IonCol>Dom</IonCol>
-                  </IonRow>
-                  <IonRow>
-                    <IonCol>
-                      {datos &&
-                        datos.horarios_check_in_out
-                          .filter((h: any) => h.aplica_lunes == 1)
-                          .map(
-                            (h: any, i: number) =>
-                              `${i > 0 ? " - " : ""}${h.check_in_hora}:${
-                                h.check_in_minuto
-                              }`
-                          )}
-                    </IonCol>
-                    <IonCol>
-                      {datos &&
-                        datos.horarios_check_in_out
-                          .filter((h: any) => h.aplica_martes == 1)
-                          .map(
-                            (h: any, i: number) =>
-                              `${i > 0 ? " - " : ""}${h.check_in_hora}:${
-                                h.check_in_minuto
-                              }`
-                          )}
-                    </IonCol>
-                    <IonCol>
-                      {datos &&
-                        datos.horarios_check_in_out
-                          .filter((h: any) => h.aplica_miercoles == 1)
-                          .map(
-                            (h: any, i: number) =>
-                              `${i > 0 ? " - " : ""}${h.check_in_hora}:${
-                                h.check_in_minuto
-                              }`
-                          )}
-                    </IonCol>
-                    <IonCol>
-                      {datos &&
-                        datos.horarios_check_in_out
-                          .filter((h: any) => h.aplica_jueves == 1)
-                          .map(
-                            (h: any, i: number) =>
-                              `${i > 0 ? " - " : ""}${h.check_in_hora}:${
-                                h.check_in_minuto
-                              }`
-                          )}
-                    </IonCol>
-                    <IonCol>
-                      {datos &&
-                        datos.horarios_check_in_out
-                          .filter((h: any) => h.aplica_viernes == 1)
-                          .map(
-                            (h: any, i: number) =>
-                              `${i > 0 ? " - " : ""}${h.check_in_hora}:${
-                                h.check_in_minuto
-                              }`
-                          )}
-                    </IonCol>
-                    <IonCol>
-                      {datos &&
-                        datos.horarios_check_in_out
-                          .filter((h: any) => h.aplica_sabado == 1)
-                          .map(
-                            (h: any, i: number) =>
-                              `${i > 0 ? " - " : ""}${h.check_in_hora}:${
-                                h.check_in_minuto
-                              }`
-                          )}
-                    </IonCol>
-                    <IonCol>
-                      {datos &&
-                        datos.horarios_check_in_out
-                          .filter((h: any) => h.aplica_domingo == 1)
-                          .map(
-                            (h: any, i: number) =>
-                              `${i > 0 ? " - " : ""}${h.check_in_hora}:${
-                                h.check_in_minuto
-                              }`
-                          )}
-                    </IonCol>
-                  </IonRow>
-                </IonGrid>
-                <div style={{ marginTop: "12pt" }} />
-                <IonCardTitle style={{ fontWeight: "bold", fontSize: "12pt", color: "black" }}>Observaciones</IonCardTitle>
-                <div style={{ marginTop: "6pt" }} />
-                <ul>
-                  {datos &&
-                    datos.observaciones.map((observacion: any) => (
-                      <li>{observacion.observacion}</li>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col mt-4">
+        <div className="w-full text-2xl text-gray-600 border border-gray-200 bg-gray-50 font-bold p-4 rounded-md">
+          Disponibilidad
+        </div>
+        <table className="mt-2 border-x border-[var(--color-viajero)]">
+          <thead className="">
+            <tr className="">
+              <td className="p-4 text-sm font-bold text-white bg-[var(--color-viajero)]/95">
+                Alojamiento
+              </td>
+              <td className="p-4 text-sm font-bold text-white bg-[var(--color-viajero)]/95">
+                Cantidad de personas
+              </td>
+              <td className="p-4 text-sm font-bold text-white bg-[var(--color-viajero)]/95">
+                Precio por {datos?.datos_basicos.noches_estadia} noches
+              </td>
+              <td className="p-4 text-sm font-bold text-white bg-[var(--color-viajero)]/95"></td>
+            </tr>
+          </thead>
+          <tbody>
+            {datos?.tipos_detalles.map((detalle: any) => (
+              <tr>
+                <td className="p-4 text-sm text-gray-600 border-r border-[var(--color-viajero)] border-b flex flex-col gap-1">
+                  <span className="font-bold text-[var(--color-viajero)] cursor-pointer hover:underline">
+                    {detalle.tipo_detalle}
+                  </span>
+                  <span className=" text-xs">
+                    {detalle.camas_cantidad.map((cama: any) => (
+                      <span className="flex flex-row gap-1 items-center">
+                        {getCamaIcon(cama.nombre_cama)} {cama.cantidad}{" "}
+                        {cama.nombre_cama}
+                      </span>
                     ))}
-                </ul>
-              </IonCardContent>
-            </IonCard>
-          </IonCol>
-          <IonCol>
-            <IonCard style={{ padding: "12pt" }}>
-              <IonCardHeader style={{ paddingBottom: "12pt" }}>
-                <IonTitle style={{ textAlign: "center", fontWeight: "bold", fontSize: "18pt", color: "#f08408" }}>Reservá</IonTitle>
-              </IonCardHeader>
-              <IonGrid
-                title="ver disponibilidad"
-                style={{ position: "relative" }}
-              >
-                {datos &&
-                  datos.tipos_detalles.map((detalle: any, index: number) => (
-                    <StyledDiv>
-                      <StyledOver
-                        onClick={() =>
-                          router.push(
-                            `/oferta/reservar/${params.id}/${detalle.id_tipo_detalle}/${params.fecha_desde}/${params.fecha_hasta}/${params.cantidad_personas}`
-                          )
-                        }
-                      >
-                        RESERVAR
-                      </StyledOver>
-                      <IonRow style={{ marginTop: index > 0 ? "12pt" : "0pt" }}>
-                        <IonCol>
-                          <IonRow>{detalle.tipo_detalle}</IonRow>
-                          <IonRow>
-                            {detalle.cantidad_baños} <span>&nbsp;baño</span>
-                            {detalle.cantidad_baños > 1 && <span>s</span>}
-                            {detalle.bl_baño_compartido ? (
-                              <span>&nbsp;&bull;baño compartido</span>
-                            ) : null}
-                            {detalle.bl_baño_adaptado ? (
-                              <span>&nbsp;&bull; baño adaptado</span>
-                            ) : null}
-                          </IonRow>
-                          <IonRow>
-                            {detalle.camas_cantidad.reduce(
-                              (acumulador: number, valorActual: any) =>
-                                acumulador + valorActual.cantidad,
-                              0
-                            )}
-                            &nbsp; cama
-                            {detalle.camas_cantidad.reduce(
-                              (acumulador: number, valorActual: any) =>
-                                acumulador + valorActual.cantidad,
-                              0
-                            ) > 1 && "s"}
-                            &nbsp; (
-                            {detalle.camas_cantidad.map(
-                              (cama: any, index: number) =>
-                                `${index != 0 ? ", " : ""}` +
-                                cama.cantidad +
-                                " " +
-                                cama.nombre_cama
-                            )}
-                            )
-                          </IonRow>
-                          <IonRow>
-                            {detalle.caracteristicas.map(
-                              (caracteristica: any, index: number) => (
-                                <span>
-                                  {index > 0 && <span>&nbsp;&bull; </span>}
-                                  {caracteristica.caracteristica}
-                                </span>
-                              )
-                            )}
-                          </IonRow>
-                        </IonCol>
-                        <IonCol
-                          style={{
-                            display: "flex",
-                            alignContent: "center",
-                            alignItems: "center",
-                            justifyContent: "right",
-                          }}
-                        >
-                          <div>
-                            {params.cantidad_personas && datos && (
-                              <IonRow>
-                                {datos.datos_basicos.noches_estadia} noche
-                                {datos.datos_basicos.noches_estadia > 1
-                                  ? "s"
-                                  : ""}
-                                ,{params.cantidad_personas} persona
-                                {params.cantidad_personas > 1 ? "s" : ""}
-                              </IonRow>
-                            )}
-                            <IonRow
-                              style={{ fontSize: "16pt", fontWeight: "bold" }}
-                            >
-                              AR$ {`${detalle.precio_total}`.replace(".", ",")}
-                            </IonRow>
-                            <IonRow>+ impuestos y tazas</IonRow>
-                          </div>
-                        </IonCol>
-                      </IonRow>
-                    </StyledDiv>
-                  ))}
-              </IonGrid>
-            </IonCard>
-          </IonCol>
-        </IonRow>
-      </IonGrid>
-    </IonContent>
+                  </span>
+                  <span className="flex flex-row gap-2 justify-start">
+                    {detalle.caracteristicas.map((caracteristica: any) => (
+                      <span className="text-xs">
+                        {caracteristica.caracteristica}
+                      </span>
+                    ))}
+                  </span>
+                </td>
+                <td className="p-4 text-sm text-gray-600 border-r border-[var(--color-viajero)] border-b">
+                  <span className="w-full flex flex-row justify-center">
+                    {new Array(params.cantidad_personas).map(() => (
+                      <User />
+                    ))}
+                  </span>
+                </td>
+                <td className="p-4 text-sm text-gray-600 border-r border-[var(--color-viajero)] border-b">
+                  <span className="w-full flex flex-row justify-center">
+                    <div className="flex flex-col">
+                      <div className="text-xl text-gray-600 font-bold">
+                        AR$ {`${detalle.precio_total}`.replace(".", ",")}
+                      </div>
+                      <div className="text-xs italic text-gray-600">
+                        + impuestos y tasas
+                      </div>
+                    </div>
+                  </span>
+                </td>
+                <td className="p-4 text-sm text-gray-600 border-b border-[var(--color-viajero)]">
+                  <button className="viajero-button px-4 py-2 w-full">
+                    Reservar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }

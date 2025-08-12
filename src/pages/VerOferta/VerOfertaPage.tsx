@@ -3,11 +3,9 @@ import VerOfertaView from "../../Views/VerOferta/VerOfertaView";
 
 const VerOfertaPage: React.FC = () => {
   return (
-    <>
-      <DefaultLoggedLayout>
-        <VerOfertaView />
-      </DefaultLoggedLayout>
-    </>
+    <DefaultLoggedLayout>
+      <VerOfertaView />
+    </DefaultLoggedLayout>
   );
 };
 export default VerOfertaPage;

@@ -1,139 +1,118 @@
-import {
-  IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
-  IonChip,
-  IonCol,
-  IonContent,
-  IonGrid,
-  IonIcon,
-  IonRow,
-  IonTitle,
-  useIonRouter,
-} from "@ionic/react";
-import {
-  bedOutline,
-  bookmarkOutline,
-  chatbox,
-  compass,
-  flash,
-  location,
-  logoUsd,
-  radioButtonOff,
-  star,
-  walk,
-} from "ionicons/icons";
+import { IonIcon, useIonRouter } from "@ionic/react";
+import { bookmarkOutline, location } from "ionicons/icons";
 
 // Import Swiper styles
-import "swiper/css";
-import MapView from "../../components/MapView/MapView";
+import {
+  Banknote,
+  Bed,
+  BedDouble,
+  BedSingle,
+  LogIn,
+  LogOut,
+  Sofa,
+  User,
+} from "lucide-react";
 import { useMemo, useState } from "react";
-import { obtenerOfertaTuristica } from "../../App/Ofertas/Ofertas";
 import { useParams } from "react-router";
 import styled from "styled-components";
+import "swiper/css";
+import { obtenerOfertaTuristica } from "../../App/Ofertas/Ofertas";
+import MapView from "../../components/MapView/MapView";
 import {
   MapViewProvider,
   useMapView,
 } from "../../components/MapView/useMapView";
-import { Bed, BedDouble, BedSingle, Sofa, User } from "lucide-react";
 
-const imageList = [
-  "/images/cabin1.jpg",
-];
-
-const RenderImages = () => {
-  if (imageList.length == 1)
+const RenderImages = ({ imagenes }: { imagenes: any[] }) => {
+  if (imagenes.length == 1)
     return (
       <div
         className="w-full aspect-video bg-center bg-cover"
-        style={{ backgroundImage: `url(${imageList[0]})` }}
+        style={{ backgroundImage: `url(${imagenes[0]})` }}
       />
     );
 
-  if (imageList.length == 2)
+  if (imagenes.length == 2)
     return (
       <div className="flex flex-row gap-4 w-full">
         <div
           className="w-full aspect-video bg-center bg-cover"
-          style={{ backgroundImage: `url(${imageList[0]})` }}
+          style={{ backgroundImage: `url(${imagenes[0]})` }}
         />
         <div
           className="w-full aspect-video bg-center bg-cover"
-          style={{ backgroundImage: `url(${imageList[1]})` }}
+          style={{ backgroundImage: `url(${imagenes[1]})` }}
         />
       </div>
     );
 
-  if (imageList.length == 3)
+  if (imagenes.length == 3)
     return (
       <div className="flex flex-row gap-4 w-full">
         <div
           className="w-2/3 aspect-video bg-center bg-cover"
-          style={{ backgroundImage: `url(${imageList[0]})` }}
+          style={{ backgroundImage: `url(${imagenes[0]})` }}
         />
         <div className="w-1/3 flex flex-col justify-center gap-4">
           <div
             className="w-full aspect-video bg-center bg-cover"
-            style={{ backgroundImage: `url(${imageList[1]})` }}
+            style={{ backgroundImage: `url(${imagenes[1]})` }}
           />
           <div
             className="w-full aspect-video bg-center bg-cover"
-            style={{ backgroundImage: `url(${imageList[2]})` }}
-          />
-        </div>
-      </div>
-    );
-
-  if (imageList.length == 4)
-    return (
-      <div className="flex flex-col w-full gap-4">
-        <div
-          className="w-full aspect-video bg-center bg-cover"
-          style={{ backgroundImage: `url(${imageList[0]})` }}
-        />
-        <div className="flex flex-row gap-4 justify-center w-full">
-          <div
-            className="w-full aspect-video bg-center bg-cover"
-            style={{ backgroundImage: `url(${imageList[1]})` }}
-          />
-          <div
-            className="w-full aspect-video bg-center bg-cover"
-            style={{ backgroundImage: `url(${imageList[2]})` }}
-          />
-          <div
-            className="w-full aspect-video bg-center bg-cover"
-            style={{ backgroundImage: `url(${imageList[3]})` }}
+            style={{ backgroundImage: `url(${imagenes[2]})` }}
           />
         </div>
       </div>
     );
 
-  if (imageList.length > 4)
+  if (imagenes.length == 4)
     return (
       <div className="flex flex-col w-full gap-4">
         <div
           className="w-full aspect-video bg-center bg-cover"
-          style={{ backgroundImage: `url(${imageList[0]})` }}
+          style={{ backgroundImage: `url(${imagenes[0]})` }}
         />
         <div className="flex flex-row gap-4 justify-center w-full">
           <div
             className="w-full aspect-video bg-center bg-cover"
-            style={{ backgroundImage: `url(${imageList[1]})` }}
+            style={{ backgroundImage: `url(${imagenes[1]})` }}
           />
           <div
             className="w-full aspect-video bg-center bg-cover"
-            style={{ backgroundImage: `url(${imageList[2]})` }}
+            style={{ backgroundImage: `url(${imagenes[2]})` }}
           />
           <div
             className="w-full aspect-video bg-center bg-cover"
-            style={{ backgroundImage: `url(${imageList[3]})` }}
+            style={{ backgroundImage: `url(${imagenes[3]})` }}
+          />
+        </div>
+      </div>
+    );
+
+  if (imagenes.length > 4)
+    return (
+      <div className="flex flex-col w-full gap-4">
+        <div
+          className="w-full aspect-video bg-center bg-cover"
+          style={{ backgroundImage: `url(${imagenes[0]})` }}
+        />
+        <div className="flex flex-row gap-4 justify-center w-full">
+          <div
+            className="w-full aspect-video bg-center bg-cover"
+            style={{ backgroundImage: `url(${imagenes[1]})` }}
+          />
+          <div
+            className="w-full aspect-video bg-center bg-cover"
+            style={{ backgroundImage: `url(${imagenes[2]})` }}
+          />
+          <div
+            className="w-full aspect-video bg-center bg-cover"
+            style={{ backgroundImage: `url(${imagenes[3]})` }}
           />
           <div
             className="relative w-full aspect-video bg-center bg-cover"
-            style={{ backgroundImage: `url(${imageList[4]})` }}
+            style={{ backgroundImage: `url(${imagenes[4]})` }}
           >
             <div className="flex w-full h-full absolute bg-gray-50/45 cursor-pointer hover:bg-[var(--color-viajero)]/50 transition-colors duration-75 text-white font-bold justify-center items-center">
               Ver más
@@ -236,15 +215,23 @@ export default function VerOfertaView() {
             className="text-3xl text-gray-600 cursor-pointer"
             icon={bookmarkOutline}
           />
-          <button className="viajero-button px-4 py-2">Reservar</button>
+          {/* <button className="viajero-button px-4 py-2">Reservar</button> */}
         </div>
       </div>
       <div className="flex flex-row gap-4 mt-4 justify-between">
         <div className="flex flex-fow w-full">
-          <RenderImages />
+          <RenderImages
+            imagenes={
+              datos
+                ? datos.imagenes_oferta.map(
+                    (img: any) => "data:image/png;base64," + img.imagen
+                  )
+                : []
+            }
+          />
         </div>
-        <div className="flex flex-col gap-2 w-1/3">
-          <div className="border border-gray-200 bg-gray-50 rounded-md p-4 flex">
+        <div className="flex flex-col justify-end gap-4 w-1/3">
+          <div className="border border-gray-200 bg-gray-50 rounded-md p-4 flex h-2/3 items-center">
             <span className="text-md text-gray-600 italic">
               No hay reseñas disponibles para esta oferta
             </span>
@@ -267,90 +254,10 @@ export default function VerOfertaView() {
               </div>
             ))}
           </div>
-          {/* <div className="mt-4 p-4 bg-blue-50">
-            <div className="text-md font-bold text-gray-600">
-              Métodos de pago
-            </div>
-            <div className="flex flex-row gap-2">
-              {datos?.metodos_pago.map((metodo: any) => (
-                <span className="p-4 border rounded-md border-gray-200 bg-blue-400 text-white">
-                  {metodo.metodo_pago}
-                </span>
-              ))}
-            </div>
-          </div> */}
-        </div>
-
-        <div className="">
-          <div className="flex flex-col gap-2">
-            <div className="p-4 rounded-md text-xl font-bold text-gray-600 bg-gray-50 border border-gray-200">
-              Horarios de check-in y check-out
-            </div>
-            <div className="flex flex-col">
-              <div className="text-md text-gray-600 font-bold p-4 border border-gray-200 bg-gray-50 rounded-t-md">
-                Check-in
-              </div>
-              <div className="flex flex-row gap-1 border-b border-x border-gray-200  rounded-b-md">
-                {[
-                  { tag: "Lun", key: "aplica_lunes" },
-                  { tag: "Mar", key: "aplica_martes" },
-                  { tag: "Mie", key: "aplica_miercoles" },
-                  { tag: "Jue", key: "aplica_jueves" },
-                  { tag: "Vie", key: "aplica_viernes" },
-                  { tag: "Sab", key: "aplica_sabado" },
-                  { tag: "Dom", key: "aplica_domingo" },
-                ].map((dia: { tag: string; key: string }) => (
-                  <div className="flex flex-col">
-                    <div className="text-gray-600 text-md font-bold px-4 py-2">
-                      {dia.tag}
-                    </div>
-                    {datos &&
-                      datos.horarios_check_in_out
-                        .filter((h: any) => h[dia.key] == 1)
-                        .map((h: any, i: number) => (
-                          <div className="text-md text-gray-600 px-4 py-2">{`${
-                            i > 0 ? " - " : ""
-                          }${h.check_in_hora}:${h.check_in_minuto}`}</div>
-                        ))}
-                  </div>
-                ))}
-              </div>
-              <div className="flex flex-col mt-2">
-                <div className="text-md text-gray-600 font-bold p-4 border border-gray-200 bg-gray-50 rounded-t-md">
-                  Check-Out
-                </div>
-                <div className="flex flex-row gap-1 border-b border-x border-gray-200 rounded-b-md">
-                  {[
-                    { tag: "Lun", key: "aplica_lunes" },
-                    { tag: "Mar", key: "aplica_martes" },
-                    { tag: "Mie", key: "aplica_miercoles" },
-                    { tag: "Jue", key: "aplica_jueves" },
-                    { tag: "Vie", key: "aplica_viernes" },
-                    { tag: "Sab", key: "aplica_sabado" },
-                    { tag: "Dom", key: "aplica_domingo" },
-                  ].map((dia: { tag: string; key: string }) => (
-                    <div className="flex flex-col">
-                      <div className="text-gray-600 text-md font-bold px-4 py-2">
-                        {dia.tag}
-                      </div>
-                      {datos &&
-                        datos.horarios_check_in_out
-                          .filter((h: any) => h[dia.key] == 1)
-                          .map((h: any, i: number) => (
-                            <div className="text-md text-gray-600 px-4 py-2">{`${
-                              i > 0 ? " - " : ""
-                            }${h.check_out_hora}:${h.check_out_minuto}`}</div>
-                          ))}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
-      <div className="flex flex-col mt-4">
+      <div className="flex flex-col mt-8">
         <div className="w-full text-2xl text-gray-600 border border-gray-200 bg-gray-50 font-bold p-4 rounded-md">
           Disponibilidad
         </div>
@@ -412,7 +319,15 @@ export default function VerOfertaView() {
                   </span>
                 </td>
                 <td className="p-4 text-sm text-gray-600 border-b border-[var(--color-viajero)]">
-                  <button className="viajero-button px-4 py-2 w-full">
+                  <button
+                    onClick={() => {
+                      datos &&
+                        router.push(
+                          `/oferta/reservar/${datos.datos_basicos.id_oferta_turistica}/${detalle.id_tipo_detalle}/${params.fecha_desde}/${params.fecha_hasta}/${params.cantidad_personas}`
+                        );
+                    }}
+                    className="viajero-button px-4 py-2 w-full"
+                  >
                     Reservar
                   </button>
                 </td>
@@ -420,6 +335,88 @@ export default function VerOfertaView() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="mt-4 flex flex-col gap-4">
+        <div className="p-4 rounded-md text-xl font-bold text-gray-600 bg-gray-50 border border-gray-200">
+          Información importante
+        </div>
+        <div className="grid grid-flow-row flex-col border border-gray-200 rounded-md">
+          <div className="grid grid-cols-10 p-4">
+            <div className="col-span-3 flex justify-center items-center gap-2 text-gray-600 font-bold">
+              <LogIn className="text-gray-600" /> Check-in
+            </div>
+            <div className="col-span-7 justify-start items-start flex flex-row">
+              {[
+                { tag: "Lun", key: "aplica_lunes" },
+                { tag: "Mar", key: "aplica_martes" },
+                { tag: "Mie", key: "aplica_miercoles" },
+                { tag: "Jue", key: "aplica_jueves" },
+                { tag: "Vie", key: "aplica_viernes" },
+                { tag: "Sab", key: "aplica_sabado" },
+                { tag: "Dom", key: "aplica_domingo" },
+              ].map((dia: { tag: string; key: string }) => (
+                <div className="flex flex-col">
+                  <div className="text-gray-600 text-md font-bold px-4 py-2">
+                    {dia.tag}
+                  </div>
+                  {datos &&
+                    datos.horarios_check_in_out
+                      .filter((h: any) => h[dia.key] == 1)
+                      .map((h: any, i: number) => (
+                        <div className="text-md text-gray-600 px-4 py-2">{`${
+                          i > 0 ? " - " : ""
+                        }${h.check_in_hora}:${h.check_in_minuto}`}</div>
+                      ))}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="w-full border-b border-gray-200" />
+          <div className="grid grid-cols-10 p-4">
+            <div className="col-span-3 flex justify-center items-center gap-2 text-gray-600 font-bold">
+              <LogOut className="text-gray-600" /> Check-out
+            </div>
+            <div className="col-span-7 justify-start items-start flex flex-row">
+              {[
+                { tag: "Lun", key: "aplica_lunes" },
+                { tag: "Mar", key: "aplica_martes" },
+                { tag: "Mie", key: "aplica_miercoles" },
+                { tag: "Jue", key: "aplica_jueves" },
+                { tag: "Vie", key: "aplica_viernes" },
+                { tag: "Sab", key: "aplica_sabado" },
+                { tag: "Dom", key: "aplica_domingo" },
+              ].map((dia: { tag: string; key: string }) => (
+                <div className="flex flex-col">
+                  <div className="text-gray-600 text-md font-bold px-4 py-2">
+                    {dia.tag}
+                  </div>
+                  {datos &&
+                    datos.horarios_check_in_out
+                      .filter((h: any) => h[dia.key] == 1)
+                      .map((h: any, i: number) => (
+                        <div className="text-md text-gray-600 px-4 py-2">{`${
+                          i > 0 ? " - " : ""
+                        }${h.check_out_hora}:${h.check_out_minuto}`}</div>
+                      ))}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="w-full border-b border-gray-200" />
+          <div className="grid grid-cols-10 p-4">
+            <div className="col-span-3 flex justify-center items-center gap-2 text-gray-600 font-bold">
+              <Banknote className="text-gray-600" /> Métodos de pago
+            </div>
+            <div className="col-span-7 justify-start items-start flex flex-row">
+              {datos?.metodos_pago.map((metodo: any) => (
+                <div className="p-4 border border-gray-200 rounded-md text-gray-600">
+                  {metodo.metodo_pago}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

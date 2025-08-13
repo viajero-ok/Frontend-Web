@@ -86,7 +86,16 @@ export default function DefaultLoggedLayout({ children }: any) {
             <IonTitle size="large">Blank</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent className="">{children}</IonContent>
+        <IonContent className="">
+          {children}
+          <div className="w-full bg-gray-50 min-h-24 flex flex-row gap-4 justify-between items-start px-16 py-4 pb-8">
+            <div className="flex flex-col gap-2 text-sm text-gray-600">
+              <div className="font-bold">Información</div>
+              <div>Sobre nosotros</div>
+              <div>Contactanos</div>
+            </div>
+          </div>
+        </IonContent>
       </IonContent>
     </IonPage>
   );

@@ -8,7 +8,8 @@ import LogIn from "../../pages/LogIn/LogIn";
 import MisReservas from "../../pages/MisReservas/MisReservas";
 import MyOffers from "../../pages/MyOffers/MyOffers";
 import NewOffer from "../../pages/MyOffers/NewOffer/NewOffer";
-import PublicarOfertaPage from "../../pages/MyOffers/PublicarOferta/PublicarOfertaPage";
+import { default as PublicarActividadPage } from "../../pages/MyOffers/PublicarOferta/PublicarActividadPage";
+import PublicarAlojamientoPage from "../../pages/MyOffers/PublicarOferta/PublicarAlojamientoPage";
 import MyPlaces from "../../pages/MyPlaces/MyPlaces";
 import NewPlace from "../../pages/MyPlaces/NewPlace/NewPlace";
 import NewActividad from "../../pages/NewActividad/NewActividad";
@@ -118,8 +119,13 @@ const RoutesProvider = ({ children }: { children?: React.ReactNode }) => {
             />
             <Route
               exact
-              path="/my-offers/publicar/:id"
-              component={PublicarOfertaPage}
+              path="/my-offers/publicar-alojamiento/:id"
+              component={PublicarAlojamientoPage}
+            />
+            <Route
+              exact
+              path="/my-offers/publicar-actividad/:id"
+              component={PublicarActividadPage}
             />
             <Route exact path="/pago/:id" component={PagarTestPage} />
             <Route exact path="/mis-reservas" component={MisReservas} />

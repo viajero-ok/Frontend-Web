@@ -1,12 +1,12 @@
 import { IonIcon } from "@ionic/react";
 import { arrowForward } from "ionicons/icons";
 import { Dispatch, SetStateAction } from "react";
-import { cn } from "../../../../components/ui/Form/Field";
-import { useModal } from "../../../../components/ui/Modal/Modal";
-import { usePublicarOferta } from "../Provider/PublicarOfertaProvider";
+import { cn } from "../../../../../components/ui/Form/Field";
+import { useModal } from "../../../../../components/ui/Modal/Modal";
+import { usePublicarOferta } from "../PublicarAlojamientoProvider";
 import DialogTarifaNueva from "./DialogTarifaNueva";
-import { actualizarTarifa } from "../../../../App/Publicaciones/PublicacionesAlojamientos";
-import { formatMoneyValue } from "../../../../components/ui/Input/Input";
+import { actualizarTarifa } from "../../../../../App/Publicaciones/PublicacionesAlojamientos";
+import { formatMoneyValue } from "../../../../../components/ui/Input/Input";
 
 type TTarifas = {
   tarifas: any[];

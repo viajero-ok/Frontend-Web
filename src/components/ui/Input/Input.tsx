@@ -245,7 +245,7 @@ const MoneyInput = React.forwardRef<HTMLInputElement, any>(
         )}
       >
         <div className="text-nowrap mx-4 text-gray-600 text-md font-bold">
-          Monto de la tarifa:
+          {props.label}
         </div>
         <input
           type="text"

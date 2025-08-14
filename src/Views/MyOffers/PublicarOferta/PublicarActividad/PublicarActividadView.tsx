@@ -1,20 +1,20 @@
-import { IonToast } from "@ionic/react";
 import { useState } from "react";
-import { publicarAlojamiento } from "../../../App/Publicaciones/PublicacionesAlojamientos";
-import { useModal } from "../../../components/ui/Modal/Modal";
-import { usePublicarOferta } from "./Provider/PublicarOfertaProvider";
-import Tarifas from "./Tarifas/Tarifas";
+import { publicarActividad } from "../../../../App/Publicaciones/PublicacionesActividades";
+import { useModal } from "../../../../components/ui/Modal/Modal";
+import Entradas from "./Entradas/Entradas";
+import { usePublicarActividad } from "./PublicarActividadProvider";
 
-export default function PublicarOfertaView() {
+export default function PublicarActividadView() {
   const [datosRegistrados, setDatosRegistrados] = useState<any | null>(null);
   const [tarifas, setTarifas] = useState<any[]>([]);
   const [selectedTarifa, setSelectedTarifa] = useState<any>(null);
 
-  const { idOferta } = usePublicarOferta();
+  const { idOferta } = usePublicarActividad();
   const { modal, setOpen } = useModal();
 
   const handlePublicar = () => {
-    publicarAlojamiento(idOferta)
+    /** TODO: Mover al provider */
+    publicarActividad(idOferta)
       .then(() => {
         console.log("publicada");
       })
@@ -67,7 +67,7 @@ export default function PublicarOfertaView() {
     <div className="mt-4 px-8">
       <div className="flex flex-row p-4 border border-gray-200 bg-gray-50 rounded-md justify-between">
         <div className="text-gray-600 text-3xl font-bold">
-          Publicar oferta turística
+          Publicar actividad
         </div>
         <button
           className="viajero-button bg-green-400! hover:bg-green-400/90! px-4 py-2 flex flex-row items-center gap-2"
@@ -87,7 +87,8 @@ export default function PublicarOfertaView() {
               datosRegistrados.datos_oferta.datos_oferta.descripcion}
           </div>
         </div>
-        <Tarifas tarifas={tarifas} setSelectedTarifa={setSelectedTarifa} />
+        {/* <Tarifas tarifas={tarifas} setSelectedTarifa={setSelectedTarifa} /> */}
+        <Entradas tarifas={tarifas} setSelectedTarifa={setSelectedTarifa} />
       </div>
     </div>
   );

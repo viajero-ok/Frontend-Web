@@ -30,7 +30,7 @@ import MyOffers from "./pages/MyOffers/MyOffers";
 import NewOffer from "./pages/MyOffers/NewOffer/NewOffer";
 import NewAlojamientoEnHabitaciones from "./pages/NewAlojamiento/NewAlojamientoEnHabitaciones";
 import ItineraryView from "./Views/Itinerary/ItineraryView";
-import PublicarOfertaPage from "./pages/MyOffers/PublicarOferta/PublicarOfertaPage";
+import PublicarOfertaPage from "./pages/MyOffers/PublicarOferta/PublicarActividadPage";
 import PagarTestPage from "./pages/PagarTest/PagarTestPage";
 import NewActividad from "./pages/NewActividad/NewActividad";
 import MisReservas from "./pages/MisReservas/MisReservas";

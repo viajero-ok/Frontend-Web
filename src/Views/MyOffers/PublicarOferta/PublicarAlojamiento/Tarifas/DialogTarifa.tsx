@@ -15,8 +15,8 @@ import {
   crearTarifa,
   eliminarTarifa,
   obtenerDatosRegistroPublicacion,
-} from "../../../../App/Publicaciones/PublicacionesAlojamientos";
-import CalendarPicker from "../CalendarPicker";
+} from "../../../../../App/Publicaciones/PublicacionesAlojamientos";
+import CalendarPicker from "../../CalendarPicker";
 import NumberField from "./NumberField";
 
 type TDialogTarifa = {

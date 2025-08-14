@@ -2,11 +2,11 @@ import { useState } from "react";
 import {
   TBodyActualizarTarifa,
   TBodyCrearTarifa,
-} from "../../../../App/Publicaciones/PublicacionesAlojamientos";
-import { MoneyInput } from "../../../../components/ui/Input/Input";
-import { useModal } from "../../../../components/ui/Modal/Modal";
-import { Select, SelectOption } from "../../../../components/ui/Select/Select";
-import CalendarPicker from "../CalendarPicker";
+} from "../../../../../App/Publicaciones/PublicacionesAlojamientos";
+import { MoneyInput } from "../../../../../components/ui/Input/Input";
+import { useModal } from "../../../../../components/ui/Modal/Modal";
+import { Select, SelectOption } from "../../../../../components/ui/Select/Select";
+import CalendarPicker from "../../CalendarPicker";
 
 type TDialogTarifa = {
   idOferta: string;

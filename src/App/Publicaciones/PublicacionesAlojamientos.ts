@@ -5,6 +5,11 @@ export const obtenerDatosRegistroPublicacion = async (idOferta: string) =>
     `/publicaciones/alojamientos/datos-publicacion-alojamiento/${idOferta}`
   );
 
+export const obtenerDatosRegistroPublicacionActividad = async (idOferta: string) =>
+  await AUTH_API.get(
+    `/publicaciones/actividades/datos-publicacion-actividad/${idOferta}`
+  );
+
 export type TBodyCrearTarifa = {
   fecha_desde: string;
   fecha_hasta: string;

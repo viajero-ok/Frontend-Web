@@ -8,7 +8,7 @@ import {
   IonSelect,
 } from "@ionic/react";
 import { calendarOutline } from "ionicons/icons";
-import CalendarPicker from "../CalendarPicker";
+import CalendarPicker from "../../CalendarPicker";
 
 export default function FormTarifa(props: any) {
   return (

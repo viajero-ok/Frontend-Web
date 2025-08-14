@@ -19,7 +19,8 @@ type ConsultaOfertasContextValue = {
   setFechas: React.Dispatch<React.SetStateAction<any>>;
   personas: number;
   setPersonas: React.Dispatch<React.SetStateAction<number>>;
-  ofertas: Oferta[];
+  alojamientos: Oferta[];
+  actividades: any[];
   buscar: () => void;
 };
 
@@ -35,7 +36,9 @@ const ConsultaOfertasProvider = ({
   const [localidad, setLocalidad] = React.useState<number | null>(null);
   const [fechas, setFechas] = React.useState<any>(null);
   const [personas, setPersonas] = React.useState<number>(1);
-  const [ofertas, setOfertas] = React.useState<Oferta[]>([]);
+  const [alojamientos, setAlojamientos] = React.useState<Oferta[]>([]);
+  const [actividades, setActividaes] = React.useState<any[]>([]);
+  const [eventos, setEventos] = React.useState<any[]>([]);
 
   const buscar = () => {
     if (!fechas) return;
@@ -52,10 +55,23 @@ const ConsultaOfertasProvider = ({
       fecha_desde: fechas.fecha_desde,
       fecha_hasta: fechas.fecha_hasta,
       cantidad_personas: personas,
-    }).then((response: any) => {
-      console.log("ofertas: ", response);
-      setOfertas(response.data);
-    });
+    })
+      .then((response: any) => {
+        setAlojamientos(response.data);
+      })
+      .catch(() => {});
+    consultarOfertasTurista({
+      pagina: 1,
+      limite: 10,
+      id_tipo_oferta: 2,
+      fecha_desde: fechas.fecha_desde,
+      fecha_hasta: fechas.fecha_hasta,
+      cantidad_personas: personas,
+    })
+      .then((response: any) => {
+        setActividaes(response.data);
+      })
+      .catch(() => {});
   };
 
   const context: ConsultaOfertasContextValue = {
@@ -65,7 +81,8 @@ const ConsultaOfertasProvider = ({
     setFechas,
     personas,
     setPersonas,
-    ofertas,
+    alojamientos,
+    actividades,
     buscar,
   };
   return (

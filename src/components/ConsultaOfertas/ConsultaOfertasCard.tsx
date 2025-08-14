@@ -52,7 +52,8 @@ export default function ConsultaOfertasCard() {
     map.relocateMarker(new LatLng(latitud, longitud));
   };
 
-  const { localidad, fechas, personas, ofertas } = useConsultaOfertas();
+  const { localidad, fechas, personas, alojamientos, actividades } =
+    useConsultaOfertas();
 
   return (
     <div className="flex flex-row gap-4 mt-6 w-full justify-center">
@@ -96,7 +97,17 @@ export default function ConsultaOfertasCard() {
           />
         </div>
         {selectedSegment == "alojamientos" &&
-          ofertas.map((oferta) => (
+          alojamientos.map((oferta) => (
+            <OfertaCard
+              key={oferta.id}
+              oferta={oferta}
+              posicionar={posicionar}
+              fecha_desde={fechas.fecha_desde ?? ""}
+              fecha_hasta={fechas.fecha_hasta ?? ""}
+            />
+          ))}
+        {selectedSegment == "actividades" &&
+          actividades.map((oferta) => (
             <OfertaCard
               key={oferta.id}
               oferta={oferta}

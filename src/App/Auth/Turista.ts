@@ -9,7 +9,6 @@ type TBodyRegistrarTurista = {
   id_localidad: number;
   id_departamento: number;
   id_provincia: number;
-  id_pais: number;
   id_idioma: number;
   id_genero: number;
   fecha_nacimiento: string;

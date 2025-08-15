@@ -1,23 +1,19 @@
+import { IonIcon, useIonRouter } from "@ionic/react";
+import { bookmark, locate, location } from "ionicons/icons";
+import { useState } from "react";
+import styled from "styled-components";
 import {
-  IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
-  IonCol,
-  IonGrid,
-  IonIcon,
-  IonImg,
-  IonLabel,
-  IonRow,
-  IonSegment,
-  IonSegmentButton,
-} from "@ionic/react";
-import { useEffect, useState } from "react";
+  eliminarOfertaGuardada,
+  guardarOfertaGuardada,
+} from "../../App/Ofertas/Ofertas";
 import MapView from "../MapView/MapView";
+import { cn } from "../ui/Form/Field";
 import FiltrosConsultaOfertas from "./FiltrosConsultaOfertas";
-import { chevronForward } from "ionicons/icons";
+import { Segment } from "../ui/Segment/Segment";
+import { useAuth } from "../../Auth/Auth";
+import { MapViewProvider, useMapView } from "../MapView/useMapView";
+import { useConsultaOfertas } from "./ConsultaOfertasProvider";
+import { LatLng } from "leaflet";
 
 interface Oferta {
   id: number;
@@ -27,187 +23,304 @@ interface Oferta {
   fecha: string;
   tipo: "alojamiento" | "actividad" | "evento";
   imagen: string;
+  setOfertasGuardadas?: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
+type TConsultaOfertasCard = {
+  fechas: { fecha_desde: string | null; fecha_hasta: string | null };
+  personas: number | null;
+  ofertas: any[];
+  setOfertasGuardadas?: React.Dispatch<React.SetStateAction<any[]>>;
+};
 export default function ConsultaOfertasCard() {
-  const [ofertas, setOfertas] = useState<Oferta[]>([]);
-  const [selectedSegment, setSelectedSegment] = useState<
-    "alojamientos" | "actividades" | "eventos"
-  >("alojamientos");
+  const [selectedSegment, setSelectedSegment] =
+    useState<string>("alojamientos");
+  const [pos, setPos] = useState<{ lat: number; lng: number } | null>(null);
 
-  useEffect(() => {
-    // Aquí deberías hacer la llamada a tu API para obtener las ofertas
-    // Por ahora, usaremos datos de ejemplo
-    const ofertasEjemplo: Oferta[] = [
-      {
-        id: 1,
-        titulo: "Cabañas de la Colina",
-        descripcion: "Habitación doble",
-        precio: 100,
-        fecha: "2023-05-01",
-        tipo: "alojamiento",
-        imagen: "public/images/cabaña1.png",
-      },
-      {
-        id: 4,
-        titulo: "Böden Hotel & Spa",
-        descripcion: "Música en vivo",
-        precio: 30,
-        fecha: "2023-05-03",
-        tipo: "alojamiento",
-        imagen: "public/images/hotel.jpg",
-      },
-      /* { id: 2, titulo: "Reserva Natural Pozo Verde", descripcion: "Recorrido guiado", precio: 50, fecha: "2023-05-02", tipo: 'actividad' },
-            { id: 5, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'actividad' },
-            { id: 3, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'evento' },
-            { id: 6, titulo: "Concierto en la playa", descripcion: "Música en vivo", precio: 30, fecha: "2023-05-03", tipo: 'evento' }, */
-    ];
-    setOfertas(ofertasEjemplo);
-  }, []);
+  // const filteredOfertas = ofertas.filter((oferta) => {
+  //   if (selectedSegment === "alojamientos")
+  //     return oferta.tipo === "alojamiento";
+  //   if (selectedSegment === "actividades") return oferta.tipo === "actividad";
+  //   if (selectedSegment === "eventos") return oferta.tipo === "evento";
+  //   return false;
+  // });
 
-  const filteredOfertas = ofertas.filter((oferta) => {
-    if (selectedSegment === "alojamientos")
-      return oferta.tipo === "alojamiento";
-    if (selectedSegment === "actividades") return oferta.tipo === "actividad";
-    if (selectedSegment === "eventos") return oferta.tipo === "evento";
-    return false;
-  });
+  const map = useMapView({});
+  const posicionar = (latitud: number, longitud: number) => {
+    //setPos((_) => ({ lat: latitud, lng: longitud }));
+    if (!map) return;
+    map.relocateMarker(new LatLng(latitud, longitud));
+  };
+
+  const { localidad, fechas, personas, alojamientos, actividades } =
+    useConsultaOfertas();
 
   return (
-    <div style={{ marginTop: "12pt" }}>
-      <div>
-        <IonSegment
-          value={selectedSegment}
-          onIonChange={(e) => setSelectedSegment(e.detail.value as any)}
-        >
-          <IonSegmentButton
-            value="alojamientos"
-            style={{ "--color-checked": "#F08408" }}
-          >
-            <IonLabel>Alojamientos</IonLabel>
-          </IonSegmentButton>
-          <IonSegmentButton
-            value="actividades"
-            style={{ "--color-checked": "#F08408" }}
-          >
-            <IonLabel>Actividades</IonLabel>
-          </IonSegmentButton>
-          <IonSegmentButton
-            value="eventos"
-            style={{ "--color-checked": "#F08408" }}
-          >
-            <IonLabel>Eventos</IonLabel>
-          </IonSegmentButton>
-        </IonSegment>
+    <div className="flex flex-row gap-4 mt-6 w-full justify-center">
+      <div style={{}}>
+        <MapViewProvider {...map}>
+          <MapView className="w-[300pt] aspect-video rounded-md border border-[#bbb] hover:border-black" />
+        </MapViewProvider>
+        {/* <MapView
+          setMarker={pos}
+          // style={{
+          //   height: "200pt",
+          //   width: "300pt",
+          //   borderRadius: "16pt",
+          // }}
+          className="w-[300pt] aspect-video rounded-md border border-[#bbb] hover:border-black"
+        /> */}
+        <FiltrosConsultaOfertas />
       </div>
-      <IonGrid style={{}}>
-        <IonRow style={{ paddingTop: "12pt" }}>
-          <IonCol size="auto" style={{}}>
-            <MapView
-              style={{
-                height: "200pt",
-                width: "300pt",
-                borderRadius: "16pt",
-              }}
+      <div className="flex flex-col w-full">
+        <div className="flex flex-row gap-2 mb-4 w-full">
+          <Segment
+            segment={selectedSegment}
+            label="Alojamientos"
+            value={"alojamientos"}
+            set={setSelectedSegment}
+            className="w-full flex flex-row justify-center"
+          />
+          <Segment
+            segment={selectedSegment}
+            label="Actividades"
+            value="actividades"
+            set={setSelectedSegment}
+            className="w-full flex flex-row justify-center"
+          />
+          <Segment
+            segment={selectedSegment}
+            label="Eventos"
+            value="eventos"
+            set={setSelectedSegment}
+            className="w-full flex flex-row justify-center"
+          />
+        </div>
+        {selectedSegment == "alojamientos" &&
+          alojamientos.map((oferta) => (
+            <OfertaCard
+              key={oferta.id}
+              oferta={oferta}
+              posicionar={posicionar}
+              fecha_desde={fechas.fecha_desde ?? ""}
+              fecha_hasta={fechas.fecha_hasta ?? ""}
             />
-            <FiltrosConsultaOfertas />
-          </IonCol>
-          <IonCol
-            style={{
-              paddingLeft: "12pt",
-            }}
-          >
-            {filteredOfertas.map((oferta) => (
-              <OfertaCard key={oferta.id} oferta={oferta} />
-            ))}
-          </IonCol>
-        </IonRow>
-      </IonGrid>
+          ))}
+        {selectedSegment == "actividades" &&
+          actividades.map((oferta) => (
+            <OfertaCard
+              key={oferta.id}
+              oferta={oferta}
+              posicionar={posicionar}
+              fecha_desde={fechas.fecha_desde ?? ""}
+              fecha_hasta={fechas.fecha_hasta ?? ""}
+            />
+          ))}
+      </div>
     </div>
   );
 }
 
-function OfertaCard({ oferta }: { oferta: Oferta }) {
+const StyledDiv = styled.div`
+  border-left: 3pt solid lightgray;
+  transition-duration: 0.25s;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 2pt 2pt 3pt lightgray;
+  }
+`;
+
+export function OfertaCard({
+  oferta,
+  fecha_desde,
+  fecha_hasta,
+  posicionar,
+  setOfertasGuardadas,
+}: {
+  oferta: any;
+  fecha_desde: string;
+  fecha_hasta: string;
+  posicionar: (latitud: number, longitud: number) => void;
+  setOfertasGuardadas?: React.Dispatch<React.SetStateAction<any[]>>;
+}) {
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+
+  const auth = useAuth();
+  const router = useIonRouter();
+
+  const handleGuardarOferta = async (id: number) => {
+    setIsFavorite(true);
+
+    if (setOfertasGuardadas) {
+      setOfertasGuardadas((prev: any[]) => [...prev, oferta]);
+    }
+
+    try {
+      await guardarOfertaGuardada({ id_oferta: oferta.id_oferta });
+      console.log("Oferta guardada:", id);
+    } catch (error) {
+      console.error("Error al guardar la oferta:", error);
+    }
+  };
+
+  const handleEliminarGuardado = () => {
+    if (!oferta.id) return;
+    eliminarOfertaGuardada(oferta.id)
+      .then(() => {
+        setIsFavorite(false);
+        if (setOfertasGuardadas) {
+          setOfertasGuardadas((prev: any[]) =>
+            prev.filter((item: any) => item.id_oferta !== oferta.id_oferta)
+          );
+        }
+      })
+      .catch(() => {});
+  };
+
   return (
-    <IonCard
-      style={{ borderRadius: "16pt", marginBottom: "24pt", marginTop: 0 }}
-    >
-      <IonRow>
-        <IonCol size="auto" style={{ padding: "20pt", paddingRight: 0 }}>
-          <img
-            src={oferta.imagen}
-            alt={oferta.titulo}
-            style={{
-              width: "250pt",
-              objectFit: "cover",
-              aspectRatio: "1/1",
-              objectPosition: "center center",
-              borderRadius: "8pt",
-              cursor: "pointer"
-            }}
-          />
-        </IonCol>
-        <IonCol style={{ paddingTop: "12pt" }}>
-          <IonCardHeader>
-            <IonCardTitle
-              style={{
-                fontSize: "24pt",
-                fontWeight: "bold",
-                color: "#F08408",
-                cursor: "pointer",
-              }}
-            >
-              {oferta.titulo}
-            </IonCardTitle>
-            <IonCardSubtitle>
-              <IonButton fill="clear">Villa Carlos Paz</IonButton>&nbsp;
-              <IonButton fill="clear">Mostrar en el mapa</IonButton>
-            </IonCardSubtitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <div style={{}}>
-              <IonGrid style={{ borderLeft: "3pt solid lightgray" }}>
-                <IonRow>
-                  <IonCol>
-                    <IonRow>Cabaña</IonRow>
-                    <IonRow>1 habitación &bull; 1 living &bull; 1 baño</IonRow>
-                    <IonRow>3 camas (1 doble, 1 single, 1 sofá)</IonRow>
-                  </IonCol>
-                  <IonCol
-                    style={{
-                      display: "flex",
-                      alignContent: "center",
-                      alignItems: "center",
-                      justifyContent: "right",
-                    }}
-                  >
-                    <div>
-                      <IonRow>3 noches, 2 personas</IonRow>
-                      <IonRow style={{ fontSize: "16pt", fontWeight: "bold" }}>
-                        AR$ 300,500
-                      </IonRow>
-                      <IonRow>+ impuestos y tazas</IonRow>
-                    </div>
-                  </IonCol>
-                </IonRow>
-              </IonGrid>
-            </div>
-          </IonCardContent>
-        </IonCol>
-      </IonRow>
-      <IonButton
+    <div className="relative flex flex-row gap-4 p-4 border border-gray-200 rounded-md">
+      <img
+        src={`data:image/png;base64, ${oferta.ruta_imagen}`}
+        alt={oferta.nombre_oferta}
         style={{
-          "--background": "#F08408",
-          "--color": "white",
-          position: "absolute",
-          float: "right",
-          right: "20pt",
-          bottom: "20pt",
+          width: "225pt",
+          aspectRatio: "4/3",
+          objectFit: "cover",
+          objectPosition: "center center",
         }}
-      >
-        Ver disponibilidad&nbsp;
-        <IonIcon icon={chevronForward} />
-      </IonButton>
-    </IonCard>
+      />
+
+      <div className="flex flex-col justify-between w-full">
+        <div className="flex flex-col gap-1">
+          <div className="flex flex-col items-start">
+            <div className="flex flex-row gap-2">
+              <button
+                onClick={() =>
+                  posicionar(
+                    oferta.latitud as number,
+                    oferta.longitud as number
+                  )
+                }
+                className="cursor-pointer hover:underline text-xs text-gray-600 mb-1"
+              >
+                <IonIcon icon={location} /> {oferta.localidad}
+              </button>
+              <button
+                onClick={() =>
+                  posicionar(
+                    oferta.latitud as number,
+                    oferta.longitud as number
+                  )
+                }
+                className="cursor-pointer hover:underline text-xs text-gray-600 mb-1"
+              >
+                <IonIcon icon={locate} /> Mostrar en el mapa
+              </button>
+            </div>
+            <div className="text-3xl font-bold text-gray-600">
+              {oferta.nombre_oferta}
+            </div>
+          </div>
+          <div className="text-sm text-gray-600">{oferta.descripcion}</div>
+        </div>
+        <div
+          className={cn(
+            "flex flex-row justify-between w-full mt-2 border border-gray-200 rounded-md p-2",
+            "cursor-pointer hover:shadow-sm hover:border-black"
+          )}
+          onClick={() => {
+            if (auth == "failed") {
+              router.push("/login");
+              return;
+            }
+
+            router.push(
+              `/ver-oferta/${oferta.id_oferta}/${fecha_desde}/${fecha_hasta}/${oferta.cantidad_personas}`
+            );
+          }}
+        >
+          <div className="flex flex-col text-gray-600 text-sm justify-center">
+            <div>{oferta.subtipo_oferta}</div>
+            <div>
+              {oferta.cantidad_baños} <span>&nbsp;baño</span>
+              {oferta.cantidad_baños > 1 && <span>s</span>}
+              {oferta.bl_baño_compartido ? (
+                <span>&nbsp;&bull;&nbsp;baño compartido</span>
+              ) : null}
+              {oferta.bl_baño_adaptado ? (
+                <span>&nbsp;&bull;&nbsp;baño adaptado</span>
+              ) : null}
+            </div>
+            <div>
+              {oferta.camas_cantidad.reduce(
+                (acumulador: number, valorActual: any) =>
+                  acumulador + valorActual.cantidad,
+                0
+              )}
+              &nbsp; cama
+              {oferta.camas_cantidad.reduce(
+                (acumulador: number, valorActual: any) =>
+                  acumulador + valorActual.cantidad,
+                0
+              ) > 1 && "s"}
+              &nbsp; (
+              {oferta.camas_cantidad.map(
+                (cama: any, index: number) =>
+                  `${index != 0 ? ", " : ""}` +
+                  cama.cantidad +
+                  " " +
+                  cama.nombre_cama
+              )}
+              )
+            </div>
+          </div>
+          <div className="">
+            <div className="flex flex-col items-end">
+              <div className="text-xs text-gray-600">
+                {oferta.noches_estadia} noche
+                {oferta.noches_estadia > 1 ? "s" : ""},
+                {oferta.cantidad_personas} persona
+                {oferta.cantidad_personas > 1 ? "s" : ""}
+              </div>
+              <div className="">
+                <span className="text-sm text-gray-600">AR$ </span>
+                <span className="text-3xl text-gray-600 font-bold">
+                  {oferta.precios_desde.split(".")[0]}
+                </span>
+                <span className="text-sm text-gray-600">
+                  .{oferta.precios_desde.split(".")[1]}
+                </span>
+              </div>
+              <div className="text-xs text-gray-500 italic">
+                + impuestos y tazas
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <IonIcon
+        icon={bookmark}
+        className={cn(
+          "cursor-pointer absolute right-4 top-4 text-3xl",
+          isFavorite ? "text-gray-600" : "text-gray-200"
+        )}
+        onClick={() => {
+          if (auth == "failed") {
+            router.push("/login");
+            return;
+          }
+
+          const nuevoEstado = !isFavorite;
+          setIsFavorite(nuevoEstado);
+
+          if (nuevoEstado) {
+            handleGuardarOferta(oferta.id_oferta);
+          } else {
+            handleEliminarGuardado();
+          }
+        }}
+      />
+    </div>
   );
 }

@@ -1,41 +1,41 @@
-import {
-  IonButton,
-  IonList,
-  IonTitle,
-  IonToast,
-  useIonRouter,
-} from "@ionic/react";
-import { alertCircleOutline } from "ionicons/icons";
-import { useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { IonToast, useIonRouter } from "@ionic/react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { iniciarSesion } from "../../App/Auth/Cuenta";
-import Field from "../../components/Field/Field";
-import { useForm } from "../../hooks/UseForm/FormProvider";
-import { Validator as v } from "../../hooks/UseForm/Validator/Validator";
-import { useAuth } from "../../hooks/UseAuth/AuthProvider";
+import {
+  cn,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage
+} from "../../components/ui/Form/Field";
+import { Input } from "../../components/ui/Input/Input";
+
+const formSchema = z.object({
+  email: z.string({ message: "Campo requerido" }),
+  password: z.string({ message: "Campo requerido" }),
+});
 
 export default function LoginForm() {
   const [openToast, setOpenToast] = useState<boolean>(false);
-  const [ToastMessage, setToastMessage] = useState<string>("");
+  const [toastMessage, setToastMessage] = useState<string>("");
 
-  const form = useForm();
   const router = useIonRouter();
-  const auth = useAuth();
-
-  useEffect(() => {
-    if (!form) return;
-  }, [form]);
 
   const handleIniciarSesion = () => {
     if (!form) return;
     if (!router) return;
-    if (!auth) return;
+    //if (!auth) return;
     // Acá se tiene ejecutar la validación del schema
     iniciarSesion({
-      mail: form.schema.email,
-      contraseña: form.schema.password,
+      mail: form.getValues().email,
+      contraseña: form.getValues().password,
     })
       .then((response: any) => {
-        auth.login();
+        //auth.login();
         router.push("/");
       })
       .catch((error: any) => {
@@ -44,95 +44,54 @@ export default function LoginForm() {
       });
   };
 
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    mode: "onSubmit",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    handleIniciarSesion();
+  }
+
   return (
-    <>
-      <IonTitle
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-        }}
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-2"
       >
-        Ingresar
-      </IonTitle>
-      <IonList
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          margin: "13pt",
-          marginTop: "0",
-          marginLeft: "34pt",
-          marginRight: "34pt",
-          paddingRight: "12pt",
-        }}
-      >
-        <Field
+        <FormField
+          control={form.control}
           name="email"
-          label="Correo Electrónico"
-          required
-          value={form?.schema?.email}
-          form={form}
-          valid={v()
-            .required("El campo es obligatorio")
-            .isEmail("Ingrese un correo electrónico válido")}
-        ></Field>
-        <Field
-          password
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input placeholder="Correo electrónico" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="password"
-          label="Contraseña"
-          required
-          value={form?.schema?.password}
-          form={form}
-          valid={v().required("El campo es obligatorio")}
-        ></Field>
-      </IonList>
-      <IonButton
-        expand="block"
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          margin: "13pt",
-          marginLeft: "89pt",
-          marginRight: "89pt",
-          paddingLeft: "12pt",
-          paddingRight: "12pt",
-          "--background": "#F08408",
-          "--color": "white",
-        }}
-        onClick={() => handleIniciarSesion()}
-      >
-        Ingresá
-      </IonButton>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        ¿No tenés cuenta?
-        <IonButton
-          style={{ "--color": "#F08408" }}
-          fill="clear"
-          size="small"
-          onClick={() => {
-            if (!router) return;
-            router.push("/signup");
-          }}
-        >
-          Registrate
-        </IonButton>
-        <IonToast
-          isOpen={openToast}
-          message={ToastMessage}
-          duration={5000}
-          icon={alertCircleOutline}
-          onDidDismiss={() => {
-            setOpenToast(false);
-            setToastMessage("");
-          }}
-        ></IonToast>
-      </div>
-    </>
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input type="password" placeholder="Contraseña" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <button type="submit" className={cn("viajero-button w-full py-3")}>
+          Ingresar
+        </button>
+      </form>
+      <IonToast onDidDismiss={() => setOpenToast(false)} duration={1000} isOpen={openToast} message={toastMessage} />
+    </Form>
   );
 }

@@ -39,8 +39,6 @@ export default function Field(props: IField) {
 	useEffect(() => {
 		if (!props.form.schema) return;
 		setValue(props.form.schema[props.name]);
-
-		console.log("value: ", props.form.schema[props.name]);
 	}, [props.form]);
 
 	return (
@@ -58,12 +56,12 @@ export default function Field(props: IField) {
 						ref={
 							props.mask
 								? async (cardRef) => {
-										if (cardRef) {
-											const input =
-												await cardRef.getInputElement();
-											props.mask(input);
-										}
-								  }
+									if (cardRef) {
+										const input =
+											await cardRef.getInputElement();
+										props.mask(input);
+									}
+								}
 								: undefined
 						}
 					></IonInput>
@@ -78,7 +76,7 @@ export default function Field(props: IField) {
 						onIonChange={(e: any) => handleOnChange(e.target.value)}
 					>
 						{props.options.map((value: any) => (
-							<IonSelectOption value={value.id}>
+							<IonSelectOption key={value.id} value={value.id}>
 								{value.text}
 							</IonSelectOption>
 						))}
@@ -93,6 +91,10 @@ export default function Field(props: IField) {
 				)}
 				{props.textarea && (
 					<IonTextarea
+						/* style={{
+							borderRadius: "10pt",
+							border: "1pt solid #f08408",
+						}} */
 						value={value}
 						maxlength={props.maxLength}
 						rows={props.rows ?? 1}

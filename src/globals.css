@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+:root {
+  --color-viajero: #f08408;
+  --ion-color-primary: #f08408;
+}
+
+.leaflet-control-attribution {
+  display: none;
+}
+
+
+ion-range::part(pin) {
+  display: flex !important;
+  opacity: 1 !important;
+  transform: translateY(0px) scale(1) !important;
+  z-index: 3;
+
+  border-radius: 16px; /* makes it a circle */
+  transform: translateY(100%) translateX(0) !important; /* removes the pin-like rotation */
+
+  width: 48px; /* 24pt */
+  height: 28px;
+  font-size: 14px;
+}
+
+ion-range::part(pin)::before {
+  display: block !important;
+  opacity: 0 !important;
+  transform: translateY(0px) scale(1) !important;
+  z-index: 3;
+
+  border-radius: 50%; /* makes it a circle */
+  transform: none !important; /* removes the pin-like rotation */
+
+  width: 32px; /* 24pt */
+  height: 32px;
+  font-size: 12px;
+}
+
+.viajero-button {
+  cursor: pointer;
+  display: flex;
+  background-color: var(--color-viajero);
+  border-radius: var(--radius-md);
+  justify-content: center;
+  color: white;
+}
+.viajero-button:hover {
+  background-color: color-mix(in srgb, var(--color-viajero) 90%, transparent);
+  box-shadow: var(--shadow-md);
+}
+
+.viajero-button-ghost {
+  cursor: pointer;
+  display: flex;
+  background-color: transparent;
+  border-width: 1pt;
+  border-color: transparent;
+  border-radius: var(--radius-md);
+  justify-content: center;
+  color: var(--color-gray-600);
+}
+.viajero-button-ghost:hover {
+  border-width: 1pt;
+  border-color: var(--color-gray-100);
+  border-radius: var(--radius-md);
+  background-color: color-mix(in srgb, var(--color-gray-50) 90%, transparent);
+}

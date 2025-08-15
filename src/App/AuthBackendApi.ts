@@ -1,7 +1,7 @@
 import axios from "axios";
 import { readJWT, storeJWT } from "./Token";
 
-const apiPath = import.meta.env.VITE_API_PATH;
+const apiPath = 'http://localhost:3000/api';
 
 const AUTH_API = axios.create({
   baseURL: apiPath,

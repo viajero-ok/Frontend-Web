@@ -1,67 +1,26 @@
-import { IonCard, IonCol, IonGrid, IonRow } from "@ionic/react";
+import { z } from "zod";
 import { FormProvider } from "../../../../hooks/UseForm/FormProvider";
-import SignupPrestadorForm from "./SignupPrestadorForm";
 import UncompleteLoggedLayout from "../../../Layouts/UncompleteLoggedLayout";
+import SignupPrestadorForm from "./SignupPrestadorForm";
+import { IonImg } from "@ionic/react";
 
 export default function SignupPrestadorView() {
-  const schema = {
-    nombre: "",
-    apellido: "",
-    tipoDeDocumento: "",
-    numeroDeDocumento: "",
-    pais: "",
-    provincia: "",
-    departamento: "",
-    localidad: "",
-    telefono: "",
-    idioma: "",
-    genero: "",
-    fehcaDeNacimiento: "",
-  };
   return (
     <UncompleteLoggedLayout>
-      <img
-        src="/3.2. Principal/Fondo.jpg"
-        style={{
-          display: "flex",
-          position: "absolute",
-          width: "auto",
-          minHeight: "100%",
-        }}
-      />
-      <IonCard
-        style={{
-          position: "relative",
-          width: "50%",
-          left: "50%",
-          marginTop: "13pt",
-          transform: "translateX(-50%)",
-          padding: "31pt",
-          paddingBottom: 0,
-        }}
-      >
-        <IonGrid>
-          <IonRow
-            style={{
-              display: "flex",
-              alignItems: "center",
-              alignContent: "center",
-              justifyContent: "center",
-            }}
-          >
-            <h1 style={{ fontWeight: "bold", color: "#F08408" }}>
+      <div className="flex flex-row gap-4 content-center items-center justify-center h-full w-full">
+        <IonImg
+          src="/public/3.3. Registro de usuario/Prestador.png"
+          className="max-w-2/5"
+        />
+        <div className="max-w-2/5 border border-gray-100 shadow-md rounded-md p-4">
+          <div className="w-full justify-left ml-4">
+            <div className="text-3xl text-gray-600 font-bold">
               Registrar Prestador
-            </h1>
-          </IonRow>
-          <IonRow>
-            <IonCol>
-              <FormProvider schema={schema}>
-                <SignupPrestadorForm />
-              </FormProvider>
-            </IonCol>
-          </IonRow>
-        </IonGrid>
-      </IonCard>
+            </div>
+          </div>
+          <SignupPrestadorForm />
+        </div>
+      </div>
     </UncompleteLoggedLayout>
   );
 }

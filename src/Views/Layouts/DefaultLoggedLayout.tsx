@@ -1,165 +1,102 @@
 import {
-	IonContent,
-	IonHeader,
-	IonItem,
-	IonList,
-	IonMenu,
-	IonMenuButton,
-	IonMenuToggle,
-	IonPage,
-	IonTitle,
-	IonToolbar,
-	useIonRouter,
+  IonContent,
+  IonHeader,
+  IonItem,
+  IonList,
+  IonMenu,
+  IonMenuButton,
+  IonMenuToggle,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  useIonRouter,
 } from "@ionic/react";
 import { useEffect, useState } from "react";
 import LoginNavbar from "../../components/LoginNavbar/LoginNavbar";
 import ProfileChip from "../../components/ProfileChip/ProfileChip";
-import { useAuth } from "../../hooks/UseAuth/AuthProvider";
-import { PERFILES } from "../../App/consts/UsuarioConsts";
+import { useAuth } from "../../Auth/Auth";
 
 export default function DefaultLoggedLayout({ children }: any) {
-	const [logged, setLogged] = useState<boolean>();
-	const [perfilSeleccionado, setPerfilSeleccionado] = useState<number>();
-	const auth = useAuth();
-	const router = useIonRouter();
+  const [logged, setLogged] = useState<boolean>();
+  const [perfilSeleccionado, setPerfilSeleccionado] = useState<number>();
+  const auth = useAuth();
+  const router = useIonRouter();
 
-	const push = (uri: string) => {
-		if (!router) return;
-		router.push(uri);
-	};
+  const push = (uri: string) => {
+    if (!router) return;
+    router.push(uri);
+  };
 
-	useEffect(() => {
-		if (auth) {
-			setLogged(auth.isLogged);
-			setPerfilSeleccionado(auth.perfilSeleccionado);
-		}
-	}, [auth]);
+  return (
+    <IonPage id="burger">
+      <IonHeader
+        style={{ "webkit-box-shadow": "none", "box-shadow": "none" }}
+        className="shadow-sm! border-b border-gray-100"
+      >
+        <div className="grid grid-cols-2 h-[50pt] mx-8">
+          <div className="flex flex-row items-center h-full gap-4">
+            <div
+              onClick={() => router.push("/")}
+              className="select-none cursor-pointer text-2xl text-[var(--color-viajero)] font-bold w-fit"
+            >
+              VIAJERO
+            </div>
+            {/* <div className="text-lg italic font-light text-gray-600">¡Hola, {}viajero!</div> */}
+          </div>
 
-	return (
-		<>
-			{logged && (
-				<IonMenu contentId="burger">
-					<IonHeader>
-						<IonToolbar>
-							<IonTitle
-								style={{
-									display: "flex",
-									position: "absolute",
-									float: "left",
-									top: "50%",
-									transform: "translateY(-50%)",
-									fontWeight: "bolder",
-									fontSize: "21pt",
-									marginLeft: "13pt",
-								}}
-							>
-								viajero
-							</IonTitle>
-						</IonToolbar>
-					</IonHeader>
-					<IonContent>
-						<IonList lines="none" style={{ marginTop: "13pt" }}>
-							<IonMenuToggle>
-								<IonItem button onClick={() => push("/")}>
-									Inicio
-								</IonItem>
-							</IonMenuToggle>
-							<IonMenuToggle>
-								<IonItem
-									button
-									onClick={() => push("/my-places")}
-								>
-									Mis establecimientos
-								</IonItem>
-							</IonMenuToggle>
-							<IonMenuToggle>
-								<IonItem
-									button
-									onClick={() => push("/my-offers")}
-								>
-									Mis ofertas turísticas
-								</IonItem>
-							</IonMenuToggle>
-							<IonMenuToggle>
-								<IonItem button disabled>
-									Mis reservas
-								</IonItem>
-							</IonMenuToggle>
-							<IonMenuToggle>
-								<IonItem button disabled>
-									Informes y estadísticas
-								</IonItem>
-							</IonMenuToggle>
-						</IonList>
-					</IonContent>
-				</IonMenu>
-			)}
-			<IonPage id="burger">
-				<IonHeader>
-					<IonToolbar>
-						<IonMenuToggle
-							slot="start"
-							style={{
-								display: "inline-block",
-								marginLeft: "13pt",
-							}}
-						>
-							<IonMenuButton
-								style={{ fontSize: "24pt" }}
-							></IonMenuButton>
-						</IonMenuToggle>
-						<IonTitle
-							style={{
-								display: "flex",
-								position: "absolute",
-								float: "left",
-								top: "calc(50% - 1.5pt)",
-								transform: "translateY(-50%)",
-								fontWeight: "bolder",
-								fontSize: "21pt",
-								marginLeft: "-13pt",
-							}}
-						>
-							viajero
-						</IonTitle>
-						<IonTitle
-							style={{
-								position: "absolute",
-								left: "50%",
-								top: "50%",
-								transform: "translateX(-50%) translateY(-50%)",
-							}}
-						>
-							¡Hola,{" "}
-							{perfilSeleccionado == -1
-								? "viajero"
-								: perfilSeleccionado == PERFILES.TURISTA.id
-								? "turista"
-								: "prestador"}
-							!
-						</IonTitle>
-						<div
-							style={{
-								display: "flex",
-								position: "relative",
-								float: "right",
-								marginRight: "31pt",
-							}}
-						>
-							{auth && logged && <ProfileChip />}
-							{auth && logged == false && <LoginNavbar />}
-						</div>
-					</IonToolbar>
-				</IonHeader>
-				<IonContent fullscreen>
-					<IonHeader collapse="condense">
-						<IonToolbar>
-							<IonTitle size="large">Blank</IonTitle>
-						</IonToolbar>
-					</IonHeader>
-					<IonContent>{children}</IonContent>
-				</IonContent>
-			</IonPage>
-		</>
-	);
+          {auth != "failed" && auth != "loading" && (
+            <div className="flex flex-row gap-8 justify-end items-center pr-4">
+              {auth.esPrestador && (
+                <div className="flex flex-row gap-4 text-gray-800 select-none h-full">
+                  <div
+                    onClick={() => router.push("/")}
+                    className="cursor-pointer px-2 hover:underline hover:bg-[var(--color-viajero)]/5 h-full flex items-center"
+                  >
+                    Inicio
+                  </div>
+                  <div
+                    onClick={() => router.push("/my-places")}
+                    className="cursor-pointer px-2 hover:underline hover:bg-[var(--color-viajero)]/5 h-full flex items-center"
+                  >
+                    Establecimientos
+                  </div>
+                  <div
+                    onClick={() => router.push("/my-offers")}
+                    className="cursor-pointer px-2 hover:underline hover:bg-[var(--color-viajero)]/5 h-full flex items-center"
+                  >
+                    Ofertas
+                  </div>
+                  <div
+                    onClick={() => router.push("/mis-reservas")}
+                    className="cursor-pointer px-2 hover:underline hover:bg-[var(--color-viajero)]/5 h-full flex items-center"
+                  >
+                    Reservas
+                  </div>
+                </div>
+              )}
+              <ProfileChip />
+            </div>
+          )}
+          {auth == "failed" && <LoginNavbar />}
+        </div>
+      </IonHeader>
+      <IonContent fullscreen>
+        <IonHeader collapse="condense">
+          <IonToolbar>
+            <IonTitle size="large">Blank</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent className="">
+          {children}
+          {/* <div className="w-full bg-gray-50 min-h-24 flex flex-row gap-4 justify-between items-start px-16 py-4 pb-8">
+            <div className="flex flex-col gap-2 text-sm text-gray-600">
+              <div className="font-bold">Información</div>
+              <div>Sobre nosotros</div>
+              <div>Contactanos</div>
+            </div>
+          </div> */}
+        </IonContent>
+      </IonContent>
+    </IonPage>
+  );
 }

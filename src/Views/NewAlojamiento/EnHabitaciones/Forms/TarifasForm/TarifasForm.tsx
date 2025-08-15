@@ -1,4 +1,4 @@
-import { IonButton, IonCol, IonGrid, IonIcon, IonRow, useIonRouter } from "@ionic/react";
+/* import { IonButton, IonCol, IonGrid, IonIcon, IonRow, useIonRouter } from "@ionic/react";
 import { useEffect, useState } from "react";
 import AgregarTarifa from "./AgregarTarifa";
 import Tarifa from "./Tarifa";
@@ -67,3 +67,4 @@ export default function TarifasForm(props: any) {
     </IonGrid>
   );
 }
+ */

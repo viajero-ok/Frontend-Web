@@ -1,17 +1,30 @@
+import { IonIcon, useIonRouter } from "@ionic/react";
 import {
-  IonButton,
-  IonGrid,
-  IonLabel,
-  IonRow,
-  IonSegment,
-  IonSegmentButton,
-} from "@ionic/react";
-import { useState } from "react";
-import { FormProvider } from "../../../hooks/UseForm/FormProvider";
+  arrowUndo,
+  bedOutline,
+  calendarOutline,
+  homeOutline,
+  imageOutline,
+} from "ionicons/icons";
+import { useEffect, useState } from "react";
+import { finalizarRegistroAlojamiento } from "../../../App/Alojamientos/NuevoAlojamiento";
+import FormSideMenu, {
+  Sidebar,
+} from "../../../components/ui/FormSideMenu/FormSideMenu";
+import { useModal } from "../../../components/ui/Modal/Modal";
+import { Segment } from "../../../components/ui/Segment/Segment";
 import AlojamientoForm from "./Forms/AlojamientoForm/AlojamientoForm";
-import DefaultLoggedLayout from "../../Layouts/DefaultLoggedLayout";
 import HabitacionesForm from "./Forms/HabitacionesForm/HabitacionesForm";
-import TarifasForm from "./Forms/TarifasForm/TarifasForm";
+import ImagenesForm from "./Forms/ImagenesForm/ImagenesForm";
+import { useAlojamientoEnHabitaciones } from "./Provider/AlojamientoEnHabitacionesProvider";
+import HorariosForm from "./Forms/HorariosForm/HorariosForm";
+import { obtenerDatosBasicosOfertaTuristica } from "../../../App/Ofertas/Ofertas";
+
+export type TImagenRegistrada = {
+  id_imagen: number;
+  nombre: string;
+  datos: string;
+};
 
 type TNewAlojamientoEnHabitacionesView = {
   idOferta: string;
@@ -19,96 +32,135 @@ type TNewAlojamientoEnHabitacionesView = {
 export default function NewAlojamientoEnHabitacionesView(
   props: TNewAlojamientoEnHabitacionesView
 ) {
-  const [segment, setSegment] = useState<
-    "alojamiento-form" | "habitaciones-form" | "tarifas-form"
-  >("alojamiento-form");
+  const [idEstado, setIdEstado] = useState<number>();
+  const [segment, setSegment] = useState<string>("alojamiento-form");
+  const { modal, setOpen } = useModal();
 
-  const schemaAlojamientoForm = {
-    // Observaciones
-    texto_observacion_comodidades_y_servicios_oferta: "",
-    texto_observacion_canchas_deportes: "",
-    texto_observacion_normas: "",
-    texto_observacion_politica_garantia: "",
-
-    // Datos basicos: {
-    nombre_alojamiento: "",
-    descripcion_alojamiento: "",
-
-    // Politicas de reserva
-    id_politica_cancelacion: "",
-    plazo_dias_cancelacion: "",
-    solicita_garantia: "",
-    monto_garantia: "", // float
-    id_tipo_pago_anticipado: "",
-    porcentaje_pago_anticipado: "", // float
-    monto_pago_anticipado: "", // float
-    minimo_dias_estadia: "",
+  const handleRegistrarOferta = () => {
+    finalizarRegistroAlojamiento(props.idOferta)
+      .then(() => {
+        modal({
+          variant: "success",
+          title: "La oferta turística fue registrada con éxito.",
+          canDismiss: false,
+          actions: (
+            <>
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  router.push("/my-offers");
+                }}
+                className="viajero-button bg-green-400 hover:bg-green-400/90 px-4 py-2"
+              >
+                Aceptar
+              </button>
+            </>
+          ),
+        });
+      })
+      .catch((error) => {
+        modal({
+          variant: "danger",
+          title: "Error",
+          description: error.message,
+          actions: (
+            <>
+              <button
+                onClick={() => setOpen(false)}
+                className="viajero-button-ghost px-4 py-2"
+              >
+                Aceptar
+              </button>
+            </>
+          ),
+        });
+      });
   };
 
-  const schemaHabitacionesForm = {};
-  const schemaTarifasForm = {};
+  const router = useIonRouter();
+  const { idOferta, puedeRegistrar, alojamientoForm } =
+    useAlojamientoEnHabitaciones();
 
- 
+  useEffect(() => {
+    obtenerDatosBasicosOfertaTuristica(idOferta)
+      .then((response) => {
+        if (!response.data) return;
+        if (!response.data.estado) return;
+        setIdEstado(response.data.id_estado);
+      })
+      .catch(() => {});
+  }, []);
 
   return (
-    <DefaultLoggedLayout>
-      <IonGrid>
-        <IonRow style={{ marginTop: "31pt" }}>
-          <IonSegment
-            value="default"
-            onIonChange={(e: any) => setSegment(e.target.value)}
-          >
-            <IonSegmentButton
-              value="alojamiento-form"
-              style={{
-                "--indicator-color": "#F08408",
-                "--color-hover": "#F08408",
-                "--color-checked": "#F08408",
-              }}
-            >
-              <IonLabel>Alojamiento</IonLabel>
-            </IonSegmentButton>
-            <IonSegmentButton
-              value="habitaciones-form"
-              style={{
-                "--indicator-color": "#F08408",
-
-                "--color-hover": "#F08408",
-                "--color-checked": "#F08408",
-              }}
-            >
-              <IonLabel>Habitaciones</IonLabel>
-            </IonSegmentButton>
-            <IonSegmentButton
-              value="tarifas-form"
-              style={{
-                "--indicator-color": "#F08408",
-                "--color-hover": "#F08408",
-                "--color-checked": "#F08408",
-              }}
-            >
-              <IonLabel>Tarifas</IonLabel>
-            </IonSegmentButton>
-          </IonSegment>
-        </IonRow>
-        <IonRow>
-          {segment == "alojamiento-form" && (
-            <FormProvider schema={schemaAlojamientoForm}>
-              <AlojamientoForm id={props.idOferta} />
-            </FormProvider>
-          )}
-          {segment == "habitaciones-form" && (
-            <FormProvider schema={schemaHabitacionesForm}>
-              <HabitacionesForm id={props.idOferta} />
-            </FormProvider>
-          )}
-          {segment == "tarifas-form" && (
-            <FormProvider schema={schemaTarifasForm}>
-              <TarifasForm id={props.idOferta} />
-            </FormProvider>
-          )}
-        </IonRow>
-      </IonGrid>
-    </DefaultLoggedLayout>
+    <>
+      <FormSideMenu
+        renderSidebar={() => (
+          <>
+            <Sidebar title="Editar alojamiento">
+              <Segment
+                segment={segment}
+                value="alojamiento-form"
+                label="Datos del alojamiento"
+                set={setSegment}
+                icon={homeOutline}
+              />
+              <Segment
+                segment={segment}
+                value="horarios-form"
+                label="Check-In y Check-Out"
+                set={setSegment}
+                icon={calendarOutline}
+              />
+              <Segment
+                segment={segment}
+                value="imagenes-form"
+                label="Imágenes del alojamiento"
+                set={setSegment}
+                icon={imageOutline}
+              />
+              <Segment
+                segment={segment}
+                value="habitaciones-form"
+                label="Datos de las habitaciones"
+                set={setSegment}
+                icon={bedOutline}
+              />
+              <button
+                onClick={() => router.push("/my-offers")}
+                className="viajero-button-ghost text-sm justify-start! w-full px-4 py-2 flex flex-row gap-1 items-center -mb-2"
+              >
+                <IonIcon icon={arrowUndo} />
+                Volver
+              </button>
+            </Sidebar>
+            {puedeRegistrar && idEstado == 1 && (
+              <div className="flex flex-col gap-2 w-fit p-4 border border-gray-200 rounded-md">
+                <div className="text-md font-bold text-gray-600">
+                  ¡Ya podés registrar tu oferta!
+                </div>
+                <div className="text-sm text-gray-600">
+                  Todos los datos necesarios han sido registrados
+                </div>
+                <button
+                  onClick={() => handleRegistrarOferta()}
+                  className="viajero-button px-4 py-2 animate-pulse"
+                >
+                  Registrar oferta
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      >
+        {segment == "alojamiento-form" && (
+          <AlojamientoForm id={props.idOferta} />
+        )}
+        {segment == "horarios-form" && <HorariosForm />}
+        {segment == "imagenes-form" && <ImagenesForm />}
+        {segment == "habitaciones-form" && (
+          <HabitacionesForm idOferta={props.idOferta} />
+        )}
+      </FormSideMenu>
+    </>
   );
 }

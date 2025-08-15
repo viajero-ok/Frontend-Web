@@ -1,14 +1,10 @@
-import { IonPage } from "@ionic/react";
 import LoginView from "../../Views/Login/LoginView";
-import VisitorLayout from "../../Views/Layouts/VisitorLayout";
 
 const LogIn: React.FC = () => {
   return (
-    <IonPage>
-      <VisitorLayout>
-        <LoginView />
-      </VisitorLayout>
-    </IonPage>
+    <div className="flex w-full h-full items-center justify-center content-center">
+      <LoginView />
+    </div>
   );
 };
 

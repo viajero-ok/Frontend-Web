@@ -4,12 +4,13 @@ import {
   useAlojamientoTab,
 } from "./useAlojamientoTab";
 import { HorarioTabContextValue, useHorariosTab } from "./useHorariosTab";
-import { useImagenesTab } from "./useImagenesTab";
+import { ImagenesContextValue, useImagenesTab } from "./useImagenesTab";
 
 type AlojamientoIndividualContextValue = {
   idOferta: string;
 } & AlojamientoContextValue &
-  HorarioTabContextValue;
+  HorarioTabContextValue &
+  ImagenesContextValue;
 
 const AlojamientoIndividualContext =
   React.createContext<AlojamientoIndividualContextValue>(
@@ -76,4 +77,3 @@ const useAlojamientoIndividual = () => {
 };
 
 export { AlojamientoIndividualProvider, useAlojamientoIndividual };
-

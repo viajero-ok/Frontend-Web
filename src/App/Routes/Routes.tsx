@@ -14,6 +14,7 @@ import MyPlaces from "../../pages/MyPlaces/MyPlaces";
 import NewPlace from "../../pages/MyPlaces/NewPlace/NewPlace";
 import NewActividad from "../../pages/NewActividad/NewActividad";
 import NewAlojamientoEnHabitaciones from "../../pages/NewAlojamiento/NewAlojamientoEnHabitaciones";
+import NewAlojamientoIndividual from "../../pages/NewAlojamiento/NewAlojamientoIndividual";
 import PagarTestPage from "../../pages/PagarTest/PagarTestPage";
 import ReservarOfertaPage from "../../pages/ReservarOferta/ReservarOfertaPage";
 import SignupPrestador from "../../pages/SignUp/Complete/Prestador/SignupPrestador";
@@ -111,6 +112,11 @@ const RoutesProvider = ({ children }: { children?: React.ReactNode }) => {
               exact
               path="/my-offers/alojamiento/en-habitaciones/edit/:id"
               component={NewAlojamientoEnHabitaciones}
+            />
+            <Route
+              exact
+              path="/my-offers/alojamiento/individual/edit/:id"
+              component={NewAlojamientoIndividual}
             />
             <Route
               exact

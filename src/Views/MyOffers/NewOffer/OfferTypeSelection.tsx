@@ -1,28 +1,33 @@
 import { useIonRouter } from "@ionic/react";
+import { ClassNameValue } from "tailwind-merge";
 import { cn } from "../../../components/ui/Form/Field";
-import { Select } from "../../../components/ui/Select/Select";
 
 export const OfferCard = ({
   onClick,
   title,
   imgSrc,
   disabled,
+  className,
 }: {
   onClick: () => void;
   title: string;
   imgSrc: string;
   disabled?: boolean;
+  className?: ClassNameValue;
 }) => {
   return (
     <div
       className={cn(
-        disabled ?  "bg-gray-50" : "cursor-pointer hover:shadow-sm hover:bg-[var(--color-viajero)]/5 transition-all duration-400"
+        disabled
+          ? "bg-gray-50"
+          : "cursor-pointer hover:shadow-sm hover:bg-[var(--color-viajero)]/5 transition-all duration-400",
+        className
       )}
       onClick={onClick}
     >
       <div
         className={cn(
-          "flex flex-col items-center justify-center border border-gray-200 p-4 rounded-md",
+          "flex flex-col items-center justify-center border border-gray-200 p-4 rounded-md h-full"
         )}
       >
         <img
@@ -32,7 +37,14 @@ export const OfferCard = ({
           height={"auto"}
           style={{}}
         />
-        <div className={cn("text-xl font-bold", disabled ? "text-gray-400" : "text-gray-600")}>{title}</div>
+        <div
+          className={cn(
+            "text-xl font-bold text-center",
+            disabled ? "text-gray-400" : "text-gray-600"
+          )}
+        >
+          {title}
+        </div>
       </div>
     </div>
   );

@@ -26,6 +26,15 @@ export default function AlojamientoTypeSelection(
   const handleCrearAlojamiento = (idTipoSuboferta: number) => {
     if (!establecimiento) return;
 
+    const getSubtipoURL = (id_oferta: string) => {
+      if (idTipoSuboferta == 1)
+        return `/my-offers/alojamiento/en-habitaciones/edit/${id_oferta}`;
+      if (idTipoSuboferta == 2)
+        return `/my-offers/alojamiento/individual/edit/${id_oferta}`;
+      //if (idTipoSuboferta == 1) return `/my-offers/alojamiento/en-habitaciones/edit/${id_oferta}`
+      return "/not-found";
+    };
+
     registrarNuevoAlojamiento({
       id_tipo_oferta: 1,
       id_sub_tipo_oferta: idTipoSuboferta,
@@ -42,9 +51,7 @@ export default function AlojamientoTypeSelection(
               <button
                 className="viajero-button bg-green-400! hover:bg-green-400/90 py-2 px-4"
                 onClick={() => {
-                  router.push(
-                    `/my-offers/alojamiento/en-habitaciones/edit/${response.data.id_oferta}`
-                  );
+                  router.push(getSubtipoURL(response.data.id_oferta));
                   setOpen(false);
                 }}
               >
@@ -132,26 +139,23 @@ export default function AlojamientoTypeSelection(
 
         <div className="flex flex-row gap-4 mt-4">
           <OfferCard
+            className="w-1/3"
             onClick={() => handleSelect(1)}
-            title="En habitaciones"
+            title="Alojamiento con tipologías (Habitaciones/Viviendas)"
             imgSrc="public\3.6. Alojamientos\En habitaciones.png"
             disabled={!establecimiento}
           />
           <OfferCard
-            onClick={() => {}}
-            title="Unidades de vivienda"
+            className="w-1/3"
+            onClick={() => handleSelect(2)}
+            title="Alojamiento individual (Casa/Departamento)"
             imgSrc="public\3.6. Alojamientos\En unidades de vivienda.png"
-            disabled
+            disabled={!establecimiento}
           />
           <OfferCard
+            className="w-1/3"
             onClick={() => {}}
-            title="Casa de alquiler"
-            imgSrc="public\3.6. Alojamientos\Casa de alquiler.png"
-            disabled
-          />
-          <OfferCard
-            onClick={() => {}}
-            title="Camping"
+            title="Alojamiento de tipo camping"
             imgSrc="public\3.6. Alojamientos\Camping.png"
             disabled
           />

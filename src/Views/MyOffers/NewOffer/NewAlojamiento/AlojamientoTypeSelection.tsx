@@ -31,7 +31,7 @@ export default function AlojamientoTypeSelection(
         return `/my-offers/alojamiento/en-habitaciones/edit/${id_oferta}`;
       if (idTipoSuboferta == 2)
         return `/my-offers/alojamiento/individual/edit/${id_oferta}`;
-      //if (idTipoSuboferta == 1) return `/my-offers/alojamiento/en-habitaciones/edit/${id_oferta}`
+      if (idTipoSuboferta == 3) return `/my-offers/alojamiento/camping/edit/${id_oferta}`
       return "/not-found";
     };
 
@@ -154,10 +154,10 @@ export default function AlojamientoTypeSelection(
           />
           <OfferCard
             className="w-1/3"
-            onClick={() => {}}
+            onClick={() => handleSelect(3)}
             title="Alojamiento de tipo camping"
             imgSrc="public\3.6. Alojamientos\Camping.png"
-            disabled
+            disabled={!establecimiento}
           />
         </div>
       </div>

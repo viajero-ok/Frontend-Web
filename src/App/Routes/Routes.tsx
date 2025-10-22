@@ -25,6 +25,7 @@ import VerOfertaPage from "../../pages/VerOferta/VerOfertaPage";
 import ItineraryView from "../../Views/Itinerary/ItineraryView";
 import PruebaFormView from "../../Views/PruebaForm/PruebaFormView";
 import ResultadoReservaView from "../../Views/ResultadosReserva/ResultadoReservaView";
+import NewAlojamientoCamping from "../../pages/NewAlojamiento/NewAlojamientoCamping";
 
 type RoutesContextValue = {};
 
@@ -117,6 +118,11 @@ const RoutesProvider = ({ children }: { children?: React.ReactNode }) => {
               exact
               path="/my-offers/alojamiento/individual/edit/:id"
               component={NewAlojamientoIndividual}
+            />
+            <Route
+              exact
+              path="/my-offers/alojamiento/camping/edit/:id"
+              component={NewAlojamientoCamping}
             />
             <Route
               exact

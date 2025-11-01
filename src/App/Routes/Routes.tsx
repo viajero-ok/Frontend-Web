@@ -24,6 +24,7 @@ import VerOfertaPage from "../../pages/VerOferta/VerOfertaPage";
 import ItineraryView from "../../Views/Itinerary/ItineraryView";
 import PruebaFormView from "../../Views/PruebaForm/PruebaFormView";
 import ResultadoReservaView from "../../Views/ResultadosReserva/ResultadoReservaView";
+import ItineraryMessagesPage from "../../pages/Itinerary/Messages/ItineraryMessagesPage";
 
 type RoutesContextValue = {};
 
@@ -145,6 +146,11 @@ const RoutesProvider = ({ children }: { children?: React.ReactNode }) => {
               component={ResultadoReservaView}
             />
             <Route exact path="/itinerary" component={ItineraryView} />
+            <Route
+              exact
+              path="/itinerary/:id/messages"
+              component={ItineraryMessagesPage}
+            />
             <Route exact path="/prueba-form" component={PruebaFormView} />
           </IonRouterOutlet>
         </IonReactRouter>

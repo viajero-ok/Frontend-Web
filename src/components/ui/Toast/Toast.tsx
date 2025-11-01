@@ -95,15 +95,15 @@ export const Toast = ({
     <div
       onClick={() => setOpen(false)}
       className={cn(
-        "flex flex-row gap-2 p-2 w-1/2 fixed bottom-0 left-1/2 -translate-x-1/2 z-50 border border-[#bbb] rounded-xl shadow-lg",
+        "flex flex-row gap-2 p-2 w-1/2 fixed bottom-0 left-1/2 -translate-x-1/2 border border-[#bbb] rounded-xl shadow-lg",
         "hover:shadow-md cursor-pointer group transition-all duration-400",
         "bg-white",
         variant == "success" ? "hover:border-green-400 bg-white" : "",
         variant == "danger" ? "hover:border-red-400 bg-white" : "",
         variant == "default" ? "hover:border-black bg-white" : "",
         open
-          ? "opacity-100 -translate-y-[12pt]"
-          : "opacity-0 -translate-y-[0pt]"
+          ? "opacity-100 -translate-y-[12pt] z-50"
+          : "opacity-0 -translate-y-[0pt] -z-50"
       )}
     >
       <div

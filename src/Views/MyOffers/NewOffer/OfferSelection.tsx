@@ -33,12 +33,21 @@ export default function OfferSelection(props: any) {
 
     registrarNuevaActividad({
       id_tipo_oferta: 2,
-      id_establecimiento: id_establecimiento !== null ? id_establecimiento : undefined,
-    })
-      .then((response: any) => {
-        router.push(`/my-offers/actividad/edit/${response.data.id_oferta}?id_establecimiento=${id_establecimiento}`);
-        setOfferType(null);
-      });
+      id_establecimiento:
+        id_establecimiento !== null ? id_establecimiento : undefined,
+    }).then((response: any) => {
+      router.push(
+        `/my-offers/actividad/edit/${response.data.id_oferta}?id_establecimiento=${id_establecimiento}`
+      );
+      setOfferType(null);
+    });
+  };
+
+  const handleCrearEvento = () => {
+    // router.push(
+    //   `/my-offers/actividad/edit/${response.data.id_oferta}?id_establecimiento=${id_establecimiento}`
+    // );
+    router.push("/my-offers/evento/edit/1?id_establecimiento=1");
   };
 
   useEffect(() => {
@@ -97,7 +106,15 @@ export default function OfferSelection(props: any) {
                 Seleccioná el establecimiento al que pertenece la actividad
               </h3>
             </IonRow>
-            <IonRow style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingLeft: "10%", paddingRight: "10%" }}>
+            <IonRow
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingLeft: "10%",
+                paddingRight: "10%",
+              }}
+            >
               <IonSelect
                 label="Establecimiento"
                 placeholder="Seleccioná el establecimiento"
@@ -107,21 +124,14 @@ export default function OfferSelection(props: any) {
                 }}
               >
                 {establecimientos.map((establecimiento: any) => (
-                  <IonSelectOption key={establecimiento.id_establecimiento} value={establecimiento.id_establecimiento}>
+                  <IonSelectOption
+                    key={establecimiento.id_establecimiento}
+                    value={establecimiento.id_establecimiento}
+                  >
                     {establecimiento.nombre}
                   </IonSelectOption>
                 ))}
               </IonSelect>
-              {/* <Field
-                  select
-                  name="establecimiento"
-                  label="Establecimientos"
-                  options={establecimientos.map((establecimiento: any) => ({
-                    id: establecimiento.id_establecimiento,
-                    text: establecimiento.nombre,
-                  }))}
-                  form={form}
-                /> */}
             </IonRow>
             <IonRow
               style={{
@@ -143,6 +153,89 @@ export default function OfferSelection(props: any) {
               <IonButton
                 style={{ "--background": "#F08408", "--color": "white" }}
                 onClick={() => handleCrearActividad()}
+              >
+                Crear
+              </IonButton>
+            </IonRow>
+          </IonGrid>
+        </div>
+      </IonModal>
+      <IonModal
+        isOpen={offerType == "evento"}
+        onDidDismiss={() => setOfferType(null)}
+        style={{ "--height": "fit-content" }}
+      >
+        <div className="wrapper">
+          <IonGrid
+            style={{ display: "flex", flexDirection: "column", flexGrow: 0 }}
+          >
+            <IonRow>
+              <IonCol></IonCol>
+              <IonCol>
+                <h4 style={{ fontWeight: "bold" }}>Confirmar creación</h4>
+              </IonCol>
+              <IonCol style={{ display: "flex", justifyContent: "right" }}>
+                <IonButton
+                  size="small"
+                  fill="clear"
+                  onClick={() => setOfferType(null)}
+                >
+                  <IonIcon icon={close} />
+                </IonButton>
+              </IonCol>
+            </IonRow>
+            <IonRow style={{ justifyContent: "center", padding: "8pt" }}>
+              <h3 style={{ color: "black", fontSize: "14pt" }}>
+                Seleccioná el establecimiento al que pertenece el evento
+              </h3>
+            </IonRow>
+            <IonRow
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingLeft: "10%",
+                paddingRight: "10%",
+              }}
+            >
+              <IonSelect
+                label="Establecimiento"
+                placeholder="Seleccioná el establecimiento"
+                value={form?.schema?.id_establecimiento}
+                onIonChange={(e: any) => {
+                  form?.setValue("id_establecimiento", e.target.value);
+                }}
+              >
+                {establecimientos.map((establecimiento: any) => (
+                  <IonSelectOption
+                    key={establecimiento.id_establecimiento}
+                    value={establecimiento.id_establecimiento}
+                  >
+                    {establecimiento.nombre}
+                  </IonSelectOption>
+                ))}
+              </IonSelect>
+            </IonRow>
+            <IonRow
+              style={{
+                justifyContent: "right",
+                padding: "8pt",
+                paddingTop: "0",
+              }}
+            >
+              <IonButton
+                onClick={() => setOfferType(null)}
+                style={{
+                  marginRight: "8pt",
+                  "--background": "white",
+                  "--color": "#F08408",
+                }}
+              >
+                Cancelar
+              </IonButton>
+              <IonButton
+                style={{ "--background": "#F08408", "--color": "white" }}
+                onClick={() => handleCrearEvento()}
               >
                 Crear
               </IonButton>

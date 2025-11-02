@@ -52,6 +52,7 @@ export default function EventoForm(props: TActividadForm) {
   const {
     idOferta,
 
+    categoriasEvento,
     eventoSchema,
     eventoForm,
     // actividadSchema,
@@ -158,7 +159,7 @@ export default function EventoForm(props: TActividadForm) {
                   <FormItem className="break-inside-avoid-column w-full">
                     <FormControl>
                       <Select placeholder="Categoría" {...field}>
-                        {[].map((categoria: any) => (
+                        {categoriasEvento.map((categoria: any) => (
                           <SelectOption
                             key={categoria.id_sub_tipo_oferta}
                             value={categoria.id_sub_tipo_oferta}

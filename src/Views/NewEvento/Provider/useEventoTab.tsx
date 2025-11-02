@@ -8,6 +8,7 @@ import {
   obtenerDatosRegistradosActividad,
   TBodyGuardarActividad,
 } from "../../../App/Actividades/Actividad";
+import { obtenerCategoriasEventos } from "../../../App/Eventos/Eventos";
 
 const numeric = z.preprocess((val) => {
   if (typeof val === "string" && /^[0-9]+$/.test(val)) {
@@ -27,6 +28,7 @@ const eventoSchema = z.object({
 });
 
 export type EventoTabContextValue = {
+  categoriasEvento: TCategoriaEvento[];
   eventoSchema: typeof eventoSchema;
   eventoForm: UseFormReturn<z.infer<typeof eventoSchema>>;
   //   actualizareventoTab: () => void;
@@ -44,7 +46,14 @@ export type EventoTabContextValue = {
   //   actividadIsDirty: boolean;
 };
 
+type TCategoriaEvento = {
+  id_sub_tipo_oferta: number;
+  nombre_sub_tipo_oferta: string;
+};
 const useEventoTab = ({ idOferta }: { idOferta: string }) => {
+  const [categoriasEvento, setCategoriasEvento] = React.useState<
+    TCategoriaEvento[]
+  >([]);
   //   const [datosRegistradosActividad, setDatosRegistradosActividad] =
   //     React.useState<any>();
   //   const [guias, setGuias] = React.useState<any[]>([]);
@@ -93,6 +102,16 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
   //       .catch(() => {});
   //   };
 
+  React.useEffect(() => {
+    obtenerCategoriasEventos()
+      .then((response) => {
+        setCategoriasEvento(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   //   React.useEffect(() => {
   //     getDatosDeRegistroNuevaActividad()
   //       .then((response: any) => {
@@ -132,6 +151,7 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
   //   };
 
   const context: EventoTabContextValue = {
+    categoriasEvento,
     eventoSchema,
     eventoForm,
     // actualizarActividadTab,

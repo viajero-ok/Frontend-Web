@@ -265,7 +265,7 @@ const MoneyInput = React.forwardRef<HTMLInputElement, any>(
           }}
           fill="outline"
           className={cn(
-            "!flex !shadow-none w-full p-4 focus-visible:outline-none text-right text-gray-600 text-center"
+            "!flex !shadow-none w-full p-4 focus-visible:outline-none text-gray-600 text-center"
           )}
           placeholder={"$0.00"}
         />

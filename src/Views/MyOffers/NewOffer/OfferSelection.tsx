@@ -18,6 +18,7 @@ import Alojamiento from "./NewAlojamiento/NewAlojamiento";
 import { obtenerEstablecimientos } from "../../../App/Establecimientos/Establecimientos";
 import Field from "../../../components/Field/Field";
 import { useForm } from "../../../hooks/UseForm/FormProvider";
+import { registrarNuevoEvento } from "../../../App/Eventos/Eventos";
 
 export default function OfferSelection(props: any) {
   const [offerType, setOfferType] = useState<
@@ -47,7 +48,16 @@ export default function OfferSelection(props: any) {
     // router.push(
     //   `/my-offers/actividad/edit/${response.data.id_oferta}?id_establecimiento=${id_establecimiento}`
     // );
-    router.push("/my-offers/evento/edit/1?id_establecimiento=1");
+    const id_establecimiento = form?.schema?.id_establecimiento;
+    registrarNuevoEvento({
+      id_tipo_oferta: 3,
+      id_establecimiento:
+        id_establecimiento !== null ? id_establecimiento : undefined,
+    }).then((response) => {
+      router.push(
+        `/my-offers/evento/edit/${response.data.id_oferta}?id_establecimiento=${id_establecimiento}`
+      );
+    });
   };
 
   useEffect(() => {

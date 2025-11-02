@@ -170,14 +170,14 @@ export default function NewTurno({ cerrar }: { cerrar: () => void }) {
             <TimeInput
               className="h-[42pt]"
               placeholder="00:00"
-              onChange={(e: any) => handleSetTime(e.target.value, "inicio")}
+              set={(value: string) => handleSetTime(value, "inicio")}
               hora={form.getValues().hora_inicio}
               minuto={form.getValues().minuto_inicio}
             />
             <TimeInput
               className="h-[42pt]"
               placeholder="00:00"
-              onChange={(e: any) => handleSetTime(e.target.value, "fin")}
+              set={(value: string) => handleSetTime(value, "fin")}
               hora={form.getValues().hora_fin}
               minuto={form.getValues().minuto_fin}
             />
@@ -192,10 +192,7 @@ export default function NewTurno({ cerrar }: { cerrar: () => void }) {
           </Check>
           <div className="flex flex-row gap-2 justify-center">
             <Check
-              checked={
-                form.getValues().aplica_lunes ||
-                allDays
-              }
+              checked={form.getValues().aplica_lunes || allDays}
               className="w-full h-[42pt]"
               onChange={(v: boolean) => selectDay(v, "aplica_lunes")}
             >

@@ -217,7 +217,7 @@ export default function TurnosRow({ turno }: { turno: any }) {
             <TimeInput
               className="h-[42pt]"
               placeholder="00:00"
-              onChange={(e: any) => handleSetTime(e.target.value, "inicio")}
+              set={(value: string) => handleSetTime(value, "inicio")}
               hora={form.getValues().hora_inicio}
               minuto={form.getValues().minuto_inicio}
               disabled={!editar}
@@ -225,7 +225,7 @@ export default function TurnosRow({ turno }: { turno: any }) {
             <TimeInput
               className="h-[42pt]"
               placeholder="00:00"
-              onChange={(e: any) => handleSetTime(e.target.value, "fin")}
+              set={(value: string) => handleSetTime(value, "fin")}
               hora={form.getValues().hora_fin}
               minuto={form.getValues().minuto_fin}
               disabled={!editar}

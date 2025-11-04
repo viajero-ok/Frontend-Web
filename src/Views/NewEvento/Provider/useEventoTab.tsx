@@ -3,12 +3,10 @@ import React from "react";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import {
-  getDatosDeRegistroNuevaActividad,
-  guardarActividad as guardarActividadService,
-  obtenerDatosRegistradosActividad,
-  TBodyGuardarActividad,
-} from "../../../App/Actividades/Actividad";
-import { obtenerCategoriasEventos } from "../../../App/Eventos/Eventos";
+  guardarDatosBasicosEvento,
+  obtenerCategoriasEventos,
+  obtenerDatosRegistradosEvento,
+} from "../../../App/Eventos/Eventos";
 
 const numeric = z.preprocess((val) => {
   if (typeof val === "string" && /^[0-9]+$/.test(val)) {
@@ -29,8 +27,10 @@ const eventoSchema = z.object({
 
 export type EventoTabContextValue = {
   categoriasEvento: TCategoriaEvento[];
+  datosBasicos: any;
   eventoSchema: typeof eventoSchema;
   eventoForm: UseFormReturn<z.infer<typeof eventoSchema>>;
+  guardarEventoTab: (data: z.infer<typeof eventoSchema>) => void;
   //   actualizareventoTab: () => void;
   //   categorias: any[];
   //   subCategorias: any[];
@@ -54,6 +54,7 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
   const [categoriasEvento, setCategoriasEvento] = React.useState<
     TCategoriaEvento[]
   >([]);
+  const [datosBasicos, setDatosBasicos] = React.useState<any>();
   //   const [datosRegistradosActividad, setDatosRegistradosActividad] =
   //     React.useState<any>();
   //   const [guias, setGuias] = React.useState<any[]>([]);
@@ -75,6 +76,45 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
     mode: "onSubmit",
   });
   const formWatch = eventoForm.watch();
+
+  const guardarEventoTab = (data: z.infer<typeof eventoSchema>) => {
+    guardarDatosBasicosEvento({
+      nombre: data.nombre_evento,
+      descripcion: data.descripcion_evento,
+      requisitos: data.requisitos_evento,
+      id_sub_categoria: data.id_categoria,
+      url_venta_entradas: data.enlace_venta_entradas,
+      observaciones: data.observaciones,
+      id_oferta: idOferta,
+    })
+      .then((response) => {
+        setDatosBasicos(response.data.datos_registrados);
+      })
+      .catch((error) => {
+        console.log("error: ", error);
+      });
+  };
+
+  const actualizarEventoTab = () => {
+    obtenerDatosRegistradosEvento(idOferta)
+      .then((response) => {
+        eventoForm.reset({
+          nombre_evento: response.data.datos_registrados.nombre,
+          descripcion_evento: response.data.datos_registrados.descripcion,
+          id_categoria: response.data.datos_registrados.id_sub_categoria,
+          requisitos_evento: response.data.datos_registrados.requisitos,
+          enlace_venta_entradas:
+            response.data.datos_registrados.url_venta_entradas,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  React.useEffect(() => {
+    actualizarEventoTab();
+  }, []);
 
   //   const actualizarActividadTab = () => {
   //     obtenerDatosRegistradosActividad(idOferta)
@@ -151,9 +191,11 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
   //   };
 
   const context: EventoTabContextValue = {
+    datosBasicos,
     categoriasEvento,
     eventoSchema,
     eventoForm,
+    guardarEventoTab,
     // actualizarActividadTab,
     // categorias,
     // subCategorias,

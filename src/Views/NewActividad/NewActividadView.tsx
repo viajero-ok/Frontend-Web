@@ -32,6 +32,11 @@ export default function NewActividadView(props: TNewActividadView) {
   const { idOferta, puedeRegistrar, registrar } = useActividad();
   const { modal, setOpen } = useModal();
 
+  useEffect(() => {
+    console.log("puede: ", puedeRegistrar)
+    console.log("estado: ", idEstado)
+  }, [puedeRegistrar, idEstado])
+
   const router = useIonRouter();
 
   const handleRegistrar = () => {
@@ -90,6 +95,7 @@ export default function NewActividadView(props: TNewActividadView) {
       .then((response) => {
         if (!response.data) return;
         if (!response.data.estado) return;
+        console.log("data: ", response.data)
         setIdEstado(response.data.id_estado);
       })
       .catch(() => {});

@@ -17,6 +17,7 @@ import { Input } from "../../../../components/ui/Input/Input";
 import { Select, SelectOption } from "../../../../components/ui/Select/Select";
 import { useToast } from "../../../../components/ui/Toast/Toast";
 import { useEvento } from "../../Provider/EventoProvider";
+import DatosBasicos from "../../../NewAlojamiento/EnHabitaciones/Forms/AlojamientoForm/DatosBasicos";
 
 // const numeric = z.preprocess((val) => {
 //   if (typeof val === "string" && /^[0-9]+$/.test(val)) {
@@ -52,9 +53,12 @@ export default function EventoForm(props: TActividadForm) {
   const {
     idOferta,
 
+    datosBasicos,
     categoriasEvento,
     eventoSchema,
     eventoForm,
+
+    guardarEventoTab,
     // actividadSchema,
     // actividadForm,
     // actualizarActividadTab,
@@ -104,6 +108,7 @@ export default function EventoForm(props: TActividadForm) {
   const { toast } = useToast();
 
   const handleGuardar = (values: z.infer<typeof eventoSchema>) => {
+    guardarEventoTab(values);
     // guardarActividad({
     //   ...values,
     //   id_oferta: idOferta,
@@ -127,7 +132,7 @@ export default function EventoForm(props: TActividadForm) {
   };
 
   const formWatch = form.watch();
-
+  
   return (
     <div className="">
       <Form {...form}>

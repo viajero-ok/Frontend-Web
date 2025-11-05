@@ -30,7 +30,7 @@ export type EventoTabContextValue = {
   datosBasicos: any;
   eventoSchema: typeof eventoSchema;
   eventoForm: UseFormReturn<z.infer<typeof eventoSchema>>;
-  guardarEventoTab: (data: z.infer<typeof eventoSchema>) => void;
+  guardarEventoTab: (data: z.infer<typeof eventoSchema>) => Promise<any>;
   //   actualizareventoTab: () => void;
   //   categorias: any[];
   //   subCategorias: any[];
@@ -77,8 +77,8 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
   });
   const formWatch = eventoForm.watch();
 
-  const guardarEventoTab = (data: z.infer<typeof eventoSchema>) => {
-    guardarDatosBasicosEvento({
+  const guardarEventoTab = async (data: z.infer<typeof eventoSchema>) => {
+    return await guardarDatosBasicosEvento({
       nombre: data.nombre_evento,
       descripcion: data.descripcion_evento,
       requisitos: data.requisitos_evento,
@@ -86,25 +86,22 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
       url_venta_entradas: data.enlace_venta_entradas,
       observaciones: data.observaciones,
       id_oferta: idOferta,
-    })
-      .then((response) => {
-        setDatosBasicos(response.data.datos_registrados);
-      })
-      .catch((error) => {
-        console.log("error: ", error);
-      });
+    });
   };
 
   const actualizarEventoTab = () => {
     obtenerDatosRegistradosEvento(idOferta)
       .then((response) => {
+        console.log("response: ", response.data.datos_registrados);
+        const datos_basicos = response.data.datos_registrados.datos_basicos;
         eventoForm.reset({
-          nombre_evento: response.data.datos_registrados.nombre,
-          descripcion_evento: response.data.datos_registrados.descripcion,
-          id_categoria: response.data.datos_registrados.id_sub_categoria,
-          requisitos_evento: response.data.datos_registrados.requisitos,
-          enlace_venta_entradas:
-            response.data.datos_registrados.url_venta_entradas,
+          nombre_evento: datos_basicos.nombre,
+          descripcion_evento: datos_basicos.descripcion,
+          id_categoria: datos_basicos.id_sub_categoria,
+          requisitos_evento: datos_basicos.requisitos,
+          enlace_venta_entradas: datos_basicos.url_venta_entradas,
+          observaciones:
+            response.data.datos_registrados.observaciones.observacion,
         });
       })
       .catch((error) => {

@@ -18,6 +18,7 @@ import { Select, SelectOption } from "../../../../components/ui/Select/Select";
 import { useToast } from "../../../../components/ui/Toast/Toast";
 import { useEvento } from "../../Provider/EventoProvider";
 import DatosBasicos from "../../../NewAlojamiento/EnHabitaciones/Forms/AlojamientoForm/DatosBasicos";
+import { useModal } from "../../../../components/ui/Modal/Modal";
 
 // const numeric = z.preprocess((val) => {
 //   if (typeof val === "string" && /^[0-9]+$/.test(val)) {
@@ -49,6 +50,8 @@ type TActividadForm = {
 };
 export default function EventoForm(props: TActividadForm) {
   const [formMetodosDePago, setFormMetodosDePago] = useState<number[]>([]);
+
+  const { modal } = useModal();
 
   const {
     idOferta,
@@ -108,7 +111,19 @@ export default function EventoForm(props: TActividadForm) {
   const { toast } = useToast();
 
   const handleGuardar = (values: z.infer<typeof eventoSchema>) => {
-    guardarEventoTab(values);
+    guardarEventoTab(values)
+      .then(() => {
+        toast({
+          variant: "success",
+          title: "Los datos han sido guardados exitosamente",
+        });
+      })
+      .catch(() => {
+        toast({
+          variant: "danger",
+          title: "Error al intentar guardar los datos. Intente nuevamente",
+        });
+      });
     // guardarActividad({
     //   ...values,
     //   id_oferta: idOferta,
@@ -132,7 +147,7 @@ export default function EventoForm(props: TActividadForm) {
   };
 
   const formWatch = form.watch();
-  
+
   return (
     <div className="">
       <Form {...form}>

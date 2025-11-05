@@ -3,6 +3,7 @@ import {
   arrowUndoOutline,
   calendarClearOutline,
   calendarOutline,
+  globeOutline,
   imagesOutline,
   locationOutline,
   personOutline,
@@ -23,6 +24,7 @@ import UbicacionForm from "./Forms/UbicacionForm/UbicacionForm";
 import Imagenes from "./Forms/Imagenes/Imagenes";
 import EntradasForm from "../NewActividad/Forms/TurnosyEntradasForm/Entradas/EntradasForm";
 import HorarioEntradasForm from "./Forms/HorarioEntradasForm/HorarioEntradasForm";
+import RedesSocialesForm from "./Forms/RedesSociales/RedesSocialesForm";
 
 type TNewEventoView = {
   idOferta: string;
@@ -114,6 +116,15 @@ export default function NewEventoView(props: TNewEventoView) {
             />
             <Segment
               segment={segment}
+              value="redes-form"
+              label="Redes sociales"
+              set={setSegment}
+              className="w-full"
+              disabled={false} //TODO: disabled={isDirty}
+              icon={globeOutline}
+            />
+            <Segment
+              segment={segment}
               value="ubicacion-form"
               label="Ubicación"
               set={setSegment}
@@ -170,6 +181,7 @@ export default function NewEventoView(props: TNewEventoView) {
       {segment == "evento-form" && (
         <EventoForm idOferta={props.idOferta ?? 0} />
       )}
+      {segment == "redes-form" && <RedesSocialesForm />}
       {segment == "ubicacion-form" && (
         <UbicacionForm
           idOferta={props.idOferta ?? 0}

@@ -6,6 +6,10 @@ import {
   HorarioEntradasTabContextValue,
   useHorarioEntradasTab,
 } from "./useHorarioEntradasTab";
+import {
+  RedesSocialesTabContextValue,
+  useRedesSocialesTab,
+} from "./useRedesSocialesTab";
 
 type EventoContextValue = {
   /** commons */
@@ -15,6 +19,7 @@ type EventoContextValue = {
   puedeRegistrar: boolean;
   registrar: () => Promise<any>;
 } & EventoTabContextValue &
+  RedesSocialesTabContextValue &
   UbicacionContextValue &
   ImagenesContextValue &
   HorarioEntradasTabContextValue;
@@ -37,6 +42,7 @@ const EventoProvider = ({
 
   /** Hooks para cada tab del dashboard */
   const evento = useEventoTab({ idOferta });
+  const redesSociales = useRedesSocialesTab({ idOferta });
   //   const actividad = useActividadTab({ idOferta });
   //   const guias = useGuiasTab({ idOferta });
   const ubicacion = useUbicacionTab({ idOferta });
@@ -70,6 +76,7 @@ const EventoProvider = ({
     registrar,
 
     ...evento,
+    ...redesSociales,
     // ...guias,
     ...imagenes,
     ...ubicacion,

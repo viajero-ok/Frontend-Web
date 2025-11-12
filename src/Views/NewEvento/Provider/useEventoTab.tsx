@@ -28,9 +28,11 @@ const eventoSchema = z.object({
 export type EventoTabContextValue = {
   categoriasEvento: TCategoriaEvento[];
   datosBasicos: any;
+  listadoRedes: any[];
   eventoSchema: typeof eventoSchema;
   eventoForm: UseFormReturn<z.infer<typeof eventoSchema>>;
   guardarEventoTab: (data: z.infer<typeof eventoSchema>) => Promise<any>;
+  actualizarEventoTab: () => void;
   //   actualizareventoTab: () => void;
   //   categorias: any[];
   //   subCategorias: any[];
@@ -55,6 +57,7 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
     TCategoriaEvento[]
   >([]);
   const [datosBasicos, setDatosBasicos] = React.useState<any>();
+  const [listadoRedes, setListadoRedes] = React.useState<any[]>([]);
   //   const [datosRegistradosActividad, setDatosRegistradosActividad] =
   //     React.useState<any>();
   //   const [guias, setGuias] = React.useState<any[]>([]);
@@ -101,8 +104,13 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
           requisitos_evento: datos_basicos.requisitos,
           enlace_venta_entradas: datos_basicos.url_venta_entradas,
           observaciones:
-            response.data.datos_registrados.observaciones.observacion,
+            response.data.datos_registrados.observaciones?.observacion ?? null,
         });
+        console.log(
+          "listado_redes: evento tab: ",
+          response.data.datos_registrados
+        );
+        setListadoRedes(response.data.datos_registrados.redes_sociales);
       })
       .catch((error) => {
         console.log(error);
@@ -189,10 +197,12 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
 
   const context: EventoTabContextValue = {
     datosBasicos,
+    listadoRedes,
     categoriasEvento,
     eventoSchema,
     eventoForm,
     guardarEventoTab,
+    actualizarEventoTab,
     // actualizarActividadTab,
     // categorias,
     // subCategorias,

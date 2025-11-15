@@ -144,7 +144,7 @@ export default function NewEventoView(props: TNewEventoView) {
             <Segment
               segment={segment}
               value="horariosyentradas-form"
-              label="Horarios y entradas"
+              label="Entradas"
               set={setSegment}
               className="w-full"
               disabled={false} //TODO: disabled={isDirty}

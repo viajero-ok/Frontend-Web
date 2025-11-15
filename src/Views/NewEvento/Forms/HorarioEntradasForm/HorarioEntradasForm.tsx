@@ -6,7 +6,11 @@ import {
   FormItem,
   FormMessage,
 } from "../../../../components/ui/Form/Field";
-import { Input, MoneyInput, TimeInput } from "../../../../components/ui/Input/Input";
+import {
+  Input,
+  MoneyInput,
+  TimeInput,
+} from "../../../../components/ui/Input/Input";
 import { useEvento } from "../../Provider/EventoProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -95,84 +99,6 @@ export default function HorarioEntradasForm() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="border border-gray-200 bg-gray-50 text-gray-600 text-xl font-bold p-4 rounded-md">
-        Horario
-      </div>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(() => {})}
-          className="flex flex-col gap-2"
-        >
-          <div className="grid grid-cols-5 gap-2">
-            <div className="border border-gray-200 bg-gray-50 text-lg font-bold text-gray-600 p-4 rounded-md">
-              Fecha de inicio
-            </div>
-            <div className="border border-gray-200 bg-gray-50 text-lg font-bold text-gray-600 p-4 rounded-md">
-              Fecha de fin
-            </div>
-            <div className="border border-gray-200 bg-gray-50 text-lg font-bold text-gray-600 p-4 rounded-md">
-              Hora de inicio
-            </div>
-            <div className="border border-gray-200 bg-gray-50 text-lg font-bold text-gray-600 p-4 rounded-md">
-              Hora de fin
-            </div>
-            <div className="border border-gray-200 bg-gray-50 text-lg font-bold text-gray-600 p-4 rounded-md w-full h-full"></div>
-          </div>
-          <div className="grid grid-cols-5 gap-2">
-            <FormField
-              control={form.control}
-              name="fecha_inicio"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormControl>
-                    <DatePicker placeholder="Fecha de inicio" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="fecha_fin"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormControl>
-                    <DatePicker placeholder="Fecha de fin" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="hora_inicio"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormControl>
-                    <TimeInput placeholder="Hora de inicio" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="hora_fin"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormControl>
-                    <TimeInput placeholder="Hora de fin" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <button className="viajero-button px-4 py-2 items-center justify-center flex">
-              Guardar
-            </button>
-          </div>
-        </form>
-      </Form>
       <div className="flex flex-row justify-between items-center gap-2">
         <span className="text-gray-600 font-bold text-xl border border-gray-200 bg-gray-50 p-4 rounded-md w-full">
           Tipos de entradas

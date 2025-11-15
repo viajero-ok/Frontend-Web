@@ -21,8 +21,11 @@ const eventoSchema = z.object({
   descripcion_evento: z.string({ message: "El campo es requerido" }),
   requisitos_evento: z.string({ message: "El campo es requerido" }),
   enlace_venta_entradas: z.string({ message: "El campo es requerido" }),
-  redes_sociales_evento: z.string({ message: "El campo es requerido" }),
-  observaciones: z.string({ message: "El campo es requerido" }),
+  fecha_inicio: z.string({ message: "El campo es requerido" }),
+  fecha_fin: z.string({ message: "El campo es requerido" }),
+  hora_inicio: z.string({ message: "El campo es requerido" }),
+  hora_fin: z.string({ message: "El campo es requerido" }),
+  observaciones: z.string().nullable(),
 });
 
 export type EventoTabContextValue = {
@@ -87,7 +90,16 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
       requisitos: data.requisitos_evento,
       id_sub_categoria: data.id_categoria,
       url_venta_entradas: data.enlace_venta_entradas,
-      observaciones: data.observaciones,
+      fecha_hora_inicio: (([y, m, d], [hh, mm]) =>
+        new Date(y, m - 1, d, hh, mm))(
+        data.fecha_inicio.split("-").map(Number),
+        data.hora_inicio.split(":").map(Number)
+      ),
+      fecha_hora_fin: (([y, m, d], [hh, mm]) => new Date(y, m - 1, d, hh, mm))(
+        data.fecha_fin.split("-").map(Number),
+        data.hora_fin.split(":").map(Number)
+      ),
+      observaciones: data.observaciones ?? "",
       id_oferta: idOferta,
     });
   };
@@ -103,6 +115,10 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
           id_categoria: datos_basicos.id_sub_categoria,
           requisitos_evento: datos_basicos.requisitos,
           enlace_venta_entradas: datos_basicos.url_venta_entradas,
+          // fecha_inicio: datos_basicos.fecha_hora_inicio.split(":")[0],
+          // fecha_fin: datos_basicos.fecha_hora_fin.split(":")[0],
+          // hora_inicio: datos_basicos.fecha_hora_inicio.split(":")[1],
+          // hora_fin: datos_basicos.fecha_hora_fin.split(":")[1],
           observaciones:
             response.data.datos_registrados.observaciones?.observacion ?? null,
         });

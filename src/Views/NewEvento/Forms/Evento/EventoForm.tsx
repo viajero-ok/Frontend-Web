@@ -1,11 +1,5 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { z } from "zod";
-import {
-  Check,
-  handleSelectCheckItem,
-} from "../../../../components/ui/Check/Check";
 import {
   Form,
   FormControl,
@@ -13,37 +7,12 @@ import {
   FormItem,
   FormMessage,
 } from "../../../../components/ui/Form/Field";
-import { Input } from "../../../../components/ui/Input/Input";
+import { Input, TimeInput } from "../../../../components/ui/Input/Input";
+import { useModal } from "../../../../components/ui/Modal/Modal";
 import { Select, SelectOption } from "../../../../components/ui/Select/Select";
 import { useToast } from "../../../../components/ui/Toast/Toast";
 import { useEvento } from "../../Provider/EventoProvider";
-import DatosBasicos from "../../../NewAlojamiento/EnHabitaciones/Forms/AlojamientoForm/DatosBasicos";
-import { useModal } from "../../../../components/ui/Modal/Modal";
-
-// const numeric = z.preprocess((val) => {
-//   if (typeof val === "string" && /^[0-9]+$/.test(val)) {
-//     return Number(val);
-//   }
-//   return val;
-// }, z.number({ message: "Debe ser un número" }));
-
-// const formSchema = z.object({
-//   nombre_actividad: z.string({ message: "El campo es requerido" }),
-//   descripcion_actividad: z.string({ message: "El campo es requerido" }),
-//   id_sub_tipo_oferta: z.number({ message: "El campo es requerido" }),
-//   id_sub_categoria: z.number({ message: "El campo es requerido" }),
-//   requisitos_actividad: z.string({ message: "El campo es requerido" }),
-//   id_dificultad: z.number({ message: "El campo es requerido" }),
-//   duracion_actividad: numeric,
-//   distancia_actividad: numeric,
-//   bl_con_guia: z.boolean({ message: "El campo es requerido" }).optional(),
-
-//   // politicas_reserva
-//   id_politica_cancelacion: z.number({ message: "El campo es requerido" }),
-//   //plazo_dias_cancelacion: z.any(),
-//   id_tipo_pago_anticipado: z.number({ message: "El campo es requerido" }),
-//   //porcentaje_pago_anticipado: z.any(), // float
-// });
+import { DatePicker } from "../../../../components/ui/DatePicker/DatePicker";
 
 type TActividadForm = {
   idOferta: string;
@@ -233,18 +202,84 @@ export default function EventoForm(props: TActividadForm) {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="redes_sociales_evento"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormControl>
-                    <Input placeholder="Redes sociales del evento" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-4 gap-2">
+              <div className="border border-gray-200 bg-gray-50 text-lg font-bold text-gray-600 p-4 rounded-md">
+                Fecha de inicio
+              </div>
+              <div className="border border-gray-200 bg-gray-50 text-lg font-bold text-gray-600 p-4 rounded-md">
+                Fecha de fin
+              </div>
+              <div className="border border-gray-200 bg-gray-50 text-lg font-bold text-gray-600 p-4 rounded-md">
+                Hora de inicio
+              </div>
+              <div className="border border-gray-200 bg-gray-50 text-lg font-bold text-gray-600 p-4 rounded-md">
+                Hora de fin
+              </div>
+            </div>
+            <div className="grid grid-cols-4 gap-2">
+              <FormField
+                control={form.control}
+                name="fecha_inicio"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormControl>
+                      <DatePicker placeholder="Fecha de inicio" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="fecha_fin"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormControl>
+                      <DatePicker placeholder="Fecha de fin" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="hora_inicio"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormControl>
+                      <TimeInput
+                        placeholder="Hora de inicio"
+                        {...field}
+                        set={(time: string) =>
+                          eventoForm.setValue("hora_inicio", time)
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="hora_fin"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormControl>
+                      <TimeInput
+                        placeholder="Hora de fin"
+                        {...field}
+                        hora={eventoForm.getValues().hora_fin?.split(":")[0]}
+                        minuto={eventoForm.getValues().hora_fin?.split(":")[1]}
+                        set={(time: string) =>
+                          eventoForm.setValue("hora_fin", time)
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
               control={form.control}
               name="observaciones"
@@ -259,7 +294,7 @@ export default function EventoForm(props: TActividadForm) {
             />
           </div>
 
-          <div className="flex flex-row w-full justify-end mt-4">
+          <div className="flex flex-row w-full justify-end">
             <button type="submit" className="viajero-button px-4 py-2">
               Guardar
             </button>

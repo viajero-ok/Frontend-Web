@@ -20,6 +20,8 @@ type TBodyGuardarDatosBasicosEvento = {
   descripcion: string;
   requisitos: string;
   url_venta_entradas: string;
+  fecha_hora_inicio: Date;
+  fecha_hora_fin: Date;
   observaciones: string;
 };
 export const guardarDatosBasicosEvento = async (

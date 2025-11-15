@@ -328,7 +328,7 @@ export default function RedesSocialesForm() {
           disabled={
             agregar ||
             datosRegistroRedes.redesSociales.filter((red: any) =>
-              listadoRedes
+              !listadoRedes
                 .map((r) => r.id_red_social)
                 .includes(red.id_red_social)
             ).length == 0

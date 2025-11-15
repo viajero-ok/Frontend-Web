@@ -18,14 +18,18 @@ const DatePicker = React.forwardRef<typeof StyledIonDateTime, any>(
     const [open, setOpen] = React.useState<boolean>(false);
 
     return (
-      <div className="group flex flex-col relative w-full items-stretch">
+      <div className="datepicker-container group flex flex-col relative w-full items-stretch">
         <Input
           readonly
           placeholder="Selecciona una fecha"
           value={props.value ? props.value.split("T")[0] : null}
           className="w-full"
           onFocus={() => setOpen(true)}
-          onIonBlur={() => setOpen(false)}
+          onBlur={(e: any) => {
+            if (!e.relatedTarget?.closest(".datepicker-popup")) {
+              setOpen(false);
+            }
+          }}
         />
         <StyledIonDateTime
           onIonChange={(e) => {
@@ -34,18 +38,15 @@ const DatePicker = React.forwardRef<typeof StyledIonDateTime, any>(
           }}
           {...props}
           value={props.value}
-          onIonInput={() => {
-            props.onChange();
-          }}
           fill="outline"
           className={cn(
+            "datepicker-popup",
             "!flex !shadow-sm absolute z-10 mt-0",
             open ? "!visible" : "!hidden",
             "w-full"
           )}
           placeholder={props.placeholder}
           presentation="date"
-          onBlur={() => setOpen(false)}
         />
       </div>
     );

@@ -248,8 +248,9 @@ export default function EventoForm(props: TActividadForm) {
                   <FormItem className="w-full">
                     <FormControl>
                       <TimeInput
-                        placeholder="Hora de inicio"
-                        {...field}
+                        placeholder="00:00"
+                        hora={form.getValues().hora_inicio.split(":")[0]}
+                        minuto={form.getValues().hora_inicio.split(":")[1]}
                         set={(time: string) =>
                           eventoForm.setValue("hora_inicio", time)
                         }

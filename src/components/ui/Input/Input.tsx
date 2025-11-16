@@ -108,8 +108,8 @@ export const formatTime = (time: number | undefined): string => {
 
 const TimeInput = React.forwardRef<HTMLInputElement, any>(
   ({ className, ...props }, ref) => {
-    const [hours, setHours] = React.useState<string | undefined>();
-    const [minutes, setMinutes] = React.useState<string | undefined>();
+    const [hours, setHours] = React.useState<string | undefined>(props.hora);
+    const [minutes, setMinutes] = React.useState<string | undefined>(props.minuto);
 
     const refHours = React.useRef<HTMLInputElement>(null);
     const refMinutes = React.useRef<HTMLInputElement>(null);

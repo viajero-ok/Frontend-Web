@@ -84,6 +84,14 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
   const formWatch = eventoForm.watch();
 
   const guardarEventoTab = async (data: z.infer<typeof eventoSchema>) => {
+    console.log("data: ", data.fecha_inicio);
+    console.log(
+      "fecha hora inicio: ",
+      (([y, m, d], [hh, mm]) => new Date(y, m - 1, d, hh, mm))(
+        data.fecha_inicio.split("T")[0].split("-").map(Number),
+        data.hora_inicio.split(":").map(Number)
+      )
+    );
     return await guardarDatosBasicosEvento({
       nombre: data.nombre_evento,
       descripcion: data.descripcion_evento,
@@ -92,11 +100,11 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
       url_venta_entradas: data.enlace_venta_entradas,
       fecha_hora_inicio: (([y, m, d], [hh, mm]) =>
         new Date(y, m - 1, d, hh, mm))(
-        data.fecha_inicio.split("-").map(Number),
+        data.fecha_inicio.split("T")[0].split("-").map(Number),
         data.hora_inicio.split(":").map(Number)
       ),
       fecha_hora_fin: (([y, m, d], [hh, mm]) => new Date(y, m - 1, d, hh, mm))(
-        data.fecha_fin.split("-").map(Number),
+        data.fecha_fin.split("T")[0].split("-").map(Number),
         data.hora_fin.split(":").map(Number)
       ),
       observaciones: data.observaciones ?? "",
@@ -115,10 +123,18 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
           id_categoria: datos_basicos.id_sub_categoria,
           requisitos_evento: datos_basicos.requisitos,
           enlace_venta_entradas: datos_basicos.url_venta_entradas,
-          // fecha_inicio: datos_basicos.fecha_hora_inicio.split(":")[0],
-          // fecha_fin: datos_basicos.fecha_hora_fin.split(":")[0],
-          // hora_inicio: datos_basicos.fecha_hora_inicio.split(":")[1],
-          // hora_fin: datos_basicos.fecha_hora_fin.split(":")[1],
+          fecha_inicio: datos_basicos.fec_hora_inicio?.split("T")[0],
+          fecha_fin: datos_basicos.fec_hora_fin?.split("T")[0],
+          hora_inicio: datos_basicos.fec_hora_inicio
+            ?.split("T")[1]
+            .split(":")
+            .slice(0, 2)
+            .join(":"),
+          hora_fin: datos_basicos.fec_hora_fin
+            ?.split("T")[1]
+            .split(":")
+            .slice(0, 2)
+            .join(":"),
           observaciones:
             response.data.datos_registrados.observaciones?.observacion ?? null,
         });

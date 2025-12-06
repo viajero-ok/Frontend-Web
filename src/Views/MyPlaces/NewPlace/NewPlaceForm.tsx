@@ -23,6 +23,7 @@ import { Input } from "../../../components/ui/Input/Input";
 import { useModal } from "../../../components/ui/Modal/Modal";
 import { Select, SelectOption } from "../../../components/ui/Select/Select";
 import { useEstablecimiento } from "./EstablecimientoProvider";
+import { getUbicaciones } from "../../../App/Ubicaciones/Ubicaciones";
 
 const BotoneraRegister = ({ onCancelar }: { onCancelar: () => void }) => {
   return (
@@ -113,6 +114,11 @@ const formSchema = z.object({
 
 export default function NewPlaceForm() {
   const [esSinNumero, setEsSinNumero] = useState<boolean>(false);
+  const [ubicaciones, setUbicaciones] = useState<{
+    provincias: any[];
+    departamentos: any[];
+    localidades: any[];
+  }>({ provincias: [], departamentos: [], localidades: [] });
 
   const {
     idEstablecimiento,
@@ -132,11 +138,18 @@ export default function NewPlaceForm() {
   });
   const formWatch = form.watch();
   const { provincias, departamentos, localidades } = useDomicilioSelection({
+    ubicaciones,
     provinciaSelection: formWatch.id_provincia,
     departamentoSelection: formWatch.id_departamento,
     localidadSelection: formWatch.id_localidad,
   });
   const mapView = useMapView({ search: true, markerOnClick: true });
+
+  useEffect(() => {
+    getUbicaciones().then((response) => {
+      setUbicaciones(response.data.ubicaciones);
+    });
+  }, []);
 
   const onRegistrar = (values: z.infer<typeof formSchema>) => {
     registrarEstablecimiento({

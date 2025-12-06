@@ -13,7 +13,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import Check from "../../../../../components/Check/Check";
 import CheckInCheckOutRow from "../CheckInCheckOutRow/CheckInCheckOutRow";
 import {
-  crearHorario,
+  registrarHorario,
   THorariosCheckInCheckOut,
 } from "../../../../../App/Alojamientos/NuevoAlojamiento";
 
@@ -31,7 +31,7 @@ export default function PoliticasNormas(props: TPoliticasNormas) {
 
   const handleAgregarHorario = () => {
     console.log("llama");
-    crearHorario({ id_oferta: props.idOferta }).then((response: any) => {
+    registrarHorario({ id_oferta: props.idOferta }).then((response: any) => {
       console.log("id: ", response.data.id_horario);
       props.setHorarios((prev: THorariosCheckInCheckOut[]) => [
         ...prev,

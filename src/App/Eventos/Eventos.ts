@@ -42,6 +42,18 @@ export const registrarEntradaService = async (
   body: TBodyRegistrarEntradaEvento
 ) => await AUTH_API.post(`/evento/entradas/registrar-entrada`, body);
 
+export type TBodyModificarEntradaEvento = {
+  id_oferta: string;
+  id_entrada: number;
+  nombre: string;
+  incluye: string;
+  precio: number;
+  sin_precio: boolean;
+};
+export const modificarEntradaService = async (
+  body: TBodyModificarEntradaEvento
+) => await AUTH_API.post(`/evento/entradas/modificar-entrada`, body);
+
 export type TBodyEliminarEntradaEvento = {
   id_oferta: string;
   id_entrada: number;
@@ -53,3 +65,8 @@ export const eliminarEntradaService = async (
 
 export const obtenerEntradasService = async (idOferta: string) =>
   AUTH_API.get(`/evento/entradas/obtener-entradas/${idOferta}`);
+
+export const publicarEventoService = async (idOferta: string) =>
+  await AUTH_API.post(`/evento/publicar/publicar-evento`, {
+    id_oferta: idOferta,
+  });

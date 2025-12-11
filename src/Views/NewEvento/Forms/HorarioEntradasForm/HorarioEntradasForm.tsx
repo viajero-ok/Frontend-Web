@@ -21,7 +21,7 @@ const EntradaExistente = (props: { entrada: any }) => {
   const {
     idOferta,
     entradaSchema,
-    registrarEntrada,
+    modificarEntrada,
     obtenerEntradas,
     eliminarEntrada,
   } = useEvento();
@@ -35,17 +35,26 @@ const EntradaExistente = (props: { entrada: any }) => {
   });
 
   const handleRegistrarEntrada = (values: z.infer<typeof entradaSchema>) => {
-    console.log(
-      "precio: ",
-      parseFloat(values.precio.replace("$", "").replace(",", ""))
-    );
-    registrarEntrada({
+    setEditar(false);
+    modificarEntrada({
       ...values,
+      id_entrada: props.entrada.id_tipo_entrada || null,
       id_oferta: idOferta,
       precio: parseFloat(values.precio.replace("$", "").replace(",", "")),
-    }).then(() => {
-      obtenerEntradas();
-    });
+    })
+      .then(() => {
+        obtenerEntradas();
+        toast({
+          variant: "success",
+          title: "Entrada modificada",
+        });
+      })
+      .catch(() => {
+        toast({
+          variant: "danger",
+          title: "Error al intentar eliminar la entrada. Intente nuevamente",
+        });
+      });
   };
 
   React.useEffect(() => {
@@ -108,7 +117,7 @@ const EntradaExistente = (props: { entrada: any }) => {
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl>
-                  <Input placeholder="Nombre" {...field} />
+                  <Input disabled={!editar} placeholder="Nombre" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -120,7 +129,11 @@ const EntradaExistente = (props: { entrada: any }) => {
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl>
-                  <Input placeholder="¿Qué incluye?" {...field} />
+                  <Input
+                    disabled={!editar}
+                    placeholder="¿Qué incluye?"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -133,13 +146,17 @@ const EntradaExistente = (props: { entrada: any }) => {
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormControl>
-                    <MoneyInput placeholder="Precio" {...field} />
+                    <MoneyInput
+                      disabled={!editar}
+                      placeholder="Precio"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Check>Sin precio</Check>
+            <Check disabled={!editar}>Sin precio</Check>
           </div>
           <div className="flex flex-row gap-2 w-full">
             {!editar && (
@@ -165,12 +182,7 @@ const EntradaExistente = (props: { entrada: any }) => {
               </button>
             )}
             {editar && (
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                }}
-                className="viajero-button p-4 w-full"
-              >
+              <button type="submit" className="viajero-button p-4 w-full">
                 Guardar
               </button>
             )}
@@ -202,10 +214,7 @@ const TipoDeEntrada = (props: { new?: boolean; cancelar: () => void }) => {
   });
 
   const handleRegistrarEntrada = (values: z.infer<typeof entradaSchema>) => {
-    console.log(
-      "precio: ",
-      parseFloat(values.precio.replace("$", "").replace(",", ""))
-    );
+    props.cancelar();
     registrarEntrada({
       ...values,
       id_oferta: idOferta,

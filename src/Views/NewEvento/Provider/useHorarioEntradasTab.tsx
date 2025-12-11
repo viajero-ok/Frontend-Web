@@ -11,9 +11,11 @@ import {
 import { TBodyRegistrarEntrada } from "../../../App/Actividades/TurnosyHorarios";
 import {
   eliminarEntradaService,
+  modificarEntradaService,
   obtenerEntradasService,
   registrarEntradaService,
   TBodyEliminarEntradaEvento,
+  TBodyModificarEntradaEvento,
   TBodyRegistrarEntradaEvento,
 } from "../../../App/Eventos/Eventos";
 
@@ -43,6 +45,7 @@ export type HorarioEntradasTabContextValue = {
   horarioForm: UseFormReturn<z.infer<typeof horarioSchema>>;
   entradaSchema: typeof entradaSchema;
   registrarEntrada: any;
+  modificarEntrada: any;
   eliminarEntrada: any;
   obtenerEntradas: any;
   entradas: any[];
@@ -94,15 +97,13 @@ const useHorarioEntradasTab = ({ idOferta }: { idOferta: string }) => {
       .catch(() => {});
   };
 
-  const registrarEntrada = (entrada: TBodyRegistrarEntradaEvento) => {
-    registrarEntradaService(entrada)
-      .then((response) => {
-        console.log("response: ", response);
-      })
-      .catch(() => {});
+  const registrarEntrada = async (entrada: TBodyRegistrarEntradaEvento) => {
+    return await registrarEntradaService(entrada);
   };
 
-  const actualizarEntrada = () => {};
+  const modificarEntrada = async (entrada: TBodyModificarEntradaEvento) => {
+    return await modificarEntradaService(entrada);
+  };
 
   const eliminarEntrada = async (entrada: TBodyEliminarEntradaEvento) => {
     return await eliminarEntradaService(entrada);
@@ -181,6 +182,7 @@ const useHorarioEntradasTab = ({ idOferta }: { idOferta: string }) => {
     horarioForm,
     entradaSchema,
     registrarEntrada,
+    modificarEntrada,
     eliminarEntrada,
     obtenerEntradas,
     entradas,

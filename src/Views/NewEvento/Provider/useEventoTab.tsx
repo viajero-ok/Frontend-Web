@@ -119,18 +119,17 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
     if (!datosRegistrados.datos_basicos.nombre) return false;
 
     if (
-      !datosRegistrados.redesSociales ||
-      datosRegistrados.redesSociales.length == 0
+      !datosRegistrados.redes_sociales ||
+      datosRegistrados.redes_sociales.length == 0
     )
       return false;
-
+      
     return true;
   };
 
   const actualizarEventoTab = () => {
     obtenerDatosRegistradosEvento(idOferta)
       .then((response) => {
-        console.log("response: ", response.data.datos_registrados);
         const datos_basicos = response.data.datos_registrados.datos_basicos;
         eventoForm.reset({
           nombre_evento: datos_basicos.nombre,
@@ -153,10 +152,6 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
           observaciones:
             response.data.datos_registrados.observaciones?.observacion ?? null,
         });
-        console.log(
-          "listado_redes: evento tab: ",
-          response.data.datos_registrados
-        );
         setListadoRedes(response.data.datos_registrados.redes_sociales);
         setIsComplete(validateIsComplete(response.data.datos_registrados));
       })
@@ -169,32 +164,6 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
     actualizarEventoTab();
   }, []);
 
-  //   const actualizarActividadTab = () => {
-  //     obtenerDatosRegistradosActividad(idOferta)
-  //       .then((response) => {
-  //         setGuias(response.data.datos_actividad.guias);
-  //         const { datos_basicos, metodos_pago } = response.data.datos_actividad;
-  //         setDatosRegistradosActividad({
-  //           ...datos_basicos,
-  //           metodos_pago,
-  //           bl_con_guia: datos_basicos.bl_con_guia == 1 ? true : false,
-  //         });
-  //         setEsConGuia(datos_basicos.bl_con_guia == 1 ? true : false);
-  //         /** TODO: Modificar en backend para que traiga las imagenes en otro endpoint */
-  //         // setImagenes(
-  //         //   response.data.imagenes.map((i: any) => ({
-  //         //     getId: () => i.id_imagen,
-  //         //     getNombre: () => i.nombre,
-  //         //     render: () => renderRemoteImage(`data:image/png;base64,${i.datos}`),
-  //         //     isRemote: () => true,
-  //         //     getDatos: () => i.datos,
-  //         //     getSize: () => i.datos.length,
-  //         //   }))
-  //         // );
-  //       })
-  //       .catch(() => {});
-  //   };
-
   React.useEffect(() => {
     obtenerCategoriasEventos()
       .then((response) => {
@@ -204,44 +173,6 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
         console.log(error);
       });
   }, []);
-
-  //   React.useEffect(() => {
-  //     getDatosDeRegistroNuevaActividad()
-  //       .then((response: any) => {
-  //         setCategorias(response.data.tipos_y_subtipos.subtipos);
-  //         setSubCategorias(response.data.sub_categorias_actividades);
-  //         setTiposPagoAnticipado(response.data.tipos_pago_anticipado);
-  //         setPoliticasDeCancelacion(response.data.politicas_cancelacion);
-  //         setMetodosDePago(response.data.metodos_pago);
-  //         setDificultades(response.data.dificultad_actividades);
-  //       })
-  //       .then(() => {
-  //         actualizarActividadTab();
-  //       })
-  //       .catch(() => {});
-  //   }, []);
-
-  //   const checkEsConGuia = () => {
-  //     setEsConGuia((prev: boolean) => !prev);
-  //   };
-
-  //   React.useEffect(() => {
-  //     if (actividadForm.formState.isDirty) {
-  //       setEsCompleto(false);
-  //       return;
-  //     }
-
-  //     setEsCompleto(actividadSchema.safeParse(actividadForm.getValues()).success);
-  //   }, [formWatch]);
-
-  //   const guardarActividad = async (body: TBodyGuardarActividad) => {
-  //     try {
-  //       await guardarActividadService(body);
-  //       //setIsDirty(true);
-  //     } catch (error) {
-  //       throw new Error((error as Error).message);
-  //     }
-  //   };
 
   const context: EventoTabContextValue = {
     datosBasicos,

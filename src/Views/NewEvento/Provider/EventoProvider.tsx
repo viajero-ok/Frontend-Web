@@ -1,15 +1,17 @@
 import * as React from "react";
+import { finalizarRegistroActividad } from "../../../App/Actividades/Actividad";
+import { publicarEventoService } from "../../../App/Eventos/Eventos";
 import { EventoTabContextValue, useEventoTab } from "./useEventoTab";
-import { UbicacionContextValue, useUbicacionTab } from "./useUbicacionTab";
-import { ImagenesContextValue, useImagenesTab } from "./useImagenesTab";
 import {
   HorarioEntradasTabContextValue,
   useHorarioEntradasTab,
 } from "./useHorarioEntradasTab";
+import { ImagenesContextValue, useImagenesTab } from "./useImagenesTab";
 import {
   RedesSocialesTabContextValue,
   useRedesSocialesTab,
 } from "./useRedesSocialesTab";
+import { UbicacionContextValue, useUbicacionTab } from "./useUbicacionTab";
 
 type EventoContextValue = {
   /** commons */
@@ -18,6 +20,7 @@ type EventoContextValue = {
   dirt: () => void;
   puedeRegistrar: boolean;
   registrar: () => Promise<any>;
+  publicar: () => Promise<any>;
 } & EventoTabContextValue &
   RedesSocialesTabContextValue &
   UbicacionContextValue &
@@ -51,12 +54,14 @@ const EventoProvider = ({
   const horarioEntradas = useHorarioEntradasTab({ idOferta });
 
   React.useEffect(() => {
+    console.log("--> ", evento.isEventoTabComplete);
     setPuedeRegistrar(
       evento.isEventoTabComplete &&
         ubicacion.ubicacionEsCompleta &&
-        imagenes.imagenes.length > 0
+        imagenes.imagenes.length > 0 &&
+        horarioEntradas.entradas.length > 0
     );
-  }, [evento, ubicacion, imagenes]);
+  }, [evento, ubicacion, imagenes, horarioEntradas]);
 
   //   React.useEffect(() => {
   //     setPuedeRegistrar(
@@ -69,11 +74,19 @@ const EventoProvider = ({
   //   }, [actividad, guias, imagenes, ubicacion, turnosEntradas]);
 
   const registrar = async () => {
-    // try {
-    //   await finalizarRegistroActividad(idOferta);
-    // } catch (error) {
-    //   throw new Error((error as Error).message);
-    // }
+    try {
+      await finalizarRegistroActividad(idOferta);
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  const publicar = async () => {
+    try {
+      await publicarEventoService(idOferta);
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
   };
 
   const context: EventoContextValue = {
@@ -82,6 +95,7 @@ const EventoProvider = ({
     dirt,
     puedeRegistrar,
     registrar,
+    publicar,
 
     ...evento,
     ...redesSociales,

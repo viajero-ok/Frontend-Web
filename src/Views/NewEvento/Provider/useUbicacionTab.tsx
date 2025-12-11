@@ -42,7 +42,7 @@ const ubicacionSchema = z.object({
       message: "La ubicación es requerida.",
     }
   ),
-  observaciones: z.string().optional(),
+  observaciones: z.string().optional().nullable(),
 });
 
 const useUbicacionTab = ({ idOferta }: { idOferta: string }) => {

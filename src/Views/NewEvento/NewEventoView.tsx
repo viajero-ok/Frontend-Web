@@ -34,7 +34,7 @@ export default function NewEventoView(props: TNewEventoView) {
   const [segment, setSegment] = useState<string>("actividad-form");
   const [idEstado, setIdEstado] = useState<number | null>(null);
 
-  const { idOferta, puedeRegistrar, registrar } = useEvento();
+  const { idOferta, puedeRegistrar, registrar, publicar } = useEvento();
   const { modal, setOpen } = useModal();
 
   const router = useIonRouter();
@@ -45,8 +45,34 @@ export default function NewEventoView(props: TNewEventoView) {
       .then(() => {
         modal({
           variant: "success",
-          title: "Actividad registrada",
-          description: "La actividad fue registrada con éxito.",
+          title: "Evento registrado",
+          description: "El evento fue registrado con éxito.",
+          actions: (
+            <>
+              <button
+                onClick={() => {
+                  router && router.push("/my-offers");
+                  setOpen(false);
+                }}
+                className="viajero-button px-4 py-2 bg-green-400! hover:bg-green-400/90! text-white!"
+              >
+                Aceptar
+              </button>
+            </>
+          ),
+          canDismiss: false,
+        });
+      })
+      .catch(() => {});
+  };
+
+  const handlePublicar = () => {
+    publicar()
+      .then(() => {
+        modal({
+          variant: "success",
+          title: "Evento publicado",
+          description: "El evento fue publicado con éxito.",
           actions: (
             <>
               <button
@@ -70,7 +96,7 @@ export default function NewEventoView(props: TNewEventoView) {
     modal({
       variant: "default",
       title: "Registrar actividad",
-      description: "Confirmá el registro de la actividad",
+      description: "Confirmá el registro del evento",
       actions: (
         <div className="flex flex-row w-full justify-between">
           <button
@@ -84,6 +110,30 @@ export default function NewEventoView(props: TNewEventoView) {
             className="viajero-button px-4 py-2"
           >
             Registrar
+          </button>
+        </div>
+      ),
+    });
+  };
+
+  const handleConfirmarPublicar = () => {
+    modal({
+      variant: "default",
+      title: "Publicar evento",
+      description: "Confirmá la publicación del evento",
+      actions: (
+        <div className="flex flex-row w-full justify-between">
+          <button
+            onClick={() => setOpen(false)}
+            className="viajero-button-ghost px-4 py-2"
+          >
+            cancelar
+          </button>
+          <button
+            onClick={() => handlePublicar()}
+            className="viajero-button px-4 py-2"
+          >
+            Publicar
           </button>
         </div>
       ),
@@ -172,6 +222,22 @@ export default function NewEventoView(props: TNewEventoView) {
                 className="viajero-button px-4 py-2 animate-pulse"
               >
                 Registrar oferta
+              </button>
+            </div>
+          )}
+          {idEstado == 2 && (
+            <div className="flex flex-col gap-2 w-fit p-4 border border-gray-200 rounded-md">
+              <div className="text-md font-bold text-gray-600">
+                ¡Ya podés publicar tu oferta!
+              </div>
+              <div className="text-sm text-gray-600">
+                Todos los datos necesarios han sido registrados
+              </div>
+              <button
+                onClick={() => handleConfirmarPublicar()}
+                className="viajero-button bg-green-400! hover:bg-green-400/90! px-4 py-2 animate-pulse"
+              >
+                Publicar oferta
               </button>
             </div>
           )}

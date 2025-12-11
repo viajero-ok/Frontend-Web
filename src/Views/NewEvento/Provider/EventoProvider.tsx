@@ -50,6 +50,14 @@ const EventoProvider = ({
   const imagenes = useImagenesTab({ idOferta });
   const horarioEntradas = useHorarioEntradasTab({ idOferta });
 
+  React.useEffect(() => {
+    setPuedeRegistrar(
+      evento.isEventoTabComplete &&
+        ubicacion.ubicacionEsCompleta &&
+        imagenes.imagenes.length > 0
+    );
+  }, [evento, ubicacion, imagenes]);
+
   //   React.useEffect(() => {
   //     setPuedeRegistrar(
   //       actividad.actividadEsCompleta &&

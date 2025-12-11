@@ -30,3 +30,26 @@ export const guardarDatosBasicosEvento = async (
 
 export const obtenerDatosRegistradosEvento = async (id_oferta: string) =>
   await AUTH_API.get(`/evento/obtener-datos-registrados/${id_oferta}`);
+
+export type TBodyRegistrarEntradaEvento = {
+  id_oferta: string;
+  nombre: string;
+  incluye: string;
+  precio: number;
+  sin_precio: boolean;
+};
+export const registrarEntradaService = async (
+  body: TBodyRegistrarEntradaEvento
+) => await AUTH_API.post(`/evento/entradas/registrar-entrada`, body);
+
+export type TBodyEliminarEntradaEvento = {
+  id_oferta: string;
+  id_entrada: number;
+};
+export const eliminarEntradaService = async (
+  body: TBodyEliminarEntradaEvento
+) =>
+  await AUTH_API.delete(`/evento/entradas/eliminar-entrada`, { params: body });
+
+export const obtenerEntradasService = async (idOferta: string) =>
+  AUTH_API.get(`/evento/entradas/obtener-entradas/${idOferta}`);

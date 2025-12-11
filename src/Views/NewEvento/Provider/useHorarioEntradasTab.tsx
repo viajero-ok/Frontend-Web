@@ -8,6 +8,14 @@ import {
   obtenerDatosRegistradosActividad,
   TBodyGuardarActividad,
 } from "../../../App/Actividades/Actividad";
+import { TBodyRegistrarEntrada } from "../../../App/Actividades/TurnosyHorarios";
+import {
+  eliminarEntradaService,
+  obtenerEntradasService,
+  registrarEntradaService,
+  TBodyEliminarEntradaEvento,
+  TBodyRegistrarEntradaEvento,
+} from "../../../App/Eventos/Eventos";
 
 const numeric = z.preprocess((val) => {
   if (typeof val === "string" && /^[0-9]+$/.test(val)) {
@@ -24,9 +32,9 @@ const horarioSchema = z.object({
 });
 
 const entradaSchema = z.object({
-  nombre_entrada: z.string({ message: "El campo es requerido" }),
+  nombre: z.string({ message: "El campo es requerido" }),
   incluye: z.string({ message: "El campo es requerido" }),
-  precio: z.string({ message: "El cmapo es rqeuerido" }),
+  precio: z.string({ message: "El campo es rqeuerido" }),
   sin_precio: z.boolean().default(false),
 });
 
@@ -34,6 +42,10 @@ export type HorarioEntradasTabContextValue = {
   horarioSchema: typeof horarioSchema;
   horarioForm: UseFormReturn<z.infer<typeof horarioSchema>>;
   entradaSchema: typeof entradaSchema;
+  registrarEntrada: any;
+  eliminarEntrada: any;
+  obtenerEntradas: any;
+  entradas: any[];
   //   actualizareventoTab: () => void;
   //   categorias: any[];
   //   subCategorias: any[];
@@ -50,6 +62,7 @@ export type HorarioEntradasTabContextValue = {
 };
 
 const useHorarioEntradasTab = ({ idOferta }: { idOferta: string }) => {
+  const [entradas, setEntradas] = React.useState<any[]>([]);
   //   const [datosRegistradosActividad, setDatosRegistradosActividad] =
   //     React.useState<any>();
   //   const [guias, setGuias] = React.useState<any[]>([]);
@@ -71,6 +84,33 @@ const useHorarioEntradasTab = ({ idOferta }: { idOferta: string }) => {
     mode: "onSubmit",
   });
   const formWatch = horarioForm.watch();
+
+  const obtenerEntradas = () => {
+    obtenerEntradasService(idOferta)
+      .then((response: any) => {
+        console.log("Entradas: ", response);
+        setEntradas(response.data);
+      })
+      .catch(() => {});
+  };
+
+  const registrarEntrada = (entrada: TBodyRegistrarEntradaEvento) => {
+    registrarEntradaService(entrada)
+      .then((response) => {
+        console.log("response: ", response);
+      })
+      .catch(() => {});
+  };
+
+  const actualizarEntrada = () => {};
+
+  const eliminarEntrada = async (entrada: TBodyEliminarEntradaEvento) => {
+    return await eliminarEntradaService(entrada);
+  };
+
+  React.useEffect(() => {
+    obtenerEntradas();
+  }, []);
 
   //   const actualizarActividadTab = () => {
   //     obtenerDatosRegistradosActividad(idOferta)
@@ -140,6 +180,11 @@ const useHorarioEntradasTab = ({ idOferta }: { idOferta: string }) => {
     horarioSchema,
     horarioForm,
     entradaSchema,
+    registrarEntrada,
+    eliminarEntrada,
+    obtenerEntradas,
+    entradas,
+
     // actualizarActividadTab,
     // categorias,
     // subCategorias,

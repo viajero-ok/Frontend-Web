@@ -109,7 +109,9 @@ export const formatTime = (time: number | undefined): string => {
 const TimeInput = React.forwardRef<HTMLInputElement, any>(
   ({ className, ...props }, ref) => {
     const [hours, setHours] = React.useState<string | undefined>(props.hora);
-    const [minutes, setMinutes] = React.useState<string | undefined>(props.minuto);
+    const [minutes, setMinutes] = React.useState<string | undefined>(
+      props.minuto
+    );
 
     const refHours = React.useRef<HTMLInputElement>(null);
     const refMinutes = React.useRef<HTMLInputElement>(null);
@@ -215,6 +217,10 @@ const formatValue = (v: string): string => {
 const MoneyInput = React.forwardRef<HTMLInputElement, any>(
   ({ className, ...props }, ref) => {
     const [value, setValue] = React.useState<string>(props.value ?? "");
+
+    React.useEffect(() => {
+      if (props.value !== value) setValue(props.value ?? "");
+    }, [props.value]);
 
     const formatValue = (v: string): string => {
       const cleaned = v

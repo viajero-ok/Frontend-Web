@@ -36,6 +36,7 @@ export type EventoTabContextValue = {
   eventoForm: UseFormReturn<z.infer<typeof eventoSchema>>;
   guardarEventoTab: (data: z.infer<typeof eventoSchema>) => Promise<any>;
   actualizarEventoTab: () => void;
+  isEventoTabComplete: boolean;
   //   actualizareventoTab: () => void;
   //   categorias: any[];
   //   subCategorias: any[];
@@ -61,6 +62,7 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
   >([]);
   const [datosBasicos, setDatosBasicos] = React.useState<any>();
   const [listadoRedes, setListadoRedes] = React.useState<any[]>([]);
+  const [isComplete, setIsComplete] = React.useState<boolean>(false);
   //   const [datosRegistradosActividad, setDatosRegistradosActividad] =
   //     React.useState<any>();
   //   const [guias, setGuias] = React.useState<any[]>([]);
@@ -112,6 +114,19 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
     });
   };
 
+  const validateIsComplete = (datosRegistrados: any): boolean => {
+    /** Solo se controla un campo, porque o se registra todo, o no se registra nada */
+    if (!datosRegistrados.datos_basicos.nombre) return false;
+
+    if (
+      !datosRegistrados.redesSociales ||
+      datosRegistrados.redesSociales.length == 0
+    )
+      return false;
+
+    return true;
+  };
+
   const actualizarEventoTab = () => {
     obtenerDatosRegistradosEvento(idOferta)
       .then((response) => {
@@ -143,6 +158,7 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
           response.data.datos_registrados
         );
         setListadoRedes(response.data.datos_registrados.redes_sociales);
+        setIsComplete(validateIsComplete(response.data.datos_registrados));
       })
       .catch((error) => {
         console.log(error);
@@ -235,6 +251,7 @@ const useEventoTab = ({ idOferta }: { idOferta: string }) => {
     eventoForm,
     guardarEventoTab,
     actualizarEventoTab,
+    isEventoTabComplete: isComplete,
     // actualizarActividadTab,
     // categorias,
     // subCategorias,

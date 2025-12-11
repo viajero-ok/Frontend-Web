@@ -1,4 +1,8 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Check } from "../../../../components/ui/Check/Check";
 import {
   Form,
   FormControl,
@@ -6,37 +10,221 @@ import {
   FormItem,
   FormMessage,
 } from "../../../../components/ui/Form/Field";
-import {
-  Input,
-  MoneyInput,
-  TimeInput,
-} from "../../../../components/ui/Input/Input";
+import { Input, MoneyInput } from "../../../../components/ui/Input/Input";
 import { useEvento } from "../../Provider/EventoProvider";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Check } from "../../../../components/ui/Check/Check";
-import { Save } from "lucide-react";
-import { useState } from "react";
-import { DatePicker } from "../../../../components/ui/DatePicker/DatePicker";
+import { useModal } from "../../../../components/ui/Modal/Modal";
+import { useToast } from "../../../../components/ui/Toast/Toast";
 
-const TipoDeEntrada = (props: { new?: boolean; cancelar: () => void }) => {
-  const { entradaSchema } = useEvento();
+const EntradaExistente = (props: { entrada: any }) => {
+  const [editar, setEditar] = useState<boolean>(false);
+
+  const {
+    idOferta,
+    entradaSchema,
+    registrarEntrada,
+    obtenerEntradas,
+    eliminarEntrada,
+  } = useEvento();
+
+  const { modal, setOpen } = useModal();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof entradaSchema>>({
     resolver: zodResolver(entradaSchema),
     mode: "onSubmit",
   });
 
+  const handleRegistrarEntrada = (values: z.infer<typeof entradaSchema>) => {
+    console.log(
+      "precio: ",
+      parseFloat(values.precio.replace("$", "").replace(",", ""))
+    );
+    registrarEntrada({
+      ...values,
+      id_oferta: idOferta,
+      precio: parseFloat(values.precio.replace("$", "").replace(",", "")),
+    }).then(() => {
+      obtenerEntradas();
+    });
+  };
+
+  React.useEffect(() => {
+    form.reset({
+      nombre: props.entrada.nombre_tipo_entrada,
+      incluye: props.entrada.descripcion_tipo_entrada,
+      precio: props.entrada.monto_tarifa,
+      sin_precio: props.entrada.bl_gratis == 1 ? true : false,
+    });
+  }, [props.entrada]);
+
+  const handleEliminar = () => {
+    modal({
+      variant: "danger",
+      title: "Eliminar entrada",
+      description: (
+        <div className="flex flex-col gap-2">
+          <div>Esta acción es irreversible.</div>
+          <button
+            onClick={() => {
+              setOpen(false);
+              eliminarEntrada({
+                id_oferta: idOferta,
+                id_entrada: props.entrada.id_tipo_entrada,
+              })
+                .then(() => {
+                  toast({
+                    variant: "success",
+                    title: "Entrada eliminada",
+                  });
+                  obtenerEntradas();
+                })
+                .catch(() => {
+                  toast({
+                    variant: "danger",
+                    title:
+                      "Error al intentar eliminar la entrada. Intente nuevamente",
+                  });
+                });
+            }}
+            className="viajero-button bg-red-400! hover:bg-red-400/90!"
+          >
+            Eliminar
+          </button>
+        </div>
+      ),
+    });
+  };
+
   return (
     <div className="">
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(() => {})}
+          onSubmit={form.handleSubmit(handleRegistrarEntrada)}
           className="grid grid-cols-4 gap-2"
         >
           <FormField
             control={form.control}
-            name="nombre_entrada"
+            name="nombre"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormControl>
+                  <Input placeholder="Nombre" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="incluye"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormControl>
+                  <Input placeholder="¿Qué incluye?" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex flex-row gap-2">
+            <FormField
+              control={form.control}
+              name="precio"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormControl>
+                    <MoneyInput placeholder="Precio" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Check>Sin precio</Check>
+          </div>
+          <div className="flex flex-row gap-2 w-full">
+            {!editar && (
+              <button
+                className="viajero-button-ghost p-4 w-full"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setEditar(true);
+                }}
+              >
+                Editar
+              </button>
+            )}
+            {!editar && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleEliminar();
+                }}
+                className="viajero-button bg-red-400! hover:bg-red-400/90! p-4 w-full"
+              >
+                Eliminar
+              </button>
+            )}
+            {editar && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+                className="viajero-button p-4 w-full"
+              >
+                Guardar
+              </button>
+            )}
+            {editar && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  setEditar(false);
+                }}
+                className="viajero-button-ghost p-4 w-full"
+              >
+                Cancelar
+              </button>
+            )}
+          </div>
+        </form>
+      </Form>
+    </div>
+  );
+};
+
+const TipoDeEntrada = (props: { new?: boolean; cancelar: () => void }) => {
+  const { idOferta, entradaSchema, registrarEntrada, obtenerEntradas } =
+    useEvento();
+
+  const form = useForm<z.infer<typeof entradaSchema>>({
+    resolver: zodResolver(entradaSchema),
+    mode: "onSubmit",
+  });
+
+  const handleRegistrarEntrada = (values: z.infer<typeof entradaSchema>) => {
+    console.log(
+      "precio: ",
+      parseFloat(values.precio.replace("$", "").replace(",", ""))
+    );
+    registrarEntrada({
+      ...values,
+      id_oferta: idOferta,
+      precio: parseFloat(values.precio.replace("$", "").replace(",", "")),
+    }).then(() => {
+      obtenerEntradas();
+    });
+  };
+
+  return (
+    <div className="">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(handleRegistrarEntrada)}
+          className="grid grid-cols-4 gap-2"
+        >
+          <FormField
+            control={form.control}
+            name="nombre"
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl>
@@ -94,7 +282,7 @@ const TipoDeEntrada = (props: { new?: boolean; cancelar: () => void }) => {
 export default function HorarioEntradasForm() {
   const [nuevaEntrada, setNuevaEntrada] = useState<boolean>(false);
 
-  const { horarioSchema, horarioForm } = useEvento();
+  const { horarioSchema, horarioForm, entradas } = useEvento();
   const form = horarioForm;
 
   return (
@@ -126,9 +314,9 @@ export default function HorarioEntradasForm() {
       {nuevaEntrada && (
         <TipoDeEntrada new cancelar={() => setNuevaEntrada(false)} />
       )}
-      {[].map(() => (
-        <></>
-      ))}{" "}
+      {entradas.map((entrada) => (
+        <EntradaExistente entrada={entrada} />
+      ))}
       {/* LISTADO DE ENTRADAS */}
     </div>
   );

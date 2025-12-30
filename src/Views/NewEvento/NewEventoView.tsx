@@ -2,9 +2,12 @@ import { IonIcon, useIonRouter } from "@ionic/react";
 import {
   arrowUndoOutline,
   calendarClearOutline,
+  calendarOutline,
+  globeOutline,
   imagesOutline,
   locationOutline,
   personOutline,
+  ticketOutline,
   walkOutline,
 } from "ionicons/icons";
 import { useEffect, useState } from "react";
@@ -12,30 +15,27 @@ import FormSideMenu, {
   Sidebar,
 } from "../../components/ui/FormSideMenu/FormSideMenu";
 import { Segment } from "../../components/ui/Segment/Segment";
-import ActividadForm from "./Forms/ActividadForm/ActividadForm";
-import GuiaForm from "./Forms/ActividadForm/GuiaForm";
-import TurnosyEntradasForm from "./Forms/TurnosyEntradasForm/TurnosyEntradasForm";
-import UbicacionForm from "./Forms/UbicacionForm/UbicacionForm";
-import { useActividad } from "./Provider/ActividadProvider";
-import Imagenes from "./Forms/Imagenes/Imagenes";
+
 import { useModal } from "../../components/ui/Modal/Modal";
 import { obtenerDatosBasicosOfertaTuristica } from "../../App/Ofertas/Ofertas";
+import { useEvento } from "./Provider/EventoProvider";
+import EventoForm from "./Forms/Evento/EventoForm";
+import UbicacionForm from "./Forms/UbicacionForm/UbicacionForm";
+import Imagenes from "./Forms/Imagenes/Imagenes";
+import EntradasForm from "../NewActividad/Forms/TurnosyEntradasForm/Entradas/EntradasForm";
+import HorarioEntradasForm from "./Forms/HorarioEntradasForm/HorarioEntradasForm";
+import RedesSocialesForm from "./Forms/RedesSociales/RedesSocialesForm";
 
-type TNewActividadView = {
+type TNewEventoView = {
   idOferta: string;
   id_establecimiento?: number;
 };
-export default function NewActividadView(props: TNewActividadView) {
+export default function NewEventoView(props: TNewEventoView) {
   const [segment, setSegment] = useState<string>("actividad-form");
   const [idEstado, setIdEstado] = useState<number | null>(null);
 
-  const { idOferta, puedeRegistrar, registrar } = useActividad();
+  const { idOferta, puedeRegistrar, registrar, publicar } = useEvento();
   const { modal, setOpen } = useModal();
-
-  useEffect(() => {
-    console.log("puede: ", puedeRegistrar)
-    console.log("estado: ", idEstado)
-  }, [puedeRegistrar, idEstado])
 
   const router = useIonRouter();
 
@@ -45,8 +45,34 @@ export default function NewActividadView(props: TNewActividadView) {
       .then(() => {
         modal({
           variant: "success",
-          title: "Actividad registrada",
-          description: "La actividad fue registrada con éxito.",
+          title: "Evento registrado",
+          description: "El evento fue registrado con éxito.",
+          actions: (
+            <>
+              <button
+                onClick={() => {
+                  router && router.push("/my-offers");
+                  setOpen(false);
+                }}
+                className="viajero-button px-4 py-2 bg-green-400! hover:bg-green-400/90! text-white!"
+              >
+                Aceptar
+              </button>
+            </>
+          ),
+          canDismiss: false,
+        });
+      })
+      .catch(() => {});
+  };
+
+  const handlePublicar = () => {
+    publicar()
+      .then(() => {
+        modal({
+          variant: "success",
+          title: "Evento publicado",
+          description: "El evento fue publicado con éxito.",
           actions: (
             <>
               <button
@@ -70,7 +96,7 @@ export default function NewActividadView(props: TNewActividadView) {
     modal({
       variant: "default",
       title: "Registrar actividad",
-      description: "Confirmá el registro de la actividad",
+      description: "Confirmá el registro del evento",
       actions: (
         <div className="flex flex-row w-full justify-between">
           <button
@@ -90,12 +116,35 @@ export default function NewActividadView(props: TNewActividadView) {
     });
   };
 
+  const handleConfirmarPublicar = () => {
+    modal({
+      variant: "default",
+      title: "Publicar evento",
+      description: "Confirmá la publicación del evento",
+      actions: (
+        <div className="flex flex-row w-full justify-between">
+          <button
+            onClick={() => setOpen(false)}
+            className="viajero-button-ghost px-4 py-2"
+          >
+            cancelar
+          </button>
+          <button
+            onClick={() => handlePublicar()}
+            className="viajero-button px-4 py-2"
+          >
+            Publicar
+          </button>
+        </div>
+      ),
+    });
+  };
+
   useEffect(() => {
     obtenerDatosBasicosOfertaTuristica(idOferta)
       .then((response) => {
         if (!response.data) return;
         if (!response.data.estado) return;
-        console.log("data: ", response.data)
         setIdEstado(response.data.id_estado);
       })
       .catch(() => {});
@@ -108,30 +157,21 @@ export default function NewActividadView(props: TNewActividadView) {
           <Sidebar title="Editar oferta">
             <Segment
               segment={segment}
-              value="actividad-form"
-              label="Actividad"
+              value="evento-form"
+              label="Evento"
               set={setSegment}
               className="w-full"
               disabled={false} //TODO: disabled={isDirty}
-              icon={walkOutline}
+              icon={calendarOutline}
             />
             <Segment
               segment={segment}
-              value="guias-form"
-              label="Guías turísticos"
+              value="redes-form"
+              label="Redes sociales"
               set={setSegment}
               className="w-full"
               disabled={false} //TODO: disabled={isDirty}
-              icon={personOutline}
-            />
-            <Segment
-              segment={segment}
-              value="imagenes-form"
-              label="Imágenes"
-              set={setSegment}
-              className="w-full"
-              disabled={false} //TODO: disabled={isDirty}
-              icon={imagesOutline}
+              icon={globeOutline}
             />
             <Segment
               segment={segment}
@@ -144,12 +184,21 @@ export default function NewActividadView(props: TNewActividadView) {
             />
             <Segment
               segment={segment}
-              value="turnosyentradas-form"
-              label="Turnos y entradas"
+              value="imagenes-form"
+              label="Imágenes"
               set={setSegment}
               className="w-full"
               disabled={false} //TODO: disabled={isDirty}
-              icon={calendarClearOutline}
+              icon={imagesOutline}
+            />
+            <Segment
+              segment={segment}
+              value="horariosyentradas-form"
+              label="Entradas"
+              set={setSegment}
+              className="w-full"
+              disabled={false} //TODO: disabled={isDirty}
+              icon={ticketOutline}
             />
             <div className="border-t border-gray-200 ml-2" />
             <button
@@ -176,23 +225,37 @@ export default function NewActividadView(props: TNewActividadView) {
               </button>
             </div>
           )}
+          {idEstado == 2 && (
+            <div className="flex flex-col gap-2 w-fit p-4 border border-gray-200 rounded-md">
+              <div className="text-md font-bold text-gray-600">
+                ¡Ya podés publicar tu oferta!
+              </div>
+              <div className="text-sm text-gray-600">
+                Todos los datos necesarios han sido registrados
+              </div>
+              <button
+                onClick={() => handleConfirmarPublicar()}
+                className="viajero-button bg-green-400! hover:bg-green-400/90! px-4 py-2 animate-pulse"
+              >
+                Publicar oferta
+              </button>
+            </div>
+          )}
         </>
       )}
     >
-      {segment == "actividad-form" && (
-        <ActividadForm idOferta={props.idOferta} />
+      {segment == "evento-form" && (
+        <EventoForm idOferta={props.idOferta ?? 0} />
       )}
+      {segment == "redes-form" && <RedesSocialesForm />}
       {segment == "ubicacion-form" && (
         <UbicacionForm
           idOferta={props.idOferta ?? 0}
           id_establecimiento={props.id_establecimiento ?? 0}
         />
       )}
-      {segment == "turnosyentradas-form" && (
-        <TurnosyEntradasForm idOferta={props.idOferta} />
-      )}
+      {segment == "horariosyentradas-form" && <HorarioEntradasForm />}
       {segment == "imagenes-form" && <Imagenes />}
-      {segment == "guias-form" && <GuiaForm />}
     </FormSideMenu>
   );
 }

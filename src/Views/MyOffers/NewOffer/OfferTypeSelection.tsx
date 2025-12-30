@@ -1,6 +1,7 @@
 import { useIonRouter } from "@ionic/react";
 import { cn } from "../../../components/ui/Form/Field";
 import { Select } from "../../../components/ui/Select/Select";
+import { useNewOffer } from "./Provider/NewOfferProvider";
 
 export const OfferCard = ({
   onClick,
@@ -16,13 +17,15 @@ export const OfferCard = ({
   return (
     <div
       className={cn(
-        disabled ?  "bg-gray-50" : "cursor-pointer hover:shadow-sm hover:bg-[var(--color-viajero)]/5 transition-all duration-400"
+        disabled
+          ? "bg-gray-50"
+          : "cursor-pointer hover:shadow-sm hover:bg-[var(--color-viajero)]/5 transition-all duration-400"
       )}
       onClick={onClick}
     >
       <div
         className={cn(
-          "flex flex-col items-center justify-center border border-gray-200 p-4 rounded-md",
+          "flex flex-col items-center justify-center border border-gray-200 p-4 rounded-md"
         )}
       >
         <img
@@ -32,17 +35,23 @@ export const OfferCard = ({
           height={"auto"}
           style={{}}
         />
-        <div className={cn("text-xl font-bold", disabled ? "text-gray-400" : "text-gray-600")}>{title}</div>
+        <div
+          className={cn(
+            "text-xl font-bold",
+            disabled ? "text-gray-400" : "text-gray-600"
+          )}
+        >
+          {title}
+        </div>
       </div>
     </div>
   );
 };
 
-type TOfferTypeSelection = {
-  setOfferType: (type: "alojamiento" | "actividad" | "evento") => void;
-};
-export default function OfferTypeSelection(props: TOfferTypeSelection) {
+export default function OfferTypeSelection() {
   const router = useIonRouter();
+
+  const offer = useNewOffer();
 
   return (
     <div className="flex w-full h-full items-center justify-center">
@@ -62,17 +71,17 @@ export default function OfferTypeSelection(props: TOfferTypeSelection) {
         </div>
         <div className="flex flex-row gap-4 w-full justify-center mt-8">
           <OfferCard
-            onClick={() => props.setOfferType("alojamiento")}
+            onClick={() => offer.setTipoOferta("alojamiento")}
             title="Alojamiento"
             imgSrc="public\3.5. Registro oferta\1-Alojamiento.png"
           />
           <OfferCard
-            onClick={() => props.setOfferType("actividad")}
+            onClick={() => offer.setTipoOferta("actividad")}
             title="Actividad"
             imgSrc="public\3.5. Registro oferta\2-Actividades.png"
           />
           <OfferCard
-            onClick={() => props.setOfferType("evento")}
+            onClick={() => offer.setTipoOferta("evento")}
             title="Evento"
             imgSrc="public\3.5. Registro oferta\3-Eventos.png"
           />

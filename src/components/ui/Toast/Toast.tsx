@@ -102,8 +102,8 @@ export const Toast = ({
         variant == "danger" ? "hover:border-red-400 bg-white" : "",
         variant == "default" ? "hover:border-black bg-white" : "",
         open
-          ? "opacity-100 -translate-y-[12pt]"
-          : "opacity-0 -translate-y-[0pt]"
+          ? "opacity-100 -translate-y-[12pt] z-50"
+          : "opacity-0 -translate-y-[0pt] -z-50 cursor-default"
       )}
     >
       <div

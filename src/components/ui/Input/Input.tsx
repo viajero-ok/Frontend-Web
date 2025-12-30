@@ -108,8 +108,10 @@ export const formatTime = (time: number | undefined): string => {
 
 const TimeInput = React.forwardRef<HTMLInputElement, any>(
   ({ className, ...props }, ref) => {
-    const [hours, setHours] = React.useState<string | undefined>();
-    const [minutes, setMinutes] = React.useState<string | undefined>();
+    const [hours, setHours] = React.useState<string | undefined>(props.hora);
+    const [minutes, setMinutes] = React.useState<string | undefined>(
+      props.minuto
+    );
 
     const refHours = React.useRef<HTMLInputElement>(null);
     const refMinutes = React.useRef<HTMLInputElement>(null);
@@ -216,6 +218,10 @@ const MoneyInput = React.forwardRef<HTMLInputElement, any>(
   ({ className, ...props }, ref) => {
     const [value, setValue] = React.useState<string>(props.value ?? "");
 
+    React.useEffect(() => {
+      if (props.value !== value) setValue(props.value ?? "");
+    }, [props.value]);
+
     const formatValue = (v: string): string => {
       const cleaned = v
         .replaceAll("$", "")
@@ -239,14 +245,16 @@ const MoneyInput = React.forwardRef<HTMLInputElement, any>(
       <div
         ref={ref}
         className={cn(
-          "flex flex-row items-center",
+          "flex flex-row items-center justify-center",
           "border border-[#bbb] rounded-md hover:border-black",
           "focus-visible:outline-[var(--color-viajero)] focus-visible:outline-2 -outline-offset-1"
         )}
       >
-        <div className="text-nowrap mx-4 text-gray-600 text-md font-bold">
-          {props.label}
-        </div>
+        {props.label && (
+          <div className="text-nowrap mx-4 text-gray-600 text-md font-bold">
+            {props.label}
+          </div>
+        )}
         <input
           type="text"
           onKeyDown={(e) => {
@@ -263,7 +271,7 @@ const MoneyInput = React.forwardRef<HTMLInputElement, any>(
           }}
           fill="outline"
           className={cn(
-            "!flex !shadow-none w-full p-4 focus-visible:outline-none text-right text-gray-600 "
+            "!flex !shadow-none w-full p-4 focus-visible:outline-none text-gray-600 text-center"
           )}
           placeholder={"$0.00"}
         />

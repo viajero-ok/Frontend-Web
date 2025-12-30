@@ -9,18 +9,15 @@ import { obtenerEstablecimientos } from "../../../../App/Establecimientos/Establ
 import { useModal } from "../../../../components/ui/Modal/Modal";
 import { Select, SelectOption } from "../../../../components/ui/Select/Select";
 import { OfferCard } from "../OfferTypeSelection";
+import { useNewOffer } from "../Provider/NewOfferProvider";
 
-type TAlojamientoTypeSelection = {
-  setOfferType: any;
-};
-export default function AlojamientoTypeSelection(
-  props: TAlojamientoTypeSelection
-) {
+export default function AlojamientoTypeSelection() {
   const [selection, setSelection] = useState<number | null>(null);
   const [establecimiento, setEstablecimiento] = useState<number>();
   const [establecimientos, setEstablecimientos] = useState<any[]>([]);
 
   const router = useIonRouter();
+  const offer = useNewOffer();
   const { modal, setOpen } = useModal();
 
   const handleCrearAlojamiento = (idTipoSuboferta: number) => {
@@ -60,28 +57,28 @@ export default function AlojamientoTypeSelection(
   const handleSelect = (idType: number) => {
     setSelection(idType);
     modal({
-      title: "Confirmar",
+      title: "Crear alojamiento",
       description: `Estás por crear un alojamiento para el establecimiento: ${
         establecimientos.filter(
           (e: any) => e.id_establecimiento == establecimiento
         )[0]?.nombre
       }`,
       actions: (
-        <>
+        <div className="flex flex-row gap-4">
           <button
-            className="viajero-button-ghost px-4 py-2"
+            className="viajero-button-ghost "
             onClick={() => setOpen(false)}
           >
             Cancelar
           </button>
           <button
             disabled={!selection}
-            className="viajero-button px-4 py-2 disabled:bg-gray-200"
+            className="viajero-button disabled:bg-gray-200"
             onClick={() => selection && handleCrearAlojamiento(selection)}
           >
-            Crear
+            Crear oferta
           </button>
-        </>
+        </div>
       ),
     });
   };
@@ -101,7 +98,7 @@ export default function AlojamientoTypeSelection(
           </div>
           <button
             className="viajero-button-ghost py-2 px-4"
-            onClick={() => props.setOfferType(null)}
+            onClick={() => offer.setTipoOferta(null)}
           >
             Cancelar
           </button>

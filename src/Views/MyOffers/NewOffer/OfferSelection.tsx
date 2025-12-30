@@ -1,75 +1,46 @@
+import { useIonRouter } from "@ionic/react";
 import { useEffect, useState } from "react";
-import OfferTypeSelection from "./OfferTypeSelection";
-import Actividad from "./NewActividad/NewActividad";
-import {
-  IonButton,
-  IonCol,
-  IonGrid,
-  IonIcon,
-  IonModal,
-  IonRow,
-  IonSelect,
-  IonSelectOption,
-  useIonRouter,
-} from "@ionic/react";
-import { close } from "ionicons/icons";
-import { registrarNuevaActividad } from "../../../App/Actividades/Actividad";
-import Alojamiento from "./NewAlojamiento/NewAlojamiento";
 import { obtenerEstablecimientos } from "../../../App/Establecimientos/Establecimientos";
-import Field from "../../../components/Field/Field";
+import { registrarNuevoEvento } from "../../../App/Eventos/Eventos";
 import { useForm } from "../../../hooks/UseForm/FormProvider";
+import AlojamientoTypeSelection from "./NewAlojamiento/AlojamientoTypeSelection";
+import OfferTypeSelection from "./OfferTypeSelection";
+import { useNewOffer } from "./Provider/NewOfferProvider";
+import ActividadTypeSelection from "./NewActividad/ActividadTypeSelection";
+import EventoTypeSelection from "./NewEvento/EventoTypeSelection";
 
 export default function OfferSelection(props: any) {
-  const [offerType, setOfferType] = useState<
-    null | "alojamiento" | "actividad" | "evento"
-  >(null);
   const router = useIonRouter();
   const [establecimientos, setEstablecimientos] = useState<any[]>([]);
+
   const form = useForm();
+  const oferta = useNewOffer();
 
-  const handleCrearActividad = () => {
-    console.log("id_establecimiento", form?.schema?.id_establecimiento);
+  const handleCrearEvento = () => {
+    // router.push(
+    //   `/my-offers/actividad/edit/${response.data.id_oferta}?id_establecimiento=${id_establecimiento}`
+    // );
     const id_establecimiento = form?.schema?.id_establecimiento;
-
-    registrarNuevaActividad({
-      id_tipo_oferta: 2,
-      id_establecimiento: id_establecimiento !== null ? id_establecimiento : undefined,
-    })
-      .then((response: any) => {
-        router.push(`/my-offers/actividad/edit/${response.data.id_oferta}?id_establecimiento=${id_establecimiento}`);
-        setOfferType(null);
-      });
-  };
-
-  useEffect(() => {
-    obtenerEstablecimientos().then((response: any) => {
-      const establecimientos = response.establecimientos;
-      establecimientos.unshift({
-        id_establecimiento: null,
-        nombre: "Sin establecimiento",
-      });
-      setEstablecimientos(establecimientos);
+    registrarNuevoEvento({
+      id_tipo_oferta: 3,
+      id_establecimiento:
+        id_establecimiento !== null ? id_establecimiento : undefined,
+    }).then((response) => {
+      router.push(
+        `/my-offers/evento/edit/${response.data.id_oferta}?id_establecimiento=${id_establecimiento}`
+      );
     });
-  }, []);
+  };
 
   return (
     <>
-      {offerType == null && (
-        <OfferTypeSelection
-          setOfferType={(type: "alojamiento" | "actividad" | "evento") =>
-            setOfferType(type)
-          }
-        />
-      )}
-      {offerType == "alojamiento" && (
-        <Alojamiento
-          setOfferType={(type: null | "alojamiento" | "actividad" | "evento") =>
-            setOfferType(type)
-          }
-        />
-      )}
-      <IonModal
-        isOpen={offerType == "actividad"}
+      {oferta.tipoOferta != "alojamiento" && <OfferTypeSelection />}
+      {oferta.tipoOferta == "alojamiento" && <AlojamientoTypeSelection />}
+      {oferta.tipoOferta == "actividad" && <ActividadTypeSelection />}
+      {oferta.tipoOferta == "evento" && <EventoTypeSelection />}
+      
+      {/* <IonModal
+        isOpen={offerType == "evento"}
         onDidDismiss={() => setOfferType(null)}
         style={{ "--height": "fit-content" }}
       >
@@ -94,10 +65,18 @@ export default function OfferSelection(props: any) {
             </IonRow>
             <IonRow style={{ justifyContent: "center", padding: "8pt" }}>
               <h3 style={{ color: "black", fontSize: "14pt" }}>
-                Seleccioná el establecimiento al que pertenece la actividad
+                Seleccioná el establecimiento al que pertenece el evento
               </h3>
             </IonRow>
-            <IonRow style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingLeft: "10%", paddingRight: "10%" }}>
+            <IonRow
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingLeft: "10%",
+                paddingRight: "10%",
+              }}
+            >
               <IonSelect
                 label="Establecimiento"
                 placeholder="Seleccioná el establecimiento"
@@ -107,21 +86,14 @@ export default function OfferSelection(props: any) {
                 }}
               >
                 {establecimientos.map((establecimiento: any) => (
-                  <IonSelectOption key={establecimiento.id_establecimiento} value={establecimiento.id_establecimiento}>
+                  <IonSelectOption
+                    key={establecimiento.id_establecimiento}
+                    value={establecimiento.id_establecimiento}
+                  >
                     {establecimiento.nombre}
                   </IonSelectOption>
                 ))}
               </IonSelect>
-              {/* <Field
-                  select
-                  name="establecimiento"
-                  label="Establecimientos"
-                  options={establecimientos.map((establecimiento: any) => ({
-                    id: establecimiento.id_establecimiento,
-                    text: establecimiento.nombre,
-                  }))}
-                  form={form}
-                /> */}
             </IonRow>
             <IonRow
               style={{
@@ -142,14 +114,14 @@ export default function OfferSelection(props: any) {
               </IonButton>
               <IonButton
                 style={{ "--background": "#F08408", "--color": "white" }}
-                onClick={() => handleCrearActividad()}
+                onClick={() => handleCrearEvento()}
               >
                 Crear
               </IonButton>
             </IonRow>
           </IonGrid>
         </div>
-      </IonModal>
+      </IonModal> */}
     </>
   );
 }

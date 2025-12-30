@@ -1,6 +1,7 @@
 import { FormProvider } from "../../../hooks/UseForm/FormProvider";
 import DefaultLoggedLayout from "../../Layouts/DefaultLoggedLayout";
 import OfferSelection from "./OfferSelection";
+import { NewOfferProvider } from "./Provider/NewOfferProvider";
 
 export default function NewOfferView() {
   const schema = {
@@ -8,9 +9,11 @@ export default function NewOfferView() {
   };
   return (
     <DefaultLoggedLayout>
-      <FormProvider schema={schema}>
-        <OfferSelection />
-      </FormProvider>
+      <NewOfferProvider>
+        <FormProvider schema={schema}>
+          <OfferSelection />
+        </FormProvider>
+      </NewOfferProvider>
     </DefaultLoggedLayout>
   );
 }

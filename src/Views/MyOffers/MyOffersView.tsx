@@ -37,6 +37,7 @@ export default function MyOffersView() {
         </div>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(250pt,1fr))] gap-x-4 mt-4 place-items-center w-full">
           <div
+            onClick={() => router.push('/my-offers/new-offer')}
             className={cn(
               "group border border-[var(--color-viajero)]/25 p-4 rounded-md hover:shadow-sm",
               "cursor-pointer w-[250pt] aspect-5/2 break-inside-avoid-column mb-4",

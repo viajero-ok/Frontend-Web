@@ -27,7 +27,7 @@ export const obtenerGuias = async (idOferta: string) =>
 type TBodyRegistrarNuevaActividad = {
   id_tipo_oferta: number;
   id_sub_tipo_oferta?: number;
-  id_establecimiento: number;
+  id_establecimiento: number|null;
 };
 
 export const registrarNuevaActividad = async (

@@ -28,6 +28,7 @@ const alojamientoSchema = z.object({
 
   nombre_alojamiento: z.string({ message: "El campo es requerido." }),
   descripcion_alojamiento: z.string({ message: "El campo es requerido." }),
+  id_sub_categoria_alojamiento: z.number({ message: "El campo es requerido." }),
 
   id_politica_cancelacion: z.number({ message: "El campo es requerido." }),
   plazo_dias_cancelacion: numeric,

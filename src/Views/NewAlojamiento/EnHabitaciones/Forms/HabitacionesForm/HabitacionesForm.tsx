@@ -5,13 +5,14 @@ import { cn } from "../../../../../components/ui/Form/Field";
 import { useModal } from "../../../../../components/ui/Modal/Modal";
 import { useAlojamientoEnHabitaciones } from "../../Provider/AlojamientoEnHabitacionesProvider";
 import Habitacion from "./Habitacion";
+import Vivienda from "./Vivienda";
 
 export default function HabitacionesForm(props: { idOferta: string }) {
-  const [habitacionSelected, setHabitacionSelected] = useState<any>();
+  const [habitacionSelected, setHabitacionSelected] = useState<any>(null);
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const router = useIonRouter();
 
-  const { habitaciones, crearTipologia, habitacionesIsDirty } =
+  const { habitaciones, crearTipologia, habitacionesIsDirty, tipoTipologia } =
     useAlojamientoEnHabitaciones();
   const { modal, setOpen } = useModal();
 
@@ -40,7 +41,7 @@ export default function HabitacionesForm(props: { idOferta: string }) {
   return (
     <div className="grid grid-cols-12 w-full">
       <div className="flex flex-col col-span-4 gap-2">
-        <div className="flex flex-row h-[42pt] items-center p-4 justify-between border border-gray-200 bg-gray-50 rounded-md">
+        <div className="flex flex-row items-center p-4 justify-between border border-gray-200 bg-gray-50 rounded-md">
           <div className="text-gray-600 text-xl font-bold">
             Tipologias ({habitaciones.length})
           </div>
@@ -49,7 +50,10 @@ export default function HabitacionesForm(props: { idOferta: string }) {
             className="viajero-button px-4 py-2 disabled:shadow-none! disabled:bg-gray-200!"
             onClick={() => handleCrearTiplogia()}
           >
-            Nuevo
+            Nuevo{" "}
+            {tipoTipologia == "habitaciones"
+              ? "tipo de habitacion"
+              : "tipo de vivienda"}
           </button>
         </div>
         <div className="flex flex-row h-[42pt] items-center p-4 justify-between border border-gray-200 bg-gray-50 rounded-md">
@@ -87,11 +91,8 @@ export default function HabitacionesForm(props: { idOferta: string }) {
         </div>
       </div>
       <div className="col-span-8 ml-4">
-        {habitacionSelected &&
-          habitaciones.filter(
-            (habitacion: any) =>
-              habitacion.id_tipo_detalle == habitacionSelected
-          )[0] && (
+        {habitacionSelected != null &&
+          (tipoTipologia == "habitaciones" ? (
             <Habitacion
               key={habitacionSelected}
               habitacion={habitaciones.find(
@@ -102,7 +103,18 @@ export default function HabitacionesForm(props: { idOferta: string }) {
               setHabitacionSelected={setHabitacionSelected}
               idOferta={props.idOferta}
             />
-          )}
+          ) : (
+            <Vivienda
+              key={habitacionSelected}
+              habitacion={habitaciones.find(
+                (habitacion: any) =>
+                  habitacion.id_tipo_detalle == habitacionSelected
+              )}
+              habitacionSelected={habitacionSelected}
+              setHabitacionSelected={setHabitacionSelected}
+              idOferta={props.idOferta}
+            />
+          ))}
         <div
           style={{
             justifyContent: "space-around",

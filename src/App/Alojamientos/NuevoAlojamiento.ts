@@ -37,11 +37,13 @@ export const registrarNuevoAlojamiento = async (
 
 export const finalizarRegistroAlojamiento = async (id_oferta: string) =>
   await AUTH_API.post(
-    `/alojamientos/finalizar-registro-alojamiento/${id_oferta}`
+    `/alojamientos/alojamiento-con-tipologias/finalizar-registro-alojamiento/${id_oferta}`
   );
 
 export const getDatosDeRegistroNuevoAlojamiento = async () =>
-  await AUTH_API.get(`/alojamientos/datos-registro-alojamiento`);
+  await AUTH_API.get(
+    `/alojamientos/alojamiento-con-tipologias/pestanna-alojamiento/datos-registro-alojamiento`
+  );
 
 export type THorariosCheckInCheckOut = {
   id_horario: string;
@@ -79,6 +81,7 @@ export type TBodyGuardarAlojamiento = {
     datos_basicos: {
       nombre_alojamiento: string;
       descripcion_alojamiento: string;
+      id_sub_categoria_alojamiento: number;
     };
     politicas_reserva: {
       id_politica_cancelacion: number;
@@ -93,7 +96,10 @@ export type TBodyGuardarAlojamiento = {
   };
 };
 export const guardarAlojamiento = async (body: TBodyGuardarAlojamiento) =>
-  await AUTH_API.patch(`/alojamientos/actualizar-alojamiento`, body);
+  await AUTH_API.patch(
+    `/alojamientos/alojamiento-con-tipologias/pestanna-alojamiento/actualizar-alojamiento`,
+    body
+  );
 
 const guardarImagenDeAlojamientoSchema = z.object({
   id_imagen: z.number(),
@@ -152,10 +158,15 @@ export type TBodyCrearHorario = {
   id_oferta: string;
 };
 export const registrarHorario = async (body: TBodyCrearHorario) =>
-  await AUTH_API.post(`/alojamientos/registrar-horario`, body);
+  await AUTH_API.post(
+    `/alojamientos/alojamiento-con-tipologias/pestanna-alojamiento/registrar-horario`,
+    body
+  );
 
 export const eliminarHorario = async (id_horario: string) =>
-  await AUTH_API.delete(`/alojamientos/eliminar-horario/${id_horario}`);
+  await AUTH_API.delete(
+    `/alojamientos/alojamiento-con-tipologias/pestanna-alojamiento/eliminar-horario/${id_horario}`
+  );
 
 const serverImageSchema = z.object({
   id_imagen: z.number(),
@@ -182,7 +193,7 @@ export const obtenerDatosRegistradosAlojamiento = async (
   try {
     const response = (
       await AUTH_API.get(
-        `/alojamientos/obtener-datos-registrados-alojamiento/${id_oferta}`
+        `/alojamientos/alojamiento-con-tipologias/pestanna-alojamiento/obtener-datos-registrados-alojamiento/${id_oferta}`
       )
     ).data;
     const parsedResponse =
@@ -219,9 +230,12 @@ export type TBodyRegistrarHorarioAlojamiento = {
 export const registrarHorarioAlojamiento = async (
   body: TBodyRegistrarHorarioAlojamiento
 ) =>
-  await AUTH_API.post(`/alojamientos/registrar-horario`, {
-    ...body,
-  });
+  await AUTH_API.post(
+    `/alojamientos/alojamiento-con-tipologias/pestanna-alojamiento/registrar-horario`,
+    {
+      ...body,
+    }
+  );
 
 export type TBodyActualizarHorarioAlojamiento =
   TBodyRegistrarHorarioAlojamiento & {
@@ -230,12 +244,19 @@ export type TBodyActualizarHorarioAlojamiento =
 export const actualizarHorarioAlojamiento = async (
   body: TBodyActualizarHorarioAlojamiento
 ) =>
-  await AUTH_API.post(`/alojamientos/modificar-horario`, {
-    ...body,
-  });
+  await AUTH_API.post(
+    `/alojamientos/alojamiento-con-tipologias/pestanna-alojamiento/modificar-horario`,
+    {
+      ...body,
+    }
+  );
 
 export const eliminarHorarioAlojamiento = async (idHorario: number) =>
-  await AUTH_API.delete(`/alojamientos/eliminar-horario/${idHorario}`);
+  await AUTH_API.delete(
+    `/alojamientos/alojamiento-con-tipologias/pestanna-alojamiento/eliminar-horario/${idHorario}`
+  );
 
 export const obtenerHorariosRegistradosAlojamiento = async (idOferta: string) =>
-  await AUTH_API.get(`/alojamientos/obtener-horarios-registrados/${idOferta}`);
+  await AUTH_API.get(
+    `/alojamientos/alojamiento-con-tipologias/pestanna-alojamiento/obtener-horarios-registrados/${idOferta}`
+  );

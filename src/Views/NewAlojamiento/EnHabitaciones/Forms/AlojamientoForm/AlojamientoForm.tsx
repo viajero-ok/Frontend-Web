@@ -56,6 +56,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
         datos_basicos: {
           nombre_alojamiento: values.nombre_alojamiento,
           descripcion_alojamiento: values.descripcion_alojamiento,
+          id_sub_categoria_alojamiento: values.id_sub_categoria_alojamiento,
         },
         politicas_reserva: {
           id_politica_cancelacion: values.id_politica_cancelacion,
@@ -167,6 +168,24 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
                       <Input placeholder="Descripción" {...field} />
                     </FormControl>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="id_sub_categoria_alojamiento"
+                render={({ field }) => (
+                  <FormItem className="break-inside-avoid-column mt-2">
+                    <FormControl>
+                      <Select placeholder="Tipo de alojamiento" {...field}>
+                        <SelectOption key={1} value={1}>
+                          Habitaciones
+                        </SelectOption>
+                        <SelectOption key={2} value={2}>
+                          Viviendas
+                        </SelectOption>
+                      </Select>
+                    </FormControl>
                   </FormItem>
                 )}
               />

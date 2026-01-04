@@ -121,7 +121,7 @@ export default function NewAlojamientoEnHabitacionesView(
               <Segment
                 segment={segment}
                 value="habitaciones-form"
-                label="Datos de las habitaciones"
+                label="Tipologías"
                 set={setSegment}
                 icon={bedOutline}
               />

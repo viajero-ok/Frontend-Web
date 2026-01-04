@@ -63,7 +63,7 @@ const useImageUpload = ({
 
   const addImage = (file: File) => {
     setImagenes((prev: LocalOrRemoteImage[]) => [
-      ...prev,
+      ...prev ?? [],
       {
         getId: () => -1,
         getNombre: () => file.name,
@@ -77,7 +77,7 @@ const useImageUpload = ({
 
   const removeImage = (idImagen: number) => {
     setImagenes((prev: LocalOrRemoteImage[]) => [
-      ...prev.filter((i: LocalOrRemoteImage) => i.getId() != idImagen),
+      ...prev?.filter((i: LocalOrRemoteImage) => i.getId() != idImagen),
     ]);
   };
 
@@ -122,7 +122,7 @@ const ImageUpload = ({
       <div className={cn("w-fit", className)}>
         <div className="text-2xl text-gray-600 font-bold bg-gray-50 border border-gray-200 rounded-md w-full p-4 content-center pl-4">
           <div>
-            Imagenes <span className="">({context.imagenes.length})</span>
+            Imagenes <span className="">({context.imagenes?.length})</span>
           </div>
         </div>
         <div className="flex mt-2 p-4 gap-4 border border-[#b3b3b3] shadow-sm rounded-md min-h-[200pt] hover:border-black">
@@ -195,7 +195,7 @@ const ImageUpload = ({
               "w-full aspect-video flex flex-col overflow-y-scroll pr-2 gap-2 [scrollbar-width:thin]"
             )}
           >
-            {context.imagenes.map(
+            {context.imagenes?.map(
               (image: LocalOrRemoteImage, index: number) => (
                 <Image key={index} {...image} index={index} />
               )

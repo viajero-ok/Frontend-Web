@@ -1,11 +1,15 @@
 import React from "react";
 import {
+  actualizarVivienda,
   crearHabitacion,
   eliminarHabitacion,
   guardarHabitacion,
   obtenerDatosRegistradosHabitacion,
   obtenerDatosRegistroHabitacion,
+  obtenerDatosRegistroVivienda,
+  registrarVivienda,
   TBodyGuardarHabitacion,
+  TBodyGuardarVivienda,
 } from "../../../../App/Alojamientos/Habitacion";
 import { z } from "zod";
 import { UseFormReturn } from "react-hook-form";
@@ -37,14 +41,39 @@ const habitacionSchema = z.object({
   caracteristicas: z.array(z.number()),
 });
 
+const viviendaSchema = z.object({
+  nombre_tipologia: z.string().optional(),
+  cantidad: numeric,
+
+  cantidad_dormitorios: numeric,
+
+  cantidad_camas_doble: numeric,
+  cantidad_camas_individual: numeric,
+  cantidad_camas_sofa: numeric,
+
+  cantidad_baños: numeric,
+  // bl_baño_compartido: z.boolean().optional(),
+  bl_baño_adaptado: z.boolean().optional(),
+  // características
+  texto_observacion_comodidades_y_servicios_habitacion: z.string().optional(),
+
+  ambientes_comunes: z.array(z.number()),
+  caracteristicas: z.array(z.number()),
+});
+
 export type HabitacionesContextValue = {
+  tipoTipologia: string;
   habitaciones: any[];
   datosRegistroHabitacion: any;
+  datosRegistroVivienda: any;
   habitacionSchema: typeof habitacionSchema;
+  viviendaSchema: typeof viviendaSchema;
   //habitacionForm: UseFormReturn<z.infer<typeof habitacionSchema>>;
   crearTipologia: () => Promise<void>;
   eliminarTipologia: (id: string) => Promise<void>;
   guardarTipologia: (body: TBodyGuardarHabitacion) => Promise<any>;
+  crearVivienda: () => Promise<void>;
+  guardarVivienda: (body: TBodyGuardarVivienda) => Promise<any>;
   habitacionesEsCompleta: boolean;
   habitacionesDirt: (v: boolean) => void;
   habitacionesIsDirty: boolean;
@@ -52,8 +81,13 @@ export type HabitacionesContextValue = {
 };
 
 const useHabitacionesTab = ({ idOferta }: { idOferta: string }) => {
+  const [tipoTipologia, setTipoTipologia] = React.useState<
+    "habitaciones" | "viviendas"
+  >("viviendas");
   const [habitaciones, setHabitaciones] = React.useState<any[]>([]);
   const [datosRegistroHabitacion, setDatosRegistroHabitacion] =
+    React.useState<any>();
+  const [datosRegistroVivienda, setDatosRegistroVivienda] =
     React.useState<any>();
   const [esCompleta, setEsCompleta] = React.useState<boolean>(false);
   const [isDirty, setIsDirty] = React.useState<boolean>(false);
@@ -76,6 +110,12 @@ const useHabitacionesTab = ({ idOferta }: { idOferta: string }) => {
     obtenerDatosRegistroHabitacion()
       .then((response) => {
         setDatosRegistroHabitacion(response.data);
+      })
+      .catch(() => {});
+
+    obtenerDatosRegistroVivienda()
+      .then((response) => {
+        setDatosRegistroVivienda(response.data);
       })
       .catch(() => {});
   };
@@ -105,6 +145,26 @@ const useHabitacionesTab = ({ idOferta }: { idOferta: string }) => {
     }
   };
 
+  const crearVivienda = async () => {
+    try {
+      return await registrarVivienda(idOferta).then(() => {
+        handleObtenerHabitaciones();
+      });
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
+  const guardarVivienda = async (body: TBodyGuardarVivienda) => {
+    try {
+      await actualizarVivienda(body);
+      handleObtenerHabitaciones();
+      return;
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  };
+
   const eliminarTipologia = async (id: string) => {
     try {
       await eliminarHabitacion(id);
@@ -124,12 +184,17 @@ const useHabitacionesTab = ({ idOferta }: { idOferta: string }) => {
   }, [isDirty]);
 
   const context: HabitacionesContextValue = {
+    tipoTipologia,
     habitaciones,
     datosRegistroHabitacion,
+    datosRegistroVivienda,
     habitacionSchema,
+    viviendaSchema,
     crearTipologia,
     eliminarTipologia,
     guardarTipologia,
+    crearVivienda,
+    guardarVivienda,
     habitacionesEsCompleta: esCompleta,
     habitacionesDirt: (v: boolean) => setIsDirty(v),
     habitacionesIsDirty: isDirty,

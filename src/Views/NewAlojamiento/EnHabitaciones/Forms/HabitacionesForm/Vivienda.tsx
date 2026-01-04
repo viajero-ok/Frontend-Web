@@ -3,6 +3,7 @@ import {
   eliminarImagenHabitacion,
   guardarImagenDeHabitacion,
   TBodyGuardarHabitacion,
+  TBodyGuardarVivienda,
 } from "../../../../../App/Alojamientos/Habitacion";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,15 +36,16 @@ type THabitacion = {
   setHabitacionSelected: Dispatch<SetStateAction<any>>;
   idOferta: string;
 };
-export default function Habitacion(props: THabitacion) {
+export default function Vivienda(props: THabitacion) {
   const [segment, setSegment] = useState<string>("datos");
 
   const {
     idOferta,
-    datosRegistroHabitacion,
+    datosRegistroVivienda,
     eliminarTipologia,
     guardarTipologia,
-    habitacionSchema,
+    viviendaSchema,
+    guardarVivienda,
     habitacionesDirt,
     actualizarHabitaciones,
   } = useAlojamientoEnHabitaciones();
@@ -113,8 +115,8 @@ export default function Habitacion(props: THabitacion) {
     });
   };
 
-  const handleGuardar = (values: z.infer<typeof habitacionSchema>) => {
-    const body: TBodyGuardarHabitacion = {
+  const handleGuardar = (values: z.infer<typeof viviendaSchema>) => {
+    const body: TBodyGuardarVivienda = {
       id_oferta: props.idOferta,
       id_tipo_detalle: props.habitacionSelected,
       tipologia: {
@@ -131,16 +133,16 @@ export default function Habitacion(props: THabitacion) {
       ],
       baño: {
         cantidad_baños: values.cantidad_baños ?? 0,
-        bl_baño_compartido: values.bl_baño_compartido ?? false,
         bl_baño_adaptado: values.bl_baño_adaptado ?? false,
       },
       caracteristicas: values.caracteristicas,
+      ambientes_comunes: [], // [!] Falta agregar ambientes comunes
       observaciones: {
         texto_observacion_comodidades_y_servicios_habitacion:
           "La habitación cuenta con aire acondicionado.",
       },
     };
-    guardarTipologia(body)
+    guardarVivienda(body)
       .then(() => {
         modal({
           variant: "success",
@@ -178,29 +180,29 @@ export default function Habitacion(props: THabitacion) {
       });
   };
 
-  const form = useForm<z.infer<typeof habitacionSchema>>({
-    resolver: zodResolver(habitacionSchema),
+  const form = useForm<z.infer<typeof viviendaSchema>>({
+    resolver: zodResolver(viviendaSchema),
     mode: "onSubmit",
     defaultValues: {
-      caracteristicas: props.habitacion.caracteristicas
+      caracteristicas: props.habitacion?.caracteristicas
         .map((caracteristica: any) => caracteristica.id_caracteristica)
         .sort((a: number, b: number) => a - b),
-      nombre_tipologia: props.habitacion.tipo_detalle,
-      cantidad: props.habitacion.cantidad?.toString(),
-      cantidad_baños: props.habitacion.cantidad_baños?.toString(),
-      bl_baño_adaptado: props.habitacion.bl_baño_adaptado,
-      bl_baño_compartido: props.habitacion.bl_baño_compartido,
+      // [!] Hay que agregar ambientes comunes
+      nombre_tipologia: props.habitacion?.tipo_detalle,
+      cantidad: props.habitacion?.cantidad?.toString(),
+      cantidad_baños: props.habitacion?.cantidad_baños?.toString(),
+      bl_baño_adaptado: props.habitacion?.bl_baño_adaptado,
       cantidad_camas_doble:
-        props.habitacion.plazas &&
-        props.habitacion.plazas[0]?.cantidad_camas.toString(),
+        props.habitacion?.plazas &&
+        props.habitacion?.plazas[0]?.cantidad_camas.toString(),
       cantidad_camas_individual:
-        props.habitacion.plazas &&
-        props.habitacion.plazas[1]?.cantidad_camas.toString(),
+        props.habitacion?.plazas &&
+        props.habitacion?.plazas[1]?.cantidad_camas.toString(),
       cantidad_camas_sofa:
-        props.habitacion.plazas &&
-        props.habitacion.plazas[2]?.cantidad_camas.toString(),
+        props.habitacion?.plazas &&
+        props.habitacion?.plazas[2]?.cantidad_camas.toString(),
       texto_observacion_comodidades_y_servicios_habitacion:
-        props.habitacion.texto_observacion_comodiadades_y_servicios_habitacion,
+        props.habitacion?.texto_observacion_comodiadades_y_servicios_habitacion,
     },
   });
   const formWatch = form.watch();
@@ -230,7 +232,7 @@ export default function Habitacion(props: THabitacion) {
   }, [form.formState]);
 
   const [imagenes, setImagenes] = useState<LocalOrRemoteImage[]>(
-    props.habitacion.imagenes.map((i: any) => ({
+    props.habitacion?.imagenes.map((i: any) => ({
       getId: () => i.id_imagen,
       getNombre: () => i.nombre,
       render: () => renderRemoteImage(`data:image/png;base64,${i.datos}`),
@@ -288,7 +290,7 @@ export default function Habitacion(props: THabitacion) {
     <div className="flex flex-col w-full">
       <div className="flex flex-row w-full h-[42pt] items-center border rounded-md border-gray-200">
         <div className="flex items-center px-4 border-r h-full text-xl text-gray-600 font-bold text-nowrap border-gray-200 bg-gray-50 rounded-l-md">
-          Editar tipología de habitación
+          Editar tipología de vivienda
         </div>
         <div className="flex flex-row gap-2 w-full justify-end pr-4">
           <Segment
@@ -341,6 +343,23 @@ export default function Habitacion(props: THabitacion) {
                   )}
                 />
               </div>
+              <FormField
+                control={form.control}
+                name="cantidad_dormitorios"
+                render={({ field }) => (
+                  <FormItem className="mt-2">
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Cantidad"
+                        label="Cantidad de dormitorios"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <div className="flex flex-row w-full mt-2 h-[42pt] items-center p-4 text-md text-gray-600 font-bold border border-gray-200 bg-gray-50 rounded-md">
@@ -422,7 +441,7 @@ export default function Habitacion(props: THabitacion) {
                         </FormItem>
                       )}
                     />
-                    <FormField
+                    {/* <FormField
                       control={form.control}
                       name="bl_baño_compartido"
                       render={({ field }) => (
@@ -435,7 +454,7 @@ export default function Habitacion(props: THabitacion) {
                           <FormMessage />
                         </FormItem>
                       )}
-                    />
+                    /> */}
                     <FormField
                       control={form.control}
                       name="bl_baño_adaptado"
@@ -454,11 +473,11 @@ export default function Habitacion(props: THabitacion) {
                 </div>
               </div>
               <div className="flex flex-row w-full mt-2 h-[42pt] items-center p-4 text-md text-gray-600 font-bold border border-gray-200 bg-gray-50 rounded-md">
-                Comodidades y servicios
+                Ambientes comunes
               </div>
               <div className="grid grid-cols-2 mt-2 gap-2">
-                {datosRegistroHabitacion &&
-                  datosRegistroHabitacion.caracteristicas_habitaciones?.map(
+                {datosRegistroVivienda &&
+                  datosRegistroVivienda.caracteristicas_comunes?.map(
                     (caracteristica: any) => (
                       <Check
                         className="h-[42pt]"
@@ -468,7 +487,32 @@ export default function Habitacion(props: THabitacion) {
                             checked
                           )
                         }
-                        checked={formWatch.caracteristicas.includes(
+                        checked={formWatch.caracteristicas?.includes(
+                          caracteristica.id_caracteristica
+                        )}
+                        key={caracteristica.id_caracteristica}
+                      >
+                        {caracteristica.caracteristica}
+                      </Check>
+                    )
+                  )}
+              </div>
+              <div className="flex flex-row w-full mt-2 h-[42pt] items-center p-4 text-md text-gray-600 font-bold border border-gray-200 bg-gray-50 rounded-md">
+                Comodidades y servicios
+              </div>
+              <div className="grid grid-cols-2 mt-2 gap-2">
+                {datosRegistroVivienda &&
+                  datosRegistroVivienda.caracteristicas_comodidades_y_servicios?.map(
+                    (caracteristica: any) => (
+                      <Check
+                        className="h-[42pt]"
+                        onChange={(checked: boolean) =>
+                          handleSelectCheckItem(
+                            caracteristica.id_caracteristica,
+                            checked
+                          )
+                        }
+                        checked={formWatch.caracteristicas?.includes(
                           caracteristica.id_caracteristica
                         )}
                         key={caracteristica.id_caracteristica}

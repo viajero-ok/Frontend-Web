@@ -12,8 +12,13 @@ export default function HabitacionesForm(props: { idOferta: string }) {
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const router = useIonRouter();
 
-  const { habitaciones, crearTipologia, habitacionesIsDirty, tipoTipologia } =
-    useAlojamientoEnHabitaciones();
+  const {
+    habitaciones,
+    crearTipologia,
+    habitacionesIsDirty,
+    tipoTipologia,
+    alojamientoEsCompleto,
+  } = useAlojamientoEnHabitaciones();
   const { modal, setOpen } = useModal();
 
   const handleRegistrarAlojamiento = () => {
@@ -46,7 +51,7 @@ export default function HabitacionesForm(props: { idOferta: string }) {
             Tipologias ({habitaciones.length})
           </div>
           <button
-            disabled={habitacionesIsDirty}
+            disabled={habitacionesIsDirty || !alojamientoEsCompleto}
             className="viajero-button px-4 py-2 disabled:shadow-none! disabled:bg-gray-200!"
             onClick={() => handleCrearTiplogia()}
           >

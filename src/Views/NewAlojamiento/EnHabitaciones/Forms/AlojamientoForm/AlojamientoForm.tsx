@@ -18,8 +18,6 @@ import {
   SelectOption,
 } from "../../../../../components/ui/Select/Select";
 import { useAlojamientoEnHabitaciones } from "../../Provider/AlojamientoEnHabitacionesProvider";
-import { THorariosCheckInCheckOutContext } from "../../Provider/useAlojamientoTab";
-import HorariosCheckInOut from "../HorariosForm/HorariosCheckInOut";
 
 type TAlojamientoForm = {
   id: string;
@@ -42,8 +40,8 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
   const handleGuardar = (values: z.infer<typeof alojamientoSchema>) => {
     let body: TBodyGuardarAlojamiento = {
       id_oferta: props.id,
-      caracteristicas: values.caracteristicas,
-      metodos_de_pago: values.metodosDePago,
+      caracteristicas: values.caracteristicas ?? [],
+      metodos_de_pago: values.metodosDePago ?? [],
       observaciones: {
         texto_observacion_comodidades_y_servicios_oferta: "",
         texto_observacion_canchas_deportes:
@@ -477,7 +475,16 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
             </div>
           </div>
           <div className="flex flex-row justify-end pb-12">
-            <button type="submit" className="viajero-button px-4 py-2">
+            <button
+              // onClick={(e) => {
+              //   e.preventDefault();
+              //   console.log(
+              //     alojamientoSchema.safeParse(form.getValues()).error
+              //   );
+              // }}
+              type="submit"
+              className="viajero-button px-4 py-2"
+            >
               Guardar
             </button>
           </div>

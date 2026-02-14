@@ -40,6 +40,7 @@ export default function AlojamientoForm(props: TAlojamientoForm) {
   const handleGuardar = (values: z.infer<typeof alojamientoSchema>) => {
     let body: TBodyGuardarAlojamiento = {
       id_oferta: props.id,
+      id_subtipo_oferta: values.id_sub_categoria_alojamiento,
       caracteristicas: values.caracteristicas ?? [],
       metodos_de_pago: values.metodosDePago ?? [],
       observaciones: {

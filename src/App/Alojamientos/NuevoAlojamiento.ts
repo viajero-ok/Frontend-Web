@@ -69,6 +69,7 @@ export type THorariosCheckInCheckOut = {
 
 export type TBodyGuardarAlojamiento = {
   id_oferta: string;
+  id_subtipo_oferta: number;
   caracteristicas: number[];
   metodos_de_pago: number[];
   observaciones: {

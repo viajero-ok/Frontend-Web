@@ -13,12 +13,15 @@ import {
 import { TAdaptedObtenerDatosRegistradosAlojamientoResponse } from "../../../../App/Alojamientos/NuevoAlojamiento.adapter";
 
 const numeric = z
-  .preprocess((val) => {
-    if (typeof val === "string" && /^[0-9]+$/.test(val)) {
-      return Number(val);
-    }
-    return val;
-  }, z.number({ message: "Debe ser un número" }))
+  .preprocess(
+    (val) => {
+      if (typeof val === "string" && /^[0-9]+$/.test(val)) {
+        return Number(val);
+      }
+      return val;
+    },
+    z.number({ message: "Debe ser un número" }),
+  )
   .optional();
 
 const alojamientoSchema = z.object({
@@ -48,6 +51,7 @@ export type THorariosCheckInCheckOutContext = THorariosCheckInCheckOut & {
 };
 
 export type AlojamientoContextValue = {
+  tipoTipologia: number | null;
   datosRegistradosAlojamiento:
     | TObtenerDatosRegistradosAlojamientoResponse
     | undefined;
@@ -62,6 +66,7 @@ export type AlojamientoContextValue = {
 };
 
 const useAlojamientoTab = ({ idOferta }: { idOferta: string }) => {
+  const [tipoTipologia, setTipoTipologia] = React.useState<number | null>(null);
   const [datosRegistradosAlojamiento, setDatosRegistradosAlojamiento] =
     React.useState<TObtenerDatosRegistradosAlojamientoResponse>();
   const [datosRegistroAlojamiento, setDatosRegistroAlojamiento] =
@@ -89,6 +94,8 @@ const useAlojamientoTab = ({ idOferta }: { idOferta: string }) => {
 
           nombre_alojamiento: response.datos.datos_basicos.nombre,
           descripcion_alojamiento: response.datos.datos_basicos.descripcion,
+          id_sub_categoria_alojamiento:
+            response.datos.datos_basicos.id_sub_tipo_oferta,
 
           caracteristicas:
             response && response.datos && response.datos.caracteristicas
@@ -116,11 +123,14 @@ const useAlojamientoTab = ({ idOferta }: { idOferta: string }) => {
           minimo_dias_estadia:
             response.datos.datos_basicos.min_dias_estadia?.toString(),
         };
+        setTipoTipologia(
+          response.datos.datos_basicos.id_sub_categoria_alojamiento,
+        );
         alojamientoForm.reset(reset);
 
         console.log("reset: ", alojamientoSchema.safeParse(reset).error);
         setEsCompleto(alojamientoSchema.safeParse(reset).success);
-      }
+      },
     );
   };
 
@@ -144,6 +154,7 @@ const useAlojamientoTab = ({ idOferta }: { idOferta: string }) => {
 
   /** alojamiento */
   const guardarAlojamiento = async (body: TBodyGuardarAlojamiento) => {
+    console.log("service correcto");
     try {
       await guardarAlojamientoService(body);
     } catch (error) {
@@ -165,11 +176,12 @@ const useAlojamientoTab = ({ idOferta }: { idOferta: string }) => {
   React.useEffect(() => {
     setEsCompleto(
       alojamientoSchema.safeParse(alojamientoForm.getValues()).success &&
-        !alojamientoForm.formState.isDirty
+        !alojamientoForm.formState.isDirty,
     );
   }, [alojamientoForm.formState]);
 
   const context: AlojamientoContextValue = {
+    tipoTipologia,
     alojamientoSchema,
     alojamientoForm,
     alojamientoEsCompleto: esCompleto,

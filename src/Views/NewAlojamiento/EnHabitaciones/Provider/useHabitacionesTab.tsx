@@ -16,12 +16,15 @@ import { UseFormReturn } from "react-hook-form";
 import { LocalOrRemoteImage } from "../../../../components/MultimediaUpload/ImageUploadProvider";
 
 const numeric = z
-  .preprocess((val) => {
-    if (typeof val === "string" && /^[0-9]+$/.test(val)) {
-      return Number(val);
-    }
-    return val;
-  }, z.number({ message: "Debe ser un número" }))
+  .preprocess(
+    (val) => {
+      if (typeof val === "string" && /^[0-9]+$/.test(val)) {
+        return Number(val);
+      }
+      return val;
+    },
+    z.number({ message: "Debe ser un número" }),
+  )
   .optional();
 
 const habitacionSchema = z.object({
@@ -62,7 +65,6 @@ const viviendaSchema = z.object({
 });
 
 export type HabitacionesContextValue = {
-  tipoTipologia: string;
   habitaciones: any[];
   datosRegistroHabitacion: any;
   datosRegistroVivienda: any;
@@ -81,9 +83,6 @@ export type HabitacionesContextValue = {
 };
 
 const useHabitacionesTab = ({ idOferta }: { idOferta: string }) => {
-  const [tipoTipologia, setTipoTipologia] = React.useState<
-    "habitaciones" | "viviendas"
-  >("viviendas");
   const [habitaciones, setHabitaciones] = React.useState<any[]>([]);
   const [datosRegistroHabitacion, setDatosRegistroHabitacion] =
     React.useState<any>();
@@ -99,8 +98,8 @@ const useHabitacionesTab = ({ idOferta }: { idOferta: string }) => {
         setEsCompleta(
           response.data.datos.filter(
             (habitacion: any) =>
-              !habitacion.tipo_detalle || habitacion.imagenes.length == 0
-          ).length == 0 && response.data.datos.length > 0
+              !habitacion.tipo_detalle || habitacion.imagenes.length == 0,
+          ).length == 0 && response.data.datos.length > 0,
         );
       })
       .catch(() => {});
@@ -179,12 +178,11 @@ const useHabitacionesTab = ({ idOferta }: { idOferta: string }) => {
     setEsCompleta(
       !isDirty &&
         habitaciones.filter((habitacion: any) => !habitacion.tipo_detalle)
-          .length == 0
+          .length == 0,
     );
   }, [isDirty]);
 
   const context: HabitacionesContextValue = {
-    tipoTipologia,
     habitaciones,
     datosRegistroHabitacion,
     datosRegistroVivienda,

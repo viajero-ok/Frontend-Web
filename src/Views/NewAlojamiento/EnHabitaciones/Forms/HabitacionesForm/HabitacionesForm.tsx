@@ -16,7 +16,7 @@ export default function HabitacionesForm(props: { idOferta: string }) {
     habitaciones,
     crearTipologia,
     habitacionesIsDirty,
-    tipoTipologia,
+    alojamientoForm,
     alojamientoEsCompleto,
   } = useAlojamientoEnHabitaciones();
   const { modal, setOpen } = useModal();
@@ -43,6 +43,16 @@ export default function HabitacionesForm(props: { idOferta: string }) {
     });
   };
 
+  if (alojamientoForm.getValues().id_sub_categoria_alojamiento == null) {
+    return (
+      <div>
+        <div>
+          Primero se deben registrar los datos del alojamiento (primera pestaña)
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-12 w-full">
       <div className="flex flex-col col-span-4 gap-2">
@@ -56,7 +66,7 @@ export default function HabitacionesForm(props: { idOferta: string }) {
             onClick={() => handleCrearTiplogia()}
           >
             Nuevo{" "}
-            {tipoTipologia == "habitaciones"
+            {alojamientoForm.getValues().id_sub_categoria_alojamiento == 1
               ? "tipo de habitacion"
               : "tipo de vivienda"}
           </button>
@@ -75,7 +85,7 @@ export default function HabitacionesForm(props: { idOferta: string }) {
                   "hover:bg-[var(--color-viajero)]/5 hover:border-[var(--color-viajero)]",
                   habitacionSelected == habitacion.id_tipo_detalle
                     ? "bg-[var(--color-viajero)]/5 border-[var(--color-viajero)]"
-                    : "cursor-pointer border-gray-200"
+                    : "cursor-pointer border-gray-200",
                 )}
                 onClick={() =>
                   setHabitacionSelected(habitacion.id_tipo_detalle)
@@ -97,12 +107,12 @@ export default function HabitacionesForm(props: { idOferta: string }) {
       </div>
       <div className="col-span-8 ml-4">
         {habitacionSelected != null &&
-          (tipoTipologia == "habitaciones" ? (
+          (alojamientoForm.getValues().id_sub_categoria_alojamiento == 1 ? (
             <Habitacion
               key={habitacionSelected}
               habitacion={habitaciones.find(
                 (habitacion: any) =>
-                  habitacion.id_tipo_detalle == habitacionSelected
+                  habitacion.id_tipo_detalle == habitacionSelected,
               )}
               habitacionSelected={habitacionSelected}
               setHabitacionSelected={setHabitacionSelected}
@@ -113,7 +123,7 @@ export default function HabitacionesForm(props: { idOferta: string }) {
               key={habitacionSelected}
               habitacion={habitaciones.find(
                 (habitacion: any) =>
-                  habitacion.id_tipo_detalle == habitacionSelected
+                  habitacion.id_tipo_detalle == habitacionSelected,
               )}
               habitacionSelected={habitacionSelected}
               setHabitacionSelected={setHabitacionSelected}

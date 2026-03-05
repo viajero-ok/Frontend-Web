@@ -14,5 +14,13 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/setupTests.ts',
+  },
+  server: {
+    host: true,
+    port: 5173,
+    hmr: {
+      host: "dev.viajeroturismo.me",
+      protocol: "wss"
+    }
   }
 })

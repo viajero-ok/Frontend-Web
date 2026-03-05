@@ -11,7 +11,7 @@ permissions:
 env:
     REGISTRY: ghcr.io
     REPOSITORIO: ${{ github.repository }} # Ejemplo: organizacion_o_usuario/nombre_repositorio
-    RAMA: ${{ github.ref_name }} # Ejemplo: dev
+    RAMA: ${{ github.ref_name }} # Ejemplo: dev 
 
 jobs:
     build-and-push:

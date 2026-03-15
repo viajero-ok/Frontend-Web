@@ -1,6 +1,10 @@
 # Stage 1: Instalación de dependencias y compilación
 FROM node:20-alpine as deps
 
+# URL de la API para el entorno dev (se pasa en el build)
+ARG VITE_API_PATH=https://dev.viajeroturismo.me/api
+ENV VITE_API_PATH=${VITE_API_PATH}
+
 WORKDIR /app
 COPY package.json package-lock.json tsconfig.json tsconfig.node.json ./
 RUN npm ci

@@ -30,13 +30,23 @@ jobs:
             - name: Set lower case repository name
               run: echo "REPOSITORIO_LC=${REPOSITORIO,,}" >> ${GITHUB_ENV}
 
+            - name: Set API URL for build
+              run: |
+                  if [[ "${{ env.RAMA }}" == "dev" ]]; then
+                    echo "VITE_API_PATH=https://dev.viajeroturismo.me/api" >> ${GITHUB_ENV}
+                  else
+                    echo "VITE_API_PATH=https://test.viajeroturismo.me/api" >> ${GITHUB_ENV}
+                  fi
+
             - name: Build y push de la imagen de Docker
               uses: docker/build-push-action@v6
               with:
                   context: .
                   file: Dockerfile.${{ env.RAMA }} # Ejemplo: Dockerfile.dev
                   push: true
-                  tags: ${{ env.REGISTRY }}/${{ env.REPOSITORIO_LC }}:${{ env.RAMA }} # Ejemplo: ghcr.io/organizacion_o_usuario/nombre_repositorio:dev 
+                  tags: ${{ env.REGISTRY }}/${{ env.REPOSITORIO_LC }}:${{ env.RAMA }} # Ejemplo: ghcr.io/organizacion_o_usuario/nombre_repositorio:dev
+                  build-args: |
+                      VITE_API_PATH=${{ env.VITE_API_PATH }} 
 
     deploy:
         runs-on: ubuntu-latest

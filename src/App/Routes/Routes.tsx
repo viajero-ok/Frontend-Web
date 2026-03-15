@@ -1,7 +1,7 @@
 import { IonRouterOutlet } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import React from "react";
-import { Redirect, Route, RouteProps } from "react-router";
+import { Redirect, Route, RouteProps, useLocation } from "react-router";
 import { useAuth } from "../../Auth/Auth";
 import Home from "../../pages/Home";
 import LogIn from "../../pages/LogIn/LogIn";
@@ -64,6 +64,14 @@ export const protect = (auth: ReturnType<typeof useAuth>) => {
   };
 };
 
+/** Fuerza que IonRouterOutlet actualice la vista al cambiar la ruta (bug conocido en Ionic React). */
+const RouterOutletWithKey = ({ children }: { children: React.ReactNode }) => {
+  const location = useLocation();
+  return (
+    <IonRouterOutlet key={location.pathname}>{children}</IonRouterOutlet>
+  );
+};
+
 const RoutesProvider = ({ children }: { children?: React.ReactNode }) => {
   /** TODO: Lógica de rutas protegidas */
   /** TODO: La definición de las rutas se puede mover a un archivo separado y accesible como @/routes.ts */
@@ -79,7 +87,7 @@ const RoutesProvider = ({ children }: { children?: React.ReactNode }) => {
     auth != "loading" && (
       <RoutesContext.Provider value={context}>
         <IonReactRouter>
-          <IonRouterOutlet>
+          <RouterOutletWithKey>
             <ViajeroRoute
               exact
               path="/home"
@@ -152,7 +160,7 @@ const RoutesProvider = ({ children }: { children?: React.ReactNode }) => {
             />
             <Route exact path="/itinerary" component={ItineraryView} />
             <Route exact path="/prueba-form" component={PruebaFormView} />
-          </IonRouterOutlet>
+          </RouterOutletWithKey>
         </IonReactRouter>
       </RoutesContext.Provider>
     )

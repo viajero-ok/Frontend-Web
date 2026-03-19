@@ -38,7 +38,7 @@ import {
               <IonRow>
                 <img
                   alt="Silhouette of mountains"
-                  src="public/images/habitacion.jpg"
+                  src="/images/habitacion.jpg"
                   width={"175pt"}
                   height={"150pt"}
                   style={{}}

@@ -16,7 +16,7 @@ export default function SignupCompleteView() {
         <div className="grid grid-cols-2 mx-4 border border-gray-100 shadow-md rounded-md h-fit p-4">
           <div>
             <IonImg
-              src="/public/3.3. Registro de usuario/Prestador.png"
+              src="/3.3. Registro de usuario/Prestador.png"
               style={{
                 width: "100%",
                 marginTop: "10pt",
@@ -57,7 +57,7 @@ export default function SignupCompleteView() {
         <div className="grid grid-cols-2 mx-4 border border-gray-100 shadow-md rounded-md h-fit p-4">
           <div>
             <IonImg
-              src="/public/3.3. Registro de usuario/Turista.png"
+              src="/3.3. Registro de usuario/Turista.png"
               style={{
                 width: "100%",
                 marginTop: "10pt",

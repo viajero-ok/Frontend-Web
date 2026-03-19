@@ -33,7 +33,7 @@ export default function HomePrestadorView(props: any) {
           >
             <img
               alt="Silhouette of mountains"
-              src="public\3.4. Menu prestador\Mis establecimientos.png"
+              src="/3.4. Menu prestador/Mis establecimientos.png"
               width={"100pt"}
               height={"auto"}
               style={{}}
@@ -68,7 +68,7 @@ export default function HomePrestadorView(props: any) {
             >
               <img
                 alt="Silhouette of mountains"
-                src="public\3.4. Menu prestador\Mis ofertas turisticas.png"
+                src="/3.4. Menu prestador/Mis ofertas turisticas.png"
                 width={"100pt"}
                 height={"auto"}
                 style={{}}
@@ -103,7 +103,7 @@ export default function HomePrestadorView(props: any) {
             >
               <img
                 alt="Silhouette of mountains"
-                src="public\3.4. Menu prestador\Mis reservas.png"
+                src="/3.4. Menu prestador/Mis reservas.png"
                 width={"100pt"}
                 height={"auto"}
                 style={{}}
@@ -138,7 +138,7 @@ export default function HomePrestadorView(props: any) {
             >
               <img
                 alt="Silhouette of mountains"
-                src="public\3.4. Menu prestador\Informes y estadisticas.png"
+                src="/3.4. Menu prestador/Informes y estadisticas.png"
                 width={"100pt"}
                 height={"auto"}
                 style={{}}

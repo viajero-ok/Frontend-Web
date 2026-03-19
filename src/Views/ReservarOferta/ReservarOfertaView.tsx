@@ -165,7 +165,7 @@ export default function ReservarOfertaView() {
         <div className="col-span-4">
           <div
             className="w-full aspect-video bg-center bg-cover rounded-t-md"
-            style={{ backgroundImage: "url(/public/images/cabin1.jpg)" }}
+            style={{ backgroundImage: "url(/images/cabin1.jpg)" }}
           />
           <div className="w-full border-x border-b rounded-b-md border-gray-200 flex flex-col gap-2 p-4">
             <div className="text-gray-600 font-bold">

@@ -73,17 +73,17 @@ export default function OfferTypeSelection() {
           <OfferCard
             onClick={() => offer.setTipoOferta("alojamiento")}
             title="Alojamiento"
-            imgSrc="public\3.5. Registro oferta\1-Alojamiento.png"
+            imgSrc="/3.5. Registro oferta/1-Alojamiento.png"
           />
           <OfferCard
             onClick={() => offer.setTipoOferta("actividad")}
             title="Actividad"
-            imgSrc="public\3.5. Registro oferta\2-Actividades.png"
+            imgSrc="/3.5. Registro oferta/2-Actividades.png"
           />
           <OfferCard
             onClick={() => offer.setTipoOferta("evento")}
             title="Evento"
-            imgSrc="public\3.5. Registro oferta\3-Eventos.png"
+            imgSrc="/3.5. Registro oferta/3-Eventos.png"
           />
         </div>
       </div>

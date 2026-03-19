@@ -131,25 +131,25 @@ export default function AlojamientoTypeSelection() {
           <OfferCard
             onClick={() => handleSelect(1)}
             title="En habitaciones"
-            imgSrc="public\3.6. Alojamientos\En habitaciones.png"
+            imgSrc="/3.6. Alojamientos/En habitaciones.png"
             disabled={!establecimiento}
           />
           <OfferCard
             onClick={() => {}}
             title="Unidades de vivienda"
-            imgSrc="public\3.6. Alojamientos\En unidades de vivienda.png"
+            imgSrc="/3.6. Alojamientos/En unidades de vivienda.png"
             disabled
           />
           <OfferCard
             onClick={() => {}}
             title="Casa de alquiler"
-            imgSrc="public\3.6. Alojamientos\Casa de alquiler.png"
+            imgSrc="/3.6. Alojamientos/Casa de alquiler.png"
             disabled
           />
           <OfferCard
             onClick={() => {}}
             title="Camping"
-            imgSrc="public\3.6. Alojamientos\Camping.png"
+            imgSrc="/3.6. Alojamientos/Camping.png"
             disabled
           />
         </div>

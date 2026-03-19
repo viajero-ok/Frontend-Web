@@ -1,34 +1,18 @@
 import {
   IonContent,
   IonHeader,
-  IonItem,
-  IonList,
-  IonMenu,
-  IonMenuButton,
-  IonMenuToggle,
-  IonPage,
-  IonTitle,
-  IonToolbar,
   useIonRouter,
 } from "@ionic/react";
-import { useEffect, useState } from "react";
 import LoginNavbar from "../../components/LoginNavbar/LoginNavbar";
 import ProfileChip from "../../components/ProfileChip/ProfileChip";
 import { useAuth } from "../../Auth/Auth";
 
 export default function DefaultLoggedLayout({ children }: any) {
-  const [logged, setLogged] = useState<boolean>();
-  const [perfilSeleccionado, setPerfilSeleccionado] = useState<number>();
   const auth = useAuth();
   const router = useIonRouter();
 
-  const push = (uri: string) => {
-    if (!router) return;
-    router.push(uri);
-  };
-
   return (
-    <IonPage id="burger">
+    <>
       <IonHeader
         style={{ "webkit-box-shadow": "none", "box-shadow": "none" }}
         className="shadow-sm! border-b border-gray-100"
@@ -81,22 +65,8 @@ export default function DefaultLoggedLayout({ children }: any) {
         </div>
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent className="">
-          {children}
-          {/* <div className="w-full bg-gray-50 min-h-24 flex flex-row gap-4 justify-between items-start px-16 py-4 pb-8">
-            <div className="flex flex-col gap-2 text-sm text-gray-600">
-              <div className="font-bold">Información</div>
-              <div>Sobre nosotros</div>
-              <div>Contactanos</div>
-            </div>
-          </div> */}
-        </IonContent>
+        {children}
       </IonContent>
-    </IonPage>
+    </>
   );
 }

@@ -3,31 +3,18 @@ import {
   IonHeader,
   useIonRouter,
 } from "@ionic/react";
-import { useEffect, useState } from "react";
 import { clearJWT } from "../../App/Token";
 import { useAuth } from "../../hooks/UseAuth/AuthProvider";
 
 export default function UncompleteLoggedLayout({ children }: any) {
-  const [logged, setLogged] = useState<boolean>();
   const auth = useAuth();
   const router = useIonRouter();
 
-  const push = (uri: string) => {
-    if (!router) return;
-    router.push(uri);
-  };
-
-  useEffect(() => {
-    if (auth) setLogged(auth.isLogged);
-  }, [auth]);
-
   const handleCerrarSesion = () => {
-    {
-      if (!router) return;
-      if (!auth) return;
-      clearJWT();
-      auth.logout();
-    }
+    if (!router) return;
+    if (!auth) return;
+    clearJWT();
+    auth.logout();
   };
 
   return (
@@ -48,7 +35,7 @@ export default function UncompleteLoggedLayout({ children }: any) {
           </div>
           <div className="flex flex-row gap-8 justify-end items-center pr-4">
             <div
-              onClick={() => alert("todo: cerrar session")}
+              onClick={handleCerrarSesion}
               className="cursor-pointer px-2 hover:underline hover:bg-[var(--color-viajero)]/5 h-full flex items-center"
             >
               Cerrar sesión

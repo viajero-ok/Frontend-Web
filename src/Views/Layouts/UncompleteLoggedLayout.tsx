@@ -1,15 +1,6 @@
 import {
-  IonButton,
   IonContent,
   IonHeader,
-  IonItem,
-  IonList,
-  IonMenu,
-  IonMenuButton,
-  IonMenuToggle,
-  IonPage,
-  IonTitle,
-  IonToolbar,
   useIonRouter,
 } from "@ionic/react";
 import { useEffect, useState } from "react";
@@ -40,7 +31,7 @@ export default function UncompleteLoggedLayout({ children }: any) {
   };
 
   return (
-    <IonPage id="burger">
+    <>
       <IonHeader
         style={{ "webkit-box-shadow": "none", "box-shadow": "none" }}
         className="shadow-sm! border-b border-gray-100"
@@ -66,13 +57,8 @@ export default function UncompleteLoggedLayout({ children }: any) {
         </div>
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent className="">{children}</IonContent>
+        {children}
       </IonContent>
-    </IonPage>
+    </>
   );
 }
